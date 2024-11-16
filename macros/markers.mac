@@ -1,0 +1,502 @@
+TeXgraph#
+{ TeXgraph 1.99}
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ markers.mac fournit la macro:  
+
+            markLine( <ligne polyg.>,  [pos1, marker1, pos2, marker2...] ) où
+
+    <ligne polyg.>: est une liste de points 2d, 
+    <pos1>, <pos2>,...: sont des positions comprises entre 0 et 1
+    <marker1>, <marker2>, ...: sont des types de markers
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+Var
+{type de marker}
+    Oarc = 101;     {arc ouvert}
+    Carc = 101+i;   {arc fermé}
+    //Dot = 102;    {point}
+    Ocro = 103;     {crochet ouvert}
+    Ccro = 103+i;   {crochet fermé}
+    Oarrow = 104;   {flèche ouverte}
+    Carrow = 104+i; {flèche fermée}
+    OTarrow = 105;  {flèche triangulaire ouverte creuse}
+    CTarrow = 105+i;    {flèche triangulaire fermée creuse}
+    OTarrow' = 105.5;   {flèche triangulaire ouverte pleine}
+    CTarrow'= 105.5+i;  {flèche triangulaire fermée pleine}
+    Line = 106;     {trait droit}
+    Circle = 107;   {cercle plein}
+    OParrow = 108;  {flèche ouverte creuse}
+    CParrow = 108+i;    {flèche fermée creuse}
+    OParrow' = 108.5;   {Flèche ouverte pleine}
+    CParrow' = 108.5+i; {Flèche fermée pleine}
+    Osect = 109;    {Secteur angulaire ouvert creux}
+    Csect = 109+i;  {Secteur angulaire fermé creux}
+    Oarc' = 110;    {Arc de cercle ouvert}
+    Carc' = 110+i;  {Arc de cercle fermé}
+    Oarrow2 = 111;  {Double flèche ouverte}
+    Carrow2 = 111+i;    {Double flèche fermée}
+    Oarrow3 = 112;  {Triple flèche ouverte}
+    Carrow3 = 112+i;    {Triple flèche fermée} 
+  
+    ODarrow = 113;  {Demi-flèche inférieure ouverte }
+    CDarrow = 113+i;    {Demi-flèche inférieure fermée }
+
+    OUarrow = 114;  {Demi-flèche supérieure ouverte }
+    CUarrow = 114+i;    {Demi-flèche supérieure fermée }
+
+    ODParrow = 115; {Demi-flèche inférieure ouverte creuse}
+    CDParrow = 115+i;   {Demi-flèche inférieure fermée creuse}
+
+    ODParrow' = 115.5;  {Demi-flèche inférieure ouverte pleine}
+    CDParrow' = 115.5+i;{Demi-flèche inférieure fermée pleine}
+
+    OUParrow = 116; {Demi-flèche supérieure ouverte creuse}
+    CUParrow = 116+i;   {Demi-flèche supérieure fermée creuse}
+    OUParrow' = 116.5;  {Demi-flèche supérieure ouverte pleine}
+    CUParrow' = 116.5+i;{Demi-flèche supérieure fermée pleine}
+
+    ODarrow2 = 117; {Demi-flèche inférieure double ouverte}
+    CDarrow2 = 117+i;   {Demi-flèche inférieure double fermée}
+    OUarrow2 = 118; {Demi-flèche supérieure double ouverte}
+    CUarrow2 = 118+i;   {Demi-flèche supérieure double fermée}
+    ODarrow3 = 119; {Demi-flèche inférieure triple ouverte}
+    CDarrow3 = 119+i;   {Demi-flèche inférieure triple fermée}
+    OUarrow3 = 120; {Demi-flèche supérieure triple ouverte}
+    CUarrow3 = 120+i;   {Demi-flèche supérieure triple fermée}  
+    Square = 121;   {Carré creux}
+    TSquare = 122;  {Carré creux avec rotation}
+    Square' = 121.5;    {Carré plein}
+    TSquare' = 122.5;   {Carré plein avec rotation}
+    Times = 123;    {Croix}
+    Plus = 124;     {Plus}
+    Dots = 125;     {Droite infinie}
+    Oscissors = 126+i;  {Paire de ciseaux ouverte creuse}
+    Cscissors = 126;    {Paire de ciseaux fermée creuse}
+    Oscissors' = 126.5+i;{Paire de ciseaux ouverte pleine}
+    Cscissors' = 126.5; {Paire de ciseaux fermée pleine}
+
+    OUdistance = 127;       {Distance "ouvert" supérieure, flèche creuse}
+    CUdistance = 127+i;     {Distance "fermé" supérieure, flèche creuse}
+    OUdistance' = 127.5;    {Distance "ouvert" supérieure, flèche pleine}
+    CUdistance' = 127.5+i;  {Distance "fermé" supérieure, flèche pleine}
+    ODdistance = 128;       {Distance "ouvert" inférieure, flèche creuse}
+    CDdistance = 128+i;     {Distance "fermé" inférieure, flèche creuse}
+    ODdistance' = 128.5;    {Distance "ouvert" inférieure, flèche pleine}
+    CDdistance' = 128.5+i;  {Distance "fermé" inférieure, flèche pleine}
+
+    CurrentArrow = Carrow;  {flèche par défaut}
+    CurrentArrowScale = 1;
+    markerNeedCut =  {marker nécessitant de raccourcir le segment}
+    [Carrow, CTarrow, CTarrow', CParrow, CParrow', Carrow2, Carrow3, -Carrow2, -Carrow3, -TSquare, -TSquare', -Circle,
+     Csect, CUdistance, CUdistance', CDdistance, CDdistance', CDParrow, CDParrow', CUParrow, CUParrow']; 
+
+{dimensions des markers en cm, utiliser le paramètre scale  pour les modifier}
+    arcSize = 0.1;
+    croHeight = 0.1;
+    croWidth = 0.05;
+    arrowHeight = 0.1;
+    arrowWidth = 0.15;
+    lineHeight = 0.1;
+
+    arcAngle = pi/2;        {Angle d'ouverture des arcs et secteurs angulaires - Oarc', Carc', Osect, Csect}
+    arrowShift = 0.05;      {Décalage du point de jonction de la flèche - Oarrow, Carrow}
+    squareWidth = 0.1;      {Taille d'un carré - Square, TSquare}
+    scissorsAngle = pi/12;  {Angle des lames de ciseaux - Scissors}
+    distanceHeight = 0.25;  {Hauteur des traits de distance - OUdistance, CUdistance, ODdistance, CDdistance}
+
+    currentMatrix = [0,1,i];
+
+{options déjà définies
+    scale = 1;}
+
+Mac
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+               gestion des markers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    cutLine = { cutLine( ligne, type marker 0/1/2, width): coupe les extrêmités d'une ligne pour ajouter un marqueur
+ en enlevant l'épaisseur du trait aux extrmêmités, la nouvelle ligne est renvoyée}
+    [$type:=%2, $x:=(%3/mm/7),
+    for $L in %1 by jump do
+        $N:=Nops(L), 
+        if N>1 then
+        $a:=L[1], $c:=L[-1],        
+        if type=0 Or type=2 then $b:=L[2], Inc(a,x*(b-a)/Abs(b-a)) fi,
+        if type=1 Or type=2 then $b:=L[-2],  Inc(c,x*(b-c)/Abs(b-c)) fi,
+        a,if N>2 then L[2,N-2] fi, c, jump
+        fi  
+    od
+    ];
+
+    cutPathAux = {cutPath( path, type, width): utilisé par cutPath}
+    [
+    $type:=%2, $x:=(%3/mm/7), $L:=%1,
+    $z:=L[0],
+    if z=curve then //on change les curve en bézier
+        $L1 := GetSpline(0,L[-2,0],0),
+        L:= [L1[1],for $Z in L1[2,0] By 3 do Z,bezier od],
+        z:=bezier
+    fi,
+    if (z=arc) Or (z=ellipticArc) then
+       $b:=L[1], $a:=L[2], $c:=L[3], $r:=L[4],
+       $sens:=if z=arc then L[5] else L[6] fi,
+       if sens>=0 then $d:=i else $d:=-i fi,
+       if type=0 Or type=2 then //debut
+          $b':= a+r*(b-a)/abs(b-a), $v:=d*(b'-a),
+          b:= b'+x*v/Abs(v),
+       fi,
+       if type=1 Or type=2 then
+          $c':= a+r*(c-a)/abs(c-a), $v:=-d*(c'-a),
+          c:= c'+x*v/Abs(v)
+       fi,
+       L:=[b,a,c,L[4,0]]
+    elif (z=line) Or (z=bezier) Or (z=curve) then
+         if type=0 Or type=2 then
+            $a:=L[1], $b:=L[2], Inc(a,x*(b-a)/Abs(b-a)),
+            L:=[a,L[2,0]]
+         fi,
+         if type=1 Or type=2 then
+            $b:=L[-3], $a:=L[-2], Inc(a,x*(b-a)/Abs(b-a)),
+            L:=[L[-3,0],a,z]
+         fi
+    elif (z=linearc) then
+         if type=0 Or type=2 then
+            $a:=L[1], $b:=L[2], Inc(a,x*(b-a)/Abs(b-a)),
+            L:=[a,L[2,0]],
+         fi,
+         if type=1 Or type=2 then
+            $b:=L[-4], $a:=L[-3], Inc(a,x*(b-a)/Abs(b-a)),
+            L:=[L[-4,0],a,L[-1,2]]
+         fi
+    fi,
+    L, 
+    ];
+
+    cutPath = { cutPath( path, type marker 0/1/2, width): coupe les extrêmités du chemin pour ajouter un marqueur
+ en enlevant l'épaisseur du trait aux extrêmités, le nouveau chemin est renvoyé}
+    [$first:=Nil, $firstinPath:=%1[1], $prems:=1, $lastpath:=Nil, $type:=%2,
+    for $L in %1 By jump do
+        if sep=move then
+            if lastpath<>Nil then
+                if type>0 then lastpath:=cutPathAux(lastpath,1,%3) fi,
+            if prems then lastpath[1],move, prems:=0 fi,
+            lastpath[2,0],
+            fi,
+           first:=L[1], prems:=1, firstinPath:=first, lastpath:=Nil,
+        elif sep=closepath then
+             if Abs(first-firstinPath)>0.000001 then 
+            if prems then lastpath[1],move, prems:=0 fi, lastpath[2,0],
+            lastpath:=[first,firstinPath,line], first:=firstinPath 
+                     fi
+        else
+            if lastpath<>Nil then
+             if prems then lastpath[1],move, prems:=0 fi,
+             lastpath[2,0]
+            fi,
+            Insert(L,first,1), 
+            if sep=arc then first:=L[3], if L[5]=Nil then Insert(L,1) fi, Insert(L,sep)
+            elif sep=ellipticArc then first:=L[3],if L[6]=Nil then Insert(L,1) fi, Insert(L,sep)
+            elif sep=line then first:=L[0], Insert(L,sep)
+            elif sep=bezier then first:=L[0], Insert(L,sep)
+            elif sep=curve then first:=L[0], Insert(L,sep)
+            elif sep=linearc then first:=L[-2], Insert(L,sep)
+            elif sep=clinearc then $r:=L[0], Del(L,0,1), L:=roundLine(L,r,1), first:=Copy(Get(Path(L)),1,0)
+            elif sep=circle then $a:=L[1], $b:=L[2], $c:=L[3],
+                     if c=Nil then L:=[a,b,a,abs(b-a),1,arc]
+                     else $o:=med(a,b) Inter med(b,c), L:= [a,o,a,abs(a-o),1,arc]
+                     fi,
+                     first:=a
+        elif sep=ellipse then $a:=L[1], $b:=L[2], $Rx:=L[3], $Ry:=L[4], $inclin:=L[5],
+                               $x:=Copy( Get( ellipticArc(a,b,a,Rx,Ry,1,inclin)),1,0),
+                               if Abs(a-x)>0.01 then L:=[a,x,line] fi,
+                               first:=x, 
+                               L:=[a,b,a,Rx,Ry,1,inclin,ellipticArc]
+           fi,
+           if (type=0 Or type=2) And prems then L:=cutPathAux( L, 0, %3) fi,
+           lastpath:=L
+        fi
+    od,
+    if lastpath<>Nil then
+            if type>0 then lastpath:=cutPathAux(lastpath,1,%3) fi,
+        if prems then lastpath[1],move, fi,
+        lastpath[2,0],
+    fi
+    ];
+
+    typeMarker = { typemarker( marker ): renvoie -1/0/1/2 (aucun, debut, fin debut+fin) }
+    [$type0:=0, $type1:=0,
+     for $z in %1 By 2 do
+         $pos:=z[1], $mark:=z[2], $cut:= (Pos(mark, markerNeedCut)<>Nil),
+         if (pos=0) And cut then type0:=1 fi,
+         if (pos=1) And cut then type1:=1 fi,
+     od,
+     2*type1+type0-1];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+               dessin des markers (macro mark)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    markLine = { markLine( liste,  <pos1, marker1, pos2, marker2...> ) }
+    [$posmark:=%2, $k:=0, $pos:=for $z in posmark by 2 do Inc(k,1), z[1]+i*k od, Sort(pos),
+     PermuteWith( for z in pos do Im(z) od, posmark, 2),
+     currentMatrix:=GetMatrix(), $mat1:=mulmatrix([0,Xscale,i*Yscale], currentMatrix),
+     SetMatrix([0,1/Xscale,i/Yscale]),
+     for $L in mtransform(%1,mat1) By jump do
+        markLineaux(L, posmark),
+     od,
+    SetMatrix(currentMatrix)
+    ];
+
+    markLineaux = {markLineaux( <liste>, <pos1, marker1, pos2, marker2...> ): pos1= position du premier marker (entre 0 et 1)}
+    [$liste:=%1, $L:=length(liste),
+     $long:=0,  $first:=Copy(liste,1,1), $k:=1,
+     SaveAttr(), Arrows:=0, LineStyle:=solid,
+     for $X in %2 By 2 do
+        $x:=X[1], $marker:=X[2],
+        if 0<=Re(x) And Re(x)<=1 then
+            $L':=Re(x)*L,
+            if L'>0 then
+                while long<L' do
+                    Inc(k,1), $z:=Copy(liste,k,1),
+                    Inc(long, Abs(z-first)), first:=z
+                od,
+                $u:=z-Copy(liste,k-1,1), u:=u/abs(u)
+            else u:=Copy(liste,k+1,1)-first, u:=u/abs(u)
+            fi,
+            $P:= first+(L'-long)*u,
+            if x=0 then mark(P, P+u, x, Re(marker), Im(marker))
+            else mark(P-u, P, x, Re(marker), Im(marker))
+            fi
+        fi
+      od,
+     RestoreAttr()];
+
+    mark = { mark(A, B, pos(0..1), type, close(0/1)) }
+    [$A:=%1, $B:=%2, $pos:=%3, $type:=abs(%4), 
+     $decal:=(%4<0), { par défaut un marqueur fermé se termine au meme point que
+     le segment, un marqueur ouvert est au bout du segment, le booléen decal inverse
+     la situation}
+     $close:=if %5=Nil then 1 else abs(%5) fi, $oldFillColor:=FillColor, $echange:=1,
+     if pos=0 then Echange(A,B), $echange:=-1 fi, LineStyle:=solid, FillStyle:=none, $ep:=Width/mm/10,
+     if type=101 then {arc}
+            $r:=(arcSize+ep)*scale, LineCap:=butt, $n:=i*(B-A),
+            if close then  $u:=(A-B)/abs(B-A), n:=-r*n/abs(n)
+            else $u:=(B-A)/abs(B-A), n:=r*n/abs(n)
+            fi,
+            $retrait:=ep*u/2, Inc(B,retrait), u:=r*u,
+            if decal then Inc(B,-u) fi, Path([B+u+n,B+u,B+u-n,r,1,arc])
+
+    elif (type>-1) And (type<15) then {Dot}
+                DotStyle:=type, DotScale:=scale,
+            $u:=B-A, if Re(u)<=0 then u:=-u fi, DotAngle:=Arg(u)*rad, 
+                        DrawDot(B,Width),
+
+    elif type=103 then {crochet}
+                    $h:=(croWidth+ep)*scale, $L:=(croHeight+ep)*scale,$n:=i*(B-A),
+                    n:=L*n/abs(n), LineJoin:=miter, LineCap:=butt,
+                    if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+                $retrait:=ep*u/2, Inc(B,retrait), u:=h*u,
+                    if decal then Inc(B,-u) fi,  FillStyle:=none,
+                    Ligne([B-n+u,B-n,B+n,B+n+u],0)
+
+    elif type=104 then {fleche ordinaire}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale,
+            $n:=i*(B-A), n:=h*n/abs(n),
+            $u:=if close then (A-B)/abs(B-A) else (B-A)/abs(B-A) fi,
+            LineCap:=round, u:=L*u, if close then Inc(B,ep*u/2/L) fi,
+            if decal then Inc(B,-(1+ep/L/(if close then 1 else 2 fi))*u) fi,
+            Bezier(B+u+n, B+u+n/2,B+u/8,B,B+u/8,B+u-n/2,B+u-n)
+
+    elif type=105 Or type=105.5 then {fleche triangulaire pleine ou creuse}
+                    $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $n:=i*(B-A),
+                    n:=h*n/abs(n), FillStyle:=full, if type=105.5 then FillColor:=Color fi, LineJoin:=miter,
+                    if close then $u:=L*(A-B)/abs(B-A),
+                      $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x)*u/L, Inc(B,retrait)
+                    else $u:=L*(B-A)/abs(B-A) fi,
+                    if decal then Inc(B,-u) fi, Ligne([B,B+u-n,B+u+n],1),
+                    if type=105.5 then FillColor:=oldFillColor fi
+
+    elif type=106 then {trait droit}
+                LineCap:=butt, $L:=(lineHeight+ep)*scale, $n:=i*(B-A),
+                    n:=L*n/abs(n), LineStyle:=butt, Ligne([B-n,B+n],0)
+
+    elif type=107 then {cercle rempli}
+                FillStyle:=full, $r:=(arcSize+ep)*scale, $u:=r*(B-A)/abs(B-A),
+                if decal then Inc(B,-u*(1+ep/2/r)) fi, Ellipse(B,r,r)
+
+    elif type=108 Or type=108.5 then {Parrow ou Parrow'}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $l:=arrowShift*scale,
+            $n:=i*(B-A), n:=h*n/abs(n), 
+            if close then $u:=L*(A-B)/abs(B-A),
+                $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x)*u/L, Inc(B,retrait)
+            else $u:=L*(B-A)/abs(B-A) fi,
+            FillStyle:=full, LineJoin:=miter, if type=108.5 then FillColor:=Color fi,
+            if decal then Inc(B,-u*(1-l/L+ep/L/2)) fi,
+            Ligne([B, B+u+n,B+u*(1-l/L),B+u-n],1), if type=108.5 then FillColor:=oldFillColor fi
+
+    elif type=110 then {arc'}
+            $r:=(arcSize+ep)*scale, FillStyle:=none, LineCap:=butt,
+            if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+            $n1:=exp(i*arcAngle/2)*u, $n2:=exp(-i*arcAngle/2)*u,
+            n1:=r*n1/abs(n1), n2:=r*n2/abs(n2), $retrait:=ep*u/2, Inc(B,retrait), u:=r*u,
+            if decal then Inc(B, -u) fi, Arc(B+u+n1, B+u, B+u+n2, r)
+
+    elif type=109 then {Secteur angulaire}
+            FillStyle:=full, $r:=(arcSize+ep)*scale, LineJoin:=miter,
+            if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+            $n1:=exp(i*arcAngle/2)*u, $n2:=exp(-i*arcAngle/2)*u,
+            n1:=r*n1/abs(n1), n2:=r*n2/abs(n2), $retrait:=ep*u/2, Inc(B,retrait), u:=r*u,
+            if decal then Inc(B, -u) fi,
+                Path([B+u+n1, B+u, B+u+n2, r, 1, arc, B+u, line, closepath])
+
+    elif type=111 then {Doubles flèches arrow2}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=h*n/abs(n), 
+            LineJoin:=miter, LineCap:=butt, FillStyle:=none,
+            if close then $u:=L*(A-B)/abs(B-A), Inc(B,retrait*u/L) else $u:=L*(B-A)/abs(B-A) fi,
+            if decal then Inc(B,-u*l/L) fi,
+            Ligne([B+u+n, B, B+u-n, jump, B+u*(1+l/L)+n, B+u*l/L, B+u*(1+l/L)-n],0)
+    
+    elif type=112 then {Triple flèche arrow3}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=h*n/abs(n), 
+            LineJoin:=miter, LineCap:=butt, FillStyle:=none,
+            if close then $u:=L*(A-B)/abs(B-A), Inc(B,retrait*u/L) else $u:=L*(B-A)/abs(B-A) fi,
+            if decal then Inc(B,-2*u*l/L) fi,
+            Ligne([B+u+n,B,B+u-n, jump, B+u*(1+l/L)+n,B+u*l/L,B+u*(1+l/L)-n, jump, B+u*(1+2*l/L)+n,B+u*2*l/L,B+u*(1+2*l/L)-n],0)
+
+    elif type=113 then {Demi-flèche inférieure simple Darrow}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi, n:=echange*n,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-u) fi, Ligne([B,B+u-n],0)
+
+    elif type=114 then {Demi-flèche supérieure simple Uarrow}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi, n:=echange*n,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-u) fi, Ligne([B,B+u+n],0)
+
+    elif type=115 Or type=115.5 then {Demi-flèche inférieure pleine DParrow}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $l:=arrowShift*scale,
+            $n:=i*(B-A), n:=h*n/abs(n), 
+            if close then $u:=L*(A-B)/abs(B-A),
+                $x:=h/L, $retrait:=(1+sqrt(1+x*x))*ep/(2*h)*u, Inc(B,retrait)
+            else $u:=L*(B-A)/abs(B-A) fi,
+            FillStyle:=full, LineJoin:=miter, if type=115.5 then FillColor:=Color fi,
+            if decal then Inc(B,-u*(1-l/L+ep/L/2)) fi, n:=echange*n,
+            Ligne([B, B+u*(1-l/L), B+u-n],1), if type=115.5 then FillColor:=oldFillColor fi
+
+    elif type=116 Or type=116.5 then {Demi-flèche supérieure pleine UParrow}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $l:=arrowShift*scale,
+            $n:=i*(B-A), n:=h*n/abs(n), 
+            if close then $u:=L*(A-B)/abs(B-A),
+                $x:=h/L, $retrait:=(1+sqrt(1+x*x))*ep/(2*h)*u, Inc(B,retrait)
+            else $u:=L*(B-A)/abs(B-A) fi,
+            FillStyle:=full, LineJoin:=miter, if type=116.5 then FillColor:=Color fi,
+            if decal then Inc(B,-u*(1-l/L+ep/L/2)) fi, n:=echange*n,
+            Ligne([B, B+u*(1-l/L), B+u+n],1), if type=116.5 then FillColor:=oldFillColor fi 
+
+    elif type=117 then {Demi-flèche inférieure double Darrow2}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi, n:=echange*n,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-u*l/L) fi, Ligne([B+u-n,B, jump, B+u*(1+l/L)-n,B+u*l/L],0) 
+
+    elif type=118 then {Demi-flèche supérieure double Uarrow2}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi, n:=echange*n,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-u*l/L) fi, 
+            Ligne([B+u+n,B, jump, B+u*(1+l/L)+n,B+u*l/L],0)
+
+    elif type=119 then {Demi-flèche inférieure triple Darrow3}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-2*u*l/L) fi, n:=echange*n,
+            Ligne([B,B+u-n, jump, B+u*l/L,B+u*(1+l/L)-n, jump, B+u*2*l/L,B+u*(1+2*l/L)-n], 0)
+
+    elif type=120 then {Demi-flèche supérieure triple Uarrow3}
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x),
+            $l:=(arrowShift+2*retrait)*scale, $n:=i*(B-A), n:=n/abs(n), 
+            LineJoin:=miter, LineCap:=butt,  FillStyle:=none, $x:=arctan(h/L), 
+            if close then $u:=L*(A-B)/abs(B-A), $C:=B+ep*n/2,x:=-x else $u:=L*(B-A)/abs(B-A), $C:=B-ep*n/2 fi,
+            B:=rot(B,C,x), n:=h*n,  if decal then Inc(B,-2*u*l/L) fi, n:=echange*n,
+            Ligne([B+u+n,B, jump, B+u*(1+l/L)+n,B+u*l/L, jump, B+u*(1+2*l/L)+n,B+u*2*l/L],0)
+
+    elif type=121 Or type=121.5 then {Carré Square}
+                $h:=(squareWidth+ep)*scale/2, $n:=i*(B-A), n:=h*n/Abs(n), 
+            FillStyle:=full, LineJoin:=miter, if type=121.5 then FillColor:=Color fi,
+            if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+            u:=h*u, if decal then Inc(B,-u*(1+ep/2/h)) fi,
+            Ligne([B-u+n, B-u-n, B+u-n, B+u+n], 1), if type=121.5 then FillColor:=oldFillColor fi,
+
+    elif type=122 Or type=122.5 then {Carré avec rotation TSquare}
+            $h:=(squareWidth+ep)*scale, $n:=i*(B-A), n:=h*n/abs(n), 
+            FillStyle:=full, LineJoin:=miter, if type=122.5 then FillColor:=Color fi, 
+            if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+            u:=h*u, if decal then Inc(B,-u*(1+ep/sqrt(2)/h) ) fi,
+            Ligne([B-u, B-n, B+u, B+n], 1), if type=122.5 then FillColor:=oldFillColor fi
+
+    elif type=123 then {Croix Times}
+            $h:=(lineHeight+ep)*scale, $n:=i*(B-A), n:=h*n/abs(n), 
+            FillStyle:=none, LineCap:=butt, 
+            if close then $u:=h*(A-B)/abs(B-A) else $u:=h*(B-A)/abs(B-A) fi,
+            if decal then Inc(B, -u*(1+ep*sqrt(2)/4/h)) fi,
+            Ligne([B+u+n, B-u-n, jump, B+u-n, B-u+n], 0)
+
+    elif type=124 then {Croix Plus}
+            $h:=(lineHeight+ep)*scale, $n:=i*(B-A), n:=h*n/abs(n), 
+            FillStyle:=none, LineCap:=butt, 
+            if close then $u:=h*(A-B)/abs(B-A) else $u:=h*(B-A)/abs(B-A) fi,
+            if decal then Inc(B, -u*(1+ep*sqrt(2)/4/h)) fi,
+            Ligne([B+u, B-u, jump, B+n, B-n], 0)
+
+    elif type=125 then {Pointillés - Droite infinie Dots}
+            FillStyle:=none, $L:=(0.05+ep)*scale, $oldColor:=Color,
+            if close then $u:=(A-B)/abs(B-A) else $u:=(B-A)/abs(B-A) fi,
+            u:=L*u, 
+            FillStyle:=full, FillColor:=Color, LineStyle:=noline,
+            for $k from 1 to 3 do Cercle(B+(k-0.5)*u,ep/2) od,
+            FillColor:=oldFillColor
+
+    elif type=126 Or type=126.5 then {Ciseaux scissors}
+            FillStyle:=full, LineJoin:=miter, $oldEofill:=Eofill, Eofill:=1,    
+            if close then $v:=(A-B)/abs(B-A) else $v:=(B-A)/abs(B-A) fi,
+            $retrait:=ep*v/2/sin(scissorsAngle), Inc(B, retrait), 
+            if decal then Inc(B, -v/2) fi, if type=126.5 then FillColor:=Color fi,
+            for $k from -1 to 1 step 2 do
+                $u:=(0.225+ep)*scale*v*exp(k*i*scissorsAngle), $n:=k*i*u, $w:=-1.75*u+5*n, w:=abs(u/w)*w,
+                Path([B+1.2*u, B-2*u, line, B-0.25*u+5*n, B+1.5*u, abs(1.75*u-5*n), k, arc, 
+                      B+1.5*u+0.325*w, B+1.2*u, abs(0.325*w), k, arc, closepath, B+1.5*u+0.1*w, move, B+1.5*u+0.325*w, circle])
+            od, LineStyle:=noline, FillColor:=Color, Eofill:=oldEofill, Path([ep+B+v/10,B+v/10,circle]), FillColor:=oldFillColor,
+            if type=126.5 then FillColor:=oldFillColor fi,
+
+    elif type=127 Or type=127.5 then {Distance supérieure Udistance}
+            FillStyle:=none, LineCap:=butt,
+            $L:=(lineHeight+ep)*scale, $n:=echange*i*(B-A), n:=L*n/abs(n), Ligne([B-n, B+n*(distanceHeight+ep)*scale/L],0),
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $l:=arrowShift*scale, n:=h*n/abs(n), 
+            if close then $u:=L*(A-B)/abs(B-A),
+                $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x)*u/L, Inc(B,retrait)
+            else $u:=L*(B-A)/abs(B-A) fi,
+            FillStyle:=full, LineJoin:=miter, if type=127.5 then FillColor:=Color fi,
+            if decal then Inc(B,-u*(1-l/L+ep/L/2)) fi,
+            Ligne([B, B+u+n,B+u*(1-l/L),B+u-n],1), if type=127.5 then FillColor:=oldFillColor fi
+
+    elif type=128 Or type=128.5 then {Distance inférieure Ddistance}
+            FillStyle:=none, LineCap:=butt, 
+            $L:=(lineHeight+ep)*scale, $n:=echange*i*(B-A), n:=L*n/abs(n), Ligne([B+n, B-n*(distanceHeight+ep)*scale/L],0),
+            $h:=(arrowHeight+ep)*scale, $L:=(arrowWidth+ep)*scale, $l:=arrowShift*scale, n:=h*n/abs(n), 
+            if close then $u:=L*(A-B)/abs(B-A),
+                $x:=h/L, $retrait:=sqrt(1+x*x)*ep/(2*x)*u/L, Inc(B,retrait)
+            else $u:=L*(B-A)/abs(B-A) fi,
+            FillStyle:=full, LineJoin:=miter, if type=128.5 then FillColor:=Color fi,
+            if decal then Inc(B,-u*(1-l/L+ep/L/2)) fi,
+            Ligne([B, B+u+n,B+u*(1-l/L),B+u-n],1), if type=128.5 then FillColor:=oldFillColor fi
+    fi];

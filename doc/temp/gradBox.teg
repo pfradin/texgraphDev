@@ -1,0 +1,16 @@
+TeXgraph#
+Graph image = [
+view(-5,4,-5,5), size(7.5,0),
+window:=[-pi-4*i,pi+4*i],//boite
+draw("gradBox",[window,pi/2+i],//boite et pas
+ [originnum:=[-2,-4], labeltext:=["\pi",""],labelden:=[2,1],
+  grid:=1, legend:=["Abscisses","Ordonnees"],
+  nbsubdiv:=[1,1], title:="{\large \textbf{Titre boite}}"]),
+SaveWin(), view(window),
+draw("cartesian",sin(3*x)+x, [Width:=12, x:=[-pi,pi],
+ Color:=red, legend:="$C_f$", labelpos:=0.4,
+ labeldir:=South]),
+draw("straightL", y-x=0, [Width:=8, Color:=darkblue,
+ legend:="$D$",labelpos:=0.75]),
+RestoreWin()
+];

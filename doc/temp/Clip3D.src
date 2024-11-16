@@ -1,0 +1,19 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegMacPredef}Clip3D}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Cmd}\ \textbf{\color{TegKeyWord}Fenetre}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol}+}{\color{TegNumeric}5}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegNumeric}5}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegNumeric}0.5}{\color{TegSymbol}+}{\color{TegNumeric}0.5}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\ \ \ \textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\ \ \ \textbf{\color{TegMacPredef}viewDir}{\color{TegSymbol}(}{\color{TegNumeric}1}{\color{TegSymbol},}{\color{TegNumeric}83}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}objet1}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegMacPredef}background}{\color{TegSymbol}(}\textbf{\color{TegConstant}full}{\color{TegSymbol},}\ \textbf{\color{TegConstant}lightgray}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textit{\color{TegIdentifier}C1}{\color{TegSymbol}:=}\textbf{\color{TegMacPredef}Cylindre}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}M}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}{\color{TegNumeric}8}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}vecI}{\color{TegSymbol},}{\color{TegNumeric}2}{\color{TegSymbol},}{\color{TegNumeric}25}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textit{\color{TegIdentifier}C2}{\color{TegSymbol}:=}\ \textbf{\color{TegMacPredef}Cylindre}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}M}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol})}{\color{TegSymbol},}{\color{TegNumeric}8}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}vecK}{\color{TegSymbol},}{\color{TegNumeric}3}{\color{TegSymbol},}{\color{TegNumeric}25}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegVarPredef}stock}{\color{TegSymbol}:=}\ \textbf{\color{TegMacPredef}Clip3D}{\color{TegSymbol}(}\textit{\color{TegIdentifier}C2}{\color{TegSymbol},}\textit{\color{TegIdentifier}C1}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegKeyWord}draw}{\color{TegSymbol}(}"{\color{TegString} SmoothFacet"}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}stock}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \ \ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}darkseagreen}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \ \ \ \textbf{\color{TegVarPredef}contrast}{\color{TegSymbol}:=}{\color{TegNumeric}0.5}{\color{TegSymbol}]}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

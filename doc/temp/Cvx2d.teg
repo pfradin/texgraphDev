@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0),size(7.5),
+P:= for k from 1 to 10 do
+  z:=8*Rand()-4+i*(8*Rand()-4),
+  LabelDot(z, k,"N",1), z
+  od,
+Ligne(Cvx2d(P),1)
+];

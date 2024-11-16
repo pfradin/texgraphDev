@@ -1,0 +1,248 @@
+TeXgraph#
+{version 2.0}
+Cmd
+	Window(-5+5*i, 5-5*i, 1+i); 
+	Margin(1, 0.5, 0.5, 1);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=0.5236, phi:=1.0472, IdMatrix3D(), ModelView(central), DistCam(20)];
+	[GrayScale(0), ComptGraph:=0];
+
+Var
+    contraintes = [1,-1,1,2,jump,1,1,-1,1,jump,0,1,1,3,jump,1,0,1,2.5,jump];
+    fonctionnelle = 1-3*i;
+    voirdroites = 1;
+    nbdroites = 4;
+    win2d = [-5,5,-5,5,1,1];
+    voiraretes = 0;
+    voiraxes = 1;
+    voirminmax = 1;
+    voirlegende = 0;
+    poslegende = 0.93264248704663+2.04663212435233*i;
+    posOrigin = -5-5*i;
+    linecolor = blue;
+    solcolor = 14480885;
+    solopacity = 1;
+    orientedlabel = 1;
+    solfill = 1;
+    posequation = 6/7;
+    pasXY = 1+i;
+
+Mac
+    Init = [$x:=0,
+	Bouton(RefPoint, "Contraintes", "AjoutContrainte()",
+	 "Permet d'ajouter/modifier/supprimer des contraintes du type: a*x+b*y<c ou a*x+b*y>c"), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Fenêtre 2D","DefFen2D()","Modifier la fenêtre graphique"), Inc(x,DeltaB*1.5),
+	
+	Bouton(RefPoint+x,"Voir les droites (o/n)","[voirdroites:=1-voirdroites, ReCalc()]",
+	"Montrer ou cacher les droites de contraintes"), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Voir les arêtes (o/n)","[voiraretes:=1-voiraretes, ReCalc()]",
+	"Montrer ou cacher les aretes
+	 du domaine de contraintes."),
+	Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Voir les axes (o/n)","[voiraxes:=1-voiraxes, ReCalc()]",
+	"Montrer ou cacher les axes"), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Voir la légende (o/n)","[voirlegende:=1-voirlegende, ReCalc()]",
+	"Montrer ou cacher la légende
+	 Un clic gauche sur le graphe déplace la légende."), Inc(x,DeltaB*1.5),
+	
+	Bouton(RefPoint+x,"Fonctionnelle","DefOptimiser()",
+	"Expression du type ax+by,
+	 à optimiser sur le polyèdre de contraintes."), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Optimisation","[voirminmax:=1-voirminmax, ReCalc()]",
+	"Montrer ou cacher l'optimisation."), Inc(x,DeltaB),
+	
+	Xinf:=win2d[1], Xsup:=win2d[2], Yinf:=win2d[3], Ysup:=win2d[4],
+	ReCalc()
+	];
+
+    ClicG = if voirlegende then
+	   poslegende:=%1,
+	   ReCalc()
+	fi;
+
+    DefFen2D = if Input("
+	Entrez Xinf, Xsup, Yinf, Ysup, le pas sur Ox, le pas sur Oy", "Fenêtre graphique",
+	[Xinf, ", ", Xsup, ", ", Yinf, ", ", Ysup, ", ", Re(pasXY), ", ",Im(pasXY)]) then
+	
+	 win2d:=Eval(["[",chaine(),"]"]),
+	
+	 Xinf:=win2d[1], Xsup:=win2d[2], Yinf:=win2d[3], Ysup:=win2d[4],
+	 pasXY:=win2d[5]+i*win2d[6],
+	 
+	 if (Xinf>=Xsup) Or (Yinf>=Ysup) then
+	    Message(["La fenêtre ",win2d," est invalide!"])
+	 else
+	     Fenetre(Xinf+i*Ysup,Xsup+i*Yinf,
+	         Xscale*(Xmax-Xmin)/(Xsup-Xinf)+i*Yscale*(Ymax-Ymin)/(Ysup-Yinf)),
+	     posOrigin:=Xinf+i*Yinf,
+	     ReCalc()
+	 fi
+	fi;
+
+    resoudre = if %1<>Nil then
+	 nbdroites:=0,
+	 $zone:=[Xinf+i*Ysup, Xsup+i*Ysup, Xsup+i*Yinf, Xinf+i*Yinf],
+	 for $z in %1 By jump do
+	     $a:=z[1], $b:=z[2], $c:=-z[4], $sig:=z[3],
+	     $u:=b-i*a,
+	     if b<>0 then
+	       $A:=Xmin-(a*Xmin+c)/b*i, $B:=Xmax-(a*Xmax+c)/b*i,
+	     else $A:=-c/a+Ymin*i, $B:=-c/a+Ymax*i
+	     fi,
+	     if sig=1 then  u:=-u fi,
+	     zone:=Clip2D(zone, [A,A+u],1),
+	     Inc(nbdroites,1)
+	 od,
+	 zone
+	fi;
+
+    drawdroite = [$a:=%1, $b:=%2, $c:=-%3, $sig:=%4,
+	 $coinS:=Xmin+i*Ymax, $coinI:=Xmax+i*Ymin,
+	 if a=0 then $A:=-i*c/b else A:=-c/a fi,
+	 $U:=-b+i*a,
+	 $N:=ScrCoordV(i*RealCoordV(U)),
+	 $C:=A+N, if sig*(Re(bar(C)*(a+i*b))+c)<0 then N:=-N fi,
+	 Droite(a,b,-c),compt:=0,
+	 Fenetre(Xinf+i*Ysup,Xsup+i*Yinf),
+	 $L:=Get(Droite(a,b,-c)), Sort(L),
+	 Fenetre(coinS,coinI),
+	 $B:=(posequation*L[1]+(1-posequation)*L[2]),
+	 $alpha:=mod(RealArg(U),pi)*rad,
+	 if orientedlabel then
+	    LabelAngle:=if alpha>90 then 180+alpha else alpha fi
+	 fi,
+	 Label(B+0.25*N/Abs(N),
+	                      ["$",$vide:=1,
+	                      if a=1 then "x",vide:=0
+	                      elif a=-1 then "-x",vide:=0
+	                      elif a<>0 then a,"x",vide:=0 fi,
+	                      if b=1 then if not(vide) then "+" fi,
+	                                        "y",vide:=0
+	                      elif b=-1 then "-y",vide:=0
+	                           elif b>0 then if not(vide) then "+" fi
+	                                          ,b,"y",vide:=0
+	                      elif b<0 then b,"y" fi,
+	                      "=",-c,"$"]),
+	 LabelAngle:=0
+	];
+
+    DefOptimiser = if Input("Entrer une fonction de (x,y) de la forme: a*x+b*y",
+	"Optimiser ax+by",@StrFonctionnelle) then
+	 NewMac("f",chaine(),x,y),
+	 $x:=[f(1,0)+i*f(0,1)],
+	 if x=Nil then Message(["Expression ", chaine()," incorrecte."])
+	    else fonctionnelle:=x, SetStr(StrFonctionnelle,chaine()),
+	         if voirminmax then ReCalc(Contraintes) fi
+	 fi,
+	 DelMac("f")
+	fi;
+
+    DefContraintes = [
+	contraintes:=Nil,
+	for $k from 1 to Nargs() do
+		$sg:=StrArgs(k),
+	        $p:=StrPos("<", sg), if p=0 then $sig:=-1, p:=StrPos(">",sg) else $sig:=1 fi,
+		$aux:=NewMac("f",StrCopy(sg,1,p-1),x,y),
+		sg:=StrCopy(sg,p+1,StrLength(sg)-p),
+		$x:=[f(1,0),f(0,1)], $c:=Eval(sg),
+		if x<>Nil And c<>Nil then Insert(contraintes,[x,sig,c,jump]),
+	          else Message(["Expression ",StrArgs(k)," incorrecte.",LF,"On attend: a*x+b*y<c ou ax+b*y>c."])
+		fi
+	od,
+	DelMac("f"),
+	ReCalc()
+	];
+
+    DelContraintes = if Input("Voulez-vous vraiment effacer toutes les contraintes?",
+	"Effacerles contraintes.","Yes")
+	 then contraintes:=Nil, SetStr(StrContranites,""), ReCalc()
+	fi;
+
+    StrContraintes = "x-y<2, x+y>1, y<3, x<2.5";
+
+    AjoutContrainte = if Input(["Entrez une suite de contraintes: a*x+b*y<c ou bien a*x+b*y>c",LF,
+	        "Par exemple: x-y<2, x+y>1"],
+	"Ajouter une contrainte", @StrContraintes)
+		then
+	  if StrComp(chaine(),"") then DelContraintes()
+	  else SetStr(StrContraintes, chaine()), Eval(["DefContraintes(",chaine(),")"])
+	  fi
+	fi;
+
+    StrFonctionnelle = "x-3*y";
+
+Cmd	[Width:=8,MouseCode:=0,FillStyle:=2,FillColor:=255,tMin:=-3.1129,tMax:=3.7125,DotStyle:=2,DotScale:=1+i];
+Graph Contraintes = [$S:=resoudre(contraintes), LabelSize:=footnotesize,
+	 SaveAttr(),
+	 {contour ou non}
+	 if voiraretes then
+	    Width:=8, Color:=linecolor,
+	 else LineStyle:=noline fi,
+	 {domaine de contraintes}
+	 FillStyle:=solfill, FillColor:=solcolor, FillOpacity:=solopacity,
+	 Ligne(S,0), FillStyle:=none,
+	 {droites de contraintes}
+	 if voirdroites then
+	    LineStyle:=solid, Color:=linecolor, Width:=8,
+	    for $z in contraintes By jump do
+	     drawdroite(z[1],z[2],z[4],z[3])
+	    od
+	 fi,
+	 RestoreAttr(),
+	 {axes}
+	 if voiraxes then
+	    Color:=black, Width:=8, Arrows:=1,
+	    Axes(posOrigin, pasXY, 1+i),
+	 fi,
+	         {optimisation}
+	 if voirminmax then
+	   $dotMin:=S[1], $dotMax:=dotMin,
+	   $Min:=Re(fonctionnelle*bar(dotMin)), $Max:=Min,
+	   for $Z in S do
+	          $m:=Re(bar(Z)*fonctionnelle),
+	          if m<Min then Min:=m,dotMin:=Z
+	          elif m>Max then Max:=m,dotMax:=Z
+	          fi
+	   od,
+	   {Maximum}
+	   Color:=brown, DotStyle:=bigdot,FillStyle:=none,Arrows:=0,
+	   drawdroite(Re(fonctionnelle),Im(fonctionnelle),Max,1),
+	   LabelDot(dotMax,"Max","NE",1),
+	   Width:=2,
+	   Ligne([Re(posOrigin)+i*Im(dotMax),dotMax,Re(dotMax)+i*Im(posOrigin)],0),
+	   {Minimum}
+	   Color:=darkolivegreen,
+	   drawdroite(Re(fonctionnelle),Im(fonctionnelle),Min,-1),
+	   Ligne([Re(posOrigin)+i*Im(dotMin),dotMin,Re(dotMin)+i*Im(posOrigin)],0),
+	   LabelDot(dotMin,"Min","NE",1),
+	 fi,
+	 {légende}
+	 if voirlegende And (nbdroites>0) then
+	 LabelStyle:=0, LabelSize:=footnotesize, Color:=black,
+	 Label(poslegende,
+	  ["$",if nbdroites>1 then "\left\{\begin{array}{l} ",LF fi,
+	   for $z in contraintes By jump do
+	        $a:=z[1], $b:=z[2], $c:=z[3], $sig:=z[4],
+	        $vide:=1,
+	        if a=1 then "x",vide:=0
+	        elif a=-1 then "-x",vide:=0
+	        elif a<>0 then a,"x",vide:=0 fi,
+	        if b=1 then if not(vide) then "+" fi,
+	                    "y",vide:=0
+	        elif b=-1 then "-y",vide:=0
+	        elif b>0 then if not(vide) then "+" fi
+	                      ,b,"y",vide:=0
+	        elif b<0 then b,"y" fi,
+	        if sig=1 then " \leqslant "
+	                       else " \geqslant" fi,c,
+	        if nbdroites>1 then "\\ ",LF, fi
+	   od,
+	   if nbdroites>1 then " \end{array}\right." fi, "$"])
+	fi
+	];

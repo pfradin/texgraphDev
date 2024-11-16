@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), size(7.5),
+theta:=75*deg, phi:=60*deg,
+S:=Cylindre(M(0,0,-4), 8*vecK, 2, 25, 0),
+C:= curveTube([3*exp(i*t),t/3],
+    0.5, -2*pi, 2*pi, 75, 12,0),
+DrawFlatFacet(S,[color:=steelblue,
+         backculling:=1],
+       C, [color:=crimson])
+];

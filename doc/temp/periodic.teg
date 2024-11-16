@@ -1,0 +1,10 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5), size(7.5),
+Axes(0,1+i), Width:=8,
+draw("periodic",if x>0 then 4 else 2 fi,[period:=[-1,1],
+ discont:=1, Color:=red]),
+draw("periodic",2*abs(x)-1,[period:=[-1,1], Color:=blue]),
+draw("periodic", sin(x)-3, [period:=[-pi/2,pi/2],
+ Color:=magenta])
+];

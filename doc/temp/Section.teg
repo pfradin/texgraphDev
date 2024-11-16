@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+view(-2,3,-2.5,3), Marges(0,0,0,0), size(7.5),
+cube:=Parallelep(Origin,3*vecI,3*vecJ,3*vecK),
+plan:=[M(3,0,0),-vecI-vecK/2],
+S:=Section(plan, cube), FillStyle:=full,
+FillColor:=firebrick, HideWidth:=8,
+DrawPoly(S,4)
+];

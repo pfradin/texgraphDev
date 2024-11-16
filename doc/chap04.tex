@@ -1,0 +1,615 @@
+\chapter{Le langage de TeXgraph}
+
+\section{Les commandes de TeXgraph}\label{chapCommandes}
+
+Les commandes sont en réalité des fonctions au sens mathématique du terme. Celles-ci renvoient un résultat qui peut être une \Mytextbf{liste de nombres complexes et/ou de chaînes de caractères} ou bien \Nil\index{Nil}.
+
+Certaines commandes permettent un minimum de programmation: affectation d'une valeur à une variable, et structures de contrôles (alternative, boucles).
+
+
+\subsection{Syntaxe générale}
+
+\begin{itemize}
+
+\item La syntaxe générale d'une commande de \TeX{graph} est: \co{[argument1, ..., argumentN]}, lorsqu'il y a un seul argument, les crochets ne sont pas obligatoires (ceux-ci représentent la fonction \Helpref{Liste}{cmdListe}). Chaque argument est une expression mathématique.
+
+\item L'exécution de la commande consiste à \textsl{évaluer chaque argument} et à renvoyer la \textsl{liste des résultats} qui sont différents de \Nil.
+
+\item \exem 
+    \begin{itemize}
+    \item \co{[2,1+i,sqrt(-2),"toto",1/2]} renvoie la liste: \res{[2,1+i,"toto",0.5]}.
+    \item \co{Seq(k\^{}2,k,1,5)} renvoie la liste: \res{[1,4,9,16,25]}.
+    \item \co{Droite(0,1+i)} renvoie la valeur \Nil, mais la fonction  \Helpref{Droite}{cmdDroite} a un effet graphique si on l'utilise dans un élément graphique \textit{Utilisateur}.
+    \item Supposons que l'on ait défini 3 variables globales: $A$, $B$ et $C$, alors la commande: \co{[C, C+i*(B-A)]} renvoie la valeur de $C$ suivie de la valeur $C+i(B-A)$  cette expression peut être la commande pour définir la perpendiculaire à $(AB)$ passant par $C$.
+    \item Supposons que l'on veuille construire un triangle $(ABC)$ avec ses trois médianes comme un seul élément graphique, alors
+        \begin{itemize}
+        \item  on choisit \textit{Eléments Graphiques/Créer/Utilisateur},
+         \item on choisit un nom pour l'objet,
+        \item on saisit la commande:
+
+ \centerline{\co{[Ligne([A,B,C],1), Droite(A,(B+C)/2), Droite(B,(A+C)/2), Droite(C,(A+B)/2)]}} 
+
+Les fonctions \Helpref{Ligne}{cmdLigne} et \Helpref{Droite}{cmdDroite} renvoient la valeur \Nil mais elles ont un effet graphique dans le contexte \textit{Utilisateur},
+         \item il ne reste plus qu'à créer les trois variables $A$, $B$, $C$ (si ce n'est déjà fait). Bien sûr on peut aussi créer séparément la ligne polygonale et les trois droites. 
+        \end{itemize}
+    \end{itemize}
+
+
+\item Les calculs sur les réels strictement positifs se font en principe dans l'intervalle $[10^{-324},10^{308}]$.
+
+\item TeXgraph est sensible à la casse, c'est à dire qu'il fait la distinction entre majuscules et minuscules.
+
+\item Chaque objet de TeXgraph est identifié à l'aide d'un \textit{identificateur} (ou nom), celui-ci doit respecter les règles suivantes:
+    \begin{itemize}
+    \item Commencer par une lettre.
+    \item Contenir au plus $35$ caractères.
+    \item Chaque caractère doit être: une lettre, ou un chiffre, une quote (apostrophe) ou un soulignet.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Structures de contrôles}
+
+Afin de simplifier la saisie, les structures suivantes ont été introduites:
+
+\begin{itemize}
+\item l'alternative: \textsl{if then else fi},\label{cmdif}
+\item la boucle conditionnelle: \textsl{while do od},
+\item la boucle répétitive: \textsl{repeat until od},\label{cmdrepeat}
+\item et la boucle itérative: \textsl{for do od}.\label{cmdfor}
+\end{itemize}
+ 
+
+Signalons aussi que:
+
+\begin{itemize}
+\item la commande \Helpref{Set}{cmdSet} (affectation) peut être remplacée par \verb|:=|, par exemple, on peut écrire \co{x:=2} à la place de \co{Set(x,2)}. La commande \Helpref{Set}{cmdSet} fait une évaluation alphanumérique de son premier argument, ce qui signifie par exemple que si $k$ est une variable contenant la valeur $2$, alors la commande \co{Set( ["x",k], 5)} sera comprise comme: \co{Set(x2,5)}. Ceci est valable avec le symbole de l'affection: \co{["x",k] := 5}.
+
+\item si $x$ est une variable contenant une liste, la commande \co{Copy(x, n, 1)} qui renvoie la valeur du n-ième élément de la liste $x$, peut être remplacée par: \co{x[n]}, plus généralement la syntaxe est: x[départ, nombre] avec la convention que si nombre=$0$ alors on va jusqu'à la fin de la liste, et si départ=$-1$ alors on part de la fin de liste et on remonte.
+
+\textsl{NB}: l'instruction \co{x[n]:=1} ne changera pas le n-ième élément de la liste $x$, car x[n] est une valeur !  C'est la macro \textsl{replace} qui permet de modifier les éléments d'une liste: \co{replace(x, n, 12)} remplacera le n-ième élément de la liste $x$ (qui doit être une variable) par la valeur $12$, la valeur de remplacement peut être également une liste.
+\end{itemize}
+
+
+\subsubsection{L'alternative}
+
+C'est l'équivalent de la commande \Helpref{Si}{cmdSi}. C'est une fonction qui renvoie la valeur \Nil.
+
+\begin{itemize}
+\item \util \textbf[if then else fi]{if <condition1> then <instructions> elif <condition2> then ... else <instructions> fi}
+\item \desc <condition> est une expression booléenne, c'est à dire qui vaut 0 (pour false) ou 1 (pour true),  elif est la contraction de else if, ce qui permet une cascade de tests. Les instructions sont séparées par une virgule. 
+\item \exem définition d'une fonction de t, par morceaux:
+
+\centerline{\co{if t<=0 then 1-t elif t<pi/2 then cos(t) else t\^{}2 fi}}
+
+pour tracer une telle fonction il est préférable de créer une macro qui représente la fonction, on peut par exemple créer une macro appelée \textsl{f} et définie par la commande \co{if \%1<=0 then 1-\%1 elif \%1<pi/2 then cos(\%1) else \%1\^{}2 fi}, le caractère \%1 représente le premier paramètre de la macro. On peut ensuite créer un élément graphique Courbe en lui donnant un nom et le paramétrage suivant: \co{t+i*f(t)} ou \co{t+i*$\backslash$f(t)}, dans cette deuxième version, $f(t)$ est directement remplacée par son expression.
+\end{itemize}
+
+\subsubsection{La boucle conditionnelle}
+
+C'est une version de la commande \Helpref{Loop}{cmdLoop}.
+
+\begin{itemize}
+\item \util \textbf[while do od]{while <condition> do <instructions> od}
+\item \desc <condition> est une expression booléenne, c'est à dire qui vaut 0 (pour false) ou 1 (pour true). Les instructions sont séparées par une virgule.
+\item \exem Liste des cubes inférieurs à 1000:
+
+\centerline{\co{[x:=0, k:=0, while x<=1000 do x, Inc(k,1), x:=k\^{}3 od]}}
+
+l'exécution de cette commande (dans la ligne de commande en bas de la fenêtre) donne:  \res{[0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]}. La première instruction de la boucle (\textsl{x}) renvoie la valeur de $x$, la deuxième (\Helpref{Inc}{cmdInc}) ajoute 1 à la variable $k$ et renvoie \Nil, la troisième (\textsl{:=}) affecte le cube de $k$ à la variable $x$ et renvoie la valeur \Nil.
+\end{itemize}
+
+\subsubsection{La boucle itérative}
+
+C'est une version des commandes \Helpref{Seq}{cmdSeq} et \Helpref{Map}{cmdMap}. Il y a deux syntaxes:
+
+\begin{itemize}
+\item \textbf[for in do od]{for <variable> in <liste valeurs> [step <pas> ou by/By <paquets de>] do <instructions> od} \item \desc Pour chaque valeur de la variable prise dans la liste, les instructions sont exécutées. Le \textit{pas} est de 1 par défaut ce qui signifie que les valeurs de la liste sont parcourues en 1 en 1. L'option \textbf{by} (ou \textbf{By}) permet de lire les valeurs par paquets en traitant le cas de la constante \jump: avec l'option \textit{by} la structure renvoie un \jump lorsqu'il est rencontré dans la liste, avec l'option \Mytextbf{By} le \jump n'est pas renvoyé. Lorsque le dernier paquet n'est pas complet, il n'est pas traité.
+
+Pour parcourir une liste par composante (deux composantes sont séparées par un \jump), on utilise \textsl{by jump} ou \textsl{By jump}. Par exemple: \co{for z in [1,2,jump,3,4,5] by jump do sum(z) od} renvoie \res{[3,jump,12]}, alors que \co{for z in [1,2,jump,3,4,5] By jump do sum(z) od} renvoie \res{[3,12]}.
+
+\item \textbf[for from to do od]{for <variable> from <valeur initiale> to <valeur finale> [step <pas> ou by/By <paquets de>] do <instructions> od}
+\item \desc Pour chaque valeur de la variable allant de la valeur initiale à la valeur finale, les instructions sont exécutées. La valeur est incrémentée du pas (1 par défaut), celui-ci peut-être négatif et réel non entier. L'option \Mytextbf{by/By} est identique à ci-dessus.
+
+\Mytextbf{NB}: on ne peut pas utiliser by et step en même temps.
+
+\Mytextbf{NB}: lors du parcours d'une liste par composante (\textsl{by/By jump}), la constante \Mytextbf{sep} contient la valeur du \jump qui termine la composante en cours. Cette valeur est en fait un complexe particulier, c'est uniquement la partie réelle qui lui donne le statut de \jump (1E308), la partie imaginaire quant à elle, peut être utilisée pour stocker une information numérique.
+
+\item \exem
+    \begin{itemize}
+    \item La commande \co{for m in [-1,-0.25,0.5,2] do Color:=4*m, Courbe(t+i*t\^{}m) od} utilisée dans un élément graphique Utilisateur permet de  tracer la famille de courbes cartésiennes: $t \mapsto t^m$ pour m variant dans la liste $[-1,-0.25,0.5,2]$, pour chaque valeur de $m$ on change également la couleur du tracé.
+
+    \item La commande \co{for k from -2*pi to 2*pi step pi/2 do Droite(1,0,k) od} utilisée dans un élément graphique Utilisateur va permettre de tracer les droites d'équations $x=-2\pi$, $x=-2\pi+\pi/2$, ..., $x=2\pi$.
+
+     \item Parcourt par paquet avec l'option \Mytextbf{by} ou \Mytextbf{By}: la commande \co{for z from 1 to 7 by 2 do z, jump od} renvoie: \res{[1, 2, jump, 3,4, jump, 5, 6, jump]}. Dans cet exemple, la variable z prend successivement les valeurs [1, 2], [3, 4], et [5, 6], le dernier paquet n'étant pas complet, il n'est pas traité.
+
+    \item Parcourt avec condition: la commande \co{for k in [1, 8, 4, 3, 2, 6, 5, 7] by 3 andif min(k)<=4 do k[1]+k[3] odfi} renvoie \res{[5,9]}.
+    \end{itemize}
+\end{itemize}
+
+
+\section{Chaînes de caractères}\label{chaine}
+
+\subsection{Écriture d'une chaîne}
+
+Une chaîne doit être délimitée par les caractères " et ", si la chaîne doit contenir le caractère ", alors celui-ci doit être doublé: "". Depuis la version 1.97, les variables de TeXgraph peuvent stocker des chaînes de caractères.
+
+Il y a une macro prédéfinie dans \textit{interface.mac} qui s'appelle \textbf[chaine()]{chaine()}. Cette macro sert à mémoriser les chaînes lors des saisies par la commande \Helpref{Input}{cmdInput}. Après une saisie validée, TeXgraph place la chaîne saisie dans la macro \textsl{chaine()}.
+
+ 
+\subsection{Mémoriser une chaîne de caractères}\label{memochaine}
+
+\Mytextbf{Cette partie est laissée pour compatibilité ascendante.}
+
+Avant la version 1.97, il fallait utiliser une macro pour mémoriser une chaîne de caractères. Pour créer une macro-chaîne :
+
+\begin{itemize}
+ \item \textbf[SetStr()]{SetStr( <nom>, <expression> [, évaluer] )} 
+
+\item \desc crée la macro appelée \argu{nom} et dont la commande est définie par l'\argu{expression}, si \argu{évaluer} vaut $1$ (valeur par défaut) alors l'expression est évaluée sous forme de chaîne, sinon l'\argu{expression} est copiée tel quel dans le corps de la macro. L'argument \argu{nom} est évalué alphanumériquement.
+\item \exem 
+  \begin{itemize}
+    \item la commande \co{SetStr( test, sqrt(4))} va créer une macro du nom de \textit{test} et dont le contenu est la chaîne: \res{"2"},
+    \item la commande \co{SetStr( test, sqrt(4), 0)} va créer une macro du nom de \textit{test} et dont le contenu est la chaîne: \res{sqrt(4)} (sans guillemets).
+    \item la commande \co{SetStr( name, ["Mon nom est ", \%1], 0)} va créer une macro du nom de \textit{name} et dont le contenu est la chaîne: ["Mon nom est ", \%1], lors de l'exécution de \co{Message( @name("toto") )} on verra s'afficher \res{Mon nom est toto}. Ainsi une macro peut faire office de fonction à un ou plusieurs paramètres et renvoyant une chaîne.
+    \end{itemize}
+\end{itemize}
+
+Pour accéder au contenu d'une macro-chaîne :
+
+\begin{itemize}
+\item \textbf[GetStr()]{GetStr( <nom> )} ou \textbf[GetStr()]{GetStr( <nom(arguments)> )}
+
+\item \desc évalue alphanumériquemment la macro appelée \argu{nom} et renvoie la chaîne qui en résulte. Il existe un raccourci à cette commande, en accolant l'opérateur @ devant le \argu{nom}.
+\item \exem \co{Message( @nom )} aura le même effet que \co{Message( GetStr( nom ) )}.
+\end{itemize}
+
+
+\subsection{Commandes liées aux chaînes de caractères}
+
+\begin{itemize}
+
+\item La commande \textbf[Concat()]{Concat( <argument 1>, <argument 2>, ..., <argument n> )}:  chaque argument est interprété sous forme de chaîne, les différents résultats sont concaténés, et la commande renvoie la chaîne qui en résulte (voir la commande \Helpref{Concat}{cmdConcat}). 
+
+Depuis la version 2.0 :
+\begin{itemize}
+    \item l'opérateur + peut s'appliquer entre des chaînes de caractères pour concaténer celles-ci. Si l'un des arguments n'est pas une chaîne alors le résultat est \Nil,
+    \item l'opérateur * peut s'appliquer entre une chaîne et un entier positif (répétition) par exemple, \co{"ab"*3} renvoie la chaîne \res{"ababab"}.
+\end{itemize}
+
+\item La commande \textbf[Insert()]{Insert( <chaine1>, <chaine2>, < position> )}: cette fonction insère la \argu{chaine2} dans la \argu{chaine1} à la position numéro \argu{position}. Lorsque la position vaut 0 [valeur par défaut], la \argu{chaine2} est ajoutée à la fin. La \argu{chaine1} doit être une variable, celle-ci est modifiée et la fonction \textsl{Insert} renvoie la valeur \Nil. La position peut être un entier négatif (voir la commande \Helpref{Insert}{cmdInsert}). 
+
+\item La commande \textbf[IsString()]{IsString( <arg> )}: renvoie $1$ si \argu{arg} est une une chaîne de caractères, $0$ sinon.  Lorsque \argu{arg} est une liste, seul le premier argument est testé.
+
+\item \textbf[UpperCase()]{UpperCase( <expression> )} et \textbf[LowerCase()]{LowerCase( <expression> )}: renvoient  \argu{expression} respectivement en majuscules et minuscules.
+
+\item La commande \textbf[ScientificF()]{ScientificF( <réel> [, <nb décimales>] )}: transforme le \argu{nombre} au format scientifique et renvoie le résultat sous forme d'une chaîne de caractères.
+
+\item La commande \textbf[Str()]{Str( <arg1>, <arg2>,... )}: évalue chaque argument, transforme chaque résultat en chaîne de caractères (un résultat égal à \Nil donne une chaîne vide), et renvoie la liste des chaînes obtenues (voir la commande \Helpref{Str}{cmdStr}).
+
+\item La commande \textbf[Str2List()]{Str2List(<chaîne>)} : renvoie la chaîne de caractères sous la forme d'une liste de caractères. Cela peut permettre par exemple de parcourir une chaîne par caractère.
+
+\item La commande \textbf[String()]{String( <expression> )}: renvoie l'expression sous forme de chaîne de caractères.
+
+\item La commande \textbf[String2Teg()]{String2Teg( <expression> )}: cette fonction fait une évaluation alphanumérique de l'\argu{expression} et renvoie le résultat sous forme de chaîne de caractères en doublant tous les caractères " rencontrés. La chaîne résultante est ainsi lisible par TeXgraph.
+
+\item La commande \textbf[StrComp()]{StrComp( <chaîne1>, <chaîne2> )}: renvoie 1 si les deux chaînes sont identiques, 0 sinon. Depuis la version 1.97, on peut plus simplement utiliser la comparaison avec le signe =.
+
+\item La commande \textbf[StrCopy()]{StrCopy( <chaîne>, <indice départ>, <quantité> )}: renvoie la chaîne résultant de l'extraction (fonctionne comme la commande \Helpref{Copy}{cmdCopy}).
+
+\item La commande \textbf[StrDel()]{StrDel( <variable>, <indice départ>, <quantité> )}: modifie la \argu{variable} en supprimant \argu{quantité} caractères à partir de \argu{indice départ} (fonctionne comme la commande \Helpref{Del}{cmdDel}). Si la \argu{variable} contient une liste de chaînes, seule la première est modifiée. Si la \argu{variable} ne contient pas de chaîne, la commande est sans effet.
+
+\item La commande \textbf[StrEval()]{StrEval( <expression> )}: cette commande évalue l'\argu{expression} et renvoie le résultat sous forme d'une chaîne de caractères.
+
+\item La commande \textbf[StrInsert()]{StrInsert( <variable chaîne 1>, <chaîne 2>, <position> )}: insère la \argu{chaîne 2} dans la \argu{chaîne 1} à la position numéro \argu{position}. La \argu{chaîne 1} doit être une variable et celle-ci est modifiée (voir la commande \Helpref{StrInsert}{cmdStrInsert}).
+
+\item La commande \textbf[StrLen()]{StrLen( <chaîne> )}: renvoie le nombre de caractères de la chaîne (l'ancien nom \Mytextbf{StrLength()} a été conservé).
+
+\item La commande \textbf[StrPos()]{StrPos( <motif>, <chaîne> )}: renvoie la position (entier) du premier motif dans la chaîne.
+
+\item La commande \textbf[StrReplace()]{StrReplace( <chaîne>, <motif à remplacer>, <motif de remplacement> )}: renvoie la chaîne résultant du remplacement.
+
+\item La commande \textbf[Subs()]{Subs( <variable>, <indice départ>, <nombre>, <remplacement> )}: remplace dans \argu{variable} \argu{nombre} éléments à partir de la position \argu{indice départ} par \argu{remplacement}, la \argu{variable} peut être une liste ou une chaîne de caractères, celle-ci est modifiée et la fonction renvoie \Nil. L'argument \argu{nombre} est facultatif et vaut 1 par défaut (voir la commande \Helpref{Subs}{cmdSubs}).
+
+\item La commande \textbf[Args()]{Args( <k> )}: s'utilise à l'intérieur d'une macro, elle évalue alphanumériquement l'argument numéro $k$, et renvoie la chaîne résultante. S'il n'y a pas d'argument, alors c'est la liste de tous les arguments qui est traitée.
+
+\item La commande \textbf[StrArgs()]{StrArgs( <k> )}: s'utilise à l'intérieur d'une macro, elle renvoie l'argument numéro k sous forme d'une chaîne. S'il n'y a pas l'argument <k>, alors c'est la liste de tous les arguments de la macro qui est traitée.
+
+\end{itemize}
+
+
+\subsection{Macros renvoyant une chaîne}
+
+Les macros suivantes sont définies dans le fichier \textit{TeXgraph.mac}.
+
+\begin{itemize}
+\item \textbf[coord()]{coord( <z> [, décimales] )}: renvoie les coordonnées du point d'affixe \argu{z} sous forme d'un couple $(x,y)$ avec le nombre maximal \argu{décimales} demandé (4 par défaut). Cette macro est destinée à être utilisée comme une chaîne dans des fonctions ou macros ayant comme argument une chaîne de caractères. Exemple:
+\co{Label(z, coord(z))}.
+
+\item \textbf[engineerF()]{engineerF( <x> )}: renvoie le réel \argu{x} sous forme de chaîne au format ingénieur, c'est à dire au format $\pm m\times 10^n$ où $m$ est dans l'intervalle $[1;1000[$ et $n$ un entier multiple de $3$. Cette macro est destinée à être utilisée comme une chaîne dans des fonctions ou macros ayant comme argument une chaîne de caractères.
+
+\item \textbf[epsCoord]{epsCoord( <z> [, décimales] )}: renvoie les coordonnées du point d'affixe \argu{z} sous forme $x\ y$ (coordonnées pour le format eps) avec le nombre maximal \argu{décimales} demandé (4 par défaut). Cette macro est destinée à être utilisée comme une chaîne dans des fonctions ou macros ayant comme argument une chaîne de caractères.
+
+\item \textbf[label]{label( <expression> )}: l'expression est évaluée, transformée en chaîne, et délimitée avec le symbole \$ si la variable \var{dollar} a la valeur $1$, la macro renvoie la chaîne qui en résulte. Par exemple: \co{ [dollar:=1, label(2+2)]} renvoie \res{"$4$"}.
+
+Cette macro est utilisée par l'instruction \Helpref{draw("gradline",...)}{typegradLine}. 
+
+\item \textbf[svgCoord]{svgCoord( <z> [, décimales] )}: renvoie les coordonnées du point d'affixe \argu{z} sous forme $x\ y$ (coordonnées pour le format svg) avec le nombre maximal \argu{décimales} demandé (4 par défaut). Cette macro est destinée à être utilisée comme une chaîne dans des fonctions ou macros ayant comme argument une chaîne de caractères. Cette macro tient compte de la matrice de transformation courante.
+
+\item \textbf[texCoord]{texCoord( <z> [, décimales] )}: renvoie les coordonnées du point d'affixe \argu{z} sous forme $(x,y)$ (coordonnées pour le format tex) avec le nombre maximal \argu{décimales} demandé (4 par défaut). Cette macro est destinée à être utilisée comme une chaîne dans des fonctions ou macros ayant comme argument une chaîne de caractères. Cette macro tient compte de la matrice de transformation courante.
+
+\item \textbf[ScriptExt()]{ScriptExt()}: renvoie la chaîne \verb|".bat"| sous windows et \verb|".sh"| sinon (extension des fichiers scripts).
+
+\item \textbf[StrNum()]{StrNum( <valeur numérique> )}:\label{macStrNum} remplace le point décimal par une virgule si la variable prédéfinie \var{usecomma} vaut $1$ et renvoie la chaîne résultante. Le nombre de décimales est déterminé par la variable \var{nbdeci}, et le format d'affichage est défini par la variable \var{numericFormat} (0: format par défaut, 1: format scientifique, 2: format ingénieur). Exemple: \co{[usecomma:=1, nbdeci:=10, Message(@StrNum(10000*sqrt(2)) )]} affiche: \res{14142,135623731}.
+
+Exemple: \co{[usecomma:=1, nbdeci:=10, numericFormat:=1, Message(StrNum(10000*sqrt(2)))]} affiche: \res{1,4142135624E4}.
+
+Exemple: \co{[usecomma:=1, nbdeci:=10, numericFormat:=2, Message(StrNum(10000*sqrt(2)))]} affiche: \res{14,1421356237E3}.\par
+ 
+Cette macro est utilisée par l'instruction \Helpref{draw("gradline",...)}{typegradLine}.
+
+\end{itemize}
+
+
+\section{Variables et constantes}
+
+\subsection{Les constantes prédéfinies}
+
+\begin{itemize}
+\item Les constantes mathématiques: $i$, $\pi$, $e$.
+
+\item Le numéro de version de TeXgraph est contenu dans la constante appelée \textbf{version}.
+
+\item La constante \textbf{Windows} contient la valeur 0 ou 1 suivant votre système d'exploitation.
+
+\item La constante \textbf{GUI} contient la valeur 0 ou 1 indiquant si on est dans l'interface graphique de TeXgraph ou non.
+
+\item La constante de saut: \jump\index{jump}. Cette constante est utilisée pour séparer les différentes composantes connexes d'une ligne polygonale. Signalons au passage que les lignes polygonales sont automatiquement "clippées" par TeXgraph avec le rectangle correspondant à la fenêtre courante.
+\item \exem la courbe d'équation $y=1/x$ peut être construite à partir de la ligne polygonale définie par la commande: \co{[Seq(t+i/t,t,-5,0,0.1), jump, Seq(t+i/t,t,0,5,0.1)]}.
+
+\item La constante \Nil. C'est une constante sans valeur, elle peut être utilisée pour des comparaisons, par exemple pour savoir si une variable $x$ contient une valeur: \co{if x<>Nil then ...}. 
+
+\item Des constantes qui sont des chaînes de caractères:
+        \begin{itemize}
+    \item \textbf[InitialPath]{InitialPath}: chemin d'accès au répertoire de TeXgraph (celui-ci contient les exécutables et les scripts).
+
+    \item \textbf[DocPath]{DocPath}: chemin d'accès au répertoire doc de TeXgraph, ce répertoire contient des docs au format pdf (dont TeXgraph.pdf).
+
+Exemple: la commande \co{Exec("xpdf","TeXgraph.pdf",DocPath)}, ouvrira le fichier TeXgraph.pdf avec le programme xpdf.
+
+    \item \textbf[UserMacPath]{UserMacPath}: chemin d'accès au répertoire contenant les macros utilisateurs. Sous linux c'est le dossier;\par \verb|$HOME/TeXgraphMac| et sous windows il doit être créé par l'utilisateur et le chemin d'accès doit être dans la variable d'environnement \textit{TeXgraphMac}. Lorsque l'utilisateur charge un fichier de macros (*.mac) ou un fichier modèle (*.mod), TeXgraph cherche dans le dossier courant, puis dans le dossier \textit{UserMacPath} et enfin dans le sous-dossier macros du dossier contenu dans la chaine \textit{InitialPath}.
+
+    \item \textbf[TmpPath]{TmpPath}: chemin d'accès à un répertoire temporaire. C'est le dossier \verb|$HOME/.TeXgraph| sous linux, et \verb|c:\tmp| sous windows.
+
+    \item \textbf[JavaviewPath]{JavaviewPath}: chemin d'accès au fichier \textit{javaview.jar} si vous l'avez installé. Sa valeur est à définir dans le fichier de configuration: menu \textit{Paramètres/Fichier de configuration}.
+
+    \item \textbf[LF]{LF}: provoque un passage à la ligne lors de l'affichage de la chaîne.
+
+    \item \textbf[Diese]{Diese}: qui renvoie le caractère du même nom (utilisé comme délimiteur dans les sources TeXgraph). 
+    \item \textbf[DirSep]{DirSep}: qui renvoie le caractère séparateur utilisé par le système dans les chemins d'accès aux fichiers.
+
+    \item \textbf[ND]{ND}: qui signifie \og non défini\fg. Elle contient la chaîne de caractères \verb|"_ND"|. Elle est utilisée lors de la lecture des fichiers \emph{csv} pour désigner les éléments vides.
+    \end{itemize}
+
+\item Les constantes d'exportation: \textbf{tex}, \textbf{teg}, \textbf{pst}, \textbf{pgf}, \textbf{eps}, \textbf{psf}, \textbf{tkz}, \textbf{pdf}, \textbf{epsc}, \textbf{pdfc}, \textbf{svg} et \textbf{bmp}, ce sont les valeurs possibles que peut prendre la constante \textbf{ExportMode} (qui est déterminée par TeXgraph au moment de l'exportation). À celles-ci s'ajoutent pour la 3D, les constantes d'exportation: \textbf{obj}, \textbf{geom}, \textbf{jvx}, \textbf{js}.
+
+\item Les constantes: \textbf{Xmin}, \textbf{Xmax}, \textbf{Ymin}, \textbf{Ymax}: elles déterminent la fenêtre graphique.\textbf{Xscale} et \textbf{Yscale}: représentent (en cm) l'échelle sur l'axe Ox pour la première, et l'échelle sur Oy pour l'autre. Ces constantes sont modifiables uniquement par le menu ou la fonction \Helpref{Fenetre}{cmdFenetre}.
+
+\item Les constantes: \textbf{margeG}, \textbf{margeD}, \textbf{margeH}, \textbf{margeB}: elles déterminent les marges autour du graphique (en cm). Ces constantes sont modifiables uniquement par le menu ou la fonction
+\Helpref{Marges}{cmdMarges}.
+
+\item Les constantes \textbf{line}, \textbf{linearc}, \textbf{bezier}, \textbf{curve}, \textbf{arc}, \textbf{ellipticArc}, \textbf{ellipse}, \textbf{circle}, \textbf{closepath}, \textbf{move}: elles sont utilisées pour construire des chemins dans la commande \Helpref{Path}{cmdPath}.
+
+\item Les constantes graphiques:
+
+    \begin{itemize}
+    \item Les couleurs: les couleurs font l'objet d'un chapitre \Helpref{spécifique}{chapcouleurs}.
+
+    \item Styles de trait:
+        \begin{itemize}
+        \item \textbf{noline} [=-1],
+            \item \textbf{solid} [=0],
+            \item \textbf{dashed} [=1],
+            \item \textbf{dotted} [=2],
+        \item \textbf{userdash} [=3], ce style utilise la variable \textbf{DashPattern} qui définit le motif, celui-ci est une liste de longueurs exprimées en points, de la forme: \textsl{[longueur trait, longueur saut,longueur trait, longueur saut, ...]}. Par exemple \co{DashPattern:=[2,3,0.1,3]} donnera une succession de traits - points.
+        \end{itemize}
+    \item Terminaison des lignes: 
+        \begin{itemize}
+        \item \textbf{butt}: terminaison droite au dernier point (valeur par défaut),
+        \item \textbf{round}: terminaison avec un arrondi après le dernier point,
+        \item \textbf{square}: terminaison avec un carré après le dernier point,
+        \end{itemize}
+
+    \item Jointure des lignes:
+        \begin{itemize}
+        \item \textbf{miter}: jointure en pointe, la variable \var{Miterlimit} (égale à 10) permet de gérer la longueur des pointes.
+        \item \textbf{round}: jointure arrondie (valeur par défaut),
+        \item \textbf{bevel}: jointure en pointe coupée. 
+        \end{itemize}
+
+    \item Épaisseur du trait (en \Mytextbf{nombre entier de dixième de point} de \TeX):
+        \begin{itemize}
+        \item \textbf{thinlines} [=2],
+            \item \textbf{thicklines} [=8],
+            \item \textbf{Thicklines} [=14], la variable \var{Width} permet également de régler l'épaisseur.
+        \end{itemize}
+    \item Styles de point (à la pstricks):
+        \begin{itemize}
+        \item \textbf{dot} [=0],
+            \item \textbf{dotcircle} [=1],
+            \item \textbf{square} [=2],
+            \item \textbf{square'} [=3] (carré plein),
+            \item \textbf{plus} [=4],
+            \item \textbf{times} [=5],
+            \item \textbf{asterisk} [=6],
+            \item \textbf{oplus} [=7],
+            \item \textbf{otimes} [=8],
+            \item \textbf{diamond} [=9],
+            \item \textbf{diamond'} [=10],
+            \item \textbf{triangle} [=11],
+            \item \textbf{triangle'} [=12],
+            \item \textbf{pentagon} [=13],
+            \item \textbf{pentagon'} [=14],
+        \end{itemize}
+     
+    \item Styles de Label (par défaut le texte est centré horizontalement et verticalement):
+        \begin{itemize}
+        \item \textbf{left} : le point de référence est à gauche du texte,
+        \item \textbf{right} : le point de référence est à droite du texte,
+        \item \textbf{top} : le point de référence est en haut du texte,
+        \item \textbf{bottom} : le point de référence est en bas du texte,
+        \item \textbf{baseline} : le point de référence est la ligne de base du texte,
+        \item \textbf{framed}: le texte est encadré,
+        \item \textbf{special}: le texte est écrit tel quel dans le fichier exporté (il n'apparaît pas à l'écran). Cela permet d'écrire directement dans le fichier LaTeX ou pgf ou pstricks (et même eps).
+        \item \textbf{stacked}: le texte peut contenir des sauts de paragraphes.
+        
+Exemple d'utilisation: \co{LabelStyle := top+framed}, le texte est centré horizontalement, le point de référence  est en haut du texte et celui-ci est encadré.
+        \end{itemize}
+
+    \item Styles de remplissage pour les polygones (les hachures sont calculées par TeXgraph pour la sortie LaTeX):
+        \begin{itemize}
+        \item \textbf{none} [=0]: pas de remplissage,
+        \item \textbf{full} [=1]: le polygone est rempli avec la couleur désignée par \var{FillColor}, ceci est sans effet avec l'export \textit{tex}.
+        \item \textbf{bdiag} [=2]: hachures orientés SO -> NE (angle de 45 degrés),
+        \item \textbf{hvcross} [=3]: styles horizontal et vertical combinés,
+        \item \textbf{diagcross} [=4]: styles bdiag et fdiag combinés,
+        \item \textbf{fdiag} [=5]: hachures orientés NO -> SE (angle de 45 degrés),
+        \item \textbf{horizontal} [=6]: hachures horizontales,
+        \item \textbf{vertical} [=7]: hachures verticales.
+        \item \textbf{gradient} [=8]: gradient de deux couleurs.
+        \end{itemize}
+        
+    \item Styles de gradient :
+        \begin{itemize}
+        \item \textbf{linear} [=1]: linéaire,
+        \item \textbf{radial} [=2]: radial,
+        \end{itemize}
+        
+    \item Taille des Labels:
+        \begin{itemize}
+            \item \textbf{tiny},
+        \item \textbf{scriptsize},
+        \item \textbf{footnotesize},
+        \item \textbf{small},
+        \item \textbf{normalsize},
+            \item \textbf{large},
+            \item \textbf{Large},
+            \item \textbf{LARGE},
+            \item \textbf{huge},
+            \item \textbf{Huge}.
+            \end{itemize}
+    \item Relatives à la 3D:
+        \begin{itemize}
+        \item \textbf{ortho}: type de projection,
+        \item \textbf{central}: type de projection,
+        \item \textbf{sep3D}: séparateur pour la commande \Helpref{Build3D}{cmdBuild3D}.
+            \end{itemize}
+
+    \end{itemize}
+\end{itemize}
+
+\subsection{Les variables globales prédéfinies}
+
+Sont considérées comme prédéfinies: les variables ci-dessous, ainsi que toute variable globale contenue dans un fichier de macros chargé au démarrage du programme. Les variables prédéfinies n'apparaissent pas dans la fenêtre de TeXgraph, elles ne seront pas enregistrées avec le graphique.
+
+
+Les variables globales suivantes correspondent aux différents "champs statiques" des éléments graphiques:
+
+\begin{itemize}
+     \item \textbf{Arrows}: nombre de flèches, initialisée à 0,
+     \item \textbf{AutoReCalc}: recalcul automatique des éléments graphiques, initialisée à 1 (pour \textit{True}), elle peut également prendre la valeur 0 (pour \textit{False}). Dans le cas ou sa valeur est nulle pour un élément graphique, seule la fonction \textbf[ReCalc()]{ReCalc()} (bouton \Mytextbf{R}) peut forcer le recalcul de cet élément.
+    \item \textbf{ForMinToMax}: variable contenant la valeur $0$ ou $1$, si sa valeur est $1$ alors la variable $t$ pour les courbes parcourt l'intervalle \verb|[Xmin,Xmax]|, sinon c'est l'intervalle \verb|[tMin,tMax]|.
+     \item Variables relatives aux axes
+        \begin{itemize}
+        \item \textbf{xylabelpos}: position des labels par rapport aux axes, initialisée à \textit{bottom+left}  (à gauche de l'axe Oy et en bas de l'axe Ox).
+        \item \textbf{xylabelsep}: distance (en cm) entre les labels et l'extrémité des graduations, initialisée à \textit{0.1 cm}.
+        \item \textbf{xyticks}: longueur (en cm) des graduations sur les axes, initialisée à \textit{0.2 cm}.
+        \end{itemize}
+     \item \textbf{Color}: couleur, initialisée à \textit{black},
+    \item \textbf{DashPattern}: définit le motif de tracé des lignes dans le style \textbf{userdash}, cette variable est une liste de longueurs exprimées en points, de la forme: \textsl{[longueur trait, longueur saut,longueur trait, longueur saut, ...]}. Par exemple \co{DashPattern:=[2,3,0.1,3]} donnera une succession de traits - points. 
+
+     \item \textbf{DotStyle}: style de point, initialisée à \textit{dot},
+     \item \textbf{DotAngle}: angle de rotation des points (en degrés), initialisée à 0
+     \item \textbf{DotScale}: facteur d'échelle pour les points, initialisée à [1,1] (échelle sur Ox et sur Oy),
+     \item \textbf{DotSize}: taille des points, initialisée à 2+2i, le contenu de cette variable est un complexe $x+iy$ où $x$ est une taille exprimée en points et $y$ un nombre positif, le diamètre des points est calculé avec la formule: x+y*(épaisseur de ligne).
+     \item \textbf{Eofill}: initialisée à 0, cette variable peut prendre les valeurs 0 ou 1, la valeur 1 indique que le mode de remplissage suit la règle pair-impair (ou even-odd), et la valeur 0 indique le cas contraire.
+
+     \item \textbf{FillColor}: couleur du remplissage, initialisée à \textit{white},
+     \item \textbf{FillOpacity}: gestion de l'opacité/transparence lorsque \var{FillStyle}=\textsl{full}, c'est une valeur entre 0 et 1 initialisée à $1$, la valeur 1 signifie pas de transparence.
+     \item \textbf{FillStyle}: style de remplissage, initialisée à \textit{none},      
+     \item \textbf{GradStyle}: style de gradient, vaut \var{linear} (par défaut) ou \var{radial}, cette variable est utilisée lorsque \var{FillStyle} a la valeur \var{gradient},
+     \item \textbf{GradColor}: contient les deux couleurs du gradient au format \var{color1+i*color2}, la valeur par défaut est \var{white+i*red}, cette variable est utilisée lorsque \var{FillStyle} a la valeur \var{gradient},
+    \item \textbf{GradAngle}: angle en degrés de la direction du gradient lorsque celui-ci est linéaire, la valeur par défaut est $0$ (gradient de gauche à droite),
+    \item \textbf{GradCenter}: affixe centre dans $[0;1]\times[0;1]$ pour le gradient lorsque celui-ci est radial, la valeur par défaut est $0.25+i*0.75$.
+        
+    \item \textbf{IsVisible}: valeur booléenne (0 ou 1), permettant de rendre l'élément graphique visible ou invisible (initialisée à 1).
+
+    \item \textbf{LabelAngle}: orientation des labels par rapport à l'horizontale, c'est un angle en degrés initialisé à 0.
+     \item \textbf{LabelSize}: taille des labels, initialisée à \textit{small},
+     \item \textbf{LabelStyle}: style de label, initialisée à 0 (centré horizontalement et verticalement),
+     \item \textbf{LineCap}: définit le type de terminaison des lignes, initialisée à \textit{butt} par défaut.
+     \item \textbf{LineJoin}: définit le type de jointure des lignes, initialisée à \textit{round} par défaut.
+     \item \textbf{LineStyle}: style de lignes, initialisée à \textit{solid},
+     \item \textbf{MiterLimit}: détermine la longueur des pointes lorsque \textit{LineJoin} est égale à \textit{miter} (jointures en pointe), initialisée à 10 par défaut.
+     \item \textbf{NbPoints}: nombre de points (pour les courbes), initialisée à 50,
+     
+    \item \textbf{StrokeOpacity}: gestion de l'opacité/transparence pour les traits lorsque \var{LineStyle} est différent de \textsl{noline}, c'est une valeur entre 0 et 1 initialisée à $1$, la valeur 1 signifie pas de transparence.
+
+     \item \textbf{TeXLabel}: valeur booléenne (0 ou 1) indiquant si les labels doivent être affichés sous forme d'images dans l'interface graphique après compilation par TeX. Cette variable est initialisée à 0.
+
+     \item \textbf{tMax}: valeur maximale du paramètre t, initialisée à 5,
+     \item \textbf{tMin}: valeur minimal du paramètre t, initialisée à -5,
+     \item \textbf{Width}: épaisseur du trait, exprimée en \Mytextbf{nombre entier de dixième de point} de TeX, elle est initialisée à \textit{thinlines}.
+\end{itemize}
+
+La création d'un élément graphique n'entraîne pas la création d'une constante portant le même nom. Il est cependant toujours  possible d'accéder à la liste des points composant un élément graphique avec la fonction  \Helpref{Get}{cmdGet}. Mais cela nécessite que l'élément graphique dont on utilise le nom soit \Mytextbf{déjà créé}, sinon la fonction \textsl{Get} renverra la valeur \Nil.
+
+Variables relatives à la représentation en 3D:
+
+\begin{itemize}
+\item \textbf{theta} et \textbf{phi}: utilisées pour les calculs de projections des surfaces,  elles sont initialisées respectivement à 30 et 60 degrés, la première représente la longitude et la deuxième la colatitude. Elles sont modifiables également par l'intermédiaire d'un bouton dans la barre d'outils.
+
+\item \textbf{AngleStep}: représente le pas angulaire (en radians) lorsque l'on fait tourner un objet 3D à l'aide des boutons représentant les flèches de direction. Celle-ci est initialisée à $\pi$/36 (5 degrés).
+\end{itemize}
+
+\subsection{Déclaration des variables}
+
+Lorsque TeXgraph rencontre un nom dans une expression, il regarde s'il est suivi d'une parenthèse [ex: \textsl{toto(...}]:
+
+\begin{itemize}
+\item si c'est le cas: il teste s'il s'agit d'une fonction prédéfinie, sinon il considère que c'est une macro\footnote{Une macro sans paramètre s'utilise quand même avec deux parenthèses: \textsl{toto()}.} (même si elle n'existe pas encore).
+
+\item si ce n'est pas le cas: alors il teste \Mytextbf{d'abord} s'il existe une variable \Mytextbf{locale} qui porte ce nom, dans la négative, il teste s'il existe une variable \Mytextbf{globale} qui porte ce nom, dans la négative, il \Mytextbf{crée} une variable \Mytextbf{locale}\footnote{Locale à l'expression en cours d'analyse, cette analyse transforme l'expression en arbre, lorsque cet arbre est détruit, les variables locales correspondantes sont également détruites.} portant ce nom [et initialisée à \Nil].
+\end{itemize}
+
+
+Il n'est donc pas nécessaire de déclarer les variables locales, la première occurrence fait office de déclaration. Cependant, il se peut que l'on ait besoin qu'une variable \textsl{x1} [par exemple] soit locale alors qu'il y a déjà une variable globale qui porte le même nom, pour obliger TeXgraph à considérer \textsl{x1} comme une variable locale, il suffit de mettre le caractère \$ devant son nom: \textsl{\$x1} (il suffit en fait de le mettre uniquement devant la première occurrence).
+
+\subsection{Les variables globales}\label{varglob}
+
+\begin{itemize}
+\item Les variables globales se déclarent par l'intermédiaire du Menu ou du bouton \textsl{Nouv.} de la zone des
+variables globales (à droite de la fenêtre), elles portent un nom et sont définies à partir d'une commande. Elles seront
+enregistrées avec le graphique dans le fichier source.
+
+\item Lorsque l'on clique sur un point de la fenêtre avec le bouton droit de la souris, TeXgraph propose d'enregistrer l'affixe de ce point sous forme de variable globale, ce qui peut être utile pour placer des labels, ou pour créer une figure sans se préoccuper des coordonnées...
+
+\item Lorsque l'utilisateur modifie leur contenu (en double-cliquant sur le nom dans la zone variable globale, ou  à partir de la ligne de commande en bas de la fenêtre), les éléments graphiques sont alors remis à jour automatiquement. On peut désactiver le recalcul automatique d'un élément graphique en décochant l'option adéquate dans les attributs.
+
+\end{itemize}
+ 
+ 
+\subsection{Recalcul automatique}
+
+La création/modification d'une variable globale ou d'une macro entraîne automatiquement le recalcul de tout le graphique c'est à dire:
+
+\begin{itemize}
+\item de toutes les variables globales non prédéfinies,
+\item de toutes les macros non prédéfinies,
+\item de tous éléments graphiques qui sont en mode \textsl{Recalcul Automatique}. 
+\end{itemize}
+
+Remarque: La modification de la fenêtre par le menu entraîne aussi le recalcul automatique.
+
+\subsection{Les variables des fichiers TeXgraph.mac et interface.mac}
+
+Ces fichiers sont chargés automatiquement lors du lancement du programme (ainsi que \textit{color.mac} et \textit{scene3d.mac}). Leur contenu est considéré comme prédéfini (c'est le savoir faire de base), il n'apparaît pas à l'écran, il n'est pas enregistré avec les graphiques, et il est présent en mémoire jusqu'à la fermeture du programme. Voici la liste des principales variables (les variables qui servent d'options dans certaines macros ne sont pas citées ici):
+
+
+\begin{itemize}
+\item \textbf{stock}, \textbf{stock1} à \textbf{stock5} (=\Nil): variables de stockage.
+
+\item \textbf{mm} (=Ent(7227/254)): nombre entier de dixième de points (de TeX) correspondant à 1 millimètre. Utile pour l'épaisseur des lignes qui sont en nombre entiers de dixième de points, par exemple \co{Width:=1.5*mm} donnera une épaisseur de 1.5 mm.
+
+\item \textbf{backcolor} (=white): contient la couleur du fond, elle est mise à jour par la macro \Helpref{background}{macbackground}, et elle est utilisée par certains exports.
+
+\item \textbf{deg} (=pi/180): conversion degrés vers radians, par exemple: \co{alpha:=40*deg}.
+
+\item \textbf{rad} (=180/pi): conversion radians vers degrés, par exemple: \co{LabelAngle:=pi/16*rad}.
+
+\item \textbf{Xfact} (=1.1) et \textbf{Yfact} (=1.1):  variables utilisées lors des zooms (boutons + et - de la barre d'outils).
+
+\item \textbf{usecomma} (=0): cette variable est utilisée par l'instruction \Helpref{draw("gradline",...)}{typegradLine}, avec la valeur $1$, le point est remplacé par une virgule dans les affichages numériques associés aux graduations. Le remplacement est fait par la macro \Helpref{StrNum}{macStrNum}.
+
+\item \textbf{numericFormat} (=0): cette variable est utilisée par la macro \Helpref{StrNum}{macStrNum}. Elle indique si l'affichage numérique se fait au format par défaut (valeur $0$), au format scientifique (valeur $1$) ou au format ingénieur (valeur $2$). 
+\item \textbf{nbdeci} (=15): nombre de décimales dans les affichages numériques, cette variable est utilisée par la macro \Helpref{StrNum}{macStrNum}, elle-même utilisée par la macro \Helpref{GradDroite}{macGradDroite}.
+
+\item \textbf{maxGrad} (=100): cette variable est utilisée par la macro \Helpref{GradDroite}{macGradDroite}, elle indique le nombre maximal de graduations.
+\end{itemize}
+
+Variables liées à la 3D:
+
+\begin{itemize}
+ \item  \textbf{Origin} (= [0,0]): l'origine,
+ \item  \textbf{vecI} (= [1,0]): premier vecteur de base,
+ \item  \textbf{vecJ} (= [i,0]): deuxième vecteur de base,
+ \item  \textbf{vecK} (= [0,1]): trosième vecteur de base,
+ \item  \textbf{Xinf} (= -5), \textbf{Xsup} (= 5), \textbf{Yinf} (= -5), \textbf{Ysup} (= 5), \textbf{Zinf} (= -5), \textbf{Zsup} (= 5): fenêtre 3D
+\end{itemize}
+
+
+\section{Les macros}\label{macros}
+
+Une macro est une fonction créée par l'utilisateur et qui renvoie un résultat (liste de complexes ou chaînes, ou bien \Nil). TeXgraph distingue trois sortes de macros: 
+
+\begin{itemize}
+\item celles qui sont chargées au lancement du programme: celles-ci sont considérées comme \Mytextbf{prédéfinies} et n'apparaissent pas dans la liste des macros modifiables, on ne peut pas les supprimer et elles ne sont pas enregistrées non plus dans les fichiers  sources \textit{*.teg}.
+
+\item celles qui sont chargées par le menu avec l'option \textit{Fichier/ Charger des macros}, ou par l'instruction \Helpref{InputMac}{cmdInputMac}: celles-ci sont considérées comme \Mytextbf{prédéfinies} et n'apparaissent pas dans la liste des macros modifiables, elles ne sont pas enregistrées dans les fichiers sources \textit{*.teg}, mais elles seront supprimées de la mémoire au prochain changement de fichier.
+
+\item celles qui sont créées pendant l'exécution du programme: celles-ci sont modifiables et sont enregistrées dans les fichiers sources \textit{*.teg}.
+\end{itemize}
+
+Un fichier de macros est un fichier texte \textit{*.mac} qui ne contient que des macros et éventuellement des variables globales. On peut créer/modifier un fichier de macros directement dans TeXgraph ou bien avec l'éditeur de son choix, à condition d'utiliser l'encodage UTF8.
+
+
+\subsection{Création d'une macro}
+
+\begin{itemize}
+\item Une macro est définie par un nom et une commande. Une macro peut posséder des variables locales et des paramètres, ceux-ci se notent ainsi: \textsl{\%1, \%2, ...}, il n'est pas nécessaire de déclarer les paramètres. 
+
+\item Afin que le texte de la macro ne soit pas enregistré sur une seule ligne dans le fichier \textit{ *.teg}, il faut formater le texte en insérant des sauts de ligne [avec la touche \textsl{Entrée}] lors de la saisie\footnote{Ceci est également valable pour la commande des éléments graphiques \textsl{Utilisateurs}.}, cela ne peut que faciliter la lisibilité. De plus il est possible de documenter une commande en insérant des commentaires, il y a deux méthodes pour cela, soit entre deux accolades: \verb|{c'est un commentaire }|, soit une ligne de commentaires commençant par \verb|//|.
+
+\item \exem voici la commande définissant une macro appelée \textsl{racine} qui donne la liste des racines n-ièmes d'un complexe:
+
+\begin{verbatim}
+            {utilisation: racine(n,z), donne la liste des racines nièmes de z}
+            if (Ent(%1)=%1) And %1>0
+            then  $a:= abs(%2)^(1/%1), 
+                  for $k from 0 to %1-1 do a*exp(i*(Arg(%2)+$k*2*pi)/%1) od
+            fi
+\end{verbatim}
+
+    \begin{itemize}
+    \item on teste si le premier paramètre (qui représente n) est un entier strictement positif, auquel cas on stocke dans une variable locale la racine n-ième du module de z (deuxième paramètre) puis on donne la liste des solutions (sinon la macro renvoie \Nil).
+    \item l'exécution de \co{[\$a:=3, racine(a,i)]} donne: \res{[0.866025+0.5*i, -0.866025+0.5*i, -i]}.
+    \end{itemize}
+
+\item TeXgraph ne teste pas le nombre d'arguments, la valeur implicite des arguments manquants est \Nil, s'il y en a trop, ceux qui sont en surplus sont ignorés.
+\end{itemize}
+
+
+\subsection{Développement différé ou immédiat}
+
+\begin{itemize}
+\item Comme une commande se présente sous la forme d'une chaîne de caractères, avant même de pouvoir exécuter la commande, TeXgraph doit analyser cette chaîne avant de la transformer en arbre. C'est lors de cette analyse qu'une macro peut être développée tout de suite ou non.
+
+\item Lors de \Mytextbf{l'analyse} de \co{[\$a:=3, racine(a,i)]}: TeXgraph construit l'arbre correspondant en conservant le mot \textsl{racine}, lorsqu'il évalue l'arbre, il fait une copie de l'expression de la macro \textsl{racine} en remplaçant le paramètre \%1 par la variable a\footnote{Ce n'est pas la valeur de a qui remplace \%1 mais l'adresse de a.} et le paramètre \%2 par i, puis évalue l'expression ainsi obtenue\footnote{Dans cette expression il y a en fait deux variables a mais il n'y a pas d'ambiguïté car l'une est "branchée" sur les variables locales de la macro, et l'autre sur les variables locales de l'expression "appelante".} et détruit la copie: \Mytextbf{c'est le développement différé}.
+
+\item Lors de \Mytextbf{l'analyse} de \co{[\$a:=3, $\backslash$racine(a,i)]}: TeXgraph remplace \textsl{$\backslash$racine} par l'expression de la macro en remplaçant le paramètre \%1 par la variable a et le paramètre \%2 par i, ce qui revient à analyser la commande: 
+
+\begin{verbatim}
+            [$a:=3,
+            if (Ent(a)=a) And a>0
+            then  $a:= abs(i)^(1/a), 
+                  for $k from 0 to a-1 do a*exp(i*(Arg(i)+$k*2*pi)/a) od
+            fi]
+\end{verbatim}
+
+\Mytextbf{c'est le développement immédiat}. On remarquera que cette fois-ci il y a une seule variable a, ce qui fait que cette commande ne donnera pas le bon résultat (elle donne \res{i}). Par contre la commande \co{[\$b:=3, $\backslash$racine(b,i)]} donne le bon résultat (\res{[0.866025403784+0.5*i,-0.866025403784+0.5*i,-i]}). Le développement immédiat ne peut avoir lieu que si la macro existe déjà, sinon c'est un développement différé.
+
+\item Le développement immédiat est à proscrire lorsque la macro possède des variables locales et qu'il y a un risque d'homonymie avec les variables de l'expression appelante. Cependant il y a des cas ou celui-ci est plus intéressant que le développement différé, par exemple si on définit la macro appelée \textsl{f} par la commande \co{\%1*arctan(\%1)/(1+\%1\^{}2)} et si on crée l'élément graphique \textsl{Courbe/Paramétrée} avec l'expression \co{t+i*$\backslash$f(t)}, alors l'expression sera en réalité \co{t+i*t*arctan(t)/(1+t\^{}2)} et comme cette expression va être évaluée un "grand nombre" de fois, ce sera plus rapide à l'exécution que l'expression \co{t+i*f(t)}, car dans celle-ci (développement différé) la macro \textsl{f} sera appelée à chaque évaluation de l'expression. 
+
+D'un autre côté, le développement immédiat permet aussi d'utiliser les macros comme des variables ou comme des \Mytextbf{raccourcis}. 
+
+\item Les macros peuvent être récursives.
+\end{itemize}

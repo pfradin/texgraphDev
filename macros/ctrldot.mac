@@ -1,0 +1,210 @@
+TeXgraph#
+{ctrdot.mac création de points de contrôle déplaçables à la souris}
+
+Var
+    ctrldot_moving = 0;
+    ctrldot_active = 0;
+    ctrldot_Dotperline = 25;
+    freeCtrldotColor = blue;
+    assignCtrldotColor = gray;
+    ctrldotLabelPos = "N";
+    magneticGrid = 1;
+    gridNbDiv = 4;
+Mac
+
+{display ctrldot}
+
+    Drawctrldot = [//display ctrldots
+    SaveAttr(),
+    $k:=1, freeCtrldotColor:=blue, assignCtrldotColor:=gray, ctrldotLabelPos:="N", magneticGrid:=1, gridNbDiv:=4,
+    $options:=%1,
+    if magneticGrid then Color:=gray, Grille(0,(1+i)/gridNbDiv), xylabelsep:=0.01, Color:=black, axeX([i*Ymin,1],1),axeY([Xmin,1],1) fi,
+    for $z in ctrl do
+        if z<>jump then 
+            if IsVar(["AssignCtrl",k]) then Color:=assignCtrldotColor 
+            else Color:=freeCtrldotColor
+            fi,
+            LabelDot(z,k,ctrldotLabelPos,1) 
+        fi, Inc(k,1)
+    od,
+    RestoreAttr()
+    ];
+    
+    Exportctrldot = [//do nothing
+    ];
+
+{utility}
+
+    ctrldot_testclic = [// to test if a ctrldot has been selected
+    $num:=0, $k:=0,
+    for $z in ctrl do
+        Inc(k,1),
+        if z=jump then Nil
+        elif Abs(z-%1)<0.2 then num:=k 
+        fi
+    od,
+    num];
+
+    ctrldot_FreeIndex = [//find a free index in ctrl or add a new one
+    $ok:=0, $k:=0,
+    for $j in ctrl do
+     Inc(k,1),
+     if (ok=0) And (j=jump) then ok:=1, k fi
+    od,
+    if ok=0 then k+1, Insert(ctrl,jump) fi
+    ];
+
+    ctrldot_nearest = [//give the nearest point from %2 in %1 , if %3=1 then interpolation
+    $out1:=Copy(%1,1,1), $d1:=abs(%2-out1),
+    $out2:=Copy(%1,2,1), $d2:=abs(%2-out2),
+    if d1>d2 then Echange(out1,out2), Echange(d1,d2) fi,
+    for z in %1 do
+        $x:=abs(z-%2),
+        if x<d1 then out2:=out1, out1:=z, d2:=d1, d1:=x 
+        elif x<d2 then out2:=z, d2:=x
+        fi
+    od,
+    if %3 then (d2*out1+d1*out2)/(d2+d1)
+    else out1 fi
+    ];
+
+    ctrldot_Split = [$list:=%1,  $B:=Nil,
+     for $z in list do
+       $A:=B, $B:=z, 
+       if A<>Nil then
+            $u:=(B-A)/ctrldot_Dotperline,
+            for $k from 0 to ctrldot_Dotperline-1 do  A+k*u od
+       fi 
+     od,
+     B];
+
+    ctrldot_DefAssign = [$type:=%1,
+    if type=1 Or type=2 then {droite AB ou ax+by=c}
+     NewVar( ["AssignCtrl", ctrldot_active], ["[", %1, ",Get(Droite(",String(%2),",",String(%3),",",String(%4),"))]"])
+    elif  type=7 then {point}
+     NewVar( ["AssignCtrl", ctrldot_active], ["[", %1, ",", String(%2), "]"])
+    elif type=4 {paramétrage} then
+     NewVar( ["AssignCtrl", ctrldot_active], ["[", %1, ",Get(Courbe(", String(%2), "))]"])
+    elif type=3 then {cercle}
+     NewVar( ["AssignCtrl",ctrldot_active], ["[", %1, ",Get(Cercle(", String(%2),",",String(%3),",",String(%4),"))]"])
+    elif type=5 {ligne polygonale} then
+     NewVar( ["AssignCtrl", ctrldot_active], ["[", %1, ",ctrldot_Split(", String(%2), ")]"])
+    elif type=6 {polygone} then
+     NewVar( ["AssignCtrl", ctrldot_active], ["[", %1, ",ctrldot_Split([", String(%2),",",Copy(%2,1,1), "])]"])
+    fi
+    ];
+
+    nearest_integer = [$n:=Ent(%1), if %1<n+0.5 then n else n+1 fi];
+
+    ctrldot_newpos = [//give the real position
+    if magneticGrid then
+    $x:=Re(%1), $y:=Im(%1),
+    (nearest_integer(gridNbDiv*x)+i*nearest_integer(gridNbDiv*y))/gridNbDiv,
+    else %1
+    fi
+    ];
+
+{macros for mouse }
+
+    ctrldot_ClicG = [//create a new ctrldot or select a crtldot
+    ctrldot_active:=ctrldot_testclic(%1), 
+    if ctrldot_active=0 then
+        $p:=ctrldot_FreeIndex(),
+        Subs(ctrl,p,ctrldot_newpos(%1)), ReCalc()
+    else {ctrlot selected}
+     ctrldot_moving:=1
+    fi
+    ];
+
+    ctrldot_CtrlClicG = [//delete a crtldot
+    ctrldot_active:=ctrldot_testclic(%1), 
+    if ctrldot_active>0 then
+        Subs(ctrl,ctrldot_active,jump), ReCalc()
+    else
+        old_ctrldot_CtrlClicG(%1)
+    fi
+    ];
+
+    ctrldot_ClicD = [
+    ctrldot_active:=ctrldot_testclic(%1), 
+    if ctrldot_active>0 then //a ctrldot is selected
+      $z:= Eval(["AssignCtrl",ctrldot_active]), //assigned ?
+      if z<>Nil then DelVar(["AssignCtrl",ctrldot_active]), ReCalc()
+      else
+        if Input( ["Assign ctrldot number ",ctrldot_active," to :
+    
+
+    - a line (AB), type: 1, A, B
+    - a line with equation ax+by=c, type: 2, a, b, c
+    - a circle with center A and radius r, type: 3, A, r
+    - a circle passing through A,B,C, type: 3, A, B, C
+    - a parametric curve f(t), type: 4, f(t)
+
+    - a polyline, type: 5, [list of points]
+    - a  polygon, type: 6, [list of points]
+    - a list of point, type : 7, [list of points]
+    
+
+    Example: 4, t+i*t^2"], "Assign a ctrldot", chaine()) 
+        then
+            Eval(["ctrldot_DefAssign(",chaine(), ")"]),
+            ctrldot_moving:=1, MouseMove(%1), ctrldot_moving:=0
+        fi
+    fi
+    else old_ctrldot_ClicD(%1) fi
+    ];
+
+
+    ctrldot_CtrlClicD = [//delete the last crtldot or change the affix of the selected ctrldot
+    ctrldot_active:=ctrldot_testclic(%1), 
+    if ctrldot_active=0 then
+        old_ctrldot_CtrlClicG(%1)
+    else {ctrlot selected}
+        $z:=Eval( ["AssignCtrl",ctrldot_active] ),
+        if (z<>Nil) then
+            RaiseError([ErrFile:="ctrldot.mac", ErrMacro:="CtrlClicD", ErrLevel:="warning", ErrType:="This ctrldot is assigned (clic right to stop assignment)"])
+        elif Input([LF,LF,"Type the new affix :"], ["Change ctrl[",ctrldot_active,"] affix"], ctrl[ctrldot_active])
+        then
+            $x:=Eval(chaine()),
+            if x<>Nil then Subs(ctrl,ctrldot_active,x), ReCalc() fi
+        fi
+    fi
+    ];
+
+    ctrldot_MouseMove = [//move the selected ctrldot
+    if ctrldot_moving then
+        $z:= Eval( ["AssignCtrl",ctrldot_active] ) , 
+        if z=Nil then Subs(ctrl,ctrldot_active,ctrldot_newpos(%1)), ReCalc(show_ctrldot)
+        else //assigned ctrldot
+            $type:=z[1],
+            if type=1 Or type=2 {droite} then $pos:= proj(%1, Copy(z,2,2)) 
+            else {type=4 Or type=5 Or type=6 then} 
+                $x:=z[2,0], pos:=ctrldot_nearest(x,%1, type<>7) //interpolation if type<>7
+            fi,
+            if pos<>Nil then Subs(ctrl,ctrldot_active,pos), ReCalc(show_ctrldot) fi
+        fi
+    else old_ctrldot_MouseMove(%1)
+    fi];
+
+    ctrldot_LButtonUp = if ctrldot_moving then ctrldot_moving:=0, ReCalc() fi;
+
+{ macros Init, Exit}
+
+    Init = [
+    RenMac("ClicG", "old_ctrldot_ClicG"), RenMac("ctrldot_ClicG", "ClicG"),
+    RenMac("ClicD", "old_ctrldot_ClicD"), RenMac("ctrldot_ClicD", "ClicD"),
+    RenMac("CtrlClicG", "old_ctrldot_CtrlClicG"), RenMac("ctrldot_CtrlClicG", "CtrlClicG"),
+    RenMac("CtrlClicD", "old_ctrldot_CtrlClicD"), RenMac("ctrldot_CtrlClicD", "CtrlClicD"),
+    RenMac("LButtonUp", "old_ctrldot_LButtonUp"), RenMac("ctrldot_LButtonUp", "LButtonUp"),
+    RenMac("MouseMove", "old_ctrldot_MouseMove"), RenMac("ctrldot_MouseMove", "MouseMove"), 
+    ReCalc()
+    ];
+
+    Exit = [
+    RenMac("ClicG", "ctrldot_ClicG"), RenMac("old_ctrldot_ClicG", "ClicG"),
+    RenMac("ClicD", "ctrldot_ClicD"), RenMac("old_ctrldot_ClicD", "ClicD"),
+    RenMac("CtrlClicG", "ctrldot_CtrlClicG"), RenMac("old_ctrldot_CtrlClicG", "CtrlClicG"),
+    RenMac("CtrlClicD", "ctrldot_CtrlClicD"), RenMac("old_ctrldot_CtrlClicD", "CtrlClicG"),
+    RenMac("LButtonUp", "ctrldot_LButtonUp"), RenMac("old_ctrldot_LButtonUp", "LButtonUp"),
+    RenMac("MouseMove", "ctrldot_MouseMove"), RenMac("old_ctrldot_MouseMove", "MouseMove")  
+        ];

@@ -1,0 +1,836 @@
+TeXgraph#
+{ TeXgraph 2.0 }
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+draw2d.mac inclut les fichiers markers.mac et gradients.mac. 
+Il permet l'utilisation de la syntaxe de dessin:
+
+                           draw( "type", données, [options])
+
+avec les types: dot, path, line, cartesian, polar, parametric, periodic,
+                odeint, implicit, spline, bezier,
+                label, seg, interval, straightL, halfPlane,
+                arc, ellipticarc, angleD, circle, ellipse, 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+Include
+    "markers.mac";
+    "gradients.mac";
+
+Var
+    pix = -1; {style pixel pour DotStyle, nécessite un NewBitmap() dans l'élément graphique}
+    x = 1/0;  {option intervalle pour les courbes cartesiennes x:=[-5, 4], pour les autres c'est t:=[ , ]}
+    discont = 0; {discontinuité (0/1) pour les courbes}
+    nbdiv = 5;   {nb de dichotomies pour les courbes}
+    period = [Xmin,Xmax]; //pour le type periodic
+
+    marker = Nil; {liste de marqueurs [pos1, type1, pos2, type2, ...] où pos est entre 0 et 1}
+    markerWidth = Nil; {épaisseur du trait pour les marqueurs}
+   
+    anchor = 0;     {pour le type label}
+    labelcolor = black; {pour le type label}
+    legend = "";
+    North = "N";
+    NE = "NE";
+    East = "E";
+    SE = "SE";
+    South = "S";
+    SW = "SO";
+    West = "O";
+    NW = "NO";
+    TeXifyLabels = 0; {valeur par défaut de l'option TeXify pour les labels}
+
+    doubleline = 0; {pour le type line}
+    doublesep = 0.333;
+    doublecolor = white;
+    lineborder = 0;
+    FillColorA = white;
+    FillColorB = red;
+
+
+    hatch = 1;  {0/1, pour le type interval}
+    hatchangle = 45; {angle des hachures par rapport à l'axe, en degrés}
+
+    labeldir = 0;//     pour le type label
+    //rotation = 0/1;   pour le type label
+
+    close = 0;      //pour le type line
+    radius = 0;     //pour le type line
+    bordercolor = white; //pour le type line
+    showdot = 0;        //pour le type line
+    dotcolor = black;  //pour le type line
+    freehand = 7;       //pour le LineStyle (main lévée)
+    freehandscale = 1;  //accentuer ou non les déformations (>=0)
+    grid  = [50,50];
+    limits =  [jump,jump];
+
+Mac
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       Utilitaires
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    convCurve2freehand =  {convCurve2freehand(ligne, scale (>=0)) :
+    convertit une courbe en courbes de Bézier pour le dessin à main levée
+    }
+    [$force:=%2, if force=Nil then force:=1 fi, $ecart:=0.075*force, $prems:=1,
+     $liste:=%1,//Get(%1,clip), {on récupère la liste de points à construire}
+     for $L in liste By jump do       {parcourt par composante connexe}
+          $N:=Nops(L),
+          if N<3 then nb:=1           {seuls les points de nb en nb}
+          elif N<20 then $nb:=Ent(N/3){sont traités, ils sont déplacés}
+          else nb:=Ent(N/15){aléatoirement et on y fait passer une spline}
+          fi,
+          $A:=L[1], $B:=L[nb],$C:=L[0],
+          v1:=0,
+          $compt:=0,$b:=Nil,$sg:=1,
+          $instruc:=GetSpline( [v1,
+              for $z in L by nb do  
+                        Inc(compt,1), $a:=b, b:=z[1], {traitement par paquets de nb}
+                        b+ if compt>1 then      {seul le premier est pris en compte}
+                        $u:=ecart*i*(b-a)/Abs(b-a),{et décalé sauf si c'est le}
+                        2*(0.5-Rand())*u,            { tout premier}
+                        else 0 fi
+              od,
+              C, v1]),
+         if prems=0 then instruc[1],move,instruc[2,0] else instruc fi, bezier, prems:=0  
+    od
+    ];
+
+    convLine2freehand =  {convLine2freehand(ligne, scale (>=0]) :
+    convertit une ligne en courbes de Bézier pour le dessin à main levée
+    }
+    [$force:=%2, if force=Nil then force:=1 fi, 
+     $ecart:= 0.075*force,
+     $liste:=%1,
+     $L:=0, $first:=Nil, $N:=0,
+     for $z in %1 do if Re(z)=Re(jump) then first:=Nil else Inc(L, Abs(z-first)), Inc(N,1), first:=z fi od,
+     if L>100000 then 
+        RaiseError( [ErrFile:="draw2d.mac", ErrMacro:="convLine2freehand", ErrLevel:="critical",
+        ErrType:="line too long, more than one kilometer ! I give up."])
+     elif N/L<4 then
+      {on créé un chemin}
+       for L in liste By jump do  {on traite par composante connexe}
+           {on est à un saut, L contient la liste}
+            if Nops(L)>1  then     {y plus d'un point}
+               L[1], move,         {déplacement}
+               $A:=Nil, $B:=Nil,
+               for z in  L  do
+                 A:=B, B:=z, $long:=1+Ent(Abs(B-A)/2),{ découpage tous les 2 cm}
+                 if A<>Nil
+                  then
+                       $v:=(B-A)/long, $u:=ecart*i*(B-A)/Abs(B-A), $V:=A, $c:=1/0,
+                       for k from 1 to long do
+                         $U:=V, V:=U+v,
+                         if c=Nil then c:=(2*U+V)/3+2*(0.5-Rand())*u fi,
+                         $d:=(2*V+U)/3+2*(0.5-Rand())*u,
+                         c,d,V,bezier, c:=2*V-d  {le segment AB est remplacé par une}
+                       od,                       {courbe poly-bézier}
+                 fi
+               od,
+             fi
+       od
+    else convCurve2freehand(liste,force,N/L) fi
+    ];
+
+    cut_first =  {cut_first(path,prems) }
+    if %2 then %2:=0, %1 else Copy(%1,2,0) fi;
+
+    ConvPath2freehand =  {convPath2freehand(ligne, scale (>=0]) :
+    convertit un chemin en courbes de Bézier pour le dessin à main levée
+    }
+    [$L:=Nil,$first:=Nil, $force:=%2, if force=Nil then force:=1 fi, $prems:=1,
+     for $z in %1 do
+      if Re(z)=Re(jump) then
+         if z=arc then $a:=L[1],$b:=L[2],$c:=L[3],$d:=L[4],$f:=L[5], if f=Nil then f:=1 fi,
+                       $x:=b+d*(a-b)/abs(a-b), 
+                       if Abs(a-x)>0.01 then cut_first(convLine2freehand([a,x],force),prems) fi,
+                       if first=Nil then first:=x fi,
+                       cut_first(convCurve2freehand(Get(Arc(a,b,c,d,f),0),force),prems),
+                       Insert(L, b+d*(c-b)/abs(c-b))
+         elif z=ellipticArc then $a:=L[1],$b:=L[2],$c:=L[3],$d:=L[4],$f:=L[5], $g:=L[6],$h:=L[7],
+                            if g=Nil then g:=1 fi, if h=Nil then h:=0 fi,
+                            $x:=Get(ellipticArc(a,b,c,d,f,g,h),0), 
+                            if Abs(a-x[1])>0.01 then cut_first(convLine2freehand([a,x[1]],force),prems) fi,
+                            cut_first(convCurve2freehand(x,force),prems), if first=Nil then first:=x[1] fi,
+                            Insert(L,x[0])
+         elif z=line then cut_first(convLine2freehand(L,force),prems), if first=Nil then first:=L[1] fi
+         elif z=circle then $a:=L[1], $b:=L[2], $c:=L[3],
+                              if c=Nil then cut_first(convCurve2freehand(Get(Arc(a,b,a,abs(b-a),1),0),force),prems)
+                              else $o:=med(a,b) Inter med(b,c),
+                                   cut_first(convCurve2freehand(Get(Arc(a,o,a,abs(a-o),1),0),force),prems)
+                              fi,
+                              if first=Nil then first:=a fi, Insert(L,a)
+         elif z=ellipse then $a:=L[1], $b:=L[2], $Rx:=L[3], $Ry:=L[4], $inclin:=L[5], $y:=Get(ellipticArc(a,b,a,Rx,Ry,1,inclin),0),
+                               $x:=Copy(y,1,0),
+                               if Abs(a-x)>0.01 then cut_first(convLine2freehand([a,x],force),prems) fi,
+                               if first=Nil then first:=x fi,
+                               cut_first(convCurve2freehand(y,force),prems), Insert(L,x)
+         elif z=bezier then $a:=L[1], cut_first(convCurve2freehand(Get(Bezier(L),0),force),prems),
+                              if first=Nil then first:=a fi
+         elif z=curve then cut_first(convCurve2freehand(Get(Spline(0,L,0),0),force),prems),
+                           if first=Nil then first:=L[1] fi
+         elif z=linearc then $r:=L[0], Del(L,0,1), cut_first(convCurve2freehand(Get(Ligne(L,0,r),0),force),prems),
+                             if first=Nil then first:=L[1] fi
+         elif z=move then L[0], move, first:=L[0] //on ne garde que le point courant
+         elif z=closepath then cut_first(convLine2freehand([L[0],first],force),prems), Insert(L,first)
+         else cut_first(convLine2freehand(L,force),prems)
+         fi,  $N:=Nops(L), if N>1 then Del(L, 1, N-1) fi
+      else Insert(L,z)
+      fi
+  od];
+  
+    convPath2freehand = convLine2freehand(Get(Path(%1),0),%2);
+
+    fillS = {fillS(style,color,opacity,eofill) ou fillS(gradient,colorA,colorB,opacity): définit le style de remplissage.}
+    [FillStyle:=%1,
+     if FillStyle=gradient then
+        if %2<>Nil then FillColorA:=%2 fi,
+        if %3<>Nil then FillColorB:=%3 fi,
+        if %2<>Nil And %3<>Nil then GradColor:=FillColorA+i*FillColorB fi,
+        if %4<>Nil then FillOpacity:=%4 fi
+     else
+        if %2<>Nil then FillColor:=%2 fi,
+       if %3<>Nil then FillOpacity:=%3 fi,
+       if %4<>Nil then Eofill:=%4 fi
+     fi
+    ];
+
+    lineS = {lineS(linestyle, color, width, arrows) ou lineS(gradient, colorA, colorB, width, arrows): définit le style de ligne.}
+    [LineStyle:=%1,
+     if LineStyle<>gradient then
+        if %2<>Nil then Color:=%2 fi, 
+        if %3<>Nil then Width:=%3 fi,  
+        if %4<>Nil then Arrows:=%4 fi
+    else
+        if %2<>Nil then LineColorA:=%2 fi,  
+        if %3<>Nil then LineColorB:=%3 fi,
+        if %4<>Nil then Width:=%4 fi,  
+        if %5<>Nil then Arrows:=%5 fi
+    fi];  
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{== type dot (incluant le style pix pour pixel) ==}
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+   Drawdot = [SaveAttr(), $options:=%2, if DotStyle=pix then Pixel(for $z in %1 do Scr2Pixel(z),Color od) else Point(%1) fi, RestoreAttr()];
+
+   Exportdot = [
+    SaveAttr(), $options:=%2,   
+    if DotStyle=pix then
+     $coul:=Lcolor(Color),
+     if ExportMode=tkz Or ExportMode=pgf then
+       WriteFile([
+       "\begin{pgfscope}%",LF,
+       "\pgfsetfillcolor{rgb,1:red,",Round(coul[1],4),";green,",Round(coul[2],4),";blue,",Round(coul[3],4),"}",LF,
+       $nb:=0,
+       for $z in %1 do
+           $A:=TeXCoord(z),Inc(nb,1),
+           "\pgfpathcircle{\pgfxy(",Round(Re(A),4),",",Round(Im(A),4),")}{",Width/10,"pt}",
+           "\pgfusepath{fill}",
+           if nb=3 then LF, nb:=0 fi,
+       od,
+       "\end{pgfscope}%"])
+    
+     elif ExportMode=eps then
+         WriteFile([
+         Round(coul[1],4)," ",Round(coul[2],4)," ",Round(coul[3],4)," setrgbcolor",LF,
+         $nb:=0,
+         for $z in %1 do
+           $A:=EpsCoord(z),Inc(nb,1),
+           Round(Re(A),4)," ",Round(Im(A),4)," 0.35 0 360 arc closepath fill ",{point assez fin}
+           if nb=10 then LF, nb:=0 fi,
+         od])
+     else 0
+     fi
+    else 0
+    fi,
+    RestoreAttr()];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type label 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    setlabel = legend:=%1;      {pour définir un label dans une liste d'options}
+    setframestyle = NewMac("framestyle", String(%1));   {pour définir un style de label avec frame}
+
+    Drawclabel = {Drawclabel( pos, "texte", framed, dollar, scale, hollow) }
+    Label(%1,%2);
+
+    Exportclabel = {Drawclabel( pos, "texte", framed, dollar, scale, hollow) }
+    if ExportMode=eps Or ExportMode=svg then 
+     $L:=TeX2FlatPs( [if %3 then if %4 then "\boxed{" else "\framebox{" fi fi, %2, if %3 then "}" fi], %4),
+     $pos:=RealCoord(%1),
+     ExportObject(drawFlatPs(pos, L, [SetMatrix([0,1/Xscale,i/Yscale]), scale:=%5, hollow:=%6, position:=LabelStyle, rotation:=LabelAngle, color:=Color]))
+    else 0 fi;
+
+    Drawlabel = {Drawlabel( "label1", [options1], "label2", [options2], ...)
+    options
+    anchor = Nil //point d'ancrage
+    labeldir = [distance, direction] par rapport au point d'ancrage, 0 par défaut
+    labelsep = 0.25 cm
+    showdot = 0/1 pour montrer ou non le point d'ancrage
+    }
+      [
+        SaveAttr(), anchor:=Nil, labeldir:=Nil, labelsep:=0.25, showdot:=0, scale:=1, hollow:=0, 
+        for $k from 1 to Nargs() step 2 do
+        $options:=Args(k+1), 
+        $frame:=framed*mod(div(LabelStyle,16),2),
+        if frame=framed then framestyle() fi, $ok:=1,
+        if labeldir=North then $angle:=pi/2, LabelStyle:=bottom+frame
+        elif labeldir=NW then angle:=3*pi/4, LabelStyle:=bottom+right+frame
+        elif labeldir=West then angle:=pi, LabelStyle:=right+frame
+        elif labeldir=SW then angle:=5*pi/4, LabelStyle:=top+right+frame
+        elif labeldir=South then angle:=-pi/2, LabelStyle:=top+frame
+        elif labeldir=SE then angle:=-pi/4, LabelStyle:=top+left+frame
+        elif labeldir=East then angle:=0, LabelStyle:=left+frame
+        elif labeldir=NE then angle:=pi/4, LabelStyle:=bottom+left+frame
+        else {on a long,direction} 
+            ok:=0, $pos:=anchor,
+            if labeldir<>Nil then
+                $dist:=labeldir[1], $direc:=labeldir[2],
+                if direc<>Nil And direc<>0 then $pos:= anchor+dist*direc/Abs(direc) fi
+            fi
+        fi,
+        if ok then $x:=exp(i*angle), pos:=anchor+ abs(labelsep)*x/Abs(x) fi,
+        if showdot then Point(anchor) fi,
+        if TeXifyLabels=0 then Label( pos, Args(k))
+        else $nom:=Args(k), draw("clabel",pos, nom, frame<>0, 0, scale, hollow)
+        fi
+        od,
+        RestoreAttr()
+        ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type path 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    defaultOptions = {default options for path and line (and gradline)}
+      [marker:=Nil, scale:=CurrentArrowScale, anchor:=Nil, legend:="", labeldir:=Nil, labelpos:=Nil, labelsep:=0.25, showdot:=0,
+       labelcolor:=Nil, doubleline:=0, doublesep:=0.333, doublecolor:=white, lineborder:=0, bordercolor:=white,
+       FillColorA:=-1, FillColorB:=-1, LineColorA:=white, LineColorB:=red,GradLineStep:=0.25, close:=0, radius:=0, dotcolor:=Nil, rotation:=0, markerWidth := Nil
+      ];
+   
+    Drawpath = [
+    SaveAttr(), defaultOptions(), $options_:=%2, qDrawpath(%1),
+    RestoreAttr()
+    ];
+    
+    qDrawpath = [$initial:=%1,
+    if FillColorA<>-1 Or FillColorB<>-1 then
+        if FillColorA=-1 then FillColorA:=Re(GradColor) fi,
+        if FillColorB=-1 then FillColorB:=Im(GradColor) fi,
+        GradColor:=FillColorA+i*FillColorB
+    fi,
+    if LineStyle=freehand then initial:=convPath2freehand(initial,freehandscale),LineStyle:=solid fi, 
+    $marker_:=marker,
+    $oldWidth:=Width-2*lineborder, $oldColor:=Color, $win_:=[M(Xmin,Ymin), M(Xmax,Ymax)],
+    if labelcolor=Nil then labelcolor:=Color fi,
+    if Arrows>1 then Insert(marker_,[0,CurrentArrow,1,CurrentArrow]), Arrows:=0
+    elif Arrows=1 then Insert(marker_,[1,CurrentArrow]), Arrows:=0  
+    fi,
+    $type:=typeMarker(marker_),
+    if markerWidth = Nil then markerWidth := Width fi,
+    if type>-1 then $L:=cutPath(initial,type,markerWidth) else L:=initial fi, 
+    if legend<>"" Or marker_<>Nil then $C:=Get(Path(initial),0) fi,
+    if LineStyle=gradient Or lineborder>0 Or doubleline then
+        if FillStyle<>none And LineStyle=gradient then 
+            $save:=LineStyle, LineStyle:=noline, Path(initial),
+            LineStyle:=save, FillStyle:=none 
+        fi,
+        if LineStyle=gradient then SaveAttr(), qgradLine(Get(Path(L),0)), RestoreAttr()
+        elif lineborder>0 Or doubleline then 
+            if lineborder>0 then
+                Width:= 2*lineborder+ oldWidth,
+                Color:=bordercolor, Path(L), FillStyle:=none
+            fi,
+            if doubleline then
+                Width:=oldWidth, Color:=oldColor, Path(L), FillStyle:=none, 
+                Color:=doublecolor, Width:=doublesep*Width, Path(L), Color:=oldColor
+            else Width:=oldWidth, Color:=oldColor, Path(L)
+            fi
+        fi
+     else Path(L)
+     fi,
+     if marker_<>Nil then Width:=markerWidth, markLine(C, marker_) fi, 
+     Width:=oldWidth+2*lineborder,
+     if legend<>"" then
+       if anchor=Nil then
+         if labelpos=Nil then    
+            $bb:=rectangle(C),
+            $x1:=Re(bb[1]), $x2:=Re(bb[2]), $y1:=Im(bb[1]), $y2:=Im(bb[2]), $cx:=(x1+x2)/2, $cy:=(y1+y2)/2,
+            if  labeldir=North then $pos:=cx+i*y2
+            elif labeldir=NW then $pos:=x1+i*y2
+            elif labeldir=West then $pos:=x1+i*cy
+            elif labeldir=SW then $pos:=x1+i*y1
+            elif labeldir=South then $pos:=cx+i*y1
+            elif labeldir=SE then $pos:=x2+i*y1
+            elif labeldir=East then $pos:=x2+i*cy
+            elif labeldir=NE then $pos:=x2+i*y2
+            else $pos:=isobar(C),
+            fi
+         else $pos:=getdot(labelpos,C)
+         fi
+       else pos:=anchor 
+       fi,
+       $labeldir_:=labeldir, $labelsep_:=labelsep, $showdot_:=showdot, Color:=labelcolor,
+       draw("label", legend, [anchor:=pos, labeldir:=labeldir_, labelsep:=labelsep_, showdot:=showdot_])
+    fi
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type line 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawline = [
+      SaveAttr(), defaultOptions(), $options:=%2,
+      if radius>0 then qDrawpath(roundLine(%1,radius,close)) else qDrawline(%1) fi,
+      RestoreAttr()
+     ];
+     
+    qDrawline = [$Z_:=%1,
+     if LineStyle=freehand then
+         $old_:=showdot, showdot:=0, LineStyle:=solid,
+         $Z_:=Get(Ligne(Z_,close,radius),0), $S_:=convLine2freehand(Z_,freehandscale),
+         qDrawpath(S_), showdot:=old_, LineStyle:=freehand,
+         if showdot then draw("dot",Z_, [Color:=dotcolor]) fi,
+     else
+     if FillColorA<>-1 Or FillColorB<>-1 then
+        if FillColorA=-1 then FillColorA:=Re(GradColor) fi,
+        if FillColorB=-1 then FillColorB:=Im(GradColor) fi,
+        GradColor:=FillColorA+i*FillColorB
+     fi,
+     $fillstyle:=FillStyle, $marker_:=marker,
+     $oldWidth:=Width-2*lineborder, $oldColor:=Color,
+     if labelcolor=Nil then labelcolor:=Color fi, if dotcolor=Nil then dotcolor:=Color fi,
+     if Arrows=2 then Insert(marker_,[0,CurrentArrow,1,CurrentArrow]), Arrows:=0
+     elif Arrows=1 then Insert(marker_,[1,CurrentArrow]), Arrows:=0 fi, 
+     $type:=typeMarker(marker_),
+     if markerWidth = Nil then markerWidth := Width fi,
+     if (close=0) And (marker_<>Nil) then $L_:=cutLine(Z_,type,markerWidth) else L_:=Z_ fi,
+     if close Or (radius>0) then $C_:=Get(Ligne(Z_,close,radius),0) else $C_:=Z_ fi,
+     if LineStyle=gradient Or lineborder>0 Or doubleline then
+        if FillStyle<>none And LineStyle=gradient then 
+            $save:=LineStyle, LineStyle:=noline, Ligne(C_,close),
+            LineStyle:=save, FillStyle:=none 
+        fi,
+        if LineStyle=gradient then SaveAttr(), qgradLine(Get(Ligne(L_,close,radius),0)), RestoreAttr()
+        elif lineborder>0 Or doubleline then 
+            if lineborder>0 then
+                Width:= 2*lineborder+oldWidth,
+                Color:=bordercolor, Ligne(L_,close,radius), FillStyle:=none
+            fi,
+            if doubleline then
+                Width:=oldWidth, Color:=oldColor, Ligne(L_,close,radius), FillStyle:=none, 
+                Color:=doublecolor, Width:=doublesep*Width, Ligne(L_,close,radius), Color:=oldColor
+            else Width:=oldWidth, Color:=oldColor, Ligne(L_,close,radius)
+            fi
+        fi
+     else Ligne(L_,close,radius)
+     fi,
+     if marker_<>Nil then Width:=markerWidth, markLine(C_, marker_) fi, 
+     Width:=oldWidth+2*lineborder, FillStyle:=fillstyle,
+     if showdot then draw("dot",Z_, [Color:=dotcolor]) fi,
+     if legend<>"" then
+          if anchor=Nil then 
+            if labelpos=Nil then    
+            $bb:=rectangle(Get(Ligne(Z_,close,radius),0)),
+            $x1:=Re(bb[1]), $x2:=Re(bb[2]), $y1:=Im(bb[1]), $y2:=Im(bb[2]), $cx:=(x1+x2)/2, $cy:=(y1+y2)/2,
+            if  labeldir=North then $pos:=cx+i*y2
+            elif labeldir=NW then $pos:=x1+i*y2
+            elif labeldir=West then $pos:=x1+i*cy
+            elif labeldir=SW then $pos:=x1+i*y1
+            elif labeldir=South then $pos:=cx+i*y1
+            elif labeldir=SE then $pos:=x2+i*y1
+            elif labeldir=East then $pos:=x2+i*cy
+            elif labeldir=NE then $pos:=x2+i*y2
+            else  $pos:=isobar(Get(Ligne(Z_,0),0))
+            fi
+          else $pos:=getdot(labelpos,Get(Ligne(%1,close,radius),0,0))
+          fi
+        else pos:=anchor 
+        fi,
+        $labeldir_:=labeldir, $labelsep_:=labelsep, $showdot_:=showdot, Color:=labelcolor,
+        draw("label", legend, [anchor:=pos, labeldir:=labeldir_, labelsep:=labelsep_, showdot:=0])
+    fi
+    fi
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type cartesian 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawcartesian = [
+    SaveAttr(),
+    x:=if ForMinToMax then [Xmin,Xmax] else [tMin, tMax] fi,
+    discont:=0, nbdiv:=5, defaultOptions(), $options:=%2,
+    tMin:=x[1], tMax:=x[2], x:=Nil,
+    $mat := GetMatrix(), IdMatrix(),
+    if anchor<>Nil then anchor := Mtransform(anchor,mat) fi,
+    qDrawline( Get([SetMatrix(mat), Cartesienne(%1,nbdiv,discont)],1) ),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type polar 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawpolar = [
+    SaveAttr(),
+    t:=if ForMinToMax then [Xmin,Xmax] else [tMin, tMax] fi,
+    discont:=0, nbdiv:=5, defaultOptions(), $options:=%2,
+    tMin:=t[1], tMax:=t[2], t:=Nil,
+    $mat := GetMatrix(), IdMatrix(),
+    if anchor<>Nil then anchor := Mtransform(anchor,mat) fi,
+    qDrawline( Get([SetMatrix(mat), Polaire(%1,nbdiv,discont)],1) ),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type parametric 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawparametric = [
+    SaveAttr(),
+    t:=if ForMinToMax then [Xmin,Xmax] else [tMin, tMax] fi,
+    discont:=0, nbdiv:=5, defaultOptions(), $options:=%2,
+    tMin:=t[1], tMax:=t[2], t:=Nil,
+    $mat := GetMatrix(), IdMatrix(),
+    if anchor<>Nil then anchor := Mtransform(anchor,mat) fi,
+    qDrawline( Get([SetMatrix(mat), Courbe(%1,nbdiv,discont)],1) ),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type periodic 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    Drawperiodic = [
+    SaveAttr(),
+    x:=if ForMinToMax then [Xmin,Xmax] else [tMin, tMax] fi,
+    x:=if ForMinToMax then [Xmin,Xmax] else [tMin, tMax] fi,
+    period:=x, discont:=0, nbdiv:=5, defaultOptions(), $options:=%2,
+    $oldtMin:=x[1], $oldtMax:=x[2], $oldXmin:=Xmin, $oldXmax:=Xmax,
+    tMin:=period[1], tMax:=period[2], x:=Nil,
+    NbPoints:= Ent(NbPoints*(tMax-tMin)/(oldtMax-oldtMin))+2,
+    Fenetre(tMin+i*Ymax, tMax+i*Ymin),
+    $L:=if Free(%1,x) then Get(Parametric(t+i*%1,nbdiv,discont),0) 
+        else Get(Cartesienne(%1,nbdiv, discont),0) fi,
+    Fenetre( max([oldtMin,oldXmin])+i*Ymax, min([oldtMax,oldXmax])+i*Ymin),
+    $T:=tMax-tMin, $k1:= Ent((oldtMin-tMin)/T), $k2:= Ent((oldtMax-tMax)/T)+1,
+    close:=0,
+    qDrawline(for $k from k1 to k2 do for $z in L do if z=jump then jump else z+k*T fi od,jump od),
+    Fenetre(oldXmin+i*Ymax, oldXmax+i*Ymin),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type odeint 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    Drawodeint = {Drawodeint( [f, t0, Y0], [options] )}
+    [
+     $L_:=odeSolve(Copy(%1,1),Copy(%1,2),Copy(%1,3,0),%2),
+     draw("line", L_, %2)
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type implicit 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    Drawimplicit = {Drawimplicit( f(x,y), [options] )
+    options :
+        grid:=[n,m] [50,50] par défaut
+        limits:=[x1+i*x2,y1+i*y2] ou jump pour la fenêtre courante}
+    [
+     SaveAttr(), grid:=[50,50], limits:=[jump,jump], defaultOptions(), $options:=%2,
+     if limits[1]<>jump then $x1:=Re(limits[1]), $x2:=Im(limits[1]) else $x1:=Xmin, x2:=Xmax fi,
+     if limits[2]<>jump then $y1:=Re(limits[2]), $y2:=Im(limits[2]) else $y1:=Ymin, y2:=Ymax fi,
+     SaveWin(), Window(x1+i*y1,x2+i*y2), $L:=Get(Implicit(%1,grid[1],grid[2]),0), RestoreWin(),
+     qDrawline(L),
+     RestoreAttr(),
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type spline 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    Drawspline = {Drawspline( [V0,A1,...,An,Vn], [options] )
+    options du type path + NbPoints}
+    [
+     $L_:=GetSpline(%1),     
+     draw("path", [L_,bezier], %2)
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type bezier 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    Drawbezier = {Drawbezier( [A1,C1,C2,A2,C3,C4,A3,..?], [options] )
+    options du type path + NbPoints}
+    [SaveAttr(),
+     defaultOptions(), $options_:=%2,
+     $wasline_:=0, $wasjump_:=0,
+     $S_:= for z_ in %1 do
+        if z_=jump then
+            if wasline_=0 then bezier fi,
+            wasjump_:=1
+        else z_,
+            if wasjump_ then line, wasline_:=1 else wasline_:=0 fi,
+            wasjump_:=0
+        fi
+       od,
+     qDrawpath([S_,if wasline_=0 then bezier fi]),
+     RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type droite 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    DrawstraightL = {DrawstraightL( a*x+b*y=c/[A,B]/[a,b,c], [options]): droite d'équation a*x+b*y=c
+    ou [a,b,c] pour ax+by+c=0 (ancien format)
+    options:
+    anchor = Nil pour imposer la position du label
+    rotation = 0/1 pour tourner ou non l'éventuel label
+    labelpos = 0.5 nombre de [0;1] position du label le long du segment
+    labelsep = 0.35 distance du label à la droite
+    legend:="texte": pour définir un label}
+       [SaveAttr(), defaultOptions(), $options:=%2,
+        $L:=%1, $mat:=GetMatrix(), IdMatrix(),
+        if Nops(L)>1 then $a:=L[1], $b:=L[2], $c_:=L[3],
+        else
+            $sg:=String(%1), $p:=StrPos("=", sg),
+            if p=0 then
+                RaiseError([ErrFile:="draw2d.mac", ErrMacro:="DrawstraightL", ErrLevel:="critical",
+                            ErrType:=Concat(String(%1)," is not a correct equation, use a*x+b*y=c or a list of two points.")]),
+                a:=Nil, b:=Nil, c_:=Nil 
+            else
+                $sg:=StrReplace(sg,"=","-("), $aux:=NewMac("draw2d_f", Concat(sg,")"),x,y),    
+                $c_:=draw2d_f(0,0),
+                $a:=draw2d_f(1,0)-c_,
+                $b:=draw2d_f(0,1)-c_, 
+            fi
+        fi,        
+        if c_<>Nil then //on a une équation
+           $u:=b-i*a,
+           if b<>0 then $A:=Xmin-(a*Xmin+c_)/b*i, $B:=Xmax-(a*Xmax+c_)/b*i,
+           else $A:=-c_/a+Ymin*i, $B:=-c_/a+Ymax*i
+           fi,
+           if Re((B-A)*bar(u) )<0 then Echange(A,B) fi,
+        else $A:=a, $B:=b, $u:=B-A
+        fi,
+        $D:=mtransform([A,B], mat), A:=D[1], B:=D[2], u:=B-A,
+        D:=Get(Droite(A,B)), A:=D[1], B:=D[2],
+        if Re((B-A)*bar(u) )<0 then Echange(A,B) fi,
+    
+        if legend<>"" then
+           if anchor=Nil then
+                anchor:=A+labelpos*(B-A),
+                labeldir:=[labelsep, ScrCoordV(i*RealCoordV(u))]
+           else anchor:=mtransform(anchor, mat)
+           fi,
+           if rotation=1 then LabelAngle:=RealArg(u)*rad fi,
+           if LabelAngle<-90 then Inc(LabelAngle,180)
+           elif LabelAngle>90 then Inc(LabelAngle,-180)
+           fi,
+        fi,
+        close:=0, radius:=0, qDrawline([A,B]),
+        DelMac("draw2d_f"),
+        RestoreAttr()
+        ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type seg (segment) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawseg = {Drawseg( [A,B], [options]): segment [A,B]
+    options:
+    anchor = Nil pour imposer la position du label
+    rotation = 0/1 pour tourner ou non l'éventuel label
+    labelpos = 0.5 nombre de [0;1] position du label le long du segment
+    labelsep = 0.25 distance du label au segment
+    legend:="texte": pour définir un label
+cet objet utilise l'objet line}
+    [
+        SaveAttr(),  defaultOptions(), rotation:=1, $options:=%2, 
+        qDrawseg(%1),
+        RestoreAttr()
+    ];
+    
+    qDrawseg = [
+        $mat:=GetMatrix(), IdMatrix(),
+        $D:=mtransform(%1, mat), $A:=D[1], $B:=D[2], $u:=B-A,
+        if legend<>"" then
+           if anchor=Nil then
+              anchor:=A+labelpos*(B-A),
+              labeldir:=[labelsep, ScrCoordV(i*RealCoordV(u))],
+              if labelsep=0 And rotation=1 then LabelStyle:=framed fi,
+           else anchor:=mtransform(anchor, mat)
+           fi,
+           if rotation=1 then LabelAngle:=RealArg(u)*rad fi,
+           if LabelAngle<-90 then Inc(LabelAngle,180)
+           elif LabelAngle>90 then Inc(LabelAngle,-180)
+           fi,
+        fi,
+        close:=0, radius:=0, qDrawline([A,B]), SetMatrix(mat)
+        ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                 type interval (intervalle) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawinterval = {Drawinterval( [A,B], [options]): dessine un intervalle
+    options:
+    hatch = 0/1 pour hachurer ou non (1 par défaut)
+    hatchangle = angle en degrés (-45 par défaut)
+    marker = "[]" ou "[[" ou "]]" ou "][" ("[]" par défaut)
+
+cet objet utilise l'objet seg}
+    [
+    SaveAttr(), 
+    defaultOptions(), rotation:=1,
+    scale:=1, hatch:=1, hatchangle:=-45, marker:="[]", $options_:=%2,
+    $h:=3*scale*croHeight, {hauteur des crochets}
+    if marker="[]" then $aux:=[0,Ccro,1,Ccro]
+    elif marker="]]" then $aux:=[0,Ocro,1,Ccro]
+    elif marker="[[" then $aux:=[0,Ccro,1,Ocro]
+    elif marker="][" then $aux:=[0,Ocro,1,Ocro]
+    fi,
+    $A:=%1[1],$B:=%1[2], $long:= Abs(B-A), $n:=Ent(2*long/h),
+    if hatch then
+        markseg(A,B,n, long/n, h*sqrt(2)/2,hatchangle)
+    fi,
+    marker:=aux, qDrawseg(%1),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                       type halfPlane 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    DrawhalfPlane = {DrawhalfPlane( a*x+b*y<=c (ou <c ou >c ou >=c), [options]) dessine un demi-plan
+    ou [a,b,c] pour ax+by+c=0 (ancien format)
+    options:
+    anchor = Nil pour imposer la position du label
+    rotation = 0/1 pour tourner ou non l'éventuel label
+    labelpos = 0.5 nombre de [0;1] position du label le long du segment
+    lablsep = 0.25 distance du label à la droite
+    legend:="texte": pour définir un label}
+    [
+        SaveAttr(), rotation:=1, anchor:=Nil, labelpos:=0.5, labeldir:=Nil, labelsep:=0.25, legend:="",
+        $options:=%2, $mat:=GetMatrix(), IdMatrix(), $labeldir_:=labeldir,
+        $sg:=String(%1), $p:=StrPos("<", sg), if p=0 then p:=StrPos(">", sg) fi,
+        NewMac("draw2d_f",StrCopy(sg,1,p-1),x,y),
+        sg:=StrCopy(sg,p,StrLength(sg)-p+1), $p:=StrPos("=",sg), if p=0 then p:=1 fi,
+        $d:=Eval(StrCopy(sg,p+1,StrLength(sg)-p)),
+        sg:=StrCopy(sg,1,p),
+        $c:=draw2d_f(0,0),
+        $a:=draw2d_f(1,0)-c,
+        $b:=draw2d_f(0,1)-c, Inc(c,-d),
+
+        $u:=b-i*a,
+        if b<>0 then $A:=Xmin-(a*Xmin+c)/b*i, $B:=Xmax-(a*Xmax+c)/b*i,
+        else $A:=-c/a+Ymin*i, $B:=-c/a+Ymax*i
+        fi,
+        if Re((B-A)*bar(u) )<0 then Echange(A,B) fi,
+        $D:=mtransform([A,B], mat), A:=D[1], B:=D[2], u:=B-A,
+        D:=Get(Droite(A,B)), A:=D[1], B:=D[2],
+        if Re((B-A)*bar(u) )<0 then Echange(A,B) fi,
+        $contour:=[Xmin+i*Ymin, Xmax+i*Ymin,Xmax+i*Ymax,Xmin+i*Ymax],
+        if (sg=">") Or (sg=">=") then  u:=-u, Echange(A,B) fi,
+    
+        if anchor=Nil then
+              $pos:=B+labelpos*(A-B),
+          labeldir_:=[labelsep, -ScrCoordV(i*RealCoordV(u))]
+        else pos:=mtransform(anchor, mat)
+        fi,
+        if rotation=1 then LabelAngle:=RealArg(u)*rad else LabelAngle:=rotation fi,
+        if LabelAngle>90 then Inc(LabelAngle,-180) elif LabelAngle<-90 then Inc(LabelAngle,180) fi,
+        if (sg="<") Or (sg=">") then
+           $style:=dashed else style:=solid
+        fi,
+    
+        draw("line", Clip2D(contour, [A,A-u],1), [LineStyle:=noline, FillStyle:=full, %2, anchor:=pos, labeldir:=labeldir_]),
+        draw("line", [A,B], [LineStyle:=style, legend:="", FillStyle:=none]),
+    
+        DelMac("draw2d_f"),
+        RestoreAttr()
+        ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+types arc([B,A,C,R,sens], [options])
+      ellipticArc([B,A,C,RX,RY,sens <,inclinaison>], [options])
+      angleD( [B,A,C,r], [options])
+      circle( [centre, rayon] ou [A,B,C], [options])
+      ellipse( [centre, rayonX, rayonY, <inclinaison>], [options])
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Drawarc = {Drawarc( [B,A,C,R,sens], [options]) : arc de cercle} 
+     [
+      SaveAttr(), defaultOptions(), $options_:=%2, 
+      qDrawarc(%1),
+      RestoreAttr()
+     ];
+        
+    qDrawarc = 
+    [$X:=%1, $B:=X[1], $A_:=X[2], $C:=X[3], $R:=X[4],
+     $sens:=X[5], if sens=Nil then sens:=1 fi, $u:=R*(B-A_)/abs(B-A_),
+     if legend<>Nil then
+        $v:=(B-A_)/abs(B-A_)+(C-A_)/abs(C-A_), v:=v/abs(v),
+        $direct:=2*(Im(bar(B-A_)*(C-A_))>0)-1, {sens direct ou non}
+        v:=direct*sens*v, $a:=RealArg(v),
+        anchor:=A_+R*v, labeldir:=[labelsep,v]
+     fi,
+     if FillStyle<>none then
+        $old_:=LineStyle, $oldM_:=marker, $oldA_:=Arrows, $oldL_:=legend,
+        LineStyle:=noline,marker:=Nil,Arrows:=0,legend:="",
+        qDrawpath([A_,A_+u,line,A_,C,R,sens,arc,closepath]),
+        LineStyle:=old_,marker:=oldM_,Arrows:=oldA_,legend:=oldL_
+     fi,
+     if LineStyle<>noline then
+        FillStyle:=none,
+        qDrawpath([A_+u,A_,C,R,sens,arc])
+     fi     
+    ];
+
+    DrawellipticArc = {DrawellipticArc( [B,A,C,RX,RY,sens <,inclinaison>], [options]) :
+                       arc d'ellipse, celle-ci peut être inclinée par rapport à l'horizontale (en degrés, 0 par défaut}
+    [$X:=%1, $RX:=X[4], $RY:=X[5], $t:=RX/RY, $B:=X[1], $A:=X[2], $C:=X[3],
+     if X[7]=Nil then $inclin:=A+5 else inclin:=A+exp(i*X[7]*deg) fi,
+     SaveAttr(),
+     $M:=GetMatrix(),
+     $u:=i*(inclin-A),
+     $mat1:=matrix( affin(z,[A,inclin],u,1/t) ),
+     $mat2:=matrix( affin(z,[A,inclin],u,t) ),
+     ComposeMatrix(mat1),
+     $L:=Mtransform([B,C],mat2),
+     defaultOptions(), $options_:=%2,
+     qDrawarc([L[1],A,L[2],RX,X[6]]),
+     RestoreAttr()
+     ];
+
+    DrawangleD = {DrawangleD( [B,A,C,r], [options]): dessine l'angle BAC avec un parallèlogramme de coté r.}
+    [$X_:=%1, $B_:=X_[1], $A_:=X_[2], $C_:=X_[3], $r_:=X_[4], $angleDu_:=(B_-A_)/Abs(B_-A_), $angleDv_:=(C_-A_)/Abs(C_-A_), 
+     if r_=Nil then r_:=0.25 fi,
+     SaveAttr(), 
+     defaultOptions(), $options_:=%2, marker:=Nil, radius:=0,
+     if FillStyle<>none then
+        $oldline_:=LineStyle, LineStyle:=noline, close:=1,
+        qDrawline([A_,A_+r_*angleDu_,A_+r_*(angleDu_+angleDv_),A_+r_*angleDv_]),
+        LineStyle:=oldline_
+     fi,
+     if LineStyle<>noline then
+        FillStyle:=none, close:=0,
+        qDrawline([A_+r_*angleDu_,A_+r_*(angleDu_+angleDv_),A_+r_*angleDv_])
+     fi,
+     RestoreAttr()
+    ];
+
+    Drawcircle = {Drawcircle( [centre, rayon] ou [A,B,C], [options]) : cercle}
+    [$X_:=%1, $a_:=X_[1], $b_:=X_[2], $c_:=X_[3],
+     if c_=Nil then $x_:=[a_+b_,a_,circle] else x_:=[%1,circle] fi,
+     if c_=Nil then $x_:=[a_+b_,a_,circle] else x_:=[%1,circle] fi,
+     defaultOptions(), LineCap:=round, $options_:=%2,
+     qDrawpath(x_) 
+    ];
+
+    Drawellipse = {Drawellipse( [centre, rayonX, rayonY, <inclinaison>], [options]) : ellipse}
+    [$X_:=%1, $O_:=X_[1], $Rx_:=X_[2], $Ry_:=X_[3],$incli_:=X_[4], if incli_=Nil then incli_:=0 fi,
+     defaultOptions(), LineCap:=round, $options_:=%2,
+     qDrawpath([O_+Rx_*exp(i*incli_*deg),move,O_,Rx_,Ry_,incli_,ellipse])
+    ];

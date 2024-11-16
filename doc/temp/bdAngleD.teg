@@ -1,0 +1,19 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), view(-3,3,-3,3),
+view3D(-3,3,-3,3,-3,3), size(7.5),
+background(full, gray),
+B:=M(0,2,0), A:=M(0,0,0),C:=M(0,0,1.5),
+Build3D(
+ bdAngleD(B,A,C,1, [color:=firebrick,tube:=1]),
+ bdDot([A,B,C], [dotstyle:=cube,
+         dotscale:=0.85,
+         color:=forestgreen]),
+ bdArc(B,A,C,2,1,[color:=blue, width:=12,
+         arrows:=1,labelarc("$\pi/2$")]),
+ bdAxes([0,0], [color:=gold,arrows:=1]),
+ bdLabel(B,"$B$",[labelpos:=[0.5,-i]]),
+ bdLabel(C,"$C$",[labelpos:=[0.5,-1]]),
+    ),
+Display3D()
+];

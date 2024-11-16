@@ -1,0 +1,12 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}GetSurface}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\ \textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textit{\color{TegIdentifier}S}{\color{TegSymbol}:=}\textbf{\color{TegKeyWord}GetSurface}{\color{TegSymbol}(}{\color{TegSymbol}[}\textbf{\color{TegVarPredef}u}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}v}{\color{TegSymbol},}\textbf{\color{TegKeyWord}sin}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}u}{\color{TegSymbol})}{\color{TegSymbol}+}\textbf{\color{TegKeyWord}cos}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}v}{\color{TegSymbol})}{\color{TegSymbol}]}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegConstant}pi}{\color{TegSymbol}*}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegConstant}pi}{\color{TegSymbol}*}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegMacPredef}DrawFacet}{\color{TegSymbol}(}\textit{\color{TegIdentifier}S}{\color{TegSymbol},}{\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegKeyWord}Rgb}{\color{TegSymbol}(}{\color{TegNumeric}0.74}{\color{TegSymbol},}{\color{TegNumeric}0.73}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol})}{\color{TegSymbol}]}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

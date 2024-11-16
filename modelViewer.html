@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Model Viewer</title>
+        <link rel="stylesheet" type="text/css" href="modelViewer.css">
+        <script src="three.js"></script>
+        <script src="TrackballControls.js"></script>
+        <script src="dat.gui.min.js"></script>
+        <!-- file to be displayed, exported by TeXgraph -->
+        <script src="./temp.js"></script>
+      
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    </head>
+    <body>
+        <div id="haut">
+            <div class="titre">Model Viewer</div>
+        </div>
+        <!-- Le panel dat.GUI-->
+        <div id="panel"></div>
+        <!-- La scène THREE.js -->
+        <div id="mycanvas">
+        <!-- program js using THREE.js, this programm shows temp.js -->
+        <script src="modelViewer.js"></script>
+        </div>
+    </body>
+</html>

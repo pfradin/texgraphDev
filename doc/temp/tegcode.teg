@@ -1,0 +1,12 @@
+TeXgraph#
+Mac Gcd = [//Gcd(liste d’entiers)
+        $L:=%1, $N:=Nops(L),
+        if N<2 then "error !"
+        else
+            $r:=pgcd(L[1],L[2]),
+            if r=1 then 1
+            elif N=2 then r
+            else Gcd( [r,L[3,0]] )
+            fi
+        fi
+        ];

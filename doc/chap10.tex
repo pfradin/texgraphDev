@@ -1,0 +1,1720 @@
+\chapter{Représentation en 3D}
+
+
+Pour être tout à fait honnête, TeXgraph n'est pas un logiciel de dessin en 3D, il travaille en complexe. Cependant, il est possible de lui faire faire un minimum de choses dans l'espace:
+
+\begin{itemize}
+ \item Un \Mytextbf{point} ou un \Mytextbf{vecteur} de coordonnées (x,y,z) est représenté par la liste: [x+i*y,z] ou encore avec la commande \Helpref{M}{cmdM}: M(x,y,z). Par exemple l'origine est M(0,0,0) ou encore [0,0], il existe aussi la variable \var{Origin}. Il est possible d'ajouter ou soustraire deux listes, de les multiplier par un nombre, on peut donc faire des combinaisons linéaires. D'autre part une variable locale ou globale peut contenir une liste de complexes, par conséquent une variable A peut très bien contenir une liste comme [x+i*y,z] représentant ainsi ce que nous appelerons un \textbf{point3D} ou un \textbf{vecteur3D}.
+ \item Un \Mytextbf{plan} est représenté par un de ses points et un vecteur normal, c'est à dire une liste: [point3D, vecteur3D].
+ \item Une \Mytextbf{droite} est représentée par un de ses points et un vecteur directeur, c'est à dire une liste: [point3D, vecteur3D].
+ \item Une \Mytextbf{facette} est représentée par la liste de ses sommets, cette liste se termine par la constante \jump. L'ordre des sommets est capital, il définit l'orientation de la facette. Exemple: \co{face:= [Origin, M(3,0,0), M(0,3,0), jump]}.
+ \item Une \Mytextbf{surface} ou un \Mytextbf{polyèdre} est représenté par une liste de facettes.
+\end{itemize}
+
+Il y a deux types de représentations 3D:
+
+\begin{enumerate}
+ \item La représentation d'\Mytextbf{objets individuels}: dans ce cas c'est l'utilisateur qui doit gérer la mise en scène, comme l'ordre d'affichage et les éventuelles intersections par exemple. Ce cas correspond aux options que l'on trouve sur la barre \textit{Supplément 3D} de l'interface graphique. Ce cas est adapté lorsqu'il y a un seul objet ou lorsque la gestion de la scène est très simple. L'avantage de cette méthode est de donner une image légère qui reste vectorielle (pour les cercles, les arcs, ...).
+ \item La représentation \Mytextbf{globale d'une scène}: dans ce cas c'est la commande \Helpref{Build3D()}{chapBuild3D} qui permet de définir la scène et la commande \Helpref{Display3D()}{cmdDisplay3D} qui \og calcule\fg\ la scène et procède à l'affichage. L'ordre d'affichage et les intersections sont donc déterminés automatiquement. L'inconvénient est que le nombre de facettes ou segments peut exploser donnant ainsi une image lourde, d'autre part on perd l'aspect vectoriel pour certains éléments qui sont alors dessinés par segments (arcs, cercles, ...)
+\end{enumerate}
+
+
+Ce chapitre est consacré au premier type, le second fait l'objet du chapitre suivant.
+
+\section{Variables prédéfinies}
+
+Variables prédéfinies relatives à la représentation en 3D:
+
+\begin{itemize}
+ \item \textbf{theta} et \textbf{phi}: utilisées pour les calculs de projections sur le plan de l'écran, elles sont initialisées respectivement à $\pi$/6 et $\pi$/3, la première représente la longitude et la deuxième la colatitude. Elles sont modifiables également par l'intermédiaire d'un bouton dans la barre d'outils.
+ \item \textbf{sep3D}: constante initialisée à \textit{Re(jump)-i}, sert de délimiteur pour les éléments graphiques dans la commande \Helpref{Build3D}{cmdBuild3D}.
+ \item \textbf{AngleStep}: représente le pas angulaire lorsque l'on fait tourner un objet 3D à l'aide des boutons représentant les flèches de direction. Celle-ci est initialisée à $\pi/36$ (soit 5 degrés).
+ \item \textbf{Origin}: origine, initialisée à \textsl{[0,0]}.
+ \item \textbf{vecI}: 1er vecteur de base, initialisé à \textsl{[1,0]}.
+ \item \textbf{vecJ}: 2ième vecteur de base, initialisé à \textsl{[i,0]}.
+ \item \textbf{vecK}: 3ième vecteur de base, initialisé à \textsl{[0,1]}.
+ \item Pour la fenêtre 3D: \textbf{Xinf} (=-5), \textbf{Xsup} (=5), \textbf{Yinf} (=-5), \textbf{Ysup} (=5), \textbf{Zinf} (=-5) et \textbf{Zsup} (=5). 
+ \item \textbf{HideStyle}: initialisée à dotted, pour le style de tracé des arêtes cachées,
+ \item \textbf{HideWidth}: initialisée à \Nil, pour l'épaisseur du tracé des arêtes cachées,
+ \item \textbf{HideColor}: initialisée à \Nil, pour la couleur du tracé des arêtes cachées.
+\end{itemize}
+
+\section{Commandes relatives à la 3D}
+
+\subsection{Edges}\label{cmdAretes}
+
+\begin{itemize}
+ \item \util \textbf[Edges()]{Edges( <liste de facettes> )} ou \textbf[Aretes()]{Aretes( <liste de facettes> )}.
+ \item \desc cette fonction renvoie la liste des arêtes de l'objet représenté par la \argu{liste de facettes}. Une arête est elle même une liste de la forme: [point3D1, point3D2, jump] et la partie imaginaire de la constante \jump contient soit la valeur $0$ pour une arête cachée, soit la valeur $1$ pour une arête visible.
+ \item \exem section d'un tétraèdre:
+\end{itemize}
+
+\begin{demo}{Aretes}{Aretes}
+\begin{texgraph}[name=Aretes]
+ view(-2,3,-2,4.5),Marges(0,0,0,0),size(7.5),
+ plan:=[M(1.5,0,0), -vecI],
+ S:= Section(plan,
+    Tetra(Origin,3*vecI,3*vecJ,4*vecK)),
+ A:=Aretes(S), Width:=12, DrawAretes(A) 
+\end{texgraph}
+\end{demo}
+
+\subsection{Outline}\label{cmdBord}
+
+\begin{itemize}
+ \item \util \textbf[Outline()]{Outline( <liste de facettes> )} ou \textbf[Bord()]{Bord( <liste de facettes> )}.
+ \item \desc cette fonction renvoie la liste des arêtes constituant le bord de l'objet représenté par la \argu{liste de facettes}. Une arête est elle même une liste de la forme: [point3D1, point3D2, jump] et la partie imaginaire de la constante \jump contient soit la valeur $0$ pour une arête cachée, soit la valeur $1$ pour une arête visible. Une arête est considérée sur le bord lorsqu'elle n'appartient qu'à une seule facette.
+\end{itemize}
+
+\subsection{ComposeMatrix3D}\label{cmdComposeMatrix3D}
+
+\begin{itemize}
+ \item \util \textbf[ComposeMatrix3D()]{ComposeMatrix3D( <[vecteur3D1, vecteur3D2, vecteur3D3, vecteur3D4]> )}.
+ \item \desc cette fonction compose la matrice \argu{[vecteur3D1, vecteur3D2, vecteur3D3, vecteur3D4]} avec la matrice 3D courante (celle-ci affecte la fonction de projection \Helpref{Proj3D}{cmdProj3D}). Cette matrice représente l'expression analytique d'une application affine de l'espace, c'est une liste de trois vecteurs: \textsl{vecteur3D1} qui est le vecteur de translation, \textsl{vecteur3D2} qui est le premier vecteur colonne de la matrice de la partie linéaire dans la base canonique, \textsl{vecteur3D3} qui est le deuxième vecteur colonne de la matrice de la partie linéaire, et \textsl{vecteur3D4} qui est le troisième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [M(0,0,0), M(1,0,0), M(0,1,0], M(0,0,1)] ou encore [Origin, vecI, vecJ, vecK] (c'est la matrice par défaut). (Voir aussi les commandes \Helpref{GetMatrix3D}{cmdGetMatrix3D}, \Helpref{SetMatrix3D}{cmdSetMatrix3D}, et \Helpref{IdMatrix3D}{cmdIdMatrix3D}).
+ \item Si $f$ est une application affine de l'espace alors sa partie linéaire est Lf(X)=f(X) - f(Origin), le vecteur de translation est f(Origin), et sa matrice s'écrit: [f(Origin), Lf(vecI), Lf(vecJ), Lf(vecK)].
+\end{itemize}
+
+\subsection{ConvertToObj}\label{cmdConvertToObj}
+
+\begin{itemize}
+ \item \util \textbf[ConvertToObj()]{ConvertToObj( <liste de facettes>, <sommets>, <facettes> )}.
+ \item \desc cette fonction convertit la \argu{liste de facettes} au format \var{obj}, plus précisément les deux derniers arguments doivent être des variables, la variable \argu{sommets} reçoit en sortie la liste des sommets (sans doublons) et la variable \argu{facettes} reçoit la liste des facettes (séparées par la constante \jump) comportant non pas les coordonnées des sommets, mais leur numéro d'apparition dans la liste des sommets. La fonction renvoie un complexe $a+ib$ où $a$ est le nombre de sommets et $b$ le nombre de faces. Cette commande est utilisée dans les exports \var{obj}, \var{geom} et \var{jvx}.
+
+ \textbf{Attention}: pour un grand nombre de facettes (plusieurs milliers ou plus), cette commande prend un certain temps (compter $2$ à $3\,$mn pour environ $20\,000$ facettes)!
+ \item La commande \Helpref{MakePoly}{cmdMakePoly} fait l'opération inverse.
+ \item \exem l'exécution \co{ConvertToObj(Tetra(Origin, 2*vecI, 3*vecJ, vecK), S, F)} renvoie la valeur \res{4+4*i}, ce qui signifie $4$ sommets et $4$ facettes. La variable $S$ contient en sortie la liste: \res{[0,0,3*i,0,2,0,0,1]}, et la variable $F$ contient en sortie la liste: \res{[1,2,3,jump,1,3,4,jump,3,2,4,jump,1,4,2,jump]}. 
+\end{itemize}
+
+\subsection{ConvertToObjN}\label{cmdConvertToObjN}
+
+\begin{itemize}
+ \item \util \textbf[ConvertToObjN()]{ConvertToObjN( <liste de facettes>, <sommets>, <facettes> )}.
+ \item \desc cette fonction convertit la \argu{liste de facettes} au format \var{obj}, plus précisément les deux derniers arguments doivent être des variables, la variable \argu{sommets} reçoit en sortie la liste des sommets (sans doublons) où \Mytextbf{chaque sommet est suivi de son vecteur unitaire normal} (ce vecteur est la moyenne des vecteurs normaux aux facettes se partageant le sommet). La variable \argu{facettes} reçoit la liste des facettes (séparées par la constante \jump) comportant non pas les coordonnées des sommets, mais leur numéro d'apparition dans la liste des sommets. La fonction renvoie un complexe $a+ib$ où $a$ est le nombre de sommets et $b$ le nombre de faces. Cette commande est utilisée dans les exports \var{obj} et \var{geom}.
+
+ \textbf{Attention}: pour un grand nombre de facettes (plusieurs milliers ou plus), cette commande prend un certain temps!
+ \item \exem l'exécution de la commande:
+
+\centerline{\co{ConvertToObjN(Tetra(Origin,2*vecI,3*vecJ,vecK),S,F)}}
+
+renvoie la valeur \res{4+4*i}, ce qui signifie $4$ sommets et $4$ facettes. La variable $S$ contient en sortie la
+liste: 
+
+%\begin{footnotesize}
+\res{[0, 0, -0.57735026918962-0.57735026918962*i, -0.57735026918962, \\
+3*i, 0, -0.87287156094397 +0.43643578047198*i, -0.21821789023599, \\
+2, 0, 0.50709255283711 -0.84515425472851*i, -0.1690308509457, \\
+0, 1, -0.45584230583855 -0.56980288229819*i, 0.68376345875782]},
+%\end{footnotesize}
+
+et la variable $F$ contient en sortie la liste: \res{[1, 2, 3, jump, 1, 3, 4, jump, 3, 2, 4, jump, 1, 4, 2, jump]}.
+
+\end{itemize}
+
+
+\subsection{Clip3DLine}\label{cmdClip3DLine}
+
+\begin{itemize}
+ \item \util \textbf[Clip3DLine()]{Clip3DLine( <liste de point3D>, <plan>, <fermée(0/1)> [, derrière] )}.
+ \item \desc cette fonction clippe la liste de points avec le \argu{plan}, celui-ci se présente sous la forme d'une liste [point3D, vecteur3D] où le vecteur est normal au plan et point3D un point du plan, la fonction renvoie la partie de la liste contenue dans le demi-espace contenant le vecteur normal (c'est le devant du plan). Le troisième argument précise si la liste doit être fermée ou non. Le dernier argument est facultatif, ce doit être un nom de variable, celle-ci contiendra en sortie la partie de la liste située derrière le plan. 
+ \item \exem couper une hélice:
+
+\end{itemize}
+
+
+\begin{demo}{Clip3DLine}{Clip3DLine}
+\begin{texgraph}[name=Clip3DLine]
+ view(-5,5,-5,5),view3D(-4,4,-4,4,-4,4),
+ size(7.5),plan:=[Origin,vecJ],
+ C:=for t from -2*pi to 2*pi step 0.1 do
+  [2*exp(i*t),t/3] od,
+ L:=Clip3DLine(C,plan,0,L'),
+ Ligne3D([M(0,-4,0), Origin],0),
+ Color:=blue, Ligne3D(L',0),
+ FillStyle:=full, FillColor:=gray,
+ FillOpacity:=0.8, Color:=black,
+ DrawPlan( [Origin, vecJ], vecI,5,5),
+ FillStyle:=none,
+ Yinf:=0, Axes3D(0,0,0),
+ Color:=red, Ligne3D(L,0)
+\end{texgraph}
+\end{demo}
+
+
+\subsection{ClipFacet}\label{cmdClipFacet}
+
+\begin{itemize}
+ \item \util \textbf[ClipFacet()]{ClipFacet( <liste de facettes>, <plan> [, arrière, intersection] )}.
+ \item \desc une facette se présente sous la forme d'une liste de points 3D se terminant par la constante \jump, ces points sont censés être coplanaires. Exemple: \textsl{[ Origin, M(0,1,0), M(0,0,3), jump]} est une facette. Les facettes sont orientées par l'ordre d'apparition des sommets.
+
+ Cette fonction coupe toutes les facettes de la liste avec le \argu{plan}, celui-ci se présente sous la forme d'une liste du type [A,u] où A est un point3D et u également, cela représente le plan passant par A et normal au vecteur u. Seule la partie des facettes dans le demi-plan contenant u est conservée. La fonction renvoie la liste des facettes coupées. 
+ 
+ Les paramètres facultatifs \argu{paramètre} et \argu{intersection} doivent être deux variables. La variable \argu{paramètre} permet de récupérer 
+ la liste des facettes qui sont dans l'autre demi-plan. La variable \argu{intersection} permet de récupérer l'intersection avec le plan de coupe sous la forme d'une liste d'arêtes.
+  
+ \item \exem la commande \co{[P:=Tetra(Origin, vecI, vecJ, vecK), ClipFacet(P, [M(0,0,0.5), -vecK])]} définit un tétraèdre nommé P et renvoie la partie de P située sous le plan (sous forme de facettes).
+\end{itemize}
+
+\begin{demo}{ClipFacet}{ClipFacet}
+\begin{texgraph}[name=ClipFacet]
+ view(-1,1,-0.75,1.25), view3D(-2,2,-2,2,-2,2),
+ Marges(0,0,0,0), size(7.5),
+ P:=Tetra(Origin, vecI, vecJ, vecK),
+ P':=ClipFacet(P, [M(0,0,0.5), -vecK],A,I),
+ DrawFacet( P', [FillOpacity:=0.6,color:=pink]),
+ SaveAttr(),
+ Color:=blue, Width:=8, fillS(bdiag,blue),
+ Ligne3D(Vertices(I),1),
+ RestoreAttr(),
+ DrawFacet(shift3d(A,0.25*vecK), 
+   [FillOpacity:=0.6,color:=pink])
+\end{texgraph}
+\end{demo}
+
+
+\subsection{DistCam}\label{cmdDistCam}
+
+\begin{itemize}
+ \item \util \textbf[DistCam()]{DistCam( <distance> )} ou \textbf[DistCam()]{DistCam()}.
+ \item \desc permet de changer la position de la caméra en modifiant sa \argu{distance} à l'origine. Lorsque cette distance est trop faible, le rendu peut ne pas être correct. Lorsque l'argument est vide, la fonction renvoie simplement la distance caméra - écran, sinon elle renvoie \Nil.Voir aussi \Helpref{ModelView}{cmdModelView} et \Helpref{PosCam}{cmdPosCam}.
+\end{itemize}
+
+
+\subsection{Fvisible}\label{cmdFvisible}
+
+\begin{itemize}
+ \item \util \textbf[Fvisible()]{Fvisible( <facette> )}.
+ \item \desc cette fonction renvoie $1$ ou $0$ suivant que la \argu{facette} est visible ou non pour l'observateur. Une facette est visible lorsque son vecteur normal est dirigé vers l'observateur (c'est à dire si le produit scalaire avec le vecteur facette - observateur, est positif). Cette fonction tient compte de la matrice de transformation 3D courante et du type de projection.
+\end{itemize}
+
+
+\subsection{GetMatrix3D}\label{cmdGetMatrix3D}
+
+\begin{itemize}
+ \item \util \textbf[GetMatrix3D()]{GetMatrix3D()}.
+ \item \desc cette fonction renvoie la matrice 3D courante. (Voir aussi les commandes \Helpref{ComposeMatrix3D}{cmdComposeMatrix3D}, \Helpref{SetMatrix3D}{cmdSetMatrix3D}, et \Helpref{IdMatrix3D}{cmdIdMatrix3D}).
+\end{itemize}
+
+
+\subsection{GetSurface}\label{cmdGetSurface}
+
+\begin{itemize}
+ \item \util \textbf[GetSurface()]{GetSurface( <f(u,v)> [, uMin+i*uMax, vMin+i*vMax, uNbLg+i*vNbLg] )}.
+ \item \desc renvoie la liste des facettes de la surface paramétrée par \argu{f(u,v)} où f est une fonction de deux variables réelles u et v, et à valeurs dans l'espace. Le deuxième paramètre représente l'intervalle du paramètre $u$ ($[-5,5]$ par défaut), le troisième paramètre représente l'intervalle du paramètre $v$ ($[-5;5]$ par défaut), le quatrième paramètre représente, sous forme complexe, le nombre de lignes pour $u$ et le nombre de lignes pour $v$ ($25$ lignes par défaut).
+ \item \exem dessin d'une surface:
+\end{itemize}
+
+\begin{demo}{GetSurface}{GetSurface}
+\begin{texgraph}[name=GetSurface]
+ Marges(0,0,0,0), size(7.5),
+ S:=GetSurface([u+i*v,sin(u)+cos(v)],
+        pi*(-1+i),pi*(-1+i)),
+ DrawFacet(S,[color:=Rgb(0.74,0.73,1)]) 
+\end{texgraph}
+\end{demo}
+
+\subsection{IdMatrix3D}\label{cmdIdMatrix3D}
+
+\begin{itemize}
+ \item \util \textbf[IdMatrix3D()]{IdMatrix3D()}.
+ \item \desc change la matrice 3D courante en la matrice identité. (Voir aussi les commandes \Helpref{ComposeMatrix3D}{cmdComposeMatrix3D}, \Helpref{SetMatrix3D}{cmdSetMatrix3D}, et \Helpref{GetMatrix3D}{cmdGetMatrix3D}) 
+\end{itemize}
+
+\subsection{Insert3D}\label{cmdInserer3D}
+
+\begin{itemize}
+ \item \util \textbf[Insert3D()]{Insert3D( <liste>, <3Dpoint> [, epsilon] )} or \textbf[Inserer3D()]{Inserer3D( <liste>, <3Dpoint> [, epsilon] )}.
+ \item \desc le premier argument doit être une variable, la fonction ajoute le \argu{point3D} dans la \argu{liste} sans qu'il y ait de doublons, et renvoie la position (entier) de ce point dans la variable \argu{liste} qui est mise à jour. Le test de comparaison se fait à \argu{epsilon} près (0 par défaut).
+\end{itemize}
+
+\subsection{MakePoly}\label{cmdMakePoly}
+\begin{itemize}
+ \item \util \textbf[MakePoly()]{MakePoly( <liste de points3D>, <liste facettes (format obj)> }
+ \item \desc cette commande prend en entrée une \argu{liste de points3D} qui représente des sommets, et une \argu{liste de facettes} au format \var{obj}, c'est à dire que les facettes ne contiennent pas les coordonnées des sommets mais leur numéro d'apparition dans la liste des sommets. La commande renvoie en sortie la liste des facettes construites avec les coordonnées des sommets, cette liste peut alors être dessinée par une des macros \Helpref{DrawPoly}{macDrawPoly}, \Helpref{DrawFacet}{macDrawFacet}.
+\end{itemize}
+
+
+\subsection{ModelView}\label{cmdModelView}
+\begin{itemize}
+ \item \util \Mytextbf{ModelView( <ortho/central> )} ou \textbf[ModelView()]{ModelView()}.
+ \item \desc permet de modifier le mode de projection \var{ortho} pour la projection orthographique et \var{central} pour la projection centrale (voir \Helpref{Proj3D}{cmdProj3D}). Lorsque l'argument est vide, la fonction renvoie simplement le mode actuel de projection, sinon elle renvoie \Nil. Voir aussi \Helpref{PosCam}{cmdPosCam} et \Helpref{DistCam}{cmdDistCam}.
+\end{itemize}
+
+
+\subsection{Mtransform3D}\label{cmdMtransform3D}
+\begin{itemize}
+ \item \util \textbf[Mtransform3D]{Mtransform3D( <liste de points 3D>, <matrice3d> )}.
+ \item \desc cette fonction renvoie la \argu{liste de points 3D} transformée par la \argu{matrice3d}. Cette matrice représente l'expression analytique d'une application affine de l'espace, c'est une liste de trois vecteurs: \textsl{vecteur3D1} qui est le vecteur de translation, \textsl{vecteur3D2} qui est le premier vecteur colonne de la matrice de la partie linéaire dans la base canonique, \textsl{vecteur3D3} qui est le deuxième vecteur colonne de la matrice de la partie linéaire, et \textsl{vecteur3D4} qui est le troisième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [M(0,0,0), M(1,0,0), M(0,1,0), M(0,0,1)] ou encore [Origin, vecI, vecJ, vecK] (c'est la matrice par défaut). (Voir aussi les commandes \Helpref{GetMatrix3D}{cmdGetMatrix3D}, \Helpref{ComposeMatrix3D}{cmdComposeMatrix3D}, et \Helpref{IdMatrix3D}{cmdIdMatrix3D}).
+\end{itemize}
+
+\begin{demo}{La commande Mtransform3D()}{Mtransform3D}
+\begin{texgraph}[name=Mtransform3D]
+ view(-5,5,-3,6), Marges(0,0,0,0), size(7.5),
+ viewDir(115,70),
+ P:=shift3d(Pyramide( [Origin,M(1,-1,0),M(3,1,0),
+        M(3,3,0),M(1,4,0)],M(1,1,3)),2*vecJ),
+ miroir:=[M(-4,0,0),M(4,0,0),M(4,0,5),M(-4,0,5),jump],
+ P':=reverse3d( Mtransform3D( P,
+          matrix3d(sym3d(M,[Origin,vecJ])))),
+ FillStyle:=full, FillColor:=brown, Width:=8,
+ DrawFacet( P', [color:=FillColor]),
+ DrawFacet( miroir,
+        [FillOpacity:=0.5, color:=lightgray]
+     ),
+ DrawPoly(P,4) 
+\end{texgraph}
+\end{demo}
+
+
+\subsection{Norm}\label{cmdNorm}
+\begin{itemize}
+ \item \util \textbf[Norm()]{Norm( <vecteur3D> )}.
+ \item \desc renvoie la norme du \argu{vecteur}.
+\end{itemize}
+
+\subsection{Normal}\label{cmdNormal}
+\begin{itemize}
+ \item \util \textbf[Normal()]{Normal()}.
+ \item \desc renvoie le vecteur unitaire normal au plan de projection et dirigé vers l'observateur. Ce vecteur est $M(\sin(\phi)\cos(\theta), \sin(\phi)\sin(\theta), \cos(\phi))$.
+\end{itemize}
+
+
+\subsection{PaintFacet}\label{cmdPaintFacet}
+\begin{itemize}
+ \item \util \textbf[PaintFacet()]{PaintFacet( <liste facettes>, <couleur+i*(non orientées 0/1)>, < (backculling 0/1)+i*contraste> )}.
+ \item \desc cette commande renvoie la \argu{liste facettes} après avoir ajouté dans la partie imaginaire de chaque constante \jump\ qui sépare les facettes, une \argu{couleur} (en réalité c'est la couleur+2). Si l'argument \argu{non orientées} vaut $1$, alors on ne distingue pas le devant du derrière des facettes. Si l'argument \argu{backculling} vaut $1$ alors les facettes non visibles sont éliminées. L'argument \argu{contrast} est un nombre positif ou nul qui permet d'accentuer ou non le contraste de couleur entre les facettes, avec la valeur $0$ la couleur sera unie. 
+ \item Cette commande est utilisée par la macro de dessin \Helpref{DrawFacet}{macDrawFacet}.
+\end{itemize}
+
+\subsection{PaintVertex}\label{cmdPaintVertex}
+\begin{itemize}
+ \item \util \textbf[PaintVertex()]{PaintVertex( <liste facettes>, <couleur+i*(non orientées 0/1)>, < (backculling 0/1)+i*contraste> )}.
+ \item \desc cette commande renvoie la \argu{liste facettes} après avoir ajouté dans la partie imaginaire de la cote de chaque sommet, une \argu{couleur} (en réalité c'est la couleur+2). Si l'argument \argu{non orientées} vaut $1$, alors on ne distingue pas le devant du derrière des facettes. Si l'argument \argu{backculling} vaut $1$ alors les facettes non visibles sont éliminées. L'argument \argu{contrast} est un nombre positif ou nul qui permet d'accentuer ou non le contraste de couleur entre les facettes, avec la valeur $0$ la couleur sera unie. L'exécution de cette commande peut être un peu longue pour un grand nombre de facettes.
+ \item Cette commande est utilisée par la macro de dessin \Helpref{DrawFacet}{macDrawFacet}.
+\end{itemize}
+
+
+\subsection{PosCam}\label{cmdPosCam}
+
+\begin{itemize}
+ \item \util \Mytextbf{PostCam( <point3D> )} ou \textbf[PostCam()]{PostCam()}.
+ \item \desc permet de modifier la position de la caméra. Celle-ci vise toujours l'origine et le plan de projection est le plan passant par l'origine et perpendiculaire à l'axe origine - caméra (c'est le plan de l'écran). Lorsque l'argument est vide, la commande renvoie simplement la position actuelle de la caméra. Voir aussi \Helpref{ModelView}{cmdModelView} et \Helpref{DistCam}{cmdDistCam}.
+\end{itemize}
+
+
+\subsection{Prodvec}
+\begin{itemize}
+ \item \util \textbf[Prodvec()]{Prodvec( <vecteur3D1>, <vecteur3D2> )}.
+ \item \desc renvoie le résultat du produit vectoriel entre les deux vecteurs.
+\end{itemize}
+
+\subsection{Prodscal}
+\begin{itemize}
+ \item \util \textbf[Prodscal()]{Prodscal( <vecteur3D1>, <vecteur3D2> )}.
+ \item \desc renvoie le résultat du produit scalaire entre les deux vecteurs.
+\end{itemize}
+
+\subsection{Proj3D}\label{cmdProj3D}
+\begin{itemize}
+ \item \util \textbf[Proj3D()]{Proj3D( < liste de point3D > )}.
+ \item \desc cette fonction \textsl{Proj3D} calcule et renvoie la liste des projetés des points 3D sur le plan passant par l'origine et normal au vecteur \textsl{Normal()} de coordonnées $(sin(\varphi)cos(\theta), sin(\varphi)sin(\theta),cos(\varphi))$ [dirigé vers l'observateur]. La liste de points 3D peut contenir la constante de saut \jump, elle sera recopiée dans le résultat.
+
+\begin{demo}{Coordonnées spatiales}{coord}
+\begin{texgraph}[name=coord]
+view(-3.5,4.5,-3,4), view3D(-3.5,3.5,-3.5,3.5,-3.5,3.5), size(7.5), Marges(0,0,0,0),
+A:=M(3,3,3), Width:=8, Arrows:=1, Axes3D(0,0,0),
+LabelDot3D(Origin, "$O$","NO",1),
+Arc3D(px(A),Origin,pxy(A),1.5,1), Arc3D(pz(A),Origin,A,1.5,1),
+Arrows:=0, LineStyle:=userdash,
+Ligne3D([px(A),pxy(A),py(A), jump, A, pxy(A),Origin],0),
+Arrows:=1, LineStyle:=solid, Ligne3D([Origin ,A],0),
+LabelDot3D(A,"$\vec{n}$", "NE"),
+Label(0.1228-1.0377*i,"$\theta$"),
+Label(0.3509+1.3396*i,"$\varphi$")
+\end{texgraph}
+\end{demo}
+ \item Il y a deux types de projection: orthographique et centrale. On change de mode avec la commande \Helpref{ModelView}{cmdModelView}.
+  \begin{itemize}
+   \item \textbf{projection orthographique}: projection orthogonale sur le plan passant par l'origine et normal au vecteur \textsl{Normal()} (ce plan correspond au plan de l'écran). Cela revient à dire que l'observateur est à l'infini. Cette projection a l'avantage d'être linéaire, elle conserve les barycentres, on peut donc dessiner une courbe de \textsc{Bezier} dans l'espace en utilisant la fonction \Helpref{Bezier}{cmdBezier} du plan: si A, B et C sont trois points de l'espace alors on peut créer un élément graphique \textsl{Courbe/Bezier} avec la commande \co{Proj3D([A,C,B])} et on verra se dessiner la projection de la courbe de Bézier d'extrémités A et B avec C comme point de contrôle.
+
+  \item \textbf{projection centrale}: l'observateur est en un certain point $C$ de l'espace (autre que l'origine), le vecteur \textsl{Normal()} correspond alors au vecteur $\vec{OC}$ normalisé. La projection se fait toujours sur le plan $P$ passant par l'origine et normal au vecteur \textsl{Normal()}, de la manière suivante: le projeté d'un point $M$ est l'intersection de la droite $(CM)$ avec le plan $P$. Lorsque la distance est trop courte, l'affichage n'est pas toujours correct. Les commandes liées à ce mode de projection sont \Helpref{PosCam}{cmdPosCam} et \Helpref{DistCam}{cmdDistCam}.
+  \end{itemize}
+ \item \exem représentation dans l'espace d'une courbe plane:
+\end{itemize}
+
+
+\begin{demo}{Proj3D}{Proj3D}
+\begin{texgraph}[name=Proj3D]
+ModelView(central), view(-6,6,-6,6),
+view3D(-5,5,-4,4,-4,4),
+Marges(0,0,0,0), size(7.5),
+L:= for z in Get(Cartesienne(sin(x)),0)
+  do [z,0] od,
+Arrows:=1, Axes3D(0,0,0),
+Arrows:=0, Width:=8,
+Color:=red, Ligne( Proj3D(L), 0)
+\end{texgraph}
+\end{demo}
+
+\subsection{ReadObj}\label{cmdReadObj}
+
+\begin{itemize}
+ \item \util \textbf[ReadObj()]{ReadObj( <"fichier">, <facettes construites>, <lignes construites> [, <sommets>, <facettes obj>, <lignes obj>] )}.
+ \item \desc cette commande permet de lire un \argu{"fichier"} au format \var{obj} (l'extension est obligatoire). Les arguments suivants doivent être des variables. La variable \argu{facettes construites} reçoit la liste des facettes prêtes à être déssinées, de même pour la variable \argu{lignes construites}. Les arguments optionnels sont aussi des variables et permettent de récupérer les données du fichier au format \var{obj}: liste des \argu{sommets}, \argu{facettes obj} et \argu{lignes obj} avec les numéros d'apparition des sommets dans la liste.
+ \item \exem lecture d'un fichier \textit{triceratops.obj} (chargé à cette adresse: 
+
+\centerline{\url{http://www.cs.technion.ac.il/~irit/data/Viewpoint/}}
+
+ L'image est obtenue à partir d'une capture (bouton snapshot) avec un export \var{eps} avant une conversion \var{png}.
+\end{itemize}
+
+\pngtrue
+\begin{demo}{ReadObj}{triceratops}
+\begin{texgraph}[name=triceratops, export=none]
+ view(-9,10,-7,7), Marges(0,0,0,0),
+ size(7.5), viewDir(37,85),
+ SetMatrix3D([Origin, vecJ, vecK, vecI]),
+ background(full, lightblue),
+ ReadObj("obj/triceratops.obj", stock1, stock2),
+ draw("SmoothFacet", stock1, [color:=gray])
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+
+\subsection{SetMatrix3D}\label{cmdSetMatrix3D}
+
+\begin{itemize}
+ \item \util \textbf[SetMatrix3D()]{SetMatrix3D( <[vecteur3D1, vecteur3D2, vecteur3D3, vecteur3D4]> )}.
+ \item \desc cette fonction change la matrice courante en \argu{[vecteur3D1,vecteur3D2,vecteur3D3,vecteur3D4]} (ceci affecte la fonction de projection \Helpref{Proj3D}{cmdProj3D}). Cette matrice représente l'expression analytique d'une application affine de l'espace, c'est une liste de trois vecteurs: \textsl{vecteur3D1} qui est le vecteur de translation, \textsl{vecteur3D2} qui est le premier vecteur colonne de la matrice de la partie linéaire dans la base canonique, \textsl{vecteur3D3} qui est le deuxième vecteur colonne de la matrice de la partie linéaire, et \textsl{vecteur3D4} qui est le troisième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [M(0,0,0), M(1,0,0), M(0,1,0], M(0,0,1)] ou encore [Origin, vecI, vecJ, vecK] (c'est la matrice par défaut). (Voir aussi les commandes \Helpref{GetMatrix3D}{cmdGetMatrix3D}, \Helpref{ComposeMatrix3D}{cmdComposeMatrix3D}, et \Helpref{IdMatrix3D}{cmdIdMatrix3D}). 
+ \item Si $f$ est une application affine de l'espace alors sa partie linéaire est Lf=f-f(Origin), le vecteur de
+translation est f(Origin), et sa matrice s'écrit: [f(Origin), Lf(vecI), Lf(vecJ), Lf(vecK)].
+
+\end{itemize}
+
+\subsection{Vertices}\label{cmdSommets}
+
+\begin{itemize}
+ \item \util \textbf[Vertices()]{Vertices( < liste de facettes> )} ou \textbf[Sommets()]{Sommets( < liste de facettes> )}.
+ \item \desc cette fonction renvoie la liste des sommets, sans doublons.
+\end{itemize}
+
+\subsection{SortFacet}\label{cmdSortFacet}
+
+\begin{itemize}
+ \item \util \textbf[SortFacet()]{SortFacet( <liste de facettes> [, (backculling 0/1)+i*contraste ] )}.
+ \item \desc une facette se présente sous la forme d'une liste de points 3D se terminant par la constante \textit{jump}, ces points sont censés être coplanaires. Exemple: \textsl{[ Origin, M(0,1,0), M(0,0,3), jump]} est une facette. Les facettes sont orientées par l'ordre d'apparition des sommets.
+
+ Cette fonction classe les facettes de la plus éloignée à la plus proche de l'observateur (c'est la cote du centre de gravité sur l'axe dirigé vers l'observateur qui est pris en compte), et renvoie la liste classée qui en résulte (la liste originale n'est pas modifiée).
+
+ L'argument optionnel est un complexe de la forme (0/1)+i*(0/1).
+
+ Si la partie réelle vaut $1$: les facettes non visibles sont éliminées du tri. Une facette est visible lorsque son vecteur unitaire normal (son sens est déterminé par l'orientation de la facette) est de \og même sens\fg\ que le vecteur unitaire dirigé vers l'observateur (produit scalaire positif avec le vecteur n()). 
+
+ Si la partie réelle vaut $0$: toutes les facettes sont triées.
+
+ Si la partie imaginaire vaut $1$: à chaque facette est attribué un coefficient (produit scalaire entre le vecteur unitaire normal à la facette et \textsl{Normal()} qui sert à nuancer la couleur de remplissage lorsque \textsl{FillStyle=full}. Ce coefficient est stocké dans la partie imaginaire de la constante \jump qui termine la facette. La fonction graphique \Helpref{Ligne}{cmdLigne} lit ce coefficient, qui est entre $0$ et $1$ pour une facette visible, et multiplie les composantes rgb de la couleur de remplissage par ce coefficient avant de peindre. 
+
+ Si la partie imaginaire vaut $0$: la couleur de remplissage ne sera pas nuancée.
+
+ Par défaut, l'argument optionnel est nul.
+\end{itemize}
+
+
+\section{Les macros mathématiques relatives la 3D}
+
+\subsection{aire3d}
+\begin{itemize}
+ \item \util \textbf[aire3d()]{aire3d( <liste de facettes convexes> )}.
+ \item \desc renvoie la somme des aires de la \argu{liste de facettes convexes}.
+\end{itemize}
+
+
+\subsection{angle3d}
+\begin{itemize}
+ \item \util \textbf[angle3d()]{angle3d( <vecteur3D1>, <vecteur3D2> )}.
+ \item \desc renvoie l'écart angulaire entre les deux vecteurs de l'espace.
+\end{itemize}
+
+\subsection{bary3d}
+\begin{itemize}
+ \item \util \textbf[bary3d()]{bary3d( <[point3D1, coef1, point3D2, coef2, ...]> )}.
+ \item \desc renvoie le barycentre du système pondéré \argu{[(point3D1, coef1), (point3D2, coef2), ...]}.
+\end{itemize}
+
+
+\subsection{det3d}
+\begin{itemize}
+ \item \util \textbf[det3d()]{det3d( <vecteur3D1>, <vecteur3D2>, <vecteur3D3> )}.
+ \item \desc renvoie le déterminant des trois vecteurs de l'espace.
+\end{itemize}
+
+\subsection{interDD}
+\begin{itemize}
+ \item \util \textbf[interDD()]{interDD( <droite>, <droite> [, epsilon])}.
+ \item \desc intersection droite-droite. Les droites sont de la forme: [point3D, vecteur directeur]. Si les droites sont coplanaires non parallèles, la macro renvoie un point3D. Par défaut la tolérance \argu{epsilon} vaut 1E-10.
+\end{itemize}
+
+\subsection{interDP}
+\begin{itemize}
+ \item \util \textbf[interDP()]{interDP( <droite>, <plan> )}.
+ \item \desc intersection droite-plan. La droite est de la forme: [point3D, vecteur directeur] et le plan de la forme [point3D, vecteur3D normal], la macro renvoie une droite un point3D.
+\end{itemize}
+
+\subsection{interLP}
+\begin{itemize}
+ \item \util \textbf[interLP()]{interLP( <liste de points 3D>, <plan> [, close(0/1)] )}.
+ \item \desc cette macro renvoie la liste des points d'intersection entre la ligne polygonale constituée par la \argu{liste de points 3D} et le \argu{plan}. Le plan est de la forme [point3D, vecteur3D normal]. Le paramètre optionnel \argu{close} indique si la ligne doit être refermée ou non ($0$ par défaut).
+\end{itemize}
+
+\subsection{interPP}
+\begin{itemize}
+ \item \util \textbf[interPP()]{interPP( <plan1>, <plan1> )}.
+ \item \desc intersection plan-plan. Chaque plan est de la forme: [point3D, vecteur3D normal] et la macro renvoie une droite sous la forme d'une liste du type [point3D, vecteur directeur].
+\end{itemize}
+
+\subsection{IsAlign3D}
+\begin{itemize}
+ \item \util \textbf[IsAlign3D()]{IsAlign3D( <liste points 3D> [, epsilon] )}.
+ \item \desc renvoie 1 si les point3D de la \argu{liste} sont alignés, 0 sinon. Par défaut la tolérance \argu{epsilon} vaut 1E-10. La \argu{liste} ne doit pas contenir la constante \jump.
+\end{itemize}
+
+\subsection{isobar3d}
+\begin{itemize}
+ \item \util \textbf[isobar3d()]{isobar3d( <liste point3D> )}.
+ \item \desc renvoie le centre de gravité d'une liste de points de l'espace, la constante \jump\ est ignorée.
+\end{itemize}
+
+\subsection{IsPlan}
+\begin{itemize}
+ \item \util \textbf[IsPlan()]{IsPlan( <liste points 3D> [, epsilon] )}.
+ \item \desc renvoie 1 si les point3D de la \argu{liste} sont coplanaires, 0 sinon. Par défaut la tolérance \argu{epsilon} vaut 1E-10. La \argu{liste} ne doit pas contenir la constante \jump.
+\end{itemize}
+
+
+\subsection{KillDup3D}
+\begin{itemize}
+ \item \util \textbf[KillDup3D()]{KillDup3D( <liste de points 3D> [, epsilon] )}.
+ \item \desc renvoie la \argu{liste de point3d} sans doublons, les comparaisons se font à \argu{epsilon} près (\argu{epsilon} vaut $0$ par défaut).
+\end{itemize}
+
+\subsection{length3d}
+\begin{itemize}
+ \item \util \textbf[length3d()]{length3d( <liste point3D> [, fermée(0/1)] )}.
+ \item \desc renvoie la longueur de la \argu{liste point3D} en unités graphiques, le repère 3D est orthonormé, la \argu{liste point3D} peut représenter une liste d'arêtes ou une facette. Par défaut le paramètre \argu{fermée} vaut $0$.
+\end{itemize}
+
+\subsection{Merge3d}
+\begin{itemize}
+ \item \util \textbf[Merge3d()]{Merge3d( <liste point3D> )}.
+ \item \desc cette macro permet de recoller des morceaux de listes pour avoir des composantes de longueur maximale, elle renvoie la liste qui en résulte. C'est l'équivalent de la commande \Helpref{Merge}{cmdMerge} dans l'espace.
+\end{itemize}
+
+
+\subsection{n}\label{macn}
+\begin{itemize}
+ \item \util \textbf[n()]{n()}.
+ \item \desc macro équivalente à la commande \Helpref{Normal()}{cmdNormal}. Utilisée en développement immédiat (\verb|\n|) elle est remplacée par la commande \textsl{Normal()}.
+\end{itemize}
+
+\subsection{Nops3d}
+\begin{itemize}
+ \item \util \textbf[Nops3d()]{Nops3d( <liste point3D> )}.
+ \item \desc renvoie le nombre de point3D de la \argu{liste}, en comptant les éventuels \jump.
+ \item \exem la commande \co{Nops3d([Origin, jump, 1+i,1, M(1,2,3), jump])} renvoie la valeur \res{5}.
+\end{itemize}
+
+\subsection{normalize}
+\begin{itemize}
+ \item \util \textbf[normalize()]{normalize( <point3D> )}.
+ \item \desc renvoie le vecteur normalisé.
+\end{itemize}
+
+
+\subsection{permute3d}
+\begin{itemize}
+ \item \util \textbf[permute3d()]{permute3d( <liste de point3D> )}.
+ \item \desc modifie la \argu{liste de point3D} en plaçant le premier élément 3D (1 point3D = 2 affixes) à la fin, la \argu{liste de point3D} doit être une variable. Si le premier élément de cette liste est la constante \jump\ alors celle-ci sera déplacée à la fin de la liste (dans ce cas un seul affixe est déplacé).
+\end{itemize}
+
+
+\subsection{planEqn}
+\begin{itemize}
+ \item \util \textbf[planEqn()]{planEqn( <[a,b,c,d]> )}.
+ \item \desc renvoie le plan d'équation $ax+by+cz=d$ sous la forme [point3D, vecteur3D], c'est à dire un point et un
+vecteur normal.
+\end{itemize}
+
+
+\subsection{Pos3d}
+\begin{itemize}
+ \item \util \textbf[Pos3d()]{Pos3d( <point3D>, <liste points 3D> [, epsilon] )}.
+ \item \desc renvoie la liste des positions du \argu{point3D} dans la \argu{liste}, la comparaison se fait à \argu{epsilon} près ($0$ par défaut).
+ \item \exem la commande \co{Pos3d( M(1,1,0), [Origin, jump, M(1,1,1), M(1,2,3)])} donne la valeur \res{Nil}, et \co{Pos3d( M(1,1,1), [Origin, jump, M(1,1,1), M(1,2,3)])} donne la valeur \res{3}.
+\end{itemize}
+
+\subsection{purge3d}
+\begin{itemize}
+ \item \util \textbf[purge3d()]{purge3d( <liste point3D> [, epsilon] )}.
+ \item \desc renvoie la \argu{liste point3D} après avoir supprimer les points consécutifs égaux, supprimer les composantes de cardinal strictement inférieur à $2$. Le test d'égalité se fait à \argu{epsilon} près, il vaut 1E-10 par défaut.
+\end{itemize}
+
+
+\subsection{px, py, pz, pxy, pxz, pyz} 
+
+\begin{itemize}
+ \item \textbf[px()]{px( <point3D> )}: projeté sur Ox.
+ \item \textbf[py()]{py( <point3D> )}: projeté sur Oy.
+ \item \textbf[pz()]{pz( <point3D> )}: projeté sur Oz.
+ \item \textbf[pxy()]{pxy( <point3D> )}: projeté sur xOy.
+ \item \textbf[pxz()]{pxz( <point3D> )}: projeté sur xOz.
+ \item \textbf[pyz()]{pyz( <point3D> )}: projeté sur yOz.
+\end{itemize}
+
+\subsection{replace3d}
+\begin{itemize}
+ \item \util \textbf[replace3d()]{replace3d( <liste de point3D>, <position>, <valeur de remplacement> )}.
+ \item \desc modifie la variable \argu{liste de points 3D} en remplaçant l'élément numéro \argu{position} par la \argu{valeur}, le résultat retourné est \Nil.
+ \item \exem si \co{S=[Origin, jump, M(1,1,1), M(1,2,3), jump]}, alors après la commande \co{replace3d(S,3, [M(1,0,1),M(0,1,1)])}, on aura \res{S=[Origin, jump, M(1,0,1),M(0,1,1), M(1,2,3), jump]}, c'est à dire \res{S=[0,0,jump,1,1,i,1,1+2*i,3,jump]}.
+\end{itemize}
+
+\subsection{reverse3d}
+\begin{itemize}
+ \item \util \textbf[reverse3d()]{reverse3d( <liste de point3D> )}.
+ \item \desc renvoie la \argu{liste de points 3D} en inversant chacune des composantes de cette \argu{liste} (deux composantes sont séparées par un \jump). Mais la \argu{liste} n'est pas modifiée.
+ \item \exem la commande \co{S:=reverse3d([Origin, M(1,1,0), jump, M(1,1,1), M(1,2,3), jump])} donne \res{S=[M(1,1,0), Origin, jump, M(1,2,3), M(1,1,1), jump]}, c'est à dire \res{S=[1+i,0,0,0,jump,1+2*i,3,1+i,1,jump]}.
+\end{itemize}
+
+
+\subsection{viewDir}
+\begin{itemize}
+ \item \util \textbf[viewDir()]{viewDir( <vecteur3D> )} ou \Mytextbf{viewDir( <theta>, <phi> )} ou \Mytextbf{viewDir(xOy/yOz/xOz )} 
+ \item \desc dans la première version, la macro modifie le vecteur normal au plan de projection (voir \Helpref{n()}{macn}) pour qu'il corresponde au \argu{vecteur3D} normalisé. Dans la deuxième version, elle modifie les angles de vue \argu{theta} et \argu{phi}, avec les valeurs fournies, celles-ci doivent être en \Mytextbf{degrés}. Dans la troisième version il y a trois arguments possibles: \var{xOy} ou \var{yOz} ou \var{xOz}, ce qui définit le plan de projection.
+\end{itemize}
+
+\begin{demo}{Exemples de vues}{viewDir}
+\begin{texgraph}[name=viewDir,file]
+Mac
+  dessin = [ BoxAxes3D(grid:=1, zlabelstyle:=right,
+     zlabelsep:=0.15, xlabelsep:=0.25,
+       ylabelsep:=0.25,
+     xlegendsep:=0.35, ylegendsep:=0.35,
+     FillColor:=lightcyan),
+   Ligne3D(SortFacet(stock),1), RestoreWin()];
+
+Cmd [tMin:=-5,tMax:=0,DotScale:=1+i];
+Graph objet1 = [view(-6,6,-6,6), Marges(0,0,0,0),
+     size(7.5),
+   view3D(-3,3,-3,3,-3,3),
+   S:=GetSurface([u+i*v,2*sin(u)+cos(v)],
+          -3+3*i,-3+3*i),
+   stock:=for facette in S By jump do
+      z:=Zde(isobar3d(facette)),
+      facette,
+      ColorJump(Hsb(270*(Zsup-z)/(Zsup-Zinf),1,1))
+     od,
+  
+   FillStyle:=full, LabelSize:=tiny,
+   ModelView(central), SaveTphi(), SaveWin(),
+   view(-6,0,0,6), ChangeWinTo([-8-7*i,6+6*i]),
+   dessin(), SaveWin(), ModelView(ortho),
+   view(0,6,0,6), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(xOy), dessin(), SaveWin(),
+   view(-6,0,-6,0), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(yOz), dessin(), SaveWin(),
+   view(0,6,-6,0), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(xOz), dessin(), RestoreTphi() ];
+\end{texgraph}
+\end{demo}
+
+\subsection{visible}
+\begin{itemize}
+ \item \util \textbf[visible()]{visible( <vecteur3D> )}.
+ \item \desc renvoie $1$ si le \argu{vecteur3D} est dirigé vers l'observateur (produit scalaire positif).
+\end{itemize}
+
+
+\subsection{Xde, Yde, Zde} 
+\begin{itemize}
+ \item \textbf[Xde()]{Xde( <point3D> )}: renvoie l'abscisse.
+ \item \textbf[Yde()]{Yde( <point3D> )}: renvoie l'ordonnée.
+ \item \textbf[Zde()]{Zde( <point3D> )}: renvoie la cote.
+\end{itemize}
+
+ 
+
+\section{Transformations géométriques de l'espace} 
+
+\subsection{antirot3d}
+\begin{itemize}
+ \item \util \textbf[antirot3d()]{antirot3d( <liste point3D>, <droite>, <alpha> )}.
+ \item \desc calcule les images de la liste par la rotation d'axe la \argu{droite} et d'angle le réel \argu{alpha}, composée avec la réflexion par rapport au plan orthogonal à la \argu{droite}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur], le vecteur directeur oriente la droite, et le plan orthogonal considéré est celui passant par le même point3D.
+\end{itemize}
+
+\subsection{defAff3d}
+\begin{itemize}
+ \item \util \textbf[defAff3d()]{defAff3d( <nom>, <A>, <A'>, <partie linéaire> )}.
+ \item \desc cette fonction permet de créer une macro appelée \argu{nom} qui représentera l'application affine qui transforme \argu{A} en \argu{A'}, et dont la partie linéaire est le dernier argument. Cette partie linéaire se présente sous la forme d'une liste de 3 vecteur3D: [Lf(vecI), Lf(vecJ), Lf(vecK)] où Lf désigne la partie linéaire de la transformation.
+\end{itemize}
+
+\subsection{dproj3d}
+\begin{itemize}
+ \item \util \textbf[dproj3d()]{dproj3d( <liste point3D>, <droite> )}.
+ \item \desc calcule les images de la liste par la projection orthogonale sur la \argu{droite}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur].
+\end{itemize}
+
+\subsection{dproj3dO}
+\begin{itemize}
+ \item \util \textbf[dproj3dO()]{dproj3dO( <liste point3D>, <droite>, <vecteur3D normal> )}.
+ \item \desc calcule les images de la liste par la projection oblique sur la \argu{droite} et perpendiculairement au \argu{vecteur normal}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur].
+\end{itemize}
+
+\subsection{dsym3d}
+\begin{itemize}
+ \item \util \textbf[dsym3d()]{dsym3d( <liste point3D>, <droite> )}.
+ \item \desc calcule les images de la liste par la symétrie orthogonale pa rapport à la \argu{droite}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur].
+\end{itemize}
+
+\subsection{dsym3dO}
+\begin{itemize}
+ \item \util \textbf[dsym3dO()]{dsym3dO( <liste point3D>, <droite>, <vecteur3D normal> )}.
+ \item \desc calcule les images de la liste par la symétrie oblique par rapport à la \argu{droite} et perpendiculairement au \argu{vecteur normal}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur].
+\end{itemize}
+
+\subsection{ftransform3d}
+\begin{itemize}
+ \item \util \textbf[ftransform3d()]{ftransform3d( <liste point3D>, <f(M)> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par la fonction \argu{f(M)}, celle-ci peut-être une expression fonction de $M$ ou une macro d'argument $M$, $M$ représentant un point3D.
+\end{itemize}
+
+\subsection{hom3d}
+\begin{itemize}
+ \item \util \textbf[hom3d()]{hom3d( <liste point3D>, <point3D>, <lambda> )}.
+ \item \desc calcule les images de la liste par l'homothétie de centre \argu{point3D} et de rapport le réel\argu{lambda}.
+\end{itemize}
+
+\subsection{inv3d}
+\begin{itemize}
+ \item \util \textbf[inv3d()]{inv3d( <liste point3D>, <point3D>, <R> )}.
+ \item \desc calcule les images de la liste par l'inversion par rapport à la sphère de centre \argu{point3D} et de rayon le réel \argu{R}.
+\end{itemize}
+
+\subsection{proj3d}
+\begin{itemize}
+ \item \util \textbf[proj3d()]{proj3d( <liste point3D>, <plan> )}.
+ \item \desc calcule la liste des projetés orthogonaux des points de \argu{liste point3D} sur le \argu{plan}. Le \argu{plan} est une liste de la forme: [point3D, vecteur3D normal].
+\end{itemize}
+
+\subsection{proj3dO}
+\begin{itemize}
+ \item \util \textbf[proj3dO()]{proj3dO( <liste point3D>, <plan>, <vecteur> )}.
+ \item \desc calcule les images de la liste par la projection oblique sur le \argu{plan} et parallèlement au \argu{vecteur}. Le \argu{plan} est une liste de la forme: [point3D, vecteur3D normal].
+\end{itemize}
+
+\subsection{rot3d}
+\begin{itemize}
+ \item \util \textbf[rot3d()]{rot3d( <liste point3D>, <droite>, <alpha> )}.
+ \item \desc calcule les images de la liste par la rotation d'axe la \argu{droite} et d'angle le réel \argu{alpha}. La \argu{droite} est une liste de la forme: [point3D, vecteur3D directeur], le vecteur directeur oriente la droite.
+\end{itemize}
+
+\subsection{shift3d}
+\begin{itemize}
+ \item \util \textbf[shift3d()]{shift3d( <liste point3D>, <vecteur3D> )}.
+ \item \desc calcule la liste des translatés des points de \argu{liste point3D} par le \argu{vecteur3D}.
+\end{itemize}
+
+\subsection{sym3d}
+\begin{itemize}
+ \item \util \textbf[sym3d()]{sym3d( <liste point3D>, <plan> )}.
+ \item \desc calcule la liste des symétriques orthogonaux des points de \argu{liste point3D} par rapport au \argu{plan}. Le \argu{plan} est une liste de la forme: [point3D, vecteur3D normal].
+\end{itemize}
+
+\subsection{sym3dO}
+\begin{itemize}
+ \item \util \textbf[sym3dO()]{sym3dO( <liste point3D>, <plan>, <vecteur3D> )}.
+ \item \desc calcule et renvoie la liste des images de la liste par la symétrie oblique par rapport au \argu{plan} et parallèlement au \argu{vecteur3D}. Le \argu{plan} est une liste de la forme: [point3D, vecteur3D normal].
+\end{itemize}
+
+\section{Matrices de transformations 3D} 
+
+Une matrice 3D est une liste de la forme \Mytextbf{[vecteur3D1, vecteur3D2, vecteur3D3, vecteur3D4]}. Cette liste représente l'expression analytique d'une application affine de l'espace, c'est une liste de trois vecteurs: \Mytextbf{vecteur3D1} qui est le vecteur de translation, \Mytextbf{vecteur3D2} qui est le premier vecteur colonne de la matrice de la partie linéaire dans la base canonique, \Mytextbf{vecteur3D3} qui est le deuxième vecteur colonne de la matrice de la partie linéaire, et \Mytextbf{vecteur3D4} qui est le troisième vecteur colonne de la matrice de la partie linéaire. 
+
+Si $f$ est une application affine de l'espace alors sa partie linéaire est \textit{Lf=f-f(Origin)}, le vecteur de translation est \textit{f(Origin)}, et sa matrice s'écrit: \textit{[f(Origin), Lf(vecI), Lf(vecJ), Lf(vecK)]}. 
+
+Par exemple, la matrice de l'identité s'écrit ainsi: \textit{[M(0,0,0), M(1,0,0), M(0,1,0), M(0,0,1)]} ou encore \textit{[Origin, vecI, vecJ, vecK]} (c'est la matrice par défaut). 
+Voir aussi les commandes \Helpref{ComposeMatrix3D}{cmdComposeMatrix3D}, \Helpref{GetMatrix3D}{cmdGetMatrix3D}, \Helpref{SetMatrix3D}{cmdSetMatrix3D} et \Helpref{IdMatrix3D}{cmdIdMatrix3D}.
+
+
+
+\subsection{invmatrix3d}
+\begin{itemize}
+ \item \util \textbf[invmatrix3d()]{invmatrix3d( <[f(0), Lf(vecI), Lf(vecJ), Lf(vecK)]> )}.
+ \item \desc renvoie l'inverse de la matrice \argu{[f(0), Lf(vecI), Lf(vecJ), Lf(vecK)]}, c'est à dire la matrice:
+  \[[f^{-1}(0), Lf^{-1}(vecI), Lf^{-1}(vecJ), Lf^{-1}(vecK)]\] 
+  si elle existe.
+\end{itemize}
+
+
+\subsection{matrix3d}
+\begin{itemize}
+ \item \util \textbf[matrix3d()]{matrix3d( <fonction affine> [, variable] )}.
+ \item \desc renvoie la matrice de la \argu{fonction affine}, par défaut la \argu{variable} est la lettre $M$ (représentant un point3D). Cette matrice se présente sous la forme [f(0), Lf(vecI), Lf(vecJ), L(vecK)], où f désigne l'application affine et Lf sa partie linéaire, (vecI, vecJ, vecK) étant la base canonique.
+ \item \exem \co{matrix3d( sym3d(M, [Origin,vecK] ) )} renvoie \res{[0,0,1,0,i,0,0,-1]}, ce qui représente la symétrie orthogonale par rapport au plan xOy. 
+\end{itemize}
+
+\subsection{mulmatrix3d}
+\begin{itemize}
+ \item \util \textbf[mulmatrix3d()]{mulmatrix3d( <matrice3d de f>, <matrice3d de g> )}.
+ \item \desc renvoie la matrice de la composée: fog, où f et g sont les deux applications affines de l'espace définies par leur matrice, celle-ci est de la forme [f(0), Lf(vecI), Lf(vecJ), Lf(vecK)] où Lf désigne la partie linéaire.
+\end{itemize}
+
+
+\section{Macros de gestion de la fenêtre 3D}
+
+\subsection{drawWin3d}
+\begin{itemize}
+ \item \util \textbf[drawWin3d()]{drawWin3d( <mode> )}.
+ \item \desc cette macro dessine la fenêtre 3D courante dans le \argu{mode} voulu avec la macro \Helpref{DrawPoly}{macDrawPoly}. 
+\end{itemize}
+
+\subsection{rectangle3d}
+\begin{itemize}
+ \item \util \textbf[rectangle3d()]{rectangle3d( <liste point3D> )}.
+ \item \desc cette macro détermine le plus petit parallélépipède rectangle contenant la \textit{liste point3D}, cette macro renvoie la grande diagonale de cette boite: \textsl{[M(Xinf, Yinf, Zinf), M(Xsup, Ysup, Zsup)]}.
+\end{itemize}
+
+
+\subsection{RestoreTphi}\label{macRestoreTphi}
+\begin{itemize}
+ \item \util \textbf[RestoreTphi()]{RestoreTphi()}.
+ \item \desc cette macro restaure les valeurs des angles de vue \textit{theta} et \textit{phi} depuis la pile (voir \Helpref{SaveTphi}{macSaveTphi}).
+\end{itemize}
+
+
+\subsection{RestoreWin3d}\label{macRestoreWin3d}
+\begin{itemize}
+ \item \util \textbf[RestoreWin3d()]{RestoreWin3d()}.
+ \item \desc cette macro restaure la fenêtre 3D et la matrice 3D depuis la pile (voir \Helpref{SaveWin3d}{macSaveWin3d}). \end{itemize}
+
+\subsection{SaveTphi}\label{macSaveTphi}
+\begin{itemize}
+ \item \util \textbf[SaveTphi()]{SaveTphi()}.
+ \item \desc cette macro enregistre les valeurs des angles de vue \textit{theta} et \textit{phi}, dans une pile (voir aussi \Helpref{RestoreTphi}{macRestoreTphi}).
+\end{itemize}
+
+\subsection{SaveWin3d}\label{macSaveWin3d}
+\begin{itemize}
+ \item \util \textbf[SaveWin3d()]{SaveWin3d()}.
+ \item \desc cette macro enregistre la fenêtre 3D actuelle ainsi que la matrice 3D courante dans une pile (voir aussi \Helpref{RestoreWin3d}{macRestoreWin3d}).
+\end{itemize}
+
+\subsection{transformbox3d}
+\begin{itemize}
+ \item \util \textbf[transformbox3d()]{transformbox3d( <[M(xinf, yinf, zinf), M(xsup, ysup, zsup)]> [, ortho] )}.
+ \item \desc cette macro calcule la matrice transformant la boite de grande diagonale \argu{[M(xinf, yinf, zinf), M(xsup, ysup, zsup)]} en la boite de grande diagonale $[M(-3,-3,-3),M(3,3,3)]$. Si le paramètre optionnel \argu{ortho} vaut $1$ ($0$ par défaut), alors le repère sera orthonormé, cette matrice \Mytextbf{est composée avec la matrice 3D courante}, la fenêtre 3D courante est modifiée.
+\end{itemize}
+
+\subsection{view3D}
+\begin{itemize}
+ \item \util \textbf[view3D()]{view3D( <xmin>, <xmax>, <ymin>, <ymax>, <zmin>, <zmax> )} ou \Mytextbf{view3D( <[M(xinf, yinf, zinf), M(xsup, ysup, zsup)]> )} 
+ \item \desc permet de définir la fenêtre graphique 3D, c'est à dire la valeur des variables \var{Xinf}, \var{Xsup},
+\var{Yinf}, \var{Ysup}, \var{Zinf} et \var{Zsup}.
+\end{itemize}
+
+\section{Les axes de l'écran et la 3D}
+
+L'écran est le plan de projection, il passe par l'origine du repère spatial, le vecteur unitaire normal à ce plan et dirigé vers la caméra est le vecteur désigné par la macro \Helpref{n()}{macn}.
+
+\subsection{ScreenX}
+\begin{itemize}
+ \item \util \textbf[ScreenX()]{ScreenX()}.
+ \item \desc cette macro renvoie les coordonnées spatiales du vecteur unitaire de l'axe $Ox$ de l'écran.
+\end{itemize}
+
+
+\subsection{ScreenY}
+\begin{itemize}
+ \item \util \textbf[ScreenY()]{ScreenY()}.
+ \item \desc cette macro renvoie les coordonnées spatiales du vecteur unitaire de l'axe $Oy$ de l'écran.
+\end{itemize}
+
+
+\subsection{ScreenPos}
+\begin{itemize}
+ \item \util \textbf[ScreenPos()]{ScreenPos( <affixe> [, distance] )}.
+ \item \desc cette macro renvoie les coordonnées du point de l'espace se projetant sur l'\argu{affixe} donné en argument et à la \argu{distance} donnée sur l'axe normal à l'écran (ou l'axe dirigé vers la caméra en projection centrale), cette \argu{distance} est facultative et vaut $500$ par défaut.
+\end{itemize}
+
+
+\subsection{ScreenCenter}
+\begin{itemize}
+ \item \util \textbf[ScreenCenter()]{ScreenCenter()}.
+ \item \desc Cette macro renvoie les coordonnées spatiales du centre de l'écran.
+\end{itemize}
+
+
+\section{Macros de clipping pour la 3D}
+
+\subsection{Clip3D}
+\begin{itemize}
+ \item \util \textbf[Clip3D()]{Clip3D( <liste de facettes>, <polyèdre convexe> [, extérieur(0/1)] )}.
+ \item \desc cette macro renvoie la \argu{liste de facettes} clippées par le \argu{polyèdre convexe}. Si le paramètre optionnel \textit{extérieur} vaut 0 (valeur par défaut) c'est la partie intérieure au polyèdre qui est renvoyée, sinon c'est la partie extérieure.
+\end{itemize}
+
+\pngtrue
+\begin{demo}{Clip3D}{Clip3D}
+\begin{texgraph}[name=Clip3D, export=eps, file]
+Cmd Fenetre(-5+5*i,5-5*i,0.5+0.5*i);
+   Marges(0,0,0,0);
+   viewDir(1,83);
+
+Graph objet1 = [ size(7.5),
+  background(full, lightgray),
+  C1:=Cylindre(M(-4,0,0),8*vecI,2,25),
+  C2:= Cylindre(M(0,0,-4),8*vecK,3,25),
+  stock:= Clip3D(C2,C1,1),
+  draw("SmoothFacet", stock,
+          [color:=darkseagreen,
+           contrast:=0.5])
+];
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+\subsection{clipCurve}
+\begin{itemize}
+ \item \util \textbf[clipCurve()]{clipCurve( <liste de point3D> [, fenêtre 3D] )}.
+ \item \desc cette macro renvoie la \argu{liste de point3D} clippées par la \argu{fenêtre 3D}, si ce paramètre est absent, c'est la fenêtre 3D courante qui est prise en compte. La \argu{fenêtre 3D} est donnée par sa grande diagonale: \textsl{[M(xinf, yinf, zinf), M(xsup, ysup, zsup)]}.
+\end{itemize}
+
+\subsection{clipPoly}
+\begin{itemize}
+ \item \util \textbf[clipPoly()]{clipPoly( <liste de facettes> [, fenêtre 3D] )}.
+ \item \desc cette macro renvoie la \argu{liste de facettes} clippées par la \argu{fenêtre 3D}, si ce paramètre est absent, c'est la fenêtre 3D courante qui est prise en compte. La \argu{fenêtre 3D} est donnée par sa grande diagonale: \textsl{[M(xinf, yinf, zinf), M(xsup, ysup, zsup)]}.
+\end{itemize}
+
+\begin{demo}{clipPoly}{clipPoly}
+\begin{texgraph}[name=clipPoly]
+ ModelView(central), Marges(0,0,0,0), size(7.5),
+ view3D(-3,3,-3,3,-3,3),
+ S:=clipPoly( Sphere( M(1,0,1),3,30,15) ),
+ HideWidth:=8, drawWin3d(0), 
+ DrawFacet(S, [color:=steelblue]),
+ drawWin3d(1)
+\end{texgraph}
+\end{demo}
+
+
+
+\section{Macros de construction d'objets 3D}
+
+
+\subsection{AretesNum}
+\begin{itemize}
+ \item \util \textbf[AretesNum()]{AretesNum( <polyèdre>, <liste de numéros> )}.
+ \item \desc cette macro renvoie les arêtes du \argu{polyèdre} dont les numéros sont dans la \argu{liste de numéros}. Les arêtes sont numérotées dans l'ordre de leur apparition.
+\end{itemize}
+
+
+\subsection{Chanfrein}
+\begin{itemize}
+ \item \util \textbf[Chanfrein()]{Chanfrein( <polyèdre convexe>, <épaisseur> [, épointer(0/1)] )}.
+ \item \desc renvoie le \argu{polyèdre convexe} après l'avoir chanfreiné, pour chaque arête, le solide est sectionné par un plan parallèle au plan bissecteur extérieur aux deux faces adjacentes situé à une distance égale à \argu{épaisseur} vers l'intérieur du solide. Le paramètre optionnel \argu{épointer} indique si les sommets doivent être épointés ou non ($1$ par défaut).
+\end{itemize}
+
+\begin{demo}{Chanfrein}{Chanfrein}
+\begin{texgraph}[name=Chanfrein]
+ view(-3.5,4.5,-3,3), Marges(0,0,0,0), size(7.5),
+ P:=Parallelep(Origin, 3*vecI,3*vecJ,3*vecK),
+ P1:=Chanfrein(P,0.25,0), P2:=Chanfrein(P,0.25,1),
+ DrawFacet( shift3d(P1,-2*vecJ), [color:=steelblue],
+       shift3d(P2, 2*vecJ), [color:=steelblue]),
+ Label(-2-1.5*i, "non epointe", 1.8-2.6*i, "epointe")
+\end{texgraph}
+\end{demo}
+
+
+\subsection{Cone}
+\begin{itemize}
+ \item \textbf[Cone()]{Cone( <point3D>, <vecteur3D>, <rayon> [, nb faces, creux] )}.
+ \item \desc cette macro renvoie un polyèdre représentant le cône construit à partir d'un \argu{point3D} qui est le sommet, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cône, du \argu{rayon} de la face circulaire et du nombre \argu{nb faces}, ce dernier vaut $35$ par défaut. Le paramètre \argu{creux} vaut $0$ ou $1$ ($1$ par défaut) et indique si le cône doit est creux ou non, dans la négative la face circulaire est ajoutée aux facettes, c'est la première de la liste.
+\end{itemize}
+
+
+\subsection{curve2Cone}
+\begin{itemize}
+ \item \util \textbf[curve2Cone()]{curve2Cone( <f(t)>, <tmin>, <tmax>, <sommet>, [, rapport, base] )}.
+ \item \desc cette macro renvoie sous forme de facettes, le cône partant du \argu{sommet} et s'appuyant la courbe gauche paramétrée par $f(t)=[x(t)+i*y(t), z(t)]$ ou $f(t)=M(x(t),y(t),z(t))$. Le paramètre \argu{rapport} (nul par défaut) permet de construire l'autre partie du cône par homothétie, le dernier paramètre, \argu{base}, est une variable qui contiendra en sortie la liste des points du ou des bords du cône.
+\end{itemize}
+
+
+\begin{demo}{curve2Cone}{curve2Cone}
+\begin{texgraph}[name=curve2Cone]
+Marges(0,0,0,0), size(7.5), NbPoints:=100,
+C:=curve2Cone( [cos(2*t)*exp(i*t)*5,-3],
+        -pi,pi,[0,0],-1),
+FillOpacity:=0.7,
+DrawFlatFacet(C,[color:=darkseagreen])
+\end{texgraph}
+\end{demo}
+
+
+\subsection{curve2Cylinder}
+\begin{itemize}
+ \item \util \textbf[curve2Cylinder()]{curve2Cylinder( <f(t)>, <tmin>, <tmax>, <vecteur3D axe>, [, base] )}.
+ \item \desc cette macro renvoie sous forme de facettes, le cylindre s'appuyant sur la courbe gauche paramétrée par $f(t)=[x(t)+i*y(t), z(t)]$ ou $f(t)=M(x(t),y(t),z(t))$. Le paramètre \argu{vecteur3D axe} détermine de combien la base doit être translatée pour terminer le cylindre. Le dernier paramètre, \argu{base}, est une variable qui contiendra la liste des points du ou des bords du cylindre.
+\end{itemize}
+
+\begin{demo}{Exemple avec \textsl{curve2Cylinder}}{curve2Cylinder}
+\begin{texgraph}[name=curve2Cylinder]
+Marges(0,0,0,0), size(7.5),
+C:=curve2Cylinder([4*cos(t)+2*i*sin(t),-3],
+         -pi,pi,[i,6]),
+DrawFlatFacet(C,[color:=violet]) 
+\end{texgraph}
+\end{demo}
+
+
+\subsection{curveTube}
+\begin{itemize}
+ \item \util \textbf[curveTube()]{curveTube( <f(t)>, <rayon>, <tmin>, <tmax> [, nb points, nb faces, creux (0/1)] )}.
+ \item \desc cette macro renvoie sous forme de facettes, un tube centré sur la courbe gauche paramétrée par $f(t)=[x(t)+i*y(t), z(t)]$ ou $f(t)=M(x(t),y(t),z(t))$, de \argu{rayon} voulu. Le paramètre \argu{nb points} est égal par défaut à la variable globale \var{NbPoints}. Le paramètre \argu{nb faces} vaut $4$ par défaut, et le paramètre \argu{creux} vaut $1$ par défaut.
+\end{itemize}
+
+
+\begin{demo}{curveTube}{curveTube}
+\begin{texgraph}[name=curveTube]
+Marges(0,0,0,0), size(7.5),
+S:=curveTube([i*t,2.5*sin(t)],0.75,-pi,pi,50,12),
+DrawFlatFacet(S,[color:=darkseagreen])
+\end{texgraph}
+\end{demo}
+
+\subsection{Cvx3d}
+\begin{itemize}
+ \item \util \textbf[Cvx3d()]{Cvx3d( <liste de point3D> )}.
+ \item \desc renvoie l'enveloppe convexe de la \argu{liste} sous forme d'une liste de facettes. La \argu{liste} ne doit pas contenir la constante \jump.
+\end{itemize}
+
+
+
+\subsection{Cylindre}
+\begin{itemize}
+ \item \util \textbf[Cylindre()]{Cylindre( <point3D>, <vecteur3D>, <rayon> [, nb faces, creux] )}.
+ \item \desc cette macro renvoie un polyèdre représentant le cylindre construit à partir d'un \argu{point3D} qui est le centre d'une des deux faces circulaires, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cylindre, d'un \argu{rayon} et du nombre \argu{nb faces}, ce dernier vaut $35$ par défaut. Le paramètre \argu{creux} vaut $0$ ou $1$ ($1$ par défaut) et indique si le cylindre est creux ou non, dans la négative les deux faces circulaires sont ajoutées facettes, ce sont les deux premières de la liste. 
+\end{itemize}
+
+
+\subsection{FacesNum}
+\begin{itemize}
+ \item \util \textbf[FacesNum()]{FacesNum( <polyèdre>, <liste de numéros> )}.
+ \item \desc cette macro renvoie les faces du \argu{polyèdre} dont les numéros sont dans la \argu{liste de numéros}. Les faces sont numérotées dans l'ordre de leur apparition.
+\end{itemize}
+
+
+\subsection{getdroite}
+\begin{itemize}
+ \item \util \textbf[getdroite()]{getdroite( <[point3D,vecteur3D]> [, échelle] )}.
+ \item \desc cette macro renvoie un segment 3D correspondant à la droite \argu{[point3D,vecteur3D]} clippée par la fenêtre 3D courante. La droite est définie sous la forme d'un de ses points et un vecteur directeur. Le paramètre optionnel \argu{échelle}, qui vaut $1$ par défaut, permet d'agrandir ou diminuer la taille de ce segment (par rapport à son milieu).
+\end{itemize}
+
+
+\subsection{getplan}
+\begin{itemize}
+ \item \util \textbf[getplan()]{getplan( <[point3D,vecteur3D]> [, échelle] )}.
+ \item \desc cette macro renvoie une facette correspondant au plan \argu{[point3D,vecteur3D]} clippé par la fenêtre 3D courante. Le plan est défini sous la forme d'un de ses points et un vecteur normal. Le paramètre optionnel \argu{échelle}, qui vaut $1$ par défaut, permet d'agrandir ou diminuer la taille de cette facette.
+\end{itemize}
+
+
+\subsection{getplanEqn}
+\begin{itemize}
+ \item \util \textbf[getplanEqn()]{getplanEqn( <[a,b,c,d]> [, échelle] )}.
+ \item \desc cette macro renvoie une facette correspondant au plan \argu{[a,b,c,d]} clippé par la fenêtre 3D courante. Le plan est défini sous la forme d'une équation cartésienne $ax+by+cz=d$. Le paramètre optionnel \argu{échelle}, qui vaut $1$ par défaut, permet d'agrandir ou diminuer la taille de cette facette.
+\end{itemize}
+
+\subsection{grille3d}
+\begin{itemize}
+ \item \util \textbf[grille3d()]{grille3d( <x ou y ou z>, <valeur> [, <pas>] )}.
+ \item \desc cette macro renvoie le plan \argu{x ou y ou z} = \argu{valeur} sous forme d'une grille (liste de segments). Par défaut le \argu{pas} est de $1$, mais il peut être de la forme \texttt{pas1+i*pas2} si on veut un pas différent sur les deux côtés de la grille; lorsque \texttt{pas2} est nul, on considère qu'il est égal à \texttt{pas1}.
+\end{itemize}
+
+\begin{demo}{grille3d}{grille3d}
+\begin{texgraph}[name=grille3d]
+view(-8,8,-8,8), Marges(0,0,0,0), size(7.5),
+ModelView(central), DistCam(30),
+Color:=darkgray,
+Ligne3D([grille3d(x,-5,1+2*i), grille3d(y,-5,1+2*i),
+     grille3d(z,-5)],0),
+Color:=black,
+S:=curveTube([3*exp(i*t), t/3], 0.5,
+       -3*pi, 3*pi, 100, 12),
+Color:=black, Width:=1,
+DrawFlatFacet(S,
+     [color:=steelblue, contrast:=0.5])
+\end{texgraph}
+\end{demo}
+
+\subsection{HollowFacet}
+\begin{itemize}
+ \item \util \textbf[HollowFacet()]{HollowFacet( <polyèdre> [, épaisseur+i*(mode 0/1), intérieur])}.
+ \item \desc cette macro creuse chaque facette du \argu{polyèdre} en laissant une \argu{épaisseur} au bord (0.25 par défaut), lorsque \argu{mode} est nul (valeur par défaut) le découpage est parallèle au bord, lorsque \argu{mode} vaut $1$, le découpage est . Les morceaux de facettes enlevés sont restitués dans la variable \argu{intérieur} si elle est présente.
+\end{itemize}
+
+\begin{demo}{Valeurs de mode (HollowFacet)}{HollowFacetbis}
+\begin{texgraph}[name=HollowFacetbis]
+view(-5,5,-2.5,2.5), Marges(0,0,0,0), size(7.5),
+F:=for z in carre(3-3*i,3+3*i,1) do z,0 od,
+theta:=-pi/2,phi:=0, ep:=2,SaveWin(),
+view(-5,0,-2.5,2.5),ChangeWinTo([-5-5*i,5+5*i]),
+DrawFacet(HollowFacet(F,ep), [color:=lightblue]),
+Arrows:=2,Ligne3D([-3+3.25*i,0,(-3+ep/2)+3.25*i,0],0),
+Arrows:=0,Label(-3+ep/4+4*i,"ep/2"),
+RestoreWin(),SaveWin(),
+view(0,5,-2.5,2.5), ChangeWinTo([-5-5*i,5+5*i]),
+DrawFacet(HollowFacet(F,ep+i), [color:=lightblue]),
+Arrows:=2, Ligne3D([3+3.25*i,0,(3-ep)+3.25*i,0],0),
+Arrows:=0,Label(3-ep/2+4*i,"ep"),
+RestoreWin(),
+Label(-2.5-2*i,"mode=0"), Label(2.5-2*i,"mode=1") 
+\end{texgraph}
+\end{demo}
+
+
+\begin{demo}{HollowFacet: exemple}{HollowFacet}
+\begin{texgraph}[name=HollowFacet]
+ModelView(central), Marges(0,0,0,0), size(7.5),
+background(full,darkblue),
+P:=Parallelep(M(-2.5,-2.5,-2.5), 5*vecI, 
+       5*vecJ, 5*vecK), nb:=15,
+Y:=[1,1,0], R:=[1,0,0],
+Build3D(
+  for k from 1 to nb do
+   P:=HollowFacet(P, 0.25+i, aux),
+   C:=((nb-k+1)*R+(k-1)*Y)/nb,
+   bdFacet(P, [color:=RgbL(C)]),
+   P:=aux, sep3D
+  od),
+Display3D()
+\end{texgraph}
+\end{demo}
+
+
+\subsection{Intersection}
+\begin{itemize}
+ \item \util \textbf[Intersection()]{Intersection( <plan>, <polyedre> ) [, facette] )}.
+ \item \desc le plan doit être de la forme: $[S,u]$ (plan passant par le point $S$ et normal au vecteur $u$). La macro détermine l'intersection du \argu{polyèdre} avec ce \argu{plan} et renvoie celle-ci sous forme d'une \textsl{liste d'arêtes} (que l'on peut dessiner avec la macro \Helpref{DrawAretes}{cmdAretes}). Il est possible de récupérer l'intersection sous forme d'une \argu{facette} en mettant une variable en troisième paramètre.
+\end{itemize}
+
+\subsection{line2Cone}
+\begin{itemize}
+ \item \util \textbf[line2Cone()]{line2Cone( <ligne 3D>, <sommet>, [, fermée(0/1), rapport, base] )}.
+ \item \desc cette macro renvoie sous forme de facettes, le cône partant du \argu{sommet} et s'appuyant la \argu{ligne 3D}, celle-ci ne doit pas contenir la constante \jump. Le paramètre \argu{rapport} (nul par défaut) permet de construire l'autre partie du cône par homothétie, le dernier paramètre, \argu{base}, est une variable qui contiendra en sortie la liste des points du ou des bords du cône. L'argument \argu{fermée} précise si la ligne doit être refermée ou non ($0$ par défaut).
+\end{itemize}
+
+\subsection{line2Cylinder}
+\begin{itemize}
+ \item \util \textbf[line2Cylinder()]{line2Cylinder( <ligne 3D>, <vecteur3D axe>, [, fermée(0/1), base] )}.
+ \item \desc cette macro renvoie sous forme de facettes, le cylindre s'appuyant sur la \argu{ligne 3D}, celle-ci ne doit pas contenir la constante \jump. Le paramètre \argu{vecteur3D axe} détermine de combien la base doit être translatée pour terminer le cylindre. Le dernier paramètre, \argu{base}, est une variable qui contiendra la liste des points du ou des bords du cylindre. L'argument \argu{fermée} précise si la ligne doit être refermée ou non ($0$ par défaut).
+\end{itemize}
+
+
+\subsection{lineTube}
+\begin{itemize}
+ \item \util \textbf[lineTube()]{lineTube( <liste points 3D>, <rayon>, <nb faces> [, fermé, creux] )}.
+ \item \desc cette macro renvoie sous forme de facettes, un tube centré sur la \argu{liste points 3D}, de \argu{rayon} indiqué avec le nombre \argu{nb faces} voulu. Le paramètre \argu{fermé} vaut $0$ ou $1$ et indique si la ligne doit être fermée ($0$ par défaut). Le paramètre \argu{creux} vaut $0$ ou $1$ et indique si le tube est creux ou doit être fermé au bout ($1$ par défaut), ce paramètre n'est pas pris en compte lorsque la ligne est fermée.
+\end{itemize}
+
+
+\begin{demo}{lineTube}{lineTube}
+\begin{texgraph}[name=lineTube]
+Marges(0,0,0,0), size(7.5),
+L:=for z in polyreg(0, 3.5, 6) 
+  do [z,0] od,
+S:=lineTube(L, 1, 12, 1),
+DrawFlatFacet(S,[color:=steelblue,
+         backculling:=1])
+\end{texgraph}
+\end{demo}
+
+\subsection{Parallelep}
+\begin{itemize}
+ \item \util \textbf[Parallelep()]{Parallelep( <sommet>, <vecteur3D1>, <vecteur3D2>, <vecteur3D3> )}.
+ \item \desc cette macro construit et renvoie la liste des facettes d'un parallélépipède à partir d'un \argu{sommet} et de trois vecteurs, supposés dans le sens direct.
+\end{itemize}
+
+\subsection{pqGoneReg3D}
+\begin{itemize}
+ \item \util \textbf[pqGoneReg3D()]{pqGoneReg3D( <axe>, <sommet>, <[p,q]> )}.
+ \item \desc cette macro construit et renvoie la liste des points d'un \argu{p/q}-gone régulier de l'espace, à partir deson \argu{axe} et d'un \argu{sommet}. L'axe est une droite de l'espace c'est à dire une liste de la forme: [point3D, vecteur3D], et le sommet est un point3D.
+\end{itemize}
+
+\subsection{Prisme}
+\begin{itemize}
+ \item \util \textbf[Prisme()]{Prisme( <base>, <vecteur3D> )}.
+ \item \desc cette macro renvoie la liste des facettes d'un prisme à partir d'une \argu{base} et d'un \argu{vecteur3D} qui représente le vecteur de translation de la base à la face opposée. La base est une liste de point3D coplanaires, cette liste doit être dans le sens direct, le plan étant orienté par le vecteur de translation. 
+\end{itemize}
+
+\subsection{Pyramide}
+\begin{itemize}
+ \item \util \textbf[Pyramide()]{Pyramide( <base>, <sommet> )}.
+ \item \desc cette macro construit et renvoie la liste des facettes d'une pyramide construite à partir de sa \argu{base} et du \argu{sommet}. La base est une liste de point3D coplanaires, cette liste doit être dans le sens direct, le plan étant orienté par le sommet.
+\end{itemize}
+
+\subsection{rotCurve}
+\begin{itemize}
+ \item \util \textbf[rotCurve()]{rotCurve( <f(t)>, <Axe>, <tmin>, <tmax> [, angleMin, angleMax , tNbpoints,
+angleNbpoints] )}.
+ \item \desc cette macro renvoie sous forme de facettes, la surface obtenue en faisant tourner autour de l'\argu{Axe}, la courbe gauche paramétrée par $f(t)=[x(t)+i*y(t), z(t)]$ ou $f(t)=M(x(t),y(t),z(t))$. L'argument \argu{Axe} est une droite de l'espace déterminée par une liste [point 3D, vecteur3D directeur]. Par défaut on a \argu{angleMin}=$-\pi$, \argu{angleMax}=$\pi$, \argu{tNbpoints}=$25$, et \argu{angleNbpoints}=$25$.
+\end{itemize}
+
+\begin{demo}{rotCurve}{rotCurve}
+\begin{texgraph}[name=rotCurve]
+Marges(0,0.15,0,0), size(7.5),
+C:=rotCurve(
+ 2*[1.5*i+cos(3*t)*cos(t)*i,-cos(3*t)*sin(t)],
+ [0,0,0,1], -pi/2, pi/2, 0, pi, 50),
+DrawFlatFacet(C,[color:=coral]),
+tMin:=-pi/2,tMax:=pi/2, Color:=blue,
+Width:=8,
+Courbe3D(M(0,3+2*cos(3*t)*cos(t),
+     2*cos(3*t)*sin(t)))
+\end{texgraph}
+\end{demo}
+
+\subsection{rotLine}
+\begin{itemize}
+ \item \util \textbf[rotLine()]{rotLine( <ligne 3D>, <Axe>, [, fermée(0/1), angleMin, angleMax, angleNbpoints] )}.
+ \item \desc cette macro renvoie sous forme de facettes, la surface obtenue en faisant tourner autour de l'\argu{Axe}, la \argu{ligne 3D}, celle-ci ne doit pas contenir la constante \jump. L'argument \argu{Axe} est unedroite de l'espace déterminée par une liste [point 3D, vecteur3D directeur]. Par défaut on a \argu{angleMin}=$-\pi$, \argu{angleMax}=$\pi$, et \argu{angleNbpoints}=25. L'argument \argu{fermée} précise si la \argu{ligne 3D} doit être refermée ou non ($0$ par défaut).
+\end{itemize}
+
+\begin{demo}{rotLine}{rotLine}
+\begin{texgraph}[name=rotLine]
+view(-2,3.5,-3,3.5),Marges(0,0,0,0),
+size(7.5), viewDir(55,60),
+L:=[M(0,3,0), M(-0.5,2.5,0),
+  M(-1,3,0), M(-1,2,0), M(0,2,0)],
+P:=rotLine(L,[Origin, vecI],1,0,2*pi,35),
+DrawFacet(P,[color:=coral])
+\end{texgraph}
+\end{demo}
+
+
+\subsection{Section}
+\begin{itemize}
+ \item \util \textbf[Section()]{Section( <plan>, <polyèdre> )}.
+ \item \desc cette macro permet de découper un \argu{polyèdre} avec un \argu{plan}. Le plan doit être de la forme: $[S, u]$, cela représente le plan passant par le point $S$ et normal au vecteur $u$. La macro détermine la section du polyèdre avec ce plan, et la partie du polyèdre qui est dans le demi-espace contenant le vecteur $u$, est conservée et renvoyée par la macro sous forme d'un polyèdre (liste de facettes). 
+ \item \exem section d'un cube:
+\end{itemize}
+
+\begin{demo}{Section}{Section}
+\begin{texgraph}[name=Section]
+view(-2,3,-2.5,3), Marges(0,0,0,0), size(7.5),
+cube:=Parallelep(Origin,3*vecI,3*vecJ,3*vecK),
+plan:=[M(3,0,0),-vecI-vecK/2],
+S:=Section(plan, cube), FillStyle:=full,
+FillColor:=firebrick, HideWidth:=8,
+DrawPoly(S,4)
+\end{texgraph}
+\end{demo}
+
+\subsection{Sphere}
+\begin{itemize}
+ \item \util \textbf[Sphere()]{Sphere( <centre>, <rayon> [, nb méridiens, nb parallèles) )}.
+ \item \desc Cette macro renvoie un polyèdre représentant la sphère construite à partir de son \argu{centre} et de son \argu{rayon}. Les deux autres paramètres optionnels déterminent le nombre de faces, par défaut de nombre \argu{nb méridiens} vaut $40$ et le nombre \argu{nb parallèles}vaut $25$.
+\end{itemize}
+
+
+\subsection{Tetra}
+\begin{itemize}
+ \item \util \textbf[Tetra()]{Tetra( <sommet>, <vecteur3D1>, <vecteur3D2>, <vecteur3D3> )}.
+ \item \desc cette macro construit et renvoie la liste des facettes d'un tétraèdre à partir d'un \argu{sommet} et trois vecteurs, supposés dans le sens direct.
+\end{itemize}
+
+\subsection{trianguler}
+\begin{itemize}
+ \item \util \textbf[trianguler()]{trianguler( <liste de facettes convexes> )}.
+ \item \desc cette macro renvoie la \argu{liste de facettes convexes} après les avoir triangulées.
+\end{itemize}
+
+
+\section{Les macros de dessin de lignes pour la 3D}
+
+\subsection{Arc3D}
+\begin{itemize}
+ \item \util \textbf[Arc3D()]{Arc3D( <B>, <A>, <C>, <rayon>, <sens> )}.
+ \item \desc dessine l'arc de cercle de centre \argu{A}, de rayon \argu{rayon}, qui joint la droite $(AB)$ et la droite $(AC)$ en restant dans le plan $(ABC)$, dans le sens direct si \argu{sens} est strictement positif.
+\end{itemize}
+
+
+\subsection{Axes3D}
+\begin{itemize}
+ \item \util \textbf[Axes3D()]{Axes3D( <Ox>, <Oy>, <Oz>, <gradx>, <grady>, <gradz> )}.
+ \item \desc trace les axes du repère spatial, on donne les coordonnées de l'origine et le pas des graduations sur les axes (0= aucune graduation).
+\end{itemize}
+
+\subsection{AxeX3D}
+\begin{itemize}
+ \item \util \textbf[AxeX3D()]{AxeX3D( <option1>, <option2>, ... )}.
+ \item \desc trace l'axe $Ox$ du repère spatial, cet axe est dirigé par le vecteur \var{vecI} et passe par un point qui est l'origine par défaut. Les options sont:
+
+  \begin{itemize}
+  \item \opt{axeOrigin}{point3D}: permet de donner un point de l'axe, par défaut ce point est l'origine: M(0,0,0).
+  \item \opt{xlimits}{[xinf,xsup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Xinf, Xsup].
+  \item \opt{xgradlimits}{[x1,x2}: définit l'étendue des graduations, par défaut c'est la même étendue que
+\textit{xlimits}.
+  \item \opt{xstep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{tickdir}{vecteur3D}: indique la direction des graduations, par défaut ce vecteur est \var{-vecK}.
+  \item \opt{tickpos}{0..1}: indique la position des graduations par rapport à l'axe, par défaut la valeur est $0.5$ ce qui signifie que l'axe passe au milieu des graduations.
+  \item \opt{labels}{0/1}: indique si les labels des graduations sont affichés ou non ($1$ par défaut).
+  \item \opt{originlabel}{0/1}: indique si le label de l'origine est affiché ou non ($0$ par défaut).
+  \item \opt{nbdeci}{entier}: nombre de décimales affichées ($2$ par défaut). Lorsque la variable prédéfinie \var{usecomma} vaut $1$, le point décimal est remplacé par une virgule. Lorsque la variable \var{dollar} vaut $1$, les graduations sont encadrées par le caractère \$.
+  \item \opt{xlabelstyle}{left/right/...}: définit le style de label, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende. 
+  \item \opt{xlabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newxlegend( <"texte"> )}: macro qui définit la légende pour l'axe $Ox$, par défaut le texte est \verb|"$x$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{xlegendsep}{distance en cm} définit la distance entre l'extrémité des graduations et la légende ou l'extrémité de l'axe suivant la position. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{xlabelsep} quand la légende n'est pas à une extrémité.
+  \item \opt{legendpos}{0..1}: définit la position de la légende, s'il y en a une. Avec la valeur $0$ la légende est à l'extrémité \og inférieure\fg\ de l'axe, avec la valeur $1$ la légende est à l'extrémité \og supérieure\fg\ de l'axe, sinon elle est le long de l'axe. par défaut cette valeur est $0.5$ (milieu de l'axe).
+  \end{itemize}
+\end{itemize}
+
+\subsection{AxeY3D}
+\begin{itemize}
+ \item \util \textbf[AxeY3D()]{AxeY3D( <option1>, <option2>, ... )}.
+ \item \desc trace l'axe $Oy$ du repère spatial, cet axe est dirigé par le vecteur \var{vecJ} et passe par un point qui est l'origine par défaut. Les options sont:
+
+  \begin{itemize}
+  \item \opt{axeOrigin}{point3D}: permet de donner un point de l'axe, par défaut ce point est l'origine: M(0,0,0).
+  \item \opt{ylimits}{[yinf,ysup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Yinf, Ysup].
+  \item \opt{ygradlimits}{[y1,y2}: définit l'étendue des graduations, par défaut c'est la même étendue que \textit{ylimits}.
+  \item \opt{ystep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{tickdir}{vecteur3D}: indique la direction des graduations, par défaut ce vecteur est \var{-vecK}.
+  \item \opt{tickpos}{0..1}: indique la position des graduations par rapport à l'axe, par défaut la valeur est $0.5$ ce qui signifie que l'axe passe au milieu des graduations.
+  \item \opt{labels}{0/1}: indique si les labels des graduations sont affichés ou non ($1$ par défaut).
+  \item \opt{originlabel}{0/1}: indique si le label de l'origine est affiché ou non ($0$ par défaut).
+  \item \opt{nbdeci}{entier}: nombre de décimales affichées ($2$ par défaut). Lorsque la variable prédéfinie \var{usecomma} vaut $1$, le point décimal est remplacé par une virgule. Lorsque la variable \var{dollar} vaut $1$, les graduations sont encadrées par le caractère \$.
+  \item \opt{ylabelstyle}{left/right/...}: définit le style de label, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende.
+  \item \opt{ylabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newylegend( <"texte"> )}: macro qui définit la légende pour l'axe $Oy$, par défaut le texte est \verb|"$y$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{ylegendsep}{distance en cm} définit la distance entre l'extrémité des graduations et la légende ou l'extrémité de l'axe suivant la position. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{ylabelsep} quand la légende n'est pas à une extrémité.
+  \item \opt{legendpos}{0..1}: définit la position de la légende, s'il y en a une. Avec la valeur $0$ la légende est à l'extrémité \og inférieure\fg\ de l'axe, avec la valeur $1$ la légende est à l'extrémité \og supérieure\fg\ de l'axe, sinon elle est le long de l'axe. par défaut cette valeur est $0.5$ (milieu de l'axe).
+  \end{itemize}
+\end{itemize}
+
+\subsection{AxeZ3D}
+\begin{itemize}
+ \item \util \textbf[AxeZ3D()]{AxeZ3D( <option1>, <option2>, ... )}.
+ \item \desc trace l'axe $Oz$ du repère spatial, cet axe est dirigé par le vecteur \var{vecK} et passe par un point qui est l'origine par défaut. Les options sont:
+
+  \begin{itemize}
+  \item \opt{axeOrigin}{point3D}: permet de donner un point de l'axe, par défaut ce point est l'origine: M(0,0,0).
+  \item \opt{zlimits}{[zinf,zsup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Zinf, Zsup].
+  \item \opt{zgradlimits}{[z1,z2}: définit l'étendue des graduations, par défaut c'est la même étendue que
+\textit{zlimits}.
+  \item \opt{zstep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{tickdir}{vecteur3D}: indique la direction des graduations, par défaut ce vecteur est \var{-vecJ}.
+  \item \opt{tickpos}{0..1}: indique la position des graduations par rapport à l'axe, par défaut la valeur est $0.5$ ce qui signifie que l'axe passe au milieu des graduations.
+  \item \opt{labels}{0/1}: indique si les labels des graduations sont affichés ou non ($1$ par défaut).
+  \item \opt{originlabel}{0/1}: indique si le label de l'origine est affiché ou non ($0$ par défaut).
+  \item \opt{nbdeci}{entier}: nombre de décimales affichées ($2$ par défaut). Lorsque la variable prédéfinie \var{usecomma} vaut $1$, le point décimal est remplacé par une virgule. Lorsque la variable \var{dollar} vaut $1$, les graduations sont encadrées par le caractère \$.
+  \item \opt{zlabelstyle}{left/right/...}: définit le style de label, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende.
+  \item \opt{zlabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newzlegend( <"texte"> )}: macro qui définit la légende pour l'axe $Oz$, par défut le texte est \verb|"$z$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{zlegendsep}{distance en cm} définit la distance entre l'extrémité des graduations et la légende ou l'extrémité de l'axe suivant la position. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{zlabelsep} quand la légende n'est pas à une extrémité.
+  \item \opt{legendpos}{0..1}: définit la position de la légende, s'il y en a une. Avec la valeur $0$ la légende est à l'extrémité \og inférieure\fg\ de l'axe, avec la valeur $1$ la légende est à l'extrémité \og supérieure\fg\ de l'axe, sinon elle est le long de l'axe. par défaut cette valeur est $0.5$ (milieu de l'axe).
+  \end{itemize}
+\end{itemize}
+
+\begin{demo}{Exemples d'axes}{AxeZ3D}
+\begin{texgraph}[name=AxeZ3D]
+view(-6.5,6.5,-3,5.5),Marges(0,0,0,0),size(7.5),
+view3D(-3,3,-3,3,-3,3),ModelView(central),
+Width:=8,Color:=blue, FillStyle:=full,
+FillColor:=lightcyan,Cercle3D(Origin,3,vecK),
+Arrows:=1,LabelSize:=scriptsize,
+Width:=4,Color:=black,
+AxeX3D(axeOrigin:=M(-3,-3,0),tickdir:=-vecJ,
+   xlabelstyle:=right,tickpos:=0,xlimits:=[-3,3.5],
+   legendpos:=1,xlabelsep:=0.15),
+AxeY3D(axeOrigin:=M(-3,-3,0), tickdir:=-vecI,
+    tickpos:=0, ylimits:=[-3,3.5]),
+AxeZ3D(axeOrigin:=M(-3,-3,0),zlimits:=[0,3.5],
+    tickdir:=M(1,-1,0),zgradlimits:=[1,3]),
+LineStyle:=dashed, Arrows:=0,
+Ligne3D([M(0,-3,0),Origin,M(-3,0,0)],0),
+LabelDot3D(Origin, "$O$","E",1)
+\end{texgraph}
+\end{demo}
+
+
+
+\subsection{BoxAxes3D}
+\begin{itemize}
+ \item \util \textbf[BoxAxes3D()]{BoxAxes3D( <option1>, <option2>, ... )}.
+ \item \desc trace les trois axes $Ox$, $Oy$ et $Oz$ du repère spatial sur trois des arêtes de la boite correspondant à la fenêtre 3d courante. Les options sont:
+
+  \begin{itemize}
+  \item \opt{labels}{0/1}: indique si les labels des graduations sont affichés ou non ($1$ par défaut).
+  \item \opt{nbdeci}{entier}: nombre de décimales affichées ($2$ par défaut). Lorsque la variable prédéfinie \var{usecomma} vaut $1$, le point décimal est remplacé par une virgule. Lorsque la variable \var{dollar} vaut $1$, les graduations sont encadrées par le caractère \$.
+  \item \opt{drawbox}{0/1}: indique si toutes les arêtes de la boite doivent être dessinées ($0$ par défaut).
+
+  \item \opt{grid}{0/1}: indique si une grille doit être dessinée ($0$ par défaut). Lorsque cette option vaut $1$, alors les trois grilles du fond de la boîte sont dessinées. Si la variable \var{FillStyle} vaut \textit{full} alors elles sont peintes dans la couleur définie par \var{FillColor}.
+  \item \opt{gridcolor}{couleur}: couleur de la grille si celle-ci est dessinée (noir par défaut).
+  \item \opt{gridwidth}{épaisseur}: épaisseur des traits de la grille ($2$ par défaut).
+
+  \item \opt{xaxe}{0/1}: indique si l'axe $Ox$ doit être affiché ($1$ par défaut).
+  \item \opt{xlimits}{[xinf,xsup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Xinf, Xsup].
+  \item \opt{xgradlimits}{[x1,x2]}: définit l'étendue des graduations, par défaut c'est la même étendue que \textit{xlimits}.
+  \item \opt{xstep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{xlabelstyle}{left/right/...}: définit le style de label pour l'axe $Ox$, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende.
+  \item \opt{xlabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newxlegend( <"texte"> )}: macro qui définit la légende pour l'axe $Ox$, par défaut le texte est \verb|"$x$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{xlegendsep}{distance en cm}: définit la distance entre l'extrémité des graduations et la légende. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{xlabelsep}.
+
+  \item \opt{yaxe}{0/1}: indique si l'axe $Oy$ doit être affiché ($1$ par défaut).
+  \item \opt{ylimits}{[yinf,ysup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Yinf, Ysup].
+  \item \opt{ygradlimits}{[y1,y2]}: définit l'étendue des graduations, par défaut c'est la même étendue que \textit{ylimits}.
+  \item \opt{ystep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{ylabelstyle}{left/right/...}: définit le style de label pour l'axe $Oy$, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende.
+  \item \opt{ylabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newylegend( <"texte"> )}: macro qui définit la légende pour l'axe $Oy$, par défaut le texte est \verb|"$y$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{ylegendsep}{distance en cm}: définit la distance entre l'extrémité des graduations et la légende. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{ylabelsep}.
+
+  \item \opt{zaxe}{0/1}: indique si l'axe $Oz$ doit être affiché ($1$ par défaut).
+  \item \opt{zlimits}{[zinf,zsup]}: définit l'étendue de l'axe, par défaut, c'est l'intervalle [Zinf, Zsup].
+  \item \opt{zgradlimits}{[z1,z2]}: définit l'étendue des graduations, par défaut c'est la même étendue que \textit{zlimits}.
+  \item \opt{zstep}{nombre}: définit le pas des graduations: 1 par défaut. Si cette valeur est nulle, alors il n'y aura pas de graduations (ni de labels).
+  \item \opt{zlabelstyle}{left/right/...}: définit le style de label pour l'axe $Oz$, la valeur par défaut est celle de \var{LabelStyle}. Le style ne s'applique pas à la légende.
+  \item \opt{zlabelsep}{distance en cm}: définit la distance entre l'extrémité des graduations et les labels ($0.25$ par défaut).
+  \item \textcolor{\coloropt}{newzlegend( <"texte"> )}: macro qui définit la légende pour l'axe $Oz$, par défaut le texte est \verb|"$z$"|. Si la chaîne est vide, alors il n'y aura pas de légende.
+  \item \opt{zlegendsep}{distance en cm}: définit la distance entre l'extrémité des graduations et la légende. Cette distance vaut $0.5$ par défaut et s'ajoute à \textit{zlabelsep}.
+  \end{itemize}
+ \item \exem voir \Helpref{ici}{ColorJump}.
+\end{itemize}
+
+
+
+\subsection{Cercle3D}
+\begin{itemize}
+ \item \util \textbf[Cercle3D()]{Cercle3D( <point3D>, <rayon>, <vecteur3D normal> )}.
+ \item \desc Dessine un cercle dans l'espace, de centre \argu{point3D}, le \argu{vecteur3D normal} est normal au plan du cercle et non nul.
+\end{itemize}
+
+\subsection{Courbe3D}
+\begin{itemize}
+ \item \util \textbf[Courbe3D()]{Courbe3D( <f(t)> [, divisions, discontinuités] )}.
+ \item \desc dessine une courbe gauche paramétrée par \argu{f(t)} avec $f(t)=[x(t)+iy(t), z(t)]$ ou encore $f(t)=M(x(t), y(t), z(t))$. On peut indiquer le nombre de \argu{divisions} par 2 autorisé entre 2 points consécutifs, et la prise en compte des \argu{discontinuités} (0 ou 1) comme dans la fonction \Helpref{Courbe}{cmdCourbe}.
+\end{itemize}
+
+
+\subsection{Dcone}\label{Dcone}
+\begin{itemize}
+ \item \util \textbf[Dcone()]{Dcone( <point3D>, <vecteur3D>, <rayon>, <mode> )}.
+ \item \desc dessine un cône à partir de son sommet \argu{point3D}, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cône, et du \argu{rayon} de la face circulaire. Le \argu{mode} peut valoir:
+
+  \begin{itemize}
+  \item 0: fil de fer, avec parties cachées,
+  \item 1: contour visible uniquement, on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage.
+  \item 2: contour visible (on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage), auquel on superpose les parties cachées.
+  \end{itemize}
+
+Le tracé des parties cachées utilise les variables \var{HideStyle}, \var{HideColor}, \var{HideWith}.
+\end{itemize}
+
+\subsection{Dcylindre}\label{Dcylindre}
+\begin{itemize}
+ \item \util \textbf[Dcylindre()]{Dcylindre( <point3D>, <vecteur3D>, <rayon>, <mode> )}.
+ \item \desc dessine un cylindre à partir d'un \argu{point3D} qui est le centre d'une des deux faces circulaires, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cylindre, et d'un rayon r. Le \argu{mode} peut valoir:
+
+  \begin{itemize}
+  \item 0: fil de fer, avec parties cachées,
+  \item 1: contour visible uniquement, on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage.
+  \item 2: contour visible (on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage), auquel on superpose les parties cachées.
+  \end{itemize}
+
+Le tracé des parties cachées utilise les variables \var{HideStyle}, \var{HideColor}, \var{HideWith}.
+\end{itemize}
+
+\subsection{DpqGoneReg3D}
+\begin{itemize}
+ \item \util \textbf[DpqGoneReg3D()]{DpqGoneReg3D( <axe>, <sommet>, <[p,q]> )}.
+ \item \desc cette macro dessine un \argu{p/q}-gone régulier de l'espace, à partir de son \argu{axe} et d'un \argu{sommet}. L'axe est une droite de l'espace c'est à dire une liste de la forme: [point3D, vecteur3D], et le sommet est un point3D.
+\end{itemize}
+
+\subsection{DrawAretes}
+\begin{itemize}
+ \item \util \textbf[DrawAretes()]{DrawAretes( <liste arêtes> , mode (0/1) )}.
+ \item \desc dessine une \argu{liste d'arêtes}. Une arête est une liste de deux point3D qui se termine par la constante \jump, la partie imaginaire de celle-ci contient la valeur $0$ pour une arête cachée et $1$ pour une arête visible (voir la commande \Helpref{Aretes}{cmdAretes}). Le \argu{mode} peut valoir:
+
+  \begin{itemize}
+  \item 0: toutes les arêtes sont dessinées,
+  \item 1: les arêtes visibles seulement sont dessinées.
+  \end{itemize}
+
+Le tracé des arêtes cachées utilise les variables \var{HideStyle}, \var{HideColor}, \var{HideWith}.
+\end{itemize}
+
+\subsection{DrawDdroite}
+\begin{itemize}
+ \item \util \textbf[DrawDdroite()]{DrawDdroite( <droite> [, longueur L ] )}.
+ \item \desc trace une demi-droite [A,A+u) de l'espace, celle-ci est de la forme \textsl{[A=point3D, u=vecteur3D directeur]}. S'il n'y a pas d'autre argument, alors la demi-droite est entièrement dessinée. S'il y a le paramètre \argu{L}, alors c'est le segment qui relie A à A+L*u/norm(u) qui est dessiné.
+\end{itemize}
+
+\subsection{DrawDroite}
+\begin{itemize}
+ \item \util \textbf[DrawDroite()]{DrawDroite( <droite> [, longueur L1, longueur L2] )}.
+ \item \desc trace une droite de l'espace, celle-ci est de la forme \textsl{[point3D, vecteur3D directeur]}. S'il n'y a pas d'autre argument, alors la droite est entièrement dessinée. S'il y a deux autres paramètres: \argu{L1} et \argu{L2}, alors si on appelle $A$ le point et $u$ le vecteur directeur, c'est le segment qui relie A-L1*u/norm(u) à A+L2*u/norm(u) qui est dessiné.
+\end{itemize}
+
+
+\subsection{DrawPlan}
+\begin{itemize}
+ \item \util \textbf[DrawPlan()]{DrawPlan( <plan>, <vecteur3D>, <longueur1>, <longueur2> [, type] )}.
+ \item \desc permet de représenter un plan de l'espace, le paramètre \argu{plan} est de la forme \textsl{[point3D, vecteur3D normal]}, notons $A$ le point et $u$ le vecteur3D normal, le paramètre suivant est un vecteur du plan (notons le $v$), la macro calcule le produit vectoriel $w=u \wedge v$ et détermine le parallélogramme suivant: 
+\end{itemize}
+
+
+\begin{demo}{La macro drawplan}{drawplan1}
+\begin{texgraph}[name=drawplan1]
+view(-5,5,-5,5),Marges(0,0,0,0), size(8), DotStyle:=cross,
+A:=0, M4:=-4+3*i, M1:=-2-3*i, M2:=4-3*i, M3:=2+3*i,
+LabelDot(A,"$A$","NE",1), Arrows:=1, Ligne([A,A+2*i],0),
+Width:=4, Arrows:=0, angleD(A+i,A,A-1, 0.25),
+LabelStyle:=scriptsize, LabelDot(A+i,"$\vec{u}$","O"),
+Width:=8, Color:=red, Arrows:=1, Ligne([M1,M2],0),
+Width:=4,Color:=black, LabelStyle:=left,
+LabelDot((M1+M2)/2,"$\dfrac{L_1\cdot\vec{v}}{\|\vec{v}\|}$","S"),
+Width:=8,Color:=red, Ligne([M2,M3],0),
+Width:=4,Color:=black,LabelStyle:=top,
+LabelDot((M2+M3)/2,"$\dfrac{L2\cdot\vec{w}}{\|\vec{w}\|}$","E"),
+Arrows:=0,
+LabelDot(M4,"$M4$","NO",1),
+LabelDot(M1,"$M1$","SO",1),
+LabelDot(M2,"$M2$","SE",1),
+LabelDot(M3,"$M3$","NE",1),
+Ligne([M3,M4,M1],0)
+\end{texgraph}
+\end{demo}
+
+où L1 est le paramètre \argu{longueur1} et L2 le paramètre \argu{longueur2}. Si le dernier paramètre \argu{type} est absent, alors c'est le parallélogramme qui est dessiné, les différentes valeurs possibles sont -1, -2, -3, -4, 1, 2, 3, 4. Ce qui donne (le point $A$, le vecteur $u$ et l'angle droit ont été ajoutés):
+
+\begin{demo}{Types de plans}{drawplan2}
+\begin{texgraph}[name=drawplan2,file]
+Cmd [Fenetre(-6+5.5*i,6-5.5*i,0.625+0.625*i), Marges(0,0,0,0), Border(0)];
+  [OriginalCoord(1),IdMatrix()];
+  [theta:=0.0872, phi:=1.1345, IdMatrix3D(), ModelView(ortho)];
+Var
+  A = [-4.5*i,4];
+  B = [-4.5*i,-1];
+  C = [0,-5];
+Mac
+  plan = [ a:=%1, type:=%2, Arrows:=0,
+   LabelDot(Proj3D(%1),"$A$","E",1,0.2),
+   Width:=8,
+   DrawPlan( [a,vecK], vecJ, 2, 2, type),
+   angleD( Proj3D(a+vecK), Proj3D(a), Proj3D(a-vecJ), 0.15),
+   Arrows:=1,
+   Ligne( Proj3D( [a, a+vecK]),0),
+   LabelDot( Proj3D([a+vecK]), "$\vec{u}$", "N",0)
+  ];
+Graph objet1 = [
+  Width:=8, Marges(0,0,0,0), size(7.5),
+  plan(A,1), plan( A+3*vecJ,2), plan( A+6*vecJ,3),plan( A+9*vecJ,4),
+  plan(B,-1), plan( B+3*vecJ,-2), plan( B+6*vecJ,-3),plan( B+9*vecJ,-4),
+  plan(C),
+  Arrows:=0,LabelSize:=footnotesize,
+  Label(-4.5+2.7564*i,"type=$1$"),
+  Label(-1.2529+2.7564*i,"type=$2$"),
+  Label(1.5+2.7564*i,"type=$3$"),
+  Label(4.4824+2.7564*i,"type=$4$"),
+  Label(-4.7471-2.0032*i,"type=$-1$"),
+  Label(-1.5-2.0032*i,"type=$-2$"),
+  Label(1.5-2.0032*i,"type=$-3$"),
+  Label(4.2529-2.0032*i,"type=$-4$"),
+  Label(-0.2471-5.2532*i,"pas de type")
+  ];
+\end{texgraph}
+\end{demo}
+
+\subsection{Dsphere}label{Dsphere}
+\begin{itemize}
+ \item \util \textbf[Dsphere()]{Dsphere( <point3D>, <rayon>, <mode> )}.
+ \item \desc dessine une sphère à partir de son centre \argu{point3D} et de son \argu{rayon}. Le \argu{mode} peut valoir:
+
+  \begin{itemize}
+  \item 0: fil de fer, avec parties cachées,
+  \item 1: contour visible uniquement, on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage.
+  \item 2: contour visible (on peut utiliser le style: \co{FillStyle:=full} pour avoir un remplissage), auquel on superpose les parties cachées.
+  \end{itemize}
+
+Le tracé des parties cachées utilise les variables \var{HideStyle}, \var{HideColor}, \var{HideWith}.
+\end{itemize}
+
+\subsection{LabelDot3D}
+\begin{itemize}
+ \item \util \textbf[LabelDot3D()]{LabelDot3D( <point3D>, <"texte">, <orientation> [, DrawDot, distance] )}.
+ \item \desc cette macro affiche un texte à coté du point \argu{point3D}. Les trois paramètres suivants s'appliquent à la projection du point sur le plan de l'écran. L'orientation peut être "N" pour nord, "NE" pour nord-est ...etc, ou bien une liste de la forme [longueur, direction] où direction est un complexe, dans ce deuxième cas, le paramètre optionnel \argu{distance} est ignoré. Le point est également affiché lorsque \argu{DrawDot} vaut $1$ ($0$ par défaut) et on peut redéfinir la \argu{distance} en cm entre le point et le texte (0.25cm par défaut).
+\end{itemize}
+
+
+\subsection{Ligne3D}
+\begin{itemize}
+ \item \util \textbf[Ligne3D()]{Ligne3D( <liste de point3D>, <fermée> )}.
+ \item \desc dessine une ligne polygonale dans l'espace, la \argu{liste de point3D} peut contenir la constante \jump. Le paramètre \argu{fermée} vaut 0 ou 1 et indique si la courbe doit être fermée (1=fermée).
+\end{itemize}
+
+\subsection{markseg3d}
+\begin{itemize}
+ \item \util \textbf[markseg3d()]{markseg3d( <point3D1>, <point3D2>, <n>, <espacement>, <longueur> [, angle] )}.
+ \item \desc marque le segment défini par \argu{point3D1} et \argu{point3D2} avec \argu{n} petits traits, l'\argu{espacement} est en unité graphique, et la \argu{longueur} en cm. Le paramètre optionnel \argu{angle} permet de définir en degrés l'angle que feront les marques par rapport au segment (45 degrés par défaut).
+\end{itemize}
+
+
+\subsection{Point3D}
+\begin{itemize}
+ \item \util \textbf[Point3D()]{Point3D( <liste de point3D> )}.
+ \item \desc identique à la commande \Helpref{Point}{cmdPoint}, mais avec des points de l'espace.
+\end{itemize}
+
+
+\section{Les macros de dessin de facettes pour la 3D}
+
+Ces macros se chargent de l'affichage d'objets à facettes basé sur un tri en fonction de l'éloignement du centre de gravité des facettes à l'observateur. Cette méthode ne donne pas toujours le résultat escompté, notamment en le cas de \og grandes\fg\ facettes.
+
+
+\subsection{Dparallelep}
+\begin{itemize}
+ \item \util \textbf[Dparallelep()]{Dparallelep( <sommet>, <vecteur3D1>, <vecteur3D2>, <vecteur3D3> [, mode, contrast] )}.
+ \item \desc cette macro dessine un parallélépipède à partir d'un \argu{sommet} et de trois vecteurs, supposés dans le sens direct. Cette macro utilise \Helpref{DrawPoly}{macDrawPoly} pour dessiner dans le \argu{mode} et avec le \argu{contrast} voulus.
+\end{itemize}
+
+\subsection{Dprisme}
+\begin{itemize}
+ \item \util \textbf[Dprisme()]{Dprisme( <base>, <vecteur3D> [, mode, contraste] )}.
+ \item \desc cette macro dessine un prisme à partir d'une \argu{base} et d'un \argu{vecteur3D} qui représente le vecteur de translation de la base à la face opposée. La base est une liste de point3D coplanaires, cette liste doit être dans le sens direct, le plan étant orienté par le vecteur de translation. Cette macro utilise \Helpref{DrawPoly}{macDrawPoly} pour dessiner dans le \argu{mode} et avec le \argu{contraste} voulus.
+\end{itemize}
+
+\subsection{Dpyramide}
+\begin{itemize}
+ \item \util \textbf[Dpyramide()]{Dpyramide( <base>, <sommet> [, mode, contraste] )}.
+ \item \desc cette macro dessine une pyramide à partir de sa \argu{base} et du \argu{sommet}. La base est une liste de point3D coplanaires, cette liste doit être dans le sens direct, le plan étant orienté par le sommet. Cette macro utilise \Helpref{DrawPoly}{macDrawPoly} pour dessiner dans le \argu{mode} et avec le \argu{contraste} voulus.
+\end{itemize}
+
+\subsection{DrawFacet}\label{macDrawFacet}
+\begin{itemize}
+ \item \util \textbf[DrawFacet()]{DrawFacet(facettes1, [options1], facettes2, [options2], ... )}.
+ \item \desc cette macro trie l'ensemble de toutes les facettes et les affiche en fonction de leurs options avec la possibilité de faire un lissage (de \Gouraud) ou non, mais \Mytextbf{les éventuelles intersections de sont pas gérées}. Les options possibles sont:
+
+  \begin{itemize}
+  \item \opt{backculling}{0/1}. Indique si les facettes non visibles doivent être éliminées ou non (0 par défaut).
+  \item \opt{color}{couleur}. Choix de la couleur (white par défaut).
+  \item \opt{contrast}{nombre positif}. Le contraste normal a la valeur $1$ (valeur par défaut), un contraste nul signifie que la couleur est unie. Ce nombre permet de faire varier le contraste entre les couleurs des facettes d'une même liste.
+  \item \opt{smooth}{0/1}. Indique si l'algorithme de \Gouraud (lissage des facettes) doit être utilisé ou non lors de l'exportation \var{pstricks} ou \var{eps} (0 par défaut). 
+  \end{itemize}
+ \item Les options par défaut ne sont pas réinitialisées entre \argu{facettes1} et \argu{facettes2} (idem pour les suivantes), ainsi par défaut, les options de \argu{facettes2} sont les mêmes que celles de \argu{facettes1}. Si les options sont identiques, on peut remplacer \argu{facettes1} par \argu{[facettes1,facettes2]}, ou bien mettre une liste vide (\co{[]}) pour \argu{options2}.
+ \item Lorsqu'il n'y a pas de lissage du tout, la macro \Helpref{DrawFlatFacet}{macDrawFlatFacet} est un peu plus performante. S'il y a beaucoup de lissages (ou bien que des lissages) à effectuer sur grand nombre de facettes, le rendu écran peut-être très long et la commande \Helpref{draw("SmoothFacet",...)}{macDrawSmoothFacet} est alors préférable, car cette dernière n'effectue le lissage qu'au moment de l'export et non pas dès son exécution.
+\end{itemize}
+
+\pngtrue
+\begin{demo}{DrawFacet}{DrawFacet}
+\begin{texgraph}[name=DrawFacet,
+         export=eps]
+Load("PolyedresII.mac"),
+Marges(0,0,0,0),size(7.5),
+background(full,beige),
+DrawFacet(Sphere(M(0,0,3.5),1.5,30,15),
+        [color:=steelblue,
+        backculling:=1,smooth:=1],
+     Cube([0,0,vecK],M(1,1,0)),
+        [color:=orange,smooth:=0],
+     Cube([0,0,vecK],M(2,2,-4)),
+        [color:=gold]
+        )
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+
+\subsection{DrawFlatFacet}\label{macDrawFlatFacet}
+\begin{itemize}
+ \item \util \textbf[DrawFlatFacet()]{DrawFlatFacet(facettes1, [options1], facettes2, [options2], ... )}.
+ \item \desc cette macro trie l'ensemble de toutes les facettes et les affiche en fonction de leurs options, mais \Mytextbf{les éventuelles intersection de sont pas gérées et il n'y a pas de lissage de \Gouraud}. Les options possibles sont:
+
+  \begin{itemize}
+  \item \opt{backculling}{0/1}. Indique si les facettes non visibles doivent être éliminées ou non (0 par défaut).
+  \item \opt{color}{couleur}. Choix de la couleur (white par défaut).
+  \item \opt{contrast}{nombre positif}. Le contraste normal a la valeur $1$ (valeur par défaut), un contraste nul signifie que la couleur est unie.
+  \end{itemize}
+\end{itemize}
+
+
+\begin{demo}{DrawFlatFacet}{DrawFlatFacet}
+\begin{texgraph}[name=DrawFlatFacet]
+Marges(0,0,0,0), size(7.5),
+theta:=75*deg, phi:=60*deg,
+S:=Cylindre(M(0,0,-4), 8*vecK, 2, 25, 0),
+C:= curveTube([3*exp(i*t),t/3],
+    0.5, -2*pi, 2*pi, 75, 12,0),
+DrawFlatFacet(S,[color:=steelblue,
+         backculling:=1],
+       C, [color:=crimson])
+\end{texgraph}
+\end{demo}
+
+
+\subsection{DrawPoly}\label{macDrawPoly}
+\begin{itemize}
+ \item \util \textbf[DrawPoly()]{DrawPoly( <polyedre convexe> [, mode, contraste]] )}.
+ \item \desc elle permet de dessiner un \argu{polyèdre convexe} dans le \argu{mode} voulu. Ce mode, qui a la valeur $0$ par défaut, peut prendre les valeurs suivantes:
+
+\begin{itemize}
+ \item mode 0: le dessin se fait arête par arête, y compris les arêtes cachées (qui seront dessinées dans le style HideStyle), pas de remplissage,
+ \item mode 1: le dessin se fait par face visible, celles-ci peuvent être remplies en fonction de l'attribut \var{FillStyle}, toutes les facettes ont alors la même couleur (\var{FillColor}),
+ \item mode 2: le dessin est fait comme dans le mode 1 (faces visibles), puis on rajoute les arêtes cachées, \item mode=3: comme le mode 1 mais la couleur de remplissage est nuancée en fonction de l'exposition des facettes et en fonction de la valeur de \argu{contraste}, 
+ \item mode=4: le dessin se fait par face visible mais la couleur de remplissage des facettes est nuancée en fonction de l'exposition des facettes et en fonction de la valeur de \argu{contraste}, puis on rajoute les arêtes cachées.
+\end{itemize}
+ \item Le paramètre \argu{contraste} est un nombre positif qui vaut $1$ par défaut, il permet d'accentuer ou non le contraste des couleurs des différentes facettes, la valeur $0$ donnera une couleur unie comme les modes $1$ et $2$.
+ \item L'avantage de cette macro est la gestion des arêtes, ce qui n'est pas le cas de la macro \Helpref{DrawFacet}{macDrawFacet}.
+\end{itemize}
+
+
+\subsection{DrawSmoothFacet}\label{macDrawSmoothFacet}
+\begin{itemize}
+ \item \util \textbf[DrawSmoothFacet()]{draw("SmoothFacet", facettes1, [options1], facettes2, [options2], ... )}.
+ \item \desc cette macro trie l'ensemble de toutes les facettes et les affiche en fonction de leurs options mais \Mytextbf{les éventuelles intersections de sont pas gérées}. Les exportations en \var{pstrick} ou \var{eps}, et donc \var{epsc} et \var{pdf} aussi (mais pas \var{pdfc}), l'algorithme de \Gouraud est utilisé pour le remplissage des facettes (après triangulation de celles-ci) ce qui donne un effet de lissage, ce lissage n'est pas visible à l'écran. \Mytextbf{Avec cette macro les arêtes ne sont pas dessinées}. Les options sont:
+
+  \begin{itemize}
+  \item \opt{backculling}{0/1}. Indique si les facettes cachées doivent être éliminées ou non (0 par défaut).
+  \item \opt{color}{couleur}. Choix de la couleur (white par défaut).
+  \item \opt{contrast}{nombre positif}. Le contraste normal a la valeur $1$ (valeur par défaut), un contraste nul signifie que la couleur est unie.
+ \item Cette macro utilise un export personnalisé et donc être utilisée sous la forme \Mytextbf{draw("SmoothFacet", facettes1, [options1], facettes2, [options2], ... )}, sous cette forme l'export provoquera automatiquement l'exécution de la macro \Mytextbf{ExportSmoothFacet()} qui est définie dans le fichier \textit{scene3d.mac}. Alors que sous la forme \Mytextbf{DrawSmoothFacet(facettes1, [options1], facettes2, [options2], ... )} l'export sera l'export classique, c'est à dire ce que l'on voit à l'écran (facettes sans lissage).   \end{itemize}
+\end{itemize}
+
+
+\pngtrue
+\begin{demo}{Exemple avec \textsl{DrawSmoothFacet}}{DrawSmoothFacet}
+\begin{texgraph}[name=DrawSmoothFacet,
+         export=eps]
+Marges(0,0,0,0),size(7.5),
+background(full,beige),
+draw("SmoothFacet", Sphere(M(-3,0,0),3,25,15),
+         [color:=steelblue,
+          backculling:=1],
+         Sphere(M(3,0,0),3,25,15),
+         [color:=orange])
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+
+\Mytextbf{Avertissement}: l'exemple ci-dessus illustre la macro \textit{DrawSmoothFacet} qui permet de lisser les facettes avec l'algorithme de \textsc{Gouraud}. Mais celui-ci n'est vraiment connu que de ghostscript ce qui explique que le rendu en pdf est parfois long (voire très long) et peu intéressant pour de grosses images, dans ces cas là on préférera une image jpeg haute résolution (ou un export \var{eps} si le document doit rester au format ps).
+
+\subsection{Dsurface}
+\begin{itemize}
+ \item \util \textbf[Dsurface()]{Dsurface( <f(u,v)> [, uMin+i*uMax, vMin+i*vMax, uNbLg+i*vNbLg, (smooth 0/1)+i*contraste] )}.
+ \item \desc cette macro dessine une surface paramétrée par \argu{f(u,v)} où f est une fonction de deux variables réelles u et v, et à valeurs dans l'espace. Le deuxième paramètre représente l'intervalle de la variable $u$ ($[-5,5]$ par défaut), le troisième paramètre représente l'intervalle de la variable $v$ ($[-5;5]$ par défaut), le quatrième paramètre représente, sous forme complexe, le nombre de lignes pour $u$ et le nombre de lignes pour $v$ ($25$ lignes par défaut). C'est la macro \Helpref{DrawFacet}{macDrawFacet} qui fait le rendu avec la couleur correspondant à la variable \var{FillColor} et avec le \argu{contraste} demandé ($1$ par défaut) et un lissage lorsque \argu{smooth} vaut $1$ ($0$ par défaut).
+\end{itemize}
+
+
+\subsection{Dtetraedre}
+\begin{itemize}
+ \item \util \textbf[Dtetraedre()]{Dtetraedre( <sommet>, <vecteur3D1>, <vecteur3D2>, <vecteur3D3> [, mode, contraste] )}.
+ \item \desc cette macro dessine un tétraèdre à partir d'un \argu{sommet} et trois vecteurs, supposés dans le sens direct. Cette macro utilise \Helpref{DrawPoly}{macDrawPoly} pour dessiner dans le \argu{mode} et avec le \argu{contraste} voulus.
+\end{itemize}

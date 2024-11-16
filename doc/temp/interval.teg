@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(-4,4,-1.5,2), Marges(0,0,0,0), size(7.5),
+dollar:=1, LabelSize:=footnotesize,
+v:=i, axeX([v,1],1),
+draw("interval", [-1+v,3+v], [legend:="$(x+1)(x-3)<0$",
+ labelsep:=0.5, marker:="][", Width:=8, Color:=crimson]),
+v:=-i, dollar:=1, axeX([v,1],1),
+draw("interval", [-4.5+v,-1+v],
+ [legend:="$(x+1)(x-3)\geqslant0$", labeldir:=North,
+  anchor:=1+v, marker:="]]", Width:=8, Color:=darkblue]),
+draw("interval", [3+v,4.5+v],
+ [marker:="[[", Width:=8, Color:=darkblue])
+];

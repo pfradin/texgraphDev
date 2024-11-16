@@ -1,0 +1,8 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), size(7.5), NbPoints:=100,
+C:=curve2Cone( [cos(2*t)*exp(i*t)*5,-3],
+        -pi,pi,[0,0],-1),
+FillOpacity:=0.7,
+DrawFlatFacet(C,[color:=darkseagreen])
+];

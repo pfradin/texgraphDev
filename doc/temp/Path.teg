@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-4,6), Marges(0,0,0,0), size(7.5),
+Axes(2*i,1+i),
+Eofill:=1, FillStyle:=full, FillOpacity:=0.85,
+FillColor:= blue, Width:=8,
+Path([-4,i,circle,
+   -3+2*i,move,-3,-2,line,
+   0,2,2,-1,arc,
+   3,3+3*i,0.5,linearc,
+   1,-1+5*i,-3+2*i,bezier,
+   closepath,
+   ])
+];

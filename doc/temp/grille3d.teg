@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(-8,8,-8,8), Marges(0,0,0,0), size(7.5),
+ModelView(central), DistCam(30),
+Color:=darkgray,
+Ligne3D([grille3d(x,-5,1+2*i), grille3d(y,-5,1+2*i),
+     grille3d(z,-5)],0),
+Color:=black,
+S:=curveTube([3*exp(i*t), t/3], 0.5,
+       -3*pi, 3*pi, 100, 12),
+Color:=black, Width:=1,
+DrawFlatFacet(S,
+     [color:=steelblue, contrast:=0.5])
+];

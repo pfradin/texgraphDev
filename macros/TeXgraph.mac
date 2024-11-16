@@ -1,0 +1,2000 @@
+TeXgraph#
+{ TeXgraph.mac version 2.0,macros communes à la version GUI et la version commande }
+Var
+{variables de stockage}
+    stock = Nil;    
+    stock1 = Nil;   
+    stock2 = Nil;   
+    stock3 = Nil;   
+    stock4 = Nil;   
+    stock5 = Nil;   
+{conversions}    
+    mm = Ent(7227/254); {dixième de point vers millimètres,ex: Width:=2*mm}
+    deg = pi/180;       {degrés vers radians,ex: 180*deg=pi}
+    rad = 180/pi;       {radians vers degrés,ex: pi*rad=180}
+{variables pour les zooms}    
+    Xfact = 1.1;    
+    Yfact = 1.1;
+{nombre max de graduations sur les axes}    
+    maxGrad = 100;  
+{Repère 3D}
+    Origin = [0,0];
+    vecI = [1,0];   
+    vecJ = [i,0];
+    vecK = [0,1];
+{fenêtre 3D}    
+    Xinf = -5;     
+    Xsup = 5;
+    Yinf = -5;
+    Ysup = 5;
+    Zinf = -5;
+    Zsup = 5 ;
+    clipwin = Nil;
+    backcolor = white;
+    win2dList = Nil; {pile pour la sauvegarde de la fenêtre 2D et la matrice courante,utilisée par SaveWin et RestoreWin()}
+    win3dList = Nil; {pile pour la sauvegarde de la fenêtre 3D,utilisée par SaveWin3d et RestoreWin3d()}
+    TphiList = Nil; {pile pour la sauvegarde de theta et phi,utilisée par SaveTphi et RestoreTphi()}
+{labels}
+    labelpos = top;
+    labelsep = 0.25;
+    inside = 0;
+    outside = 1;
+    usecomma = 0; {utiliser la virgule pour les labels numériques dans GradDroite}
+    nbdeci = 15;   {nombre de décimales dans les affichages numériques}
+    numericFormat = 0; {0=défaut,1=scientifique,2=ingénieur}
+{ensembles}
+    labels = 1;
+{pour le "flattened postscript" }
+    height = Nil;
+    position = 0;
+    rotation = 0;
+    select = Nil;
+    width = 8;  
+    scale = 1;
+    hollow = 0;
+    color = 0;
+    dollar = 1;
+    flip = 0;
+    mirror = 0;
+    drawbox = 0;
+{pour la macro odeSolve,résolution d'équations différentielles}
+    t = [-5,5];
+    odeMethod = "rk4";
+    odeReturn = "[t,Y]";
+{extension des scripts}
+    ScriptExt = if Windows then ".bat" else ".sh" fi;
+
+Include "errors.mac";   
+
+Mac
+
+    MapBy =  {MapBy(fonction,variable,liste,by [,return jump]): comme la commande Map mais par paquet de <by>,le dernier paramètre (0/1) indique si la macro retourne jump lorsqu'il est rencontré (valeur 1 par defaut).}
+    [$BY:= if %4=Nil then 1 else Re(%4) fi,$repjump:=if %5=Nil then i else (2*%5-1)*i fi,Map(%1,%2,%3,BY+repjump)];
+    
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    coord = [$deci:=if %2=Nil then 4 else %2 fi,
+    Concat("(",Round(Re(%1),deci),",",Round(Im(%1),deci),")")
+    ];
+
+    engineerF = [
+    $x:=%1,$m:=abs(x),$d:=%2,if d=Nil then d:=0 fi,
+    while m>=1000 do m:=m/1000,Inc(d,3) od,
+    while m<1 do m:=m*1000,Inc(d,-3) od,
+    Concat(
+        if x<0 then "-" fi,
+        if m<>1 Or d=0 then old_StrNum(m,nbdeci) fi,
+        if d<>0 then Concat("E",d) fi
+        )
+    ];
+
+    epsCoord = [$deci:=if %2=Nil then 4 else %2 fi,$z:=EpsCoord(%1),Concat(Round(Re(z),deci)," ",Im(z,deci)," ")];
+        
+    label = if dollar=1 then Concat("$",%1,"$") else Concat(%1) fi; 
+
+    SetStr = 
+    [$eval:=if %3=Nil then 1 else %3 fi,$aux:= if eval then NewMac(%1,["""",%2,""""]) else NewMac(%1,String(%2)) fi];
+    
+    StrReverse = Concat(Reverse(Str2List(%1)));
+
+    svgCoord = [$deci:=if %2=Nil then 4 else %2 fi,$z:=SvgCoord(%1),Concat(Round(Re(z),deci)," ",Im(z,deci)," ")];
+
+    texCoord = [$deci:=if %2=Nil then 4 else %2 fi,$z:=TeXCoord(%1),
+         Concat("(",Round(Re(z),deci),",",Round(Im(z),deci),")")
+        ];
+
+    old_StrNum = 
+    if usecomma then StrReplace(Round(%1,%2),".",",") else Round(%1,%2) fi;
+
+    StrNum = [if nbdeci=Nil then nbdeci:=15 fi,
+    if numericFormat=2 then engineerF(%1) elif numericFormat=1 
+    then $P:=ScientificF(%1,nbdeci),if usecomma then StrReplace(P,".",",") else P fi
+    else old_StrNum(%1,nbdeci) fi
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Abs = [$x:=Mtransform(%1,[0,Copy(GetMatrix(),2,2)]),abs(Re(x)*Xscale+i*Im(x)*Yscale)];
+
+    Ceil = -Ent(-%1);
+        
+    det2d = Im(bar(%1)*%2);
+
+    div = if %2>0 then Ent(%1/%2)
+    elif %2<0 then -Ent(-%1/%2)
+    fi;
+    
+    free = %1:=Nil;    
+
+    mod = %1-div(%1,%2)*%2;
+    
+    nil = (%1=Nil);    
+
+    not = 1-%1;
+
+    pgcd = [$a:=Ent(%1),$b:=Ent(%2),$u':=1,$v':=0,$u:=0,$v:=1,$r:=b,
+     while r<>0 do
+           r:=mod(a,b),$q:=div(a,b),
+           a:=b,b:=r,
+           $x:=u,u:=u'-q*u,$u':=x,
+           $x:=v,v:=v'-q*v,$v':=x
+     od,
+     %3:=u',%4:=v',a];
+     
+    gcd = pgcd(%1,%2,%3,%4);
+
+    ppcm = abs(Ent(%1)*Ent(%2))/pgcd(%1,%2);
+    
+    lcm = ppcm(%1,%2);
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    bary = [$L:= for $z in %1 By 1 do z od,
+     $S:=0,$T:=0,$aux:= Map( [$X:= z[2]*z[1],if X<>Nil then Inc(S,X),Inc(T,z[2]) fi],z,L,2-i),S/T];
+
+{gestion des listes par composante}
+
+    CpCopy =  {CpCopy(liste,départ,nb): renvoie nb composantes à partir de la composante numéro départ>1 ou depart<-1.}
+        [$dep:=%2,$inverse:=(dep<0),
+         if inverse then
+            $L:=CpReverse(%1),dep:=-dep  {on part de la fin si dep<0}
+         else $L:=%1 fi,
+         if %3=Nil then $fin:=dep         {on prend une seule composante}
+         elif %3=0 then fin:=Re(jump)     {on prend tout}
+         else $fin:=dep+%3-1 fi,$num:=0,$sortie:=Nil,
+         for $z in L By comp do
+             Inc(num,1),
+             if num>=dep And num<=fin then
+                if sortie<>Nil then Insert(sortie,jump) fi,
+                Insert(sortie,z)
+             fi,
+         od,
+        if inverse then sortie:=CpReverse(sortie) fi,
+        sortie
+        ];
+ 
+    CpDel =  {CpDel(liste,départ,nb): détruit nb composantes à partir de la composante numéro  départ>1 ou depart<-1 liste doit être une variable,elle est modifiée.}
+        [$dep:=%2,$inverse:=(dep<0),
+         if inverse then
+            $L:=CpReverse(%1),dep:=-dep  {on part de la fin si dep<0}
+         else $L:=%1 fi,
+         if %3=Nil then $fin:=dep         {on élimine une seule composante}
+         elif %3=0 then fin:=Re(jump)     {on élimine tout à partir de dep}
+         else $fin:=dep+%3-1 fi,$num:=0,$sortie:=Nil,
+         for $z in L By comp do
+             Inc(num,1),
+             if num<dep Or num>fin then
+                if sortie<>Nil then Insert(sortie,jump) fi,
+                Insert(sortie,z)
+             fi,
+         od,
+        if inverse then sortie:=CpReverse(sortie) fi,
+        Echange(%1,sortie)
+        ];
+
+    CpNops =  {CpNops(liste): renvoie le nb de composantes de la liste}
+        [$num:=0,
+         for $z in %1 By comp do
+             Inc(num,1),
+         od,
+        num
+        ];
+
+    CpReplace =  {CpReplace(liste,index,nouveau): remplace la composante numéro index par la nouvelle,la liste est une variable,elle est modifiée.}
+        [$dep:=%2,$inverse:=(dep<0),
+         if inverse then
+            $L:=CpReverse(%1),dep:=-dep  {on part de la fin si dep<0}
+         else $L:=%1 fi,
+         $num:=0,$sortie:=Nil,
+         for $z in L By comp do
+             Inc(num,1),
+             if sortie<>Nil then Insert(sortie,jump) fi,
+             if num=dep then Insert(sortie,%3) else Insert(sortie,z) fi
+         od,
+        if inverse then sortie:=CpReverse(sortie) fi,
+        Echange(sortie,%1)
+        ];
+
+   CpReverse =  {CpReverse(liste): renvoie la liste en inversant l'ordre des composantes sans inverser les composantes elle-mêmes.}
+       [$sortie:=Nil,
+        for $z in %1 By comp do
+                 if sortie<>Nil then Insert(sortie,jump,1) fi,
+                 Insert(sortie,z,1)
+        od,
+        sortie];
+
+{fin de gestion des listes par composante}
+
+    del = [$nb1:=%3[1],if nb1=Nil then nb1:=1 fi,$N:=Nops(%1),$k:=0,
+     $listeSuppr:=  for $z in %2 do
+                        if z<0 then Inc(z,N+1) fi,
+                        Inc(k,1),nb:=%3[k],if nb=Nil then nb:=nb1 fi,
+                        if nb<0 then Inc(z,nb+1),nb:=-nb fi,
+                        for $k from 0 to nb-1 do z+k od
+                    od,
+     k:=0,
+     for z in %1 do
+        Inc(k,1),$p:=Pos(k,listeSuppr),
+        if p=Nil then z else Del(listeSuppr,p,1) fi
+     od
+    ];
+
+    getdot = [$x:=%1,$liste:= %2,$L:=x*length(liste),
+         if x=0 then liste[1]
+         elif x=1 then liste[-1]
+         else
+         $long:=0, $first:=Nil,$search:=1,
+         for $z in liste andif search do
+                 if Re(z)=Re(jump) then first:=Nil
+                 elif first=Nil then first:=z
+                 else  Inc(long,Abs(z-first)),
+                       if long<L then  first:=z
+                       else $u:=z-first,z+(L-long)*u/Abs(u),search:=0
+                       fi
+                 fi
+         odfi,
+          fi];
+
+    IsAlign = [$N:=Nops(%1),$epsilon:=if %2=Nil then 1E-10 else %2 fi,
+     if N<3 then 1
+     else
+         $B:=Copy(%1,1,1),$C:=Copy(%1,2,1),$k:=3,
+         repeat
+               $A:=B,B:=C,C:=Copy(%1,k,1),
+               $Ok:= abs(Im(bar(B-A)*(C-A))) <$epsilon,
+               Inc(k,1)
+         until (k>N) Or (Ok=0) od,
+         Ok
+     fi];
+
+    isobar = [$close:= (if %2=Nil then 0 else %2 fi),
+     $N:=0,$S:=0,$first:=Nil,$last:=Nil,
+     for $z in %1  do
+        if z=jump then
+            if last<>Nil And first<>Nil And first=last then Inc(S,-first),Inc(N,-1) fi,
+            first:=Nil,last:=Nil
+        else
+            if IsString(z)=0 then 
+                if first=Nil then first:=z fi,
+                last:=z,Inc(S,z),Inc(N,1) 
+            fi 
+        fi
+     od,
+     S/N];
+
+    KillDup = [$L:=Nil,
+     $aux:= for $z in %1 do Inserer3D(L,[z,0],%2) od,
+     for z in L by 2 do z[1] od
+    ];
+
+    length = [$long:=0,$first:=1/0,
+     for $z in %1 do if Re(z)=Re(jump) then first:=Nil else Inc(long,Abs(z-first)),first:=z fi od,
+     long];
+
+    linspace = [$dep:=%1,$fin:=%2,$nb:=%3,
+     if nb=Nil then nb:=50 fi,
+     $pas:=(fin-dep)/(nb-1),
+     dep,for $k from 1 to nb-2 do Inc(dep,pas),dep od,fin
+     //range(dep,fin,pas)
+    ];
+    
+    list = for _ in Range(%2) do %1 od;
+
+    permute = [$nb:=if %2=Nil then 1 else %2 fi,Insert(%1,Copy(%1,1,nb)),Del(%1,1,nb)];
+
+    Pos = [$compt:=0,$epsilon:=if (%3=Nil) Or IsString(%1) then 0 else %3 fi,
+     if epsilon>0 then
+        for $z in %2 do
+                Inc(compt,1),
+                if abs(z-%1)<=epsilon then compt fi
+        od
+     else
+        for $z in %2 do
+                Inc(compt,1),
+                if z=%1 then compt fi
+        od
+     fi];
+
+    range = [$dep:=%1,$fin:=%2,$pas:=%3,
+     if fin = Nil then Range(dep)
+     elif pas = Nil then Range(dep,fin)
+     else Range(dep,fin,pas) 
+     fi];
+
+    rectangle = [Set($Ok,0),
+    Map( Si((Re($z)=Re(jump))=0,Si(Ok=0,[Set($Xmin,Re(z)),Set($Xmax,Re(z)),
+                                 Set($Ymin,Im(z)),Set($Ymax,Im(z)),Set(Ok,1)],
+                                [Si(Re(z)<Xmin,Set(Xmin,Re(z)),
+                                    Re(z)>Xmax,Set(Xmax,Re(z))),
+                                 Si(Im(z)<Ymin,Set(Ymin,Im(z)),
+                                    Im(z)>Ymax,Set(Ymax,Im(z)))]
+                          )
+            ),z,%1),
+    Xmin+i*Ymin,Xmax+i*Ymax];
+
+    replace = [Subs(%1,%2,%3),//depuis la version 2.0
+    {$num:=1,
+     $retour:= for $z in %1 do if num=%2 then %3 else $z fi,Inc(num,1) od,
+     Echange(%1,retour)}];
+
+    reverse = Map(Reverse($L),L,%1,M(Re(jump),1));
+    
+    round = for $z in %1 by 1 do Round(z,%2) od;
+
+    SortWith = [$mode:=if %4=Nil then 0 else %4 fi,
+     $k:=0,$L:=for z in %1 do Inc(k,1),Re(z)+i*k od,Sort(L,mode),
+     $L:=(for z in L do Im(z) od),
+     PermuteWith( L,%2,%3),
+    ];
+    
+    calcTeXSizes = [$aux:=OpenFile([TmpPath,"dimensions.tex"]),
+    WriteFile([
+    "\documentclass[12pt]{article}
+    \usepackage[utf8]{inputenc}
+    \usepackage[T1]{fontenc}
+    \usepackage{lmodern}
+    \usepackage{amsmath,amssymb,calc}
+    \pagestyle{empty}
+    \begin{document}
+    \newsavebox{\textbox}%
+    \newlength{\larg}%
+    \newlength{\haut}%
+    \newlength{\prof}%
+    \newwrite\OutFile%
+    \immediate\openout\OutFile dimensions.txt\relax%
+    \def\calcul#1{%
+    %\setbox\textbox\hbox{#1}%
+    \setlength{\larg}{\widthof{#1}}%
+    \setlength{\haut}{\totalheightof{#1}}%
+    }%",LF,
+    $nodes:=%1,$options:=%2,
+    $N:=Nops(nodes),
+    for $k in Range(N) do
+        $text:=nodes[k],
+        SaveAttr(),usecomma:=0,dollar:=1,nbdeci:=2,
+        $opt:=Eval(options[k]),
+            "\calcul{",
+        if LabelSize=tiny then "\tiny "
+        elif LabelSize=scriptsize then "\scriptsize "
+        elif LabelSize=footnotesize then "\footnotesize "
+        elif LabelSize=small then "\small "
+        elif LabelSize=large then "\large "
+        elif LabelSize=Large then "\Large "
+        elif LabelSize=LARGE then "\LARGE "
+        elif LabelSize=huge then "\huge "
+        elif LabelSize=Huge then "\Huge " fi,
+        if IsString(text) then if text="" then "ND" else text fi
+        else @label(@StrNum(text))
+        fi,
+            "}%",LF,
+            if LabelAngle=0 then
+    "   \immediate\write\OutFile{\the\larg}%
+    \immediate\write\OutFile{\the\haut}%"
+            else
+    "   \immediate\write\OutFile{\the\haut}%
+    \immediate\write\OutFile{\the\larg}%"
+            fi,LF,
+        RestoreAttr(),
+    od,//fin boucle for k
+    "\immediate\closeout\OutFile%",LF,
+    "\end{document}"]),
+    CloseFile(),
+    Exec("pdflatex -interaction=nonstopmode","dimensions.tex",TmpPath,1),
+    $L:=ReadData(TmpPath+"dimensions.txt",2),
+    //retour
+    for $z in L do 2.54*z/72.27 od
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Anp = if %2>=0  And Ent(%2)=%2 then prod(for $k from %1-%2+1 to %1 do k od) fi;
+
+    binom = if %2>=0 And Ent(%2)=%2 then
+     prod(for $k from %1-%2+1 to %1 do k od)/
+     prod(for k from 1 to %2 do k od)
+    fi;
+
+    ecart = sqrt(var(%1));
+
+    fact = if %1=0 then 1 elif %1>0 And Ent(%1)=%1 then prod(for k from 1 to %1 do k od) fi;
+
+    max = [$L:=for $z in %1 By 1 do if IsString(z)=0 then z fi od,Sort(L,1),L[1]];
+
+    min = [$L:=for $z in %1 By 1 do if IsString(z)=0 then z fi od,Sort(L),L[1]];
+
+    minmax = [$L:=for $z in %1 By 1 do if IsString(z)=0 then z fi od,Sort(L),L[1],L[0]];
+
+    median = [$L:= for $z in %1 By 1 do if IsString(z)=0 then z fi od,Sort(L),$N:=Nops(L)/2,
+     if Ent(N)=N then {N est pair}
+        (L[N]+L[N+1])/2
+        else {N est impair}
+            L[N+0.5]
+     fi];
+
+    moy = [$N:=0,$S:=0,for $z in %1 By 1 do  if IsString(z)=0 then Inc(S,z),Inc(N,1) fi od,S/N];
+
+    prod = [$P:=1,for $z in %1 By 1 do if IsString(z)=0 then P:=P*z fi od,P];
+
+    sum = [$S:=0,for $z in %1 By 1 do if IsString(z)=0 then Inc(S,z) fi od,S];
+
+    var = [$L:= for $z in %1 By 1 do if IsString(z)=0 then sqr(z) fi od,moy(L)-sqr(moy(%1))];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Anchor = [$type:=String(%1),if type="" Or type="%1" then type:="center" fi,
+         Mtransform(
+                if type="center" Or type="c" then (Xmin+Xmax+i*(Ymin+Ymax))/2
+                elif type="top" Or type="t" then  (Xmin+Xmax)/2+i*Ymax
+                elif type="bottom" Or type="b" then (Xmin+Xmax)/2+i*Ymin
+                elif type="left" Or type="l" then Xmin+i*(Ymin+Ymax)/2
+                elif type="right" Or type="r" then Xmax+i*(Ymin+Ymax)/2
+                elif type="left+top" Or type="top+left" Or type="tl" Or type="lt" then Xmin+i*Ymax
+                elif type="right+top" Or type="top+right" Or type="tr" Or type="rt" then Xmax+i*Ymax
+                elif type="left+bottom" Or type="bottom+left" Or type="lb" Or type="bl" then Xmin+i*Ymin
+                elif type="right+bottom" Or type="bottom+right" Or type="rb" Or type="br" then Xmax+i*Ymin
+                fi,invmatrix(GetMatrix()))
+        ];
+
+    RealArg = [$x:=Mtransform(%1,[0,Copy(GetMatrix(),2,2)]),Arg(Re(x)*Xscale+i*Im(x)*Yscale)];
+
+    RealCoord = [$x:=Mtransform(%1,GetMatrix()),Re(x)*Xscale+i*Im(x)*Yscale];
+
+    RealCoordV = [$x:=Mtransform(%1,[0,Copy(GetMatrix(),2,2)]),Re(x)*Xscale+i*Im(x)*Yscale];
+
+    ScrCoord = Mtransform( Re(%1)/Xscale+i*Im(%1)/Yscale,invmatrix(GetMatrix()));
+
+    ScrCoordV = Mtransform( Re(%1)/Xscale+i*Im(%1)/Yscale,invmatrix( [0,Copy(GetMatrix(),2,2)]));
+
+    SvgCoord = [$x:=mtransform(%1,GetMatrix()),M((Re(x)-Xmin)*Xscale+margeG,(Ymax-Im(x))*Yscale+margeH)*96/2.54];
+
+    TeXCoord = [$x:=Mtransform(%1,GetMatrix()),if OriginalCoord() then x else (Re(x)-Xmin)*Xscale+i*(Im(x)-Ymin)*Yscale fi];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    affin = for $z in %1 do if Re(z)=Re(jump) then z else $z':=[z,z+%3] Inter %2,%4*z+(1-%4)*z' fi od;
+
+    defAff = [$b:=Copy(%4,1,1),$c:=Copy(%4,2,1),
+    NewMac(%1,Concat(%3-b*Re(%2)-c*Im(%2),"+(",b,")*Re(%1)+(",c,")*Im(%1)"))];
+
+    ftransform = for $M in %1 do if Re(M)=Re(jump) then M else Assign(%2,z,M),%2 fi od;
+
+    hom = for $z in %1 do if Re(z)=Re(jump) then z else %3*(z-%2)+%2 fi od;
+
+    inv = for $z in %1 do if Re(z)=Re(jump) then z else %2+sqr(%3)/bar(z-%2) fi od;
+
+    mtransform = Mtransform(%1,%2);
+
+    proj = [$A:=%2,if %3=Nil then $B:=A[2],Del(A,2,1) else B:=%3 fi,$U:=ScrCoordV(i*RealCoordV(B-A)),
+     for $z in %1 do if Re(z)=Re(jump) then z else [z,z+U] Inter [A,B] fi od];
+
+    projO = for $z in %1 do if Re(z)=Re(jump) then z else [z,z+%3] Inter %2 fi od;
+
+    rot = for $z in %1 do if Re(z)=Re(jump) then z else exp(i*%3)*(z-%2)+%2 fi od;
+
+    shift = for $z in %1 do if Re(z)=Re(jump) then z else z+%2 fi od;
+
+    simil = for $z in %1 do if Re(z)=Re(jump) then z else exp(i*%4)*%3*(z-%2)+%2 fi od;
+
+    sym = [$A:=%2,if %3=Nil then $B:=A[2],A:=A[1] else B:=%3 fi,$U:=ScrCoordV(i*RealCoordV(B-A)),
+     for $z in %1 do if Re(z)=Re(jump) then z else 2*([z,z+U] Inter [A,B])- z fi od];
+
+    symG = [$U:=ScrCoordV(i*RealCoordV(%3)),$D:=[%2,%2+%3],
+     for $z in %1 do if Re(z)=Re(jump) then z else 2*([z,z+U] Inter D)- z + %3 fi od];
+
+    symO = for $z in %1 do if Re(z)=Re(jump) then z else 2*([z,z+%3] Inter %2)- z fi od;
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%} 
+
+    ChangeWinTo = [$x1:=Xmin,$y1:=Ymin,$x2:=Xmax,$y2:=Ymax,
+     $xinf:=Re(Copy(%1,1,1)),$yinf:=Im(Copy(%1,1,1)),if xinf>xsup then Echange(xinf,xsup) fi,
+     $xsup:=Re(Copy(%1,2,1)),$ysup:=Im(Copy(%1,2,1)),if yinf>ysup then Echange(yinf,ysup) fi,
+     $orthonorme:=(%2=1),
+     $G:=((xinf+xsup)+i*(yinf+ysup))/2,{centre}
+     $G':=((x1+x2)+i*(y1+y2))/2,{centre}
+     $Dx:=(x2-x1)/(xsup-xinf),{réductions axes}
+     $Dy:=(y2-y1)/(ysup-yinf),
+     if orthonorme then
+        if Dx>Dy then $D:=Dy else D:=Dx fi,
+        SetMatrix([G'-G*D,D,i*D]),// et non pas ComposeMatrix 
+     else
+        SetMatrix([G'-Re(G)*Dx-i*Im(G)*Dy,Dx,i*Dy])
+     fi
+    ];
+
+    invmatrix = [$L:=%1,$a:=L[2],$b:=L[3],$c:=L[1],
+     $D:=Im(b*bar(a)),
+     if (D<>0) then
+        $a':=(Im(b)-i*Im(a))/D,$b':=(-Re(b)+i*Re(a))/D,
+        -Re(c)*a'-Im(c)*b',a',b'
+     fi];
+
+    matrix = if StrComp(String(%2),"%2") then
+        Assign(%1,$z,0),$u:=%1,u,Assign(%1,z,1),%1-u,Assign(%1,z,i),%1-u
+    else    Assign(%1,%2,0),$u:=%1,u,Assign(%1,%2,1),%1-u,Assign(%1,%2,i),%1-u
+    fi;
+
+    mulmatrix = [$M1:=%1,$M2:=%2,$L:=GetMatrix(),SetMatrix(M1),ComposeMatrix(M2),GetMatrix(),SetMatrix(L)];
+    
+    rotate = [ $c_:=if %2=Nil then 0 else %2 fi,$f_:=exp(i*%1*deg),
+    ComposeMatrix( [c_*(1-f_),f_,i*f_])
+    ];
+    
+    scale = ComposeMatrix([0,%1,(if %2=Nil then %1 else %2 fi)*i]);
+    
+    translate = ComposeMatrix([%1,1,i]);
+    
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    bissec = [$u:=%1-%2,$v:=%3-%2,
+     if %4=1 then %2,%2+u/Abs(u)+v/Abs(v)
+     else %2,%2+u/Abs(u)-v/Abs(v)
+    fi];
+
+    cap = [$C1:=%1,$C2:=%2,$L:=C1 InterL C2,
+     if L=Nil then if C1[1] Inside C2 then C1 elif C2[1] Inside C1 then C2 else Nil fi
+     else
+         $L1:=L[1],
+         {on réorganise C1 et C2 pour qu'elles commencent par L1}
+         $C1':= (C1 CutB L1),Del(C1',-1,1),C1:=[C1',(C1 CutA L1)],
+         $C2':= (C2 CutB L1),Del(C2',-1,1),C2:=[C2',(C2 CutA L1)],
+         {on va parcourir L par paires (L1,L2)}
+         $L2:=L1,Del(L,1,1),Insert(L,L1),
+         for $Z in L do
+             L1:=L2,$L2:=$Z,$A:=Round(C1[2],12),{le point qui suit L1 est-il dans C2?}
+             if A Inside %2 then {on prend la partie [L1,L2] de C1}
+               $aux:=C1 CutA L2,
+             else {on prend la partie [L1,L2] de C2}
+               $aux:=(C2 CutB L1) CutA L2,
+               if aux=Nil then $aux':=C2 CutB L1,Del(aux',-1,1),aux:=[aux',C2 CutA L2] fi,
+             fi,
+             Del(aux,-1,1),aux,
+             C1:=C1 CutB L2 {on tronque C1 avant L2}
+         od,
+        C2[1]
+     fi];
+
+    capB = [$C1:=%1,$C2:=%2,$oldnb:=NbPoints,
+             NbPoints:=100,$C'1:=Get(Bezier(C1)),$C':=Get(Bezier(C2)),$L:=Get(Bezier(C1)) InterL C',
+         if L=Nil then if C1[1] Inside C2 then C1 elif C2[1] Inside C1 then C2 else Nil fi
+         else
+             $L1:=L[1],
+             {on réorganise C1 et C2 pour qu'elles commencent par L1}
+             $C1':= cutBezier(C1,L1,1),Del(C1',-1,1),C1:=[C1',cutBezier(C1,L1,0)],
+             $C1'':= (C'1 CutB L1),Del(C1'',-1,1),C'1:=[C1'',(C'1 CutA L1)],
+             $C2':= cutBezier(C2,L1,1),Del(C2',-1,1),C2:=[C2',cutBezier(C2,L1,0)],
+             {on va parcourir L par paires (L1,L2)}
+             $L2:=L1,Del(L,1,1),Insert(L,L1),
+             for $Z in L do
+                 L1:=L2,$L2:=$Z,$A:=Round(C'1[2],12),
+                 if A Inside C' then {on prend la partie [L1,L2] de C1}
+                   $aux:=cutBezier(C1,L2,0),
+                 else {on prend la partie [L1,L2] de C2}
+                   $aux:=cutBezier(C2,L1,1), $aux:=cutBezier(aux,L2,0),
+                   if aux=Nil then $aux':=cutBezier(C2,L1,1),Del(aux',-1,1),aux:=[aux',cutBezier(C2,L2,0)] fi,
+                 fi,
+                 Del(aux,-1,1),aux,
+                 C1:=cutBezier(C1,L2,1),C'1:=C'1 CutB L2 {on tronque C1 avant L2}
+             od,
+            C2[1]
+         fi,NbPoints:=$oldnb];  
+
+
+    carre = [$U:=ScrCoordV(i*RealCoordV(%2-%1)),if %3<0 then U:=-U fi,%1,%2,U+%2,U+%1];
+
+    cup = [$C1:=%1,$C2:=%2,$L:=C1 InterL C2,
+     if L=Nil then [C1,jump,C2]
+     else
+         $L1:=L[1],
+         {on réorganise C1 et C2 pour qu'elles commencent par L1}
+         $C1':= (C1 CutB L1),Del(C1',-1,1),C1:=[C1',(C1 CutA L1)],
+         $C2':= (C2 CutB L1),Del(C2',-1,1),C2:=[C2',(C2 CutA L1)],
+         {on va parcourir L par paires (L1,L2)}
+         $L2:=L1,Del(L,1,1),Insert(L,L1),
+         for $Z in L do
+             L1:=L2,$L2:=$Z,$A:=Round(C1[2],12),{le point qui suit L1,est-il dans C2?}
+             if A Inside C2 then {on prend la partie [L1,L2] de C2}
+               $aux:=(C2 CutB L1) CutA L2,
+
+               if aux=Nil then $aux':=C2 CutB L1,Del(aux',-1,1),aux:=[aux',C2 CutA L2] fi,
+             else {on prend la partie [L1,L2] de C1}
+               $aux:=(C1 CutA L2),
+             fi,
+              Del(aux,-1,1),aux,
+             C1:=C1 CutB L2 {on tronque C1 avant L2}
+         od,
+         C2[1]
+     fi];
+
+    cupB = [$C1:=%1,$C2:=%2,$oldnb:=NbPoints,
+             NbPoints:=100,$C'1:=Get(Bezier(C1)),$C':=Get(Bezier(C2)),$L:=Get(Bezier(C1)) InterL C',
+         if L=Nil then [C1,jump,C2]
+         else
+             $L1:=L[1],
+             {on réorganise C1 et C2 pour qu'elles commencent par L1}
+             $C1':= cutBezier(C1,L1,1),Del(C1',-1,1),C1:=[C1',cutBezier(C1,L1,0)],
+             $C1'':= (C'1 CutB L1),Del(C1'',-1,1),C'1:=[C1'',(C'1 CutA L1)],
+             $C2':= cutBezier(C2,L1,1),Del(C2',-1,1),C2:=[C2',cutBezier(C2,L1,0)],
+             {on va parcourir L par paires (L1,L2)}
+             $L2:=L1,Del(L,1,1),Insert(L,L1),
+             for $Z in L do
+                 L1:=L2,$L2:=$Z,$A:=Round(C'1[2],12),
+                 if A Inside C' then {on prend la partie [L1,L2] de C2}
+                   $aux:=cutBezier(C2,L1,1), $aux:=cutBezier(aux,L2,0),
+                   if aux=Nil then $aux':=cutBezier(C2,L1,1),Del(aux',-1,1),aux:=[aux',cutBezier(C2,L2,0)] fi,
+                 else {on prend la partie [L1,L2] de C1}
+                   $aux:=cutBezier(C1,L2,0),
+                 fi,
+                 Del(aux,-1,1),aux,
+                 C1:=cutBezier(C1,L2,1),C'1:=C'1 CutB L2 {on tronque C1 avant L2}
+             od,
+             C2[1]
+         fi,NbPoints:=$oldnb];
+
+    cutBezier = [
+    $L:=%1,$last:=L[1],$trouve:=0,$oldnbpoints:=NbPoints,NbPoints:=100,$pas:=1/(NbPoints),
+    $I:=%2,$compt:=0,$epsilon:=1E-2,
+    for $Z in L[2,0] By 3 andif (trouve=0) do
+        $A:=last,$C1:=Z[1],$C2:=Z[2],$B:=Z[3],last:=B,Inc(compt,1),
+        $aux:=NewMac("B_aux1",Concat("(((",B+3*(C1-C2)-A,")*t+(",3*(A+C2-2*C1),"))*t+(",3*(C1-A),"))*t+(",A,")"),t),
+        $u:=0,$S:=[for $k from 1 to NbPoints-1 do Inc(u,pas),B_aux1(u) od,B],
+        $b:=A,$k:=0,
+        for $z in S andif (trouve=0) do
+            $a:=b,$b:=z,Inc(k,1),
+            $p:=bar((b-I))*(a-I),
+            if (abs(Im(p)/abs(b-a))<2*epsilon) And (Re(p)<epsilon) then
+               $t0:=(k-Re((I-b)/(a-b)))*pas,
+               trouve:=1,$J:=B_aux1(t0)
+            fi
+        odfi,
+        if trouve then
+           $v:=10^6*(B_aux1(t0+1E-6)-B_aux1(t0))/3,
+           if %3=1 then  J,J+(1-t0)*v,B-(1-t0)*(B-C2),B,L[3*compt+2,0] {après}
+                   else if compt>1 then L[1,3*(compt-1)] fi,A,t0*(C1-A)+A,J-t0*v,J {avant}
+           fi
+        fi
+    odfi,
+    DelMac("B_aux1"),NbPoints:=oldnbpoints,
+    ];
+
+
+    Cvx2d = [$S:=%1,$old:=Nil,Sort(S),
+     S:= for z in S andif z<>old do z,old:=z,odfi,{élimination des doublons}
+     $Min:=Copy(S,1,1),$ymin:=Im(Min),$N:=Nops(S),
+     if N<3 then S
+     elif N=3 then if Im( bar(S[2]-S[1])*(S[3]-S[1]))<0 then Reverse(S) else S fi
+        else
+         for z in S do
+             $y:=Im(z),
+             if y<ymin then Min:=z,ymin:=y,
+             elif y=ymin then
+                  if Re(z)<Re(Min) then Min:=z,ymin:=y fi
+             fi
+         od,{Min est le point le plus bas}
+         $num:=0,
+         $L:= for z in S do
+                  Inc(num,1),
+                  Arg(z-Min)+i*num
+              od,
+         Sort(L), {on trie suivant l'angle que fait (Min,z) avec Ox}
+         L:=[Min,for z in L do Copy(S,Im(z),1) od,Min],
+         $fin:=0,
+         $A:=Min,$B:=L[2],$C:=L[3],$kb:=2,
+         while not(fin) do
+             if Im(bar(B-A)*(C-B))<0 then {virage à droite,on exclut B}
+                Del(L,kb,1),Inc(kb,-1),{on supprime B de L}
+                B:=A,A:=L[kb-1] {on recule d'un cran}
+             else A:=B,B:=C,Inc(kb,1),C:=L[kb+1] {on avance},
+                  fin:=(C=Nil)
+             fi
+         od,
+         L[2,0]
+        fi
+    ];
+
+    ddroite = [$m:=GetMatrix(),$a:=Mtransform([%1,%2],m),$A:=a[1],$B:=a[2],//IdMatrix(),
+     $L:=Get(Droite(A,B)),$u:=Copy(L,1,1),$v:= Copy(L,2,1),
+     m:=invmatrix(m),
+     Mtransform(if Re( bar(B-A)*(v-u))>=0 then  [A,v] else [A,u] fi,m)
+    ];
+
+    Intersec = Get(%1,0) InterL Get(%2,0);
+
+    line2strip = [$ep:=%2/2,
+     for $L in %1 by jump do
+         $a:=L[1],$b:=L[2],
+         while b=a do Del(L,1,1),$b:=L[2],od,Del(L,1,2),
+         d := L[-1],// dernier point
+         $close:= (d=a),// fermée ?
+         if close then
+            a := (a+b)/2,//on part du milieu du segment [a,b]
+            Insert(L,a),// on ajoute le milieu en fin de ligne
+         fi,
+         $v:=i*(b-a)/abs(b-a),
+         $bord:=[a-ep*v,a+ep*v],$dessus:=bord[2],
+         $first := bord[1],first,
+         $c:=b,b:=a,$v:=v/i,
+         for $z in L do
+             a:=b,b:=c,c:=z,$u:=-v,$v:=(c-b)/abs(c-b),
+             if v=Nil then
+                c:=b,b:=a,v:=-u,
+             else
+                 $w:=(u+v)/abs(u+v),// bissectrice intérieure
+                 if w=Nil then
+                    bord:=[b+i*u*ep,b-i*u*ep]
+                 else
+                    bord:=projO( bord,[b,b+w],u),
+                 fi,
+                 bord[1],Insert(dessus,bord[2],1)
+             fi
+         od,
+         c-ep*v*i,c+ep*v*i,dessus,//first
+    od];
+
+    med = [ (%1+%2)/2,(%1+%2)/2+ScrCoordV(i*RealCoordV(%2-%1))];
+
+    parallel = [$x:=%1,%2,%2+x[2]-x[1]];
+
+    parallelo = [%1,%2,%3,%3+%1-%2];
+
+    perp = [$x:=%1,$u:=x[2]-x[1],%2,%2+ScrCoordV(i*RealCoordV(u))];
+
+    polyreg = [$nb:=Re(%3),
+    if nb>2 And Ent(nb)=nb then
+     if Im(%3)=0 then $C:=RealCoord(%1),$S:=RealCoordV(%2-%1)
+        else
+        $u:=RealCoordV(%2-%1),$d:=abs(u),$v:=i*u/d,$h:=d/2/tan(pi/nb),
+            if Im(%3)>0 then $C:=RealCoord((%1+%2)/2)+h*v else C:=RealCoord((%1+%2)/2)-h*v fi,
+            S:=RealCoord(%1)-C
+    fi,
+     for $k from 1 to nb do  ScrCoord(C+exp(i*k*2*pi/nb)*S) od
+    fi];
+
+    pqGoneReg = [$C:=%1,$S:=%2,
+         $p:=%3[1],$q:=(if %3[2]=Nil then 1 else %3[2] fi),
+         if 2*q<p then
+           $m:=pgcd(p,q),
+           $p':=p/m,$q':=q/m,
+           for $S' in Seq(rot(S,C,$j*2*pi/p),j,0,m-1) do
+              Seq(rot(S',C,$k*q'*2*pi/p'),k,0,p'-1),
+              jump
+           od
+         fi];
+
+    rect = [$x:=proj(%3,%2,ScrCoordV(i*RealCoordV(%1-%2))+%2),%1,%2,x,x+%1-%2];
+    
+    roundLine = [$r:=%2,$closed:=%3,if r=Nil then r:=0 fi,if closed<>0 And closed<>1 then closed:=0 fi,
+     if ($r>0) then
+      for $L in %1 By jump do
+       $b:=L[1],$c:=L[2],$first:=1,Del(L,1,2),
+       if closed then Insert(L,[b,c]),else first:=0,b fi,
+       for $z in L do
+           $a:=b,b:=c,c:=z,
+           $alpha:=Arg((c-b)/(a-b))/2,
+           $sinalpha:=abs(sin(alpha)),
+           if (sinalpha=Nil) then b,
+           elif (sinalpha<1) And (sinalpha>0)
+           then
+               $u:=(c-b)/abs(c-b),
+               $v:=(a-b)/abs(a-b),
+               $O:=b+(u+v)/abs(u+v)*r/sinalpha,
+               $O1:=b+v*r*cos(alpha)/sinalpha,
+               $O2:=b+u*r*cos(alpha)/sinalpha,
+               $tf:=Arg((O2-O)/(O1-O)),
+               O1,
+               if first then move,first:=0 else line fi,
+               O,O2,r,2*(tf>=0)-1,arc
+           else b
+           fi
+        od,
+        if closed then closepath else c,line fi
+      od
+     else //rayon nul
+        for z in %1 By jump do
+         z[1],move,z[2,0],line,if closed then closepath fi
+        od
+     fi];    
+ 
+    setminus = [$C1:=%1,$C2:=%2,$L:=C1 InterL C2,
+     if L=Nil then if C1[1] Inside C2 then elif C2[1] Inside C1 then
+            [C1,C2] else C1 fi
+     else
+         $L1:=L[1],
+         {on réorganise C1 et C2 pour qu'elles commencent par L1}
+         $C1':= (C1 CutB L1),Del(C1',-1,1),C1:=[C1',(C1 CutA L1)],
+         $C2':= (C2 CutB L1),Del(C2',-1,1),C2:=[C2',(C2 CutA L1)],
+         {on va parcourir L par paires (L1,L2)}
+         $L2:=L1,Del(L,1,1),Insert(L,L1),
+         for $Z in L do
+             L1:=L2,$L2:=$Z,$A:=Round(C1[2],12),{le point qui suit L1 est-il dans C2?}
+             if not(A Inside %2) then {non,donc on prend la partie [L1,L2] de C1}
+           $aux:= (C2 CutA L2) CutB L1,
+           if aux=Nil then $aux':=C2 CutB L1,Del(aux',-1,1),aux:=[aux',C2 CutA L2] fi,
+           Del(aux,1,1),Del(aux,-1,1),
+               [C1 CutA L2,Reverse(aux),jump]
+             fi,
+             C1:=C1 CutB L2 {on tronque C1 avant L2}
+         od,
+     fi];
+
+    setminusB = [$C1:=%1,$C2:=%2,$oldnb:=NbPoints,
+     NbPoints:=100,$C'1:=Get(Bezier(C1)),$C'2:=Get(Bezier(C2)),$L:=C'1 InterL C'2,
+     if L=Nil then if C'1[1] Inside C'2 then elif C'2[1] Inside C'1 then
+            [C1,jump,C2] else C1 fi
+     else
+         $L1:=L[1],
+         {on réorganise C1 et C2 pour qu'elles commencent par L1}
+         $C1':= cutBezier(C1,L1,1),Del(C1',-1,1),C1:=[C1',cutBezier(C1,L1,0)],
+         $C1'':= (C'1 CutB L1),Del(C1'',-1,1),C'1:=[C1'',(C'1 CutA L1)],
+         $C2':= cutBezier(C2,L1,1),Del(C2',-1,1),C2:=[C2',cutBezier(C2,L1,0)],
+         {on va parcourir L par paires (L1,L2)}
+         $L2:=L1,Del(L,1,1),Insert(L,L1),
+         for $Z in L do
+             L1:=L2,$L2:=$Z,$A:=Round(C'1[2],12),
+                 {le point qui suit L1,est-il dans C2?}
+             if not(A Inside C'2) then {non,donc on prend la partie [L1,L2] de C1}
+           $aux:=cutBezier(C2,L1,1), $aux:=cutBezier(aux,L2,0),
+                   if aux=Nil then $aux':=cutBezier(C2,L1,1),
+                      Del(aux',-1,1),aux:=[aux',cutBezier(C2,L2,0)]
+                   fi,
+            Del(aux,-1,1),
+               [cutBezier(C1,L2,0),Reverse(aux),jump]
+             fi,
+             C1:=cutBezier(C1,L2,1),C'1:=C'1 CutB L2 {on tronque C1 avant L2}
+         od,
+     fi,NbPoints:=$oldnb];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    odeSolve = [odeMethod:="rk4",t:=[tMin,tMax],odeReturn:="t+i*Y",$ok:=0,
+    if IsString(%1) then $nom:="",$aux:=NewMac("ode_f",%1,t,Y) else $nom:=String(%1),RenMac(nom,"ode_f") fi,     
+    SaveAttr(), $options:=%4,tMin:=t[1],tMax:=t[2],t:=Nil,
+    if odeMethod<>"rk4" And odeMethod<>"rkf45" then
+       RaiseError( [ErrFile:="TeXgraph.mac",ErrMacro:="odeSolve",ErrLevel:="warning",
+                   ErrType:=Concat("value ",String2Teg(odeMethod)," is unknown for odeMethod option (use ""rk4"" or ""rkf45""). I take ""rk4"".")]),
+       odeMethod:="rk4",
+    fi,
+    $aux:=NewMac("ode_return",odeReturn,t,Y),
+    if odeMethod="rk4" then //méthode de Runge-Kutta d'ordre 4
+    $h:=(tMax-tMin)/(NbPoints-1),
+    t:=%2,$Y:=%3,$stop:=%2>=tMax,
+    $sortie:=[ode_return(t,Y),
+    while (stop=0) do
+     $k1:=ode_f(t,Y),Inc(t,h/2),
+     $k2:=ode_f(t,Y+h*k1/2),$k3:=ode_f(t,Y+h*k2/2),
+     Inc(t,h/2),$k4:=ode_f(t,Y+h*k3),
+     Y:=Y+h*(k1+2*k2+2*k3+k4)/6,
+     if Y<>Nil then ode_return(t,Y) fi,
+     if (t<tMax) And (t+h>tMax) then h:=tMax-t fi,
+     stop:=(t+h>tMax) Or (Y=Nil)
+     od],
+     t:=%2,$Y:=%3,$h:=(tMin-tMax)/(NbPoints-1),stop:=%2<=tMin,
+    while (stop=0) do
+     $k1:=ode_f(t,Y),Inc(t,h/2),
+     $k2:=ode_f(t,Y+h*k1/2),$k3:=ode_f(t,Y+h*k2/2),
+     Inc(t,h/2),$k4:=ode_f(t,Y+h*k3),
+     Y:=Y+h*(k1+2*k2+2*k3+k4)/6,
+     if Y<>Nil then Insert(sortie,ode_return(t,Y),1) fi,
+     if (t>tMin) And (t+h<tMin) then h:=tMin-t fi,
+     stop:=(t+h<tMin) Or (Y=Nil)
+     od,
+     sortie  
+
+    elif odeMethod="rkf45" then //méthode de Runge-Kutta-Fehlberg (pas variable)
+
+    $Nmax:=5*NbPoints,$stop:=%2>=tMax,
+    hMax:=(tMax-tMin)/(NbPoints-1),hMin:=(tMax-tMin)/(Nmax-1),
+    $Nmax1:=Ent((tMax-%2)/hMin),$Nmax2:=Ent((%2-tMin)/hMin),
+    t:=%2,$Y:=%3,$h:=hMax,$epsilon:=5E-7,$N:=0,
+    $sortie:=[ode_return(t,Y),
+    while (stop=0) do
+     $k1:=h*ode_f(t,Y),
+     $k2:=h*ode_f(t+0.25*h,Y+k1/4),
+     $k3:=h*ode_f(t+0.375*h,Y+3*(k1+3*k2)/32),
+     $k4:=h*ode_f(t+12*h/13,Y+(1932*k1-7200*k2+7296*k3)/2197),
+     $k5:=h*ode_f(t+h,Y+439*k1/216-8*k2+3680*k3/513-845*k4/4104),
+     $k6:=h*ode_f(t+h/2,Y-8*k1/27+2*k2-3544*k3/2565+1859*k4/4104-11*k5/40),
+     Y:=Y+25*k1/216+1408*k3/2565+2197*k4/4104-k5/5,
+     if Y<>Nil then
+        Inc(t,h),Inc(N,1),ode_return(t,Y),
+        $err:=k1/360-128*k3/4275-2197*k4/75240+k5/50+2*k6/55,
+        $d:=2*[$S:=0,for $z in err do if abs(z)>S then S:=abs(z) fi od,S],
+        if d=0 then s:=0 else s:=(epsilon*h/d)^0.25 fi,
+        if s<0.1 then s:=0.1 elif s>4 then s:=4 fi,h:=s*h,
+        if h<hMin then h:=hMin elif h>hMax then h:=hMax fi,
+     fi,
+     if (t<tMax) And (t+h>tMax) then h:=tMax-t fi,
+     stop:=(t+h>tMax) Or (N>Nmax1) Or (Y=Nil)
+     od],
+    t:=%2,$Y:=%3,$h:=-hMax,stop:=%2<=tMin,N:=0,
+    while (stop=0) do
+     $k1:=h*ode_f(t,Y),
+     $k2:=h*ode_f(t+0.25*h,Y+k1/4),
+     $k3:=h*ode_f(t+0.375*h,Y+3*(k1+3*k2)/32),
+     $k4:=h*ode_f(t+12*h/13,Y+(1932*k1-7200*k2+7296*k3)/2197),
+     $k5:=h*ode_f(t+h,Y+439*k1/216-8*k2+3680*k3/513-845*k4/4104),
+     $k6:=h*ode_f(t+h/2,Y-8*k1/27+2*k2-3544*k3/2565+1859*k4/4101-11*k5/40),
+     Y:=Y+25*k1/216+1408*k3/2565+2197*k4/4104-k5/5,
+     if Y<>Nil then
+        Inc(t,h),Inc(N,1),Insert(sortie,ode_return(t,Y),1),
+        $err:=k1/360-128*k3/4275-2197*k4/75240+k5/50+2*k6/55,
+        $d:=2*[$S:=0,for $z in err do if abs(z)>S then S:=abs(z) fi od,S],
+        if d=0 then s:=0 else s:=(-epsilon*h/d)^0.25 fi,
+        if s<0.1 then s:=0.1 elif s>4 then s:=4 fi,h:=s*h,
+        if -h<hMin then h:=-hMin elif -h>hMax then h:=-hMax fi,
+     fi,
+     if t>tMin And t+h<tMin then h:=tMin-t fi,
+     stop:=(t+h<tMin) Or (N>Nmax2) Or (Y=Nil)
+    od,
+        sortie 
+    fi,
+    if nom="" then DelMac("ode_f") else RenMac("ode_f",nom) fi,DelMac("ode_return"),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    compileFormule = [Exec("pdflatex","-interaction=nonstopmode tex2FlatPs.tex",TmpPath,1),
+     Exec("pdf2ps","tex2FlatPs.pdf",TmpPath,1),
+     Exec("pstoedit -dt -pta -f ps -psarg  -r2400","tex2FlatPs.ps tex2FlatPs.eps",TmpPath,1)
+    ];
+
+    conv2FlatPs = Exec(Concat("pstoedit -dt -pta -f ps -psarg  -r2400 ",%1," ",%2),"",if %3="" then "" else %3 fi,1);
+
+    drawFlatPs = [ $r:=Copy(%2,1,1),$long:=Re(r[1])/2,$haut:=Im(r[1])/2,$nb:=0,
+      SaveAttr(),hollow:=0,Arrows:=0,
+      scale:=1,color:=Nil,position:=center,rotation:=0,select:=Nil,hollow:=0,flip:=0,mirror:=0,drawbox:=0,
+      $aux:=%3,$oldwidth:=Width,$oldfillstyle:=FillStyle,$oldFillColor:=FillColor,
+      if position= right then trans:= -long
+      elif position= right+top then trans:= -long-i*haut
+      elif position= right+bottom then trans:= -long+i*haut
+      elif position= left then trans:= long
+      elif position= left+top then trans:= long-i*haut
+      elif position= left+bottom then trans:= long+i*haut
+      elif position= bottom then trans:= i*haut
+      elif position= top then trans:= -i*haut
+      else $trans:=0
+      fi,
+      $anchor:=%1,$scaleX:=Re(scale),$scaleY:=Im(scale),if scaleY=0 then scaleY:=scaleX fi,
+      ComposeMatrix( matrix((z-$anchor)*exp(i*rotation*deg)+$anchor) ),
+      ComposeMatrix( matrix($anchor+scaleX*Re(z-anchor)+scaleY*Im(z-anchor)*i) ),
+      ComposeMatrix( matrix(z+$anchor+trans ) ),
+      if flip then ComposeMatrix([0,1,-i]) fi,
+      if mirror then ComposeMatrix([0,-1,i]) fi,   
+      if drawbox then 
+        SaveAttr(),LineStyle:=solid,Width:=4,Color:=gray,DotScale:=1.5,$z:=-trans,
+        if flip then z:=bar(z) fi,if mirror then z:=-bar(z) fi,
+        Ligne( [-long-i*haut,long-i*haut,long+i*haut,-long+i*haut],1),Point(z),
+        RestoreAttr()
+      fi,
+      Color:=color,
+      for $z in Copy(%2,2,0) do
+          if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+             then  Inc(nb,1),
+                   $x:=chemin[1],if color=Nil then Color:=Re(x) fi,
+                   Del(chemin,1,1),FillColor:=if hollow then $oldFillColor else Color fi,
+                   if hollow then LineStyle:=solid,Width:=$oldwidth else LineStyle:=noline fi,
+                   if Im(z)=-1 then Eofill:=1,FillStyle:=if hollow then $oldfillstyle else full fi,
+                   elif Im(z)=-2 then Eofill:=0,FillStyle:=if hollow then $oldfillstyle else full fi,
+                   else FillStyle:=none,LineStyle:=solid,Width:=Im(x)*scale,
+                   fi,
+                  if Im(z)<>-4 then  {on ignore les clip}
+                     if select=Nil Or Pos(nb,select)<>Nil then Path(chemin) fi
+                  fi,
+                  chemin:=Nil
+             else Insert(chemin,z)
+          fi
+      od,
+      RestoreAttr()
+    ];
+
+    drawTeXlabel = drawFlatPs(%1,%2,[%3,position:=LabelStyle,rotation:=LabelAngle,color:=Color]);
+
+    extractFlatPs = [SaveAttr(),width:=Nil,height:= Nil,
+      $options:=%3,$liste:=%2,$chemin:=Nil,$nb:=0,
+          $x1:=1E38,$x2:=-1E38,$y1:=1E38,$y2:=-1E38,
+      $Res:=
+            for $z in Copy(%1,2,0) do
+          if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+             then  Inc(nb,1),
+                   if Im(z)<>-4 then  {on ignore les clip}
+                     if Pos(nb,liste)<>Nil then
+                            chemin,z,
+                            for $u in chemin[2,0] andif Re(u)<>Re(jump) do
+                                $x:=Re(u),$y:=Im(u),
+                                if x<x1 then x1:=x fi,if x>x2 then x2:=x fi,
+                                if y<y1 then y1:=y fi,if y>y2 then y2:=y fi,
+                            odfi
+                         fi
+                   fi,
+                   chemin:=Nil
+                 else Insert(chemin,z)
+          fi
+       od,
+          c:=isobar( [x1+i*y1,x2+i*y2]),
+      if (width=Nil) And (height=Nil) then
+         width:=(x2-x1),height:=(y2-y1),ratioX:=1,ratioY:=1
+      elif height=Nil {width<>Nil}
+               then
+               $ratioX:=width/(x2-x1),
+           $ratioY:=ratioX, height:=ratioY*(y2-y1)
+      else {height<>Nil}
+           ratioY:=height/(y2-y1),
+               if width=Nil then
+              ratioX:=ratioY,width:=ratioX*(x2-x1)
+               else ratioX:=width/(x2-x1)
+               fi
+      fi,
+      $mat:=if ratioX=ratioY then matrix((z-c)*ratioX)
+            else  matrix( Re(z-c)*ratioX+i*Im(z-c)*ratioY)
+            fi,
+      Round(width,4)+i*Round(height,4),
+          for $z in Res do
+          if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+             then
+                      chemin[1],Del(chemin,1,1),
+                      Mtransform(chemin,mat),z,
+                      chemin:=Nil
+                 else Insert(chemin,z)
+          fi
+       od,
+           RestoreAttr()
+    ];
+
+    loadFlatPs = [ $L:=ReadFlatPs(%1),$nb:=0,
+      $r:=Copy(L,1,2),$x1:=Re(r[1]),$y1:=Im(r[1]),$x2:=Re(r[2]),$y2:=Im(r[2]),
+      $c:= isobar(r),$nb:=0,center:=0,
+      SaveAttr(),width:=Nil,height:= Nil,
+      $aux:=%3,
+      if (width=Nil) And (height=Nil) then
+         ratioX:=2.54/72,ratioY:=ratioX,width:=(x2-x1)*ratioX,height:=(y2-y1)*ratioY,
+      elif height=Nil {width<>Nil}
+               then
+               $ratioX:=width/(x2-x1),
+           $ratioY:=ratioX, height:=ratioY*(y2-y1)
+      else {height<>Nil}
+           ratioY:=height/(y2-y1),
+               if width=Nil then
+              ratioX:=ratioY,width:=ratioX*(x2-x1)
+               else ratioX:=width/(x2-x1)
+               fi
+      fi,
+      $mat:=if ratioX=ratioY then matrix((z-c)*ratioX)
+            else  matrix( Re(z-c)*ratioX+i*Im(z-c)*ratioY)
+            fi,
+      Round(width,4)+i*Round(height,4),$chemin:=Nil,
+      for $z in Copy(L,3,0) do
+          if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+             then  Inc(nb,1),
+                   $x:=chemin[1],Re(x)+i*(Ent(Im(x)*10)+1),
+                   Del(chemin,1,1),
+            Mtransform(chemin,mat),
+                   z,chemin:=Nil
+             else Insert(chemin,z)
+          fi
+      od,
+      RestoreAttr(),%3:=nb
+    ];
+    
+
+    NewTeXlabel = [dollar:=0,scale:=1,hollow:=0,$options:=%4,
+         $L:=TeX2FlatPs( %3,dollar),$aux:=NewVar(["TeX_",%1],L),
+     NewGraph(%1,["drawTeXlabel(",%2,",TeX_",%1,",[scale:=",scale,",hollow:=",hollow,"])"]),
+     ReDraw()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    bbox = [$r:=rectangle(Get()),Fenetre(r[1],r[2])];
+
+    centerView = [$longX:=(Xmax-Xmin)/2,$longY:=(Ymax-Ymin)/2,
+     Fenetre(%1-longX+i*longY,%1+longX-i*longY)
+    ];
+    
+    IsIn = [$x:=Mtransform(%1,GetMatrix()),if %2=Nil then $epsilon:=0.0001 else $epsilon:=%2 fi,
+     (Re(x)<=Xmax+epsilon/Xscale) And (Re(x)>=Xmin-epsilon/Xscale)
+     And (Im(x)<=Ymax+epsilon/Yscale) And (Im(x)>=Ymin-epsilon/Yscale)];    
+
+    RestoreWin = [$win:=win2dList[1,6],Del(win2dList,1,6),
+     if win<>Nil then Fenetre(win[1],win[2],win[3]),
+              SetMatrix(win[4,0])
+    fi];
+
+    SaveWin = Insert(win2dList,[Xmin+i*Ymax,Xmax+i*Ymin,Xscale+i*Yscale,GetMatrix()],1);
+
+    size = [$SizeX:=Re(%1),$SizeY:=Im(%1),
+     if SizeY=0 then SizeY:=SizeX fi,
+     if %2=Nil then $Ratio:=Xscale/Yscale else Ratio:=%2 fi,
+     $xscale:=(SizeX-margeG-margeD)/(Xmax-Xmin),
+     $yscale:=(SizeY-margeH-margeB)/(Ymax-Ymin),
+     if Ratio>0 then
+         $aux:=Ratio*yscale,
+         if aux> xscale then yscale:=xscale/Ratio
+                             else xscale:=aux
+         fi
+     fi,
+     Fenetre(Xmin+i*Ymax,Xmax+i*Ymin,xscale+i*yscale)
+    ];
+
+    view = [if Nargs()>1 then $x1:=%1,$x2:=%2,$y1:=%3,$y2:=%4,
+     else $u:=Copy(%1,1,1),$v:=Copy(%1,2,1),$x1:=Re(u),$x2:=Re(v),$y1:=Im(u),$y2:=Im(v),
+     fi,
+     if y1>y2 then Echange(y1,y2) fi,if x1>x2 then Echange(x1,x2) fi,
+     $z := Mtransform([x1+i*y2,x2+i*y1],GetMatrix()),//prise en compte de la matrice courante
+     Window(z[1],z[2])
+    ];
+
+    zoom = [$r:=abs(%1),
+     for $k from 1 to r do
+        $cX:=(Xmin+Xmax)/2,$cY:=(Ymin+Ymax)/2,$lX:=(Xmax-Xmin)/2,$lY:=(Ymax-Ymin)/2,
+     if %1>0 then 
+        $xmax:=cX+lX/Xfact,$xmin:=2*cX-xmax, $ymax:=cY+lY/Yfact,$ymin:=2*cY-ymax,
+        Fenetre(xmin+i*ymax,xmax+i*ymin,Xscale*Xfact+i*Yscale*Yfact)
+        else 
+        xmax:=cX+lX*Xfact,xmin:=2*cX-xmax, ymax:=cY+lY*Yfact,ymin:=2*cY-ymax,
+        Fenetre(xmin+i*ymax,xmax+i*ymin,Xscale/Xfact+i*Yscale/Yfact)
+    fi
+    od];
+
+
+{%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%}
+
+    aire3d = [$aire:=0,
+     Map(
+          [$A:=$facette[1,2],$B:=Nil,$C:=facette[3,2],
+           Map(
+                 [B:=C,C:=$Z,
+                  Inc(aire,Norm(Prodvec(B-A,C-A)))
+                 ],Z,facette[5,0],2+i)
+          ],facette,%1,Re(jump)-i),
+     aire/2];
+
+    angle3d = [$angleX:=Prodscal(normalize(%1),normalize(%2)),$epsilon:=if %3=Nil then 0 else %3 fi,
+    if angleX>=1-epsilon then 0 elif angleX<=-1+epsilon then pi else arccos(angleX) fi];
+    angle = angle3d(%1,%2,%3); {pour compatibilité}
+
+    bary3d = [$L:= for $z in %1 By 1 do z od,
+     $S:=0,$T:=0,$aux:= Map( [Inc(S,z[3]*z[1,2]),Inc(T,z[3])],z,L,3-i),S/T];
+
+
+    det3d = Prodscal(%3,Prodvec(%1,%2));
+    
+    det = Prodscal(%3,Prodvec(%1,%2)); {pour compatibilité}
+
+    interDD = [$A:=Copy(%1,1,2),$u:=Copy(%1,3,2),$A':=Copy(%2,1,2),$u':=Copy(%2,3,2),
+    $N:=Prodvec(u,u'),$epsilon:=if %3=Nil then 1E-10 else  %3 fi,
+    if  abs(det(A'-A,u,u'))<=epsilon then A+det(A'-A,u',N)/Prodscal(N,N)*u fi];
+
+    interDP = [$A:=Copy(%1,1,2),$u:=Copy(%1,3,2),$B:=Copy(%2,1,2),$v:=Copy(%2,3,2),
+     A+Prodscal(B-A,v)/Prodscal(u,v)*u];
+
+    interLP = [$O:=Copy(%2,1,2),$u:=Copy(%2,3,2),$close:=if %3=Nil then 0 else %3 fi,
+     for L in %1 By jump do
+        $B:=L[1,2],$sg:=Round(Prodscal(B-O,u),10),
+        for Z in (if close then [L[3,0],B] else L[3,0] fi) By 2 do
+            $A:=B,B:=Z,$x:= Round(Prodscal(B-O,u),10),
+            if sg*x<1E-10 then interDP([A,B-A],%2) fi,
+            sg:=x
+        od
+     od
+    ];
+
+    interPP = [$A:=Copy(%1,1,2),$u:=Copy(%1,3,2),$B:=Copy(%2,1,2),$v:=Copy(%2,3,2),
+    $N:=Prodvec(u,v),$M:= A+ Prodscal(B-A,v)/Prodscal(N,N)*Prodvec(N,u),
+    M,N];
+
+    IsAlign3d = [$N:=Nops3d(%1),$epsilon:=if %2=Nil then 1E-10 else  %2 fi,
+     if N<3 then 1
+     else
+         $B:=Copy(%1,1,2),$C:=Copy(%1,3,2),$k:=3,
+         repeat
+               $A:=B,B:=C,C:=Copy(%1,2*k-1,2),
+               $Ok:= Norm(Prodvec(B-A,C-A)) <epsilon,
+               Inc(k,1)
+         until (k>N) Or (Ok=0) od,
+         Ok
+     fi];
+
+    isobar3d = [$L:= for $z in %1 By 1 do z od,
+     $S:=0,$T:=0,$aux:= Map( [Inc(S,$M),Inc(T,1)],M,L,2-i),S/T];
+
+
+    IsPlan = [$N:=Nops3d(%1),$epsilon:=if %2=Nil then 1E-10 else  %2 fi,
+     if N<4 then 1
+     else
+         $B:=Copy(%1,1,2),$C:=Copy(%1,3,2),$D:=Copy(%1,5,2),$k:=4,
+         repeat
+               $A:=B,B:=C,C:=D,D:=Copy(%1,2*k-1,2),
+               $Ok:= abs(det(B-A,C-A,D-A)) <epsilon,
+               Inc(k,1)
+         until (k>N) Or (Ok=0) od,
+         Ok
+     fi];
+
+    KillDup3D = [$L:=Nil,
+     $aux:= for $z in %1 by 2 do Inserer3D(L,z,%2) od,
+     L
+    ]; 
+
+    length3d = [$long:=0,$first:=1/0,$pred:=1/0,$nb:=0,$compt:=0,$Z:=Nil,
+     $close:=if %2=Nil then 0 else %2 fi,
+     for $z in %1 do  Inc(nb,1),
+        if Re(z)=Re(jump)
+           then
+               if close then Inc(long,Norm(pred-first)) fi,
+               pred:=Nil,first:=Nil,compt:=0,nb:=0,Z:=Nil
+           else Insert(Z,z)
+        fi,
+        if nb=2 then
+           Inc(long,Norm(Z-pred)),pred:=Z,nb:=0,Inc(compt,1),
+           if compt=1 then first:=Z,fi,
+           Z:=Nil,
+        fi
+     od,
+     if (first<>Nil) And close then  Inc(long,Norm(pred-first)) fi,
+     long];
+
+   Map3D = [$repjump:=if %4=Nil then i else (2*%4-1)*i fi,Map(%1,%2,%3,2+repjump)];
+
+   Merge3d = [$liste:=for $Z in %1 by 2 do Inserer3D($sommets,Z,1E-10) od,
+     for Z in Merge(liste) by 1 do sommets[2*Z-1,2] od
+    ];
+
+    n =  {\n: vecteur unitaire normal au plan de projection,dirigé vers l'observateur.} 
+    Normal();
+
+    Nops3d = [$compt:=0,$nb:=0,
+    for $z in %1 do if Re(z)=Re(jump) then Inc(compt,1),$nb:=0 else Inc(nb,1) fi,
+    if nb=2 then Inc(compt,1),$nb:=0 fi
+    od,compt];
+
+    normalize = %1/Norm(%1);
+
+    permute3d =  {permute3d(liste): modifie la liste (qui doit être une variable) en plaçant le premier élément 3D à la fin. Cette macro renvoie Nil.}
+    [$z:=Copy(%1,1,1),
+    if Re(z)=Re(jump) then Insert(%1,Copy(%1,1,1)),Del(%1,1,1)
+    else Insert(%1,Copy(%1,1,2)),Del(%1,1,2)
+    fi];
+
+    planEqn = [$a:=Copy(%1,1,1),$b:=Copy(%1,2,1),$c:=Copy(%1,3,1),$d:=Copy(%1,4,1),
+     $u:=[a+i*b,c],
+     if abs(a)>0 then [d/a,0,u]
+     elif abs(b)>0 then [i*d/b,0,u]
+     elif abs(c)>0 then [0,d/c,u]
+     fi];
+
+    Pos3d = [$compt:=0,$nb:=0,$epsilon:=if %3=Nil then 0 else %3 fi,
+     for $z in %2 do
+         Inc(nb,1),
+         if Re(z)=Re(jump) then
+            Inc(compt,1),nb:=0,$Z:=Nil,
+            if %1=jump then compt fi
+         else Insert(Z,z),
+              if nb=2 then Inc(compt,1),
+                           if Norm(Z-%1)<=epsilon then compt fi,
+                           nb:=0,Z:=Nil
+              fi
+         fi
+     od];
+
+    purge3d = [$epsilon:= if %2=Nil then 1E-10 else %2fi,
+     for $z in [%1,jump] do
+        if Re(z)=Re(jump) then
+               $aux:= [$a:=$L[1,2],a,$compt:=1,
+                   for $Z in L[3,0] by 2 do
+
+                    if Norm(a-Z)>epsilon then Z,a:=Z,Inc(compt,1) fi
+                   od],
+               if compt>1 then aux,z fi,$L:=Nil
+        else Insert(L,z)
+        fi
+    od];
+
+    px = [Xde(%1),0];
+
+    py = [i*Yde(%1),0];
+
+    pz = [0,Zde(%1)];
+
+    pxy = [Copy(%1,1,1),0];
+
+    pxz = [Xde(%1),Copy(%1,2,1)];
+
+    pyz = [i*Yde(%1),Copy(%1,2,1)];
+
+   replace3d = [$num:=0,$nb:=0,$Z:=Nil,
+    $retour:=for $z in %1 do
+        if Re(z)=Re(jump) then Inc(num,1),$nb:=0,Z:=Nil,
+                       if num=%2 then %3 else z fi
+            else Inc(nb,1),Insert(Z,z),
+                 if nb=2 then Inc(num,1),
+                          if num=%2 then %3 else Z fi,
+                      $nb:=0,Z:=Nil
+                fi,
+        fi,
+    od,Echange(%1,retour)];
+
+    reverse3d = Map( Reverse(Map(Reverse($Z),Z,$F,2+i)),F,%1,M(Re(jump),1));
+
+    viewDir = if Nargs()=2 then
+        theta:=%1*deg,phi:=%2*deg
+    elif StrComp(String(%1),"xOy") then theta:=-pi/2,phi:=0
+    elif StrComp(String(%1),"yOz") then theta:=0,phi:=pi/2
+    elif StrComp(String(%1),"xOz") then theta:=-pi/2,phi:=pi/2
+    else $u:=normalize(%1),phi:=arccos(Zde(u)),theta:=Arg(pxy(u))
+    fi;
+
+    visible = Prodscal(Normal(),%1)>0;
+
+    Xde = Re(Copy(%1,1,1));
+
+    Yde = Im(Copy(%1,1,1));
+
+    Zde = Re(Copy(%1,2,1));
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+   antirot3d = [$A:=Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),$c1:=cos(%3),$s1:=sin(%3),
+    Map([$x:=$M-A,$w:=Prodscal(x,u)*u,A-w+c1*(x-w)+s1*Prodvec(u,x)],M,%1,2+i)];
+
+    defAff3d = [$b:=Copy(%4,1,2),$c:=Copy(%4,3,2),$d:=Copy(%4,5,2),
+    NewMac(%1,Concat(%3-Xde(%2)*b-Yde(%2)*c-Zde(%2)*d,"+Xde(%1)*(",b,")+Yde(%1)*(",c,")+Zde(%1)*(",d,")"))];
+
+    dproj3d = [$A:= Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),Map(A+Prodscal(u,$M-A)*u,M,%1,2+i)];
+
+    dproj3dO = Map(interDP(%2,[$M,%3]),M,%1,2+i);
+
+    dsym3d = [$A:= Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),Map(2*(A+Prodscal(u,$M-A)*u)-M,M,%1,2+i)];
+
+    dsym3dO = Map(2*interDP(%2,[$M,%3])-M,M,%1,2+i);
+
+    ftransform3d = Map([Assign(%2,$M,$m),%2],m,%1,2+i);
+
+    hom3d = Map(%3*(M-%2)+%2,M,%1,2+i);
+
+   inv3d = Map(%2+sqr(%3/Norm($M-%2))*(M-%2),M,%1,2+i);
+
+    proj3d = [$A:= Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),Map($M-Prodscal(u,M-A)*u,M,%1,2+i)];
+
+    proj3dO = Map(interDP([$M,%3],%2),M,%1,2+i);
+
+    shift3d = Map($M+%2,M,%1,2+i);
+
+    sym3d = [$A:= Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),Map(M-2*Prodscal(u,$M-A)*u,M,%1,2+i)];
+
+    sym3dO = Map(2*interDP([$M,%3],%2)-M,M,%1,2+i);
+
+    rot3d = [$A:=Copy(%2,1,2),$u:=normalize(Copy(%2,3,2)),$c1:=cos(%3),$s1:=sin(%3),
+    Map([$x:=$M-A,$w:=Prodscal(x,u)*u,A+w+c1*(x-w)+s1*Prodvec(u,x)],M,%1,2+i)];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    invmatrix3d = [$A:=Copy(%1,3,2),$B:=Copy(%1,5,2),$C:=Copy(%1,7,2),$t:=Copy(%1,1,2),
+     $u:=Prodvec(B,C),$v:=Prodvec(C,A),$w:=Prodvec(A,B),$d:=det(A,B,C),
+     if not(d=0) then
+        $A':=[Xde(u)+i*Xde(v),Xde(w)]/d,$B':=[Yde(u)+i*Yde(v),Yde(w)]/d,
+        $C':=[Zde(u)+i*Zde(v),Zde(w)]/d,
+        [-Xde(t)*A'-Yde(t)*B'-Zde(t)*C',A',B',C']
+     fi];
+
+
+    matrix3d = if StrComp(String(%2),"%2") then
+        Assign(%1,$M,[0,0]),$u:=%1,u,Assign(%1,M,vecI),%1-u,
+        Assign(%1,M,vecJ),%1-u,Assign(%1,M,vecK),%1-u
+    else   Assign(%1,%2,[0,0]),$u:=%1,u,Assign(%1,%2,vecI),%1-u,
+           Assign(%1,%2,vecJ),%1-u,Assign(%1,%2,vecK),%1-u
+    fi;
+
+    mtransform3d = Mtransform3D(%1,%2);
+
+
+    mulmatrix3d = [$M1:=%1,$M2:=%2,$L:=GetMatrix3D(),SetMatrix3D(M1),ComposeMatrix3D(M2),GetMatrix3D(),SetMatrix3D(L)]; 
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+   drawWin3d = DrawPoly(Parallelep(M(Xinf,Yinf,Zinf),[Xsup-Xinf,0],[i*(Ysup-Yinf),0],[0,Zsup-Zinf]),%1);
+
+    rectangle3d = [$Ok:=0,
+    Map( if Ok=0 then $Xinf:=Re($Z[1]),$Xsup:=Xinf,$Yinf:=Im(Z[1]),$Ysup:=Yinf,$Zinf:=Re(Z[2]),$Zsup:=Zinf,Ok:=1
+            else
+             $x:=Re($Z[1]),$y:=Im($Z[1]),$z:=Re($Z[2]),
+                     if x<Xinf then Xinf:=x elif x>Xsup then Xsup:=x fi,
+             if y<Yinf then Yinf:=y elif y>Ysup then Ysup:=y fi,
+             if z<Zinf then Zinf:=z elif z>Zsup then Zsup:=z fi,
+                  fi,Z,%1,2-i),
+    M(Xinf,Yinf,Zinf),M(Xsup,Ysup,Zsup)];
+
+    RestoreTphi = [theta:=TphiList[1],phi:=TphiList[2],Del(TphiList,1,2),
+     if theta=Nil then theta:=pi/6 fi,
+     if phi=Nil then phi:=pi/3 fi
+    ];
+
+    RestoreWin3d = [$win:=win3dList[1,11],Del(win3dList,1,11),
+     if win<>Nil then Xinf:=Re(win[1]),Xsup:=Im(win[1]),Yinf:=Re(win[2]),
+              Ysup:=Im(win[2]),Zinf:=Re(win[3]),Zsup:=Im(win[3]),
+              SetMatrix3D(win[4,0])
+    fi];
+
+    SaveTphi = Insert(TphiList,[theta,phi],1);
+
+    SaveWin3d = Insert(win3dList,[Xinf+i*Xsup,Yinf+i*Ysup,Zinf+i*Zsup,GetMatrix3D()],1);
+
+    transformbox3d = [$a:=3,$xinf:=-a,$xsup:=a,$yinf:=-a,$ysup:=a,$zinf:=-a,$zsup:=a,$A:=Copy(%1,1,2),$B:=Copy(%1,3,2),
+     Xinf:=Xde(A),Xsup:=Xde(B),Yinf:=Yde(A),Ysup:=Yde(B),Zinf:=Zde(A),Zsup:=Zde(B),
+     if %2=Nil then $orthonorme:=0 else orthonorme:=(%2=1) fi,
+     $G:=[(Xsup+Xinf)+i*(Ysup+Yinf),Zsup+Zinf]/2,{centre}
+     if orthonorme then
+
+        $reduc:=[ (Xsup-Xinf)/(xsup-xinf),{réductions axes}
+                   (Ysup-Yinf)/(ysup-yinf),
+                   (Zsup-Zinf)/(zsup-zinf)],
+        Sort(reduc),$D:=reduc[3],
+        ComposeMatrix3D([-G,[1,0],[i,0],[0,1]]/D),
+     else
+      $Dx:=(Xsup-Xinf)/(xsup-xinf),{réductions axes}
+      $Dy:=(Ysup-Yinf)/(ysup-yinf),
+      $Dz:=(Zsup-Zinf)/(zsup-zinf),
+      ComposeMatrix3D([-[Xde(G)/Dx+i*Yde(G)/Dy,Zde(G)/Dz],[1,0]/Dx,[i,0]/Dy,[0,1]/Dz])
+     fi
+     ];
+
+   view3D = [if Nargs()>1 then 
+        Xinf:=%1,Xsup:=%2,Yinf:=%3,Ysup:=%4,Zinf:=%5,Zsup:=%6
+     else   Xinf:=Re(Copy(%1,1,1)),Xsup:=Re(Copy(%1,3,1)),Yinf:=Im(Copy(%1,1,1)),Ysup:=Im(Copy(%1,3,1)),
+        Zinf:=Re(Copy(%1,2,1)),Zsup:=Re(Copy(%1,4,1))
+     fi,
+     if Xsup<Xinf then Echange(Xinf,Xsup) fi,
+     if Ysup<Yinf then Echange(Yinf,Ysup) fi,
+     if Zsup<Zinf then Echange(Zinf,Zsup) fi ];
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    ScreenX = [i*exp(i*theta),0];
+    
+    ScreenY = [-cos(phi)*exp(i*theta),sin(phi)];
+    
+    ScreenCenter = (Xmax+Xmin)/2*ScreenX()+(Ymax+Ymin)/2*ScreenY();
+    
+    ScreenPos = [$A:=Re(%1)*ScreenX()+Im(%1)*ScreenY(),
+     $d:=(if %2=Nil then 500 else %2 fi),
+     $u:= if ModelView()=ortho then Normal() else normalize(PosCam()-A) fi,
+     A+d*u
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Clip3D = [$S:=%1,
+     if %3=Nil then $int:=0 else int:=%3 fi,
+     if int=0 then {intérieur}
+       Map(
+           [$A:=$facette[1,2],$B:=facette[3,2],$C:=facette[5,2],
+            $Plan:=[A,-Prodvec(B-A,C-A)],
+            if Plan<>Nil then S:=ClipFacet(S,Plan) fi
+           ],facette,%2,Re(jump)-i),
+       S
+     else  {exterieur}
+     Map(
+           [$A:=$facette[1,2],$B:=facette[3,2],$C:=facette[5,2],
+            $u:=Prodvec(B-A,C-A),
+            if u<>Nil then
+               ClipFacet(S,[A,u],$der),
+               S:=der fi
+           ],facette,%2,M(Re(jump),1))
+     fi];
+
+
+    clipCurve = [if %2=Nil then $xinf:=Xinf,$xsup:=Xsup,$yinf:=Yinf,$ysup:=Ysup,$zinf:=Zinf,$zsup:=Zsup 
+     else   $A:=Copy(%2,1,2),$B:=Copy(%2,3,2),
+        xinf:=Xde(A),xsup:=Xde(B),yinf:=Yde(A),ysup:=Yde(B),zinf:=Zde(A),zsup:=Zde(B),
+     fi,
+     $S:=Clip3DLine(%1,[[0,zsup],-vecK]),
+     S:=Clip3DLine(S,[[0,zinf],vecK]),
+     S:=Clip3DLine(S,[[xinf,0],vecI]),
+     S:=Clip3DLine(S,[[xsup,0],-vecI]),
+     S:=Clip3DLine(S,[[i*ysup,0],-vecJ]),
+     Clip3DLine(S,[[i*yinf,0],vecJ])
+     ];
+
+    clipPoly = [if %2=Nil then $xinf:=Xinf,$xsup:=Xsup,$yinf:=Yinf,$ysup:=Ysup,$zinf:=Zinf,$zsup:=Zsup 
+     else   $A:=Copy(%2,1,2),$B:=Copy(%2,3,2),
+        xinf:=Xde(A),xsup:=Xde(B),yinf:=Yde(A),ysup:=Yde(B),zinf:=Zde(A),zsup:=Zde(B),
+     fi,
+     $S:=ClipFacet(%1,[[0,zsup],-vecK]),
+     S:=ClipFacet(S,[[0,zinf],vecK]),
+     S:=ClipFacet(S,[[xinf,0],vecI]),
+     S:=ClipFacet(S,[[xsup,0],-vecI]),
+     S:=ClipFacet(S,[[i*ysup,0],-vecJ]),
+     ClipFacet(S,[[i*yinf,0],vecJ])
+     ];
+
+{%%%%%%%%%%%%%%%%%%%%%}
+{ Internes }
+{%%%%%%%%%%%%%%%%%%%%%}
+
+    pdfprog = "epstopdf --gsopt=-dNOSAFER --gsopt=-dALLOWPSTRANSPARENCY"; {programme de conversion eps -> pdf (un argument: fichier.eps)}
+
+    CompileEps = ["CompileEps",ScriptExt]; {programme pour compiler puis exporter en eps  (argument: <fichier courant> avec extension eps)}
+
+    CompilePdf = ["CompilePdf",ScriptExt," 1"]; {programme pour compiler puis exporter en pdf  (argument: <fichier courant> avec extension pdf)}
+
+    Bsave = UserBsave();
+
+    Esave = UserEsave();
+
+    Init3D =  {En mode serveur,cette macro est exécutée après chaque appel à TeXgraph}
+    [Zinf:=-5,Zsup:=5,Yinf:=-5,Ysup:=5,Xinf:=-5,Ysup:=5,win2dList:=Nil,win3dList:=Nil,TphiList:=Nil,ModelView(ortho),DistCam(15)];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    DrawDot = [SaveAttr(),Arrows:=0,$scalex:=Re(DotScale),$scaley:=Im(DotScale),
+        if scaley=0 then scaley:=scalex fi,
+    $r:=(Re(DotSize)+(if Im(DotSize)=Nil then 0 else Im(DotSize)*Width/10 fi))/2,{en point}
+    r:=r*2.54/(72.27),$Linmat:=[0,scalex/Xscale,i*scaley/Yscale],
+    if DotAngle<>0 then $Linmat:=mulmatrix(matrix( exp(i*DotAngle*deg)*z ),Linmat) fi,
+        $L:=Mtransform(%1,GetMatrix()),SetMatrix(Linmat),$invmat:=invmatrix(Linmat),
+        L:= Mtransform(L,invmat),
+    LineStyle:=solid,Width:=(if %2=Nil then 4 else %2 fi),
+    if Pos(DotStyle,[times,plus,asterisk])<>Nil
+        then FillStyle:=none,
+        else FillStyle:=full,FillOpacity:=1,
+             if Pos(DotStyle,[oplus,otimes,dotcircle,triangle,square,pentagon,diamond])=Nil
+            then FillColor:=Color
+            fi,
+    fi,
+    if (DotStyle=dotcircle) Or  (DotStyle=dot) then
+       for $z in L By 1 do Cercle(z,r) od
+
+    elif (DotStyle=triangle) Or (DotStyle=triangle') then
+       LineJoin:=miter,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           Ligne( for k from 0 to 2 do z+i*r*exp(i*2*k*pi/3) od,1),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=square) Or (DotStyle=square') then
+       LineJoin:=miter,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           Ligne( for k from 0 to 3 do z+r*exp(i*(2*k+1)*pi/4) od,1),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=pentagon) Or (DotStyle=pentagon') then
+       LineJoin:=miter,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           Ligne( for k from 0 to 4 do z+i*r*exp(i*2*k*pi/5) od,1),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=diamond) Or (DotStyle=diamond') then
+       LineJoin:=miter,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           Ligne([z+i*r*1.65,z-r*0.9,z-i*r*1.65,z+r*0.9],1),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=times) Or (DotStyle=otimes) then
+       LineJoin:=miter,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           if DotStyle=otimes then Cercle(z,r*1.25) fi,
+           Ligne([z+r*exp(i*pi/4),z-r*exp(i*pi/4),jump,
+                  z+r*exp(3*i*pi/4),z-r*exp(3*i*pi/4)],0),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=plus) Or (DotStyle=oplus) then
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           if DotStyle=oplus then Cercle(z,r*1.25) fi,
+           Ligne([z+r,z-r,jump,z+r*i,z-r*i,jump],0),
+           {SetMatrix(Linmat)}
+       od
+    elif (DotStyle=asterisk) then
+       LineCap:=round,
+       for $z in L By 1 do
+           {$u:=Mtransform(z,invmat)-z,ComposeMatrix([u,1,i]),}
+           Ligne([z+r,z-r,jump,z+r*i,z-r*i,jump,
+                  z+r*exp(i*pi/4),z-r*exp(i*pi/4),jump,
+                  z+r*exp(3*i*pi/4),z-r*exp(3*i*pi/4)],0),
+           {SetMatrix(Linmat)}
+       od
+    fi,RestoreAttr()
+    ];
+
+    ellipseArc = ellipticArc(%1,%2,%3,%4,%5,%6,%7); {laissée pour compatibilité ascendante}
+
+    ellipticArcEnds = [$RX:=%4,$RY:=%5,$t:=RX/RY,$B:=%1,$A:=%2,$C:=%3,
+     if %7=Nil then $inclin:=A+5 else inclin:=A+exp(i*%7*deg) fi,
+     $u:=i*(inclin-A),
+     $mat1:=matrix( affin(z,[A,inclin],u,1/t) ),
+     $mat2:=matrix( affin(z,[A,inclin],u,t) ),
+     $L:=Mtransform([B,C],mat2),B:=L[1],C:=L[2],
+     Mtransform([A+RX*(B-A)/abs(B-A),A+RX*(C-A)/abs(C-A)],mat1),
+     ];
+
+Include "draw2d.mac";
+        "draw3d.mac";
+        "axes.mac";
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+Mac
+
+    angleD = draw("angleD",[%1,%2,%3,%4],%5);
+
+  
+    Arc = //EllipticArc(%1,%2,%3,%4,%4,%5); 
+      draw("arc",[%1,%2,%3,%4,%5],[%6]);
+
+    background = [draw("line",[Xmin+i*Ymax,Xmin+i*Ymin,Xmax+i*Ymin,Xmax+i*Ymax],
+                  [close:=1,if %1<>Nil then FillStyle:=%1 fi,if %2<>Nil then FillColor:=%2 fi,
+                   if FillStyle=gradient then 
+                        if %2<>Nil then FillColorA:=%2 fi,
+                        if %3<>Nil then FillColorB:=%3 fi,
+                   fi,LineStyle:=noline]),
+     backcolor:=%2,
+    ];
+
+
+    Cercle = draw("circle",[%1,%2,%3],%4);
+
+    Clip = [ $Ok:=0,$S:=%1,
+      for $z in S do {on cherche le point le plus à gauche}
+        if ($z=jump)=0 then
+        if Ok=0 then $xmin:=Re(z),$y:=Im(z),Ok:=1
+                else if Re(z)<xmin then xmin:=Re(z),y:=Im(z) fi
+                     fi
+       fi
+     od,
+    $X:=xmin+i*y,$L:=[ S CutB X,S CutA X],$Y:=L[3],
+    $oldfillstyle:= FillStyle,$oldlinestyle:= LineStyle,
+    FillStyle:=full,LineStyle:=noline,
+    $coinS:=Xmin+i*Ymax,$coinI:=Xmax+i*Ymin,
+    Fenetre(coinS-margeG/2+i*margeH/2,coinI+margeD/2-i*margeB/2),
+    if Re(bar(i)*(Y-X)) <=0  {sens direct?}
+        then
+          Ligne( [L,Xmin+i*y,Xmin+i*Ymax,Xmax+i*Ymax,Xmax+i*Ymin,Xmin+i*Ymin,Xmin+i*y,X],1)
+        else
+          Ligne( [L,Xmin+i*y,Xmin+i*Ymin,Xmax+i*Ymin,Xmax+i*Ymax,Xmin+i*Ymax,Xmin+i*y,X],1)
+    fi,
+    Fenetre(coinS,coinI),
+    FillStyle:=oldfillstyle,LineStyle:= oldlinestyle
+    ];
+
+    Dbissec = [$x:=bissec(%1,%2,%3,%4),draw("straightL",x,%5) ];
+
+    Dcarre = draw("line",carre(%1,%2,%3),[%4,close:=1]);
+
+    Dcircle = draw("circle",[%1,%2,%3],%4);
+
+    Ddroite = draw("line",ddroite(%1,%2),[%3,close:=0]);
+
+    Dmed = [$x:=med(%1,%2),draw("straightL",x,%4),
+     if %3 then $m:=(%1+%2)/2,angleD(%1,m,x[2],0.25,%4) fi];
+
+    domaine1 = [SaveAttr(),x:=if ForMinToMax then [Xmin,Xmax] else [tMin,tMax] fi,
+     discont:=0,nbdiv:=5,$options:=%2,tMin :=x[1],tMax:=x[2],x:=Nil,
+     $L:=Get(Cartesienne(%1,nbdiv,discont),0),
+     draw("line",[tMin,for $z in L By jump do z od,tMax],[%2,radius:=0,close:=1]),
+     RestoreAttr()
+    ];
+
+    domaine2 = [SaveAttr(),x:=if ForMinToMax then [Xmin,Xmax] else [tMin,tMax] fi,
+     discont:=0,nbdiv:=5,$options:=%3,tMin:=x[1],tMax:=x[2],x:=Nil,
+     $L1:=Get(Cartesienne(%1,nbdiv),0),
+     $L2:=Get(Cartesienne(%2,nbdiv),0),
+     draw("line",[for $z in L1 By jump do z od,Reverse(for $z in L2 By jump do z od)],[%3,radius:=0,close:=1]),
+     RestoreAttr()
+    ];
+
+    domaine3 = [SaveAttr(),x:=if ForMinToMax then [Xmin,Xmax] else [tMin,tMax] fi,
+     discont:=0,nbdiv:=5,$options:=%2,tMin:=x[1],tMax:=x[2],x:=Nil,
+     if Free(%1,x) then $L1:=Get(Courbe(t+i*%1,nbdiv),0) else $L1:=Get(Cartesienne(%1,nbdiv),0) fi,
+     if Free(%2,x) then $L2:=Get(Courbe(t+i*%2,nbdiv),0) else $L2:=Get(Cartesienne(%2,nbdiv),0) fi,
+     $C1:= for $z in L1 By jump do z od,$C2:= for $z in L2 By jump do z od,
+     $P:= C1 InterL C2,
+     $A:= Copy(P,1,1),$B:=Copy(P,0,1),
+     draw("line",
+        [A,
+         for z in C1 do if Re(z)>= Re(A) And Re(z)<= Re(B) then z fi od,
+         B,
+         Reverse(for z in C2 do if Re(z)>= Re(A) And Re(z)<= Re(B) then z fi od)
+        ],[%3,radius:=0,close:=1]),
+     RestoreAttr()
+    ];
+    
+    ellipticArc = [$RX:=%4,$RY:=%5,$t:=RX/RY,$B:=%1,$A:=%2,$C:=%3,
+     if %7=Nil then $ang_:=0 else ang_:=%7 fi,
+     while ang_<0 do Inc(ang_,360) od,while ang_>=360 do Inc(ang_,-360) od,
+     if ang_=0 then EllipticArc(B,A,C,RX,RY,%6)
+     else
+        $inclin:=A+exp(i*ang_*deg),
+        $M:=GetMatrix(),
+        $u:=i*(inclin-A),
+        $mat1:=matrix( affin(z,[A,inclin],u,1/t) ),
+        $mat2:=matrix( affin(z,[A,inclin],u,t) ),
+        ComposeMatrix(mat1),
+        $L:=Mtransform([B,C],mat2),
+        EllipticArc(L[1],A,L[2],RX,RX,%6),
+        SetMatrix(M)
+    fi];
+    
+    markangle = [$b:=%1,$a:=%2,$c:=%3,$r:=%4,$n:=%5,$esp:=%6/Abs(r),$long:=%7/2,
+    $dep:= Arg(b-a)+ (Arg((c-a)/(b-a))-(n-1)*esp)/2,
+    Ligne(
+    for $k from 0 to n-1 do
+    $p:=exp(i*(dep+k*esp)),$v:=p/Abs(p),
+    a+r*p+long*v,a+r*p-long*v,jump
+    od,0)
+    ];
+    
+    markseg = [$a:=%1,$b:=%2,$n:=%3,$esp:= %4,$long:=%5,if %6=Nil then $angle:=pi/4 else angle:=%6*deg fi,
+    $v:= (b-a)/Abs(b-a),$u:=ScrCoordV( long/2*exp(i*angle)*RealCoordV(v) ),
+    $c:= a+(Abs(b-a)-(n-1)*esp)*v/2,$pas:= esp*v,
+    Ligne(for k from 1 to n do c-u,c+u,jump,Inc(c,pas) od,0)
+    ];
+
+
+
+    Dparallel = draw("straightL",parallel(%1,%2),%3);
+
+    Dparallelo = draw("line",parallelo(%1,%2,%3),[%4,close:=1]);
+
+    Dperp = [$X:=%1,$A:=X[1],$B:=X[2],$x:=perp(X,%2),draw("straightL",x,%4),
+     if %3 then $p:=proj(x[2],X),angleD(x[2],p,p+B-A,0.25) fi];
+
+    Dpolyreg = draw("line",polyreg(%1,%2,%3),[%4,close:=1]);
+
+    DpqGoneReg = draw("line",pqGoneReg(%1,%2,%3),[%4,close:=1]);
+
+    drawSet = [for $Z in %1 By jump do
+            draw("path",[ Z[1],move,
+                   for $z in Z[2,0] By 3 do z,bezier od,
+                   closepath],%2)
+     od
+    ];
+
+    Drectangle = draw("line",rect(%1,%2,%3),[%4,close:=1]);
+    
+    flecher = [if %3=Nil then marker:=CurrentArrow else marker:=%3 fi,scale:=CurrentArrowScale,  
+     markLine(%1,for z in %2 do Re(z),if Im(z)=0 then marker else Re(marker) fi od)
+    ];
+
+    LabelArc = [labelpos:=outside,labelsep:=0.25,rotation:=0,scale:=1,
+     SaveAttr(),$aux:=%7,$scale_:=scale,
+     $labelpos_:=labelpos,$labelsep_:=labelsep,$rotation_:=rotation,
+     $B:=%1,$A:=%2,$C:=%3,$R:=%4,$sens:=2*(%5>0)-1,
+     Rarc(B,A,C,R,sens,[scale:=scale_]),
+     LabelAngle:=rotation,$u:=(B-A)/Abs(B-A)+(C-A)/Abs(C-A),u:=u/Abs(u),
+     $direct:=2*(Im(bar(B-A)*(C-A))>0)-1,{sens direct ou non}
+     u:=direct*sens*u,
+     if $labelpos_=outside then
+        draw("label",%6,anchor:=A+(R+labelsep_)*u),
+     elif $labelpos_=inside then
+        draw("label",%6,anchor:=A+(R-labelsep_)*u)
+     fi,
+     RestoreAttr()
+    ];
+
+    LabelAxe = [$mark:=if %5=Nil then 0 else %5 fi,$oldstyle:= LabelStyle,$u:=1/Abs(1),$v:=i/Abs(i),
+     SaveWin(),view(Xmin-0.5/Xscale,Xmax+0.5/Xscale, Ymin-0.5/Yscale,Ymax+0.5/Yscale), 
+     $labelPos:=if %4=Nil then 1,$decal:=0.25 else %4[1],decal:=%4[2] fi,
+     if decal=Nil then decal:=0.25 fi,
+     if Im(labelPos)=-1 Or Im(labelPos)=left then $decal:=-decal
+     elif Im(labelPos)=0 Or Im(labelPos)=center then $decal:=0
+     fi,
+     if String(%1)="x" then 
+        if Re(labelPos)=1 Or Re(labelPos)=bottom then {dessous}
+            $pos:=%2-(xyticks/2+xylabelsep)*v+decal*u,LabelStyle:=top
+        elif Re(labelPos)=2 Or Re(labelPos)=top then  {dessus}
+            $pos:=%2+(xyticks/2+xylabelsep)*v+decal*u,LabelStyle:=bottom
+        fi
+    elif String(%1)="y" then
+     if Re(labelPos)=1 Or Re(labelPos)=bottom then {à droite}
+        $pos:=%2+(xyticks/2+xylabelsep)*u+decal*v,LabelStyle:=left
+     elif Re(labelPos)=2 Or Re(labelPos)=top then  {à gauche}
+        $pos:=%2-(xyticks/2+xylabelsep)*u+decal*v,LabelStyle:=right
+     fi
+    fi,
+    draw("label",%3,[anchor:=pos]),if mark then Point(%2) fi,
+    LabelStyle:=oldstyle,RestoreWin()
+    ];
+
+    LabelDot = draw("label",%2,[anchor:=%1,labeldir:=%3,showdot:=(%4=1),if %5<>Nil then labelsep:=%5 fi]);
+
+    LabelSeg = [labelpos:=top,labelsep:=0.25,rotation:=Nil,$options:=%4,
+     if labelpos=center then setframestyle([FillStyle:=full,LineStyle:=noline]) fi,
+     draw("seg",[%1,%2],[rotation:=Nil,%4,legend:=%3,if labelpos=center then labelsep:=0 elif labelpos=bottom then       labelsep:=-abs(labelsep) fi,
+                          if rotation<>Nil then LabelAngle:=rotation else rotation:=1 fi,labelpos:=0.5
+                         ])
+    ];
+    
+    periodic = draw("periodic",%1,[period:=[%2,%3],if %4<>Nil then nbdiv:=%4 fi,if %5<>Nil then discont:=%5 fi,%6]);
+
+    Rarc = [ $sens:=if %5=Nil then 1 else %5 fi,
+      $B:=%1,$A:=%2,$C:=%3,$R:=%4,$u:=R*(B-A)/Abs(B-A),
+      if sens>0
+         then $n:=ScrCoordV(i*RealCoordV(u)),
+         else $n:=ScrCoordV(-i*RealCoordV(u)),
+      fi,
+      $angle:= RealArg((C-A)/(B-A)),{angle BAC}
+      if (sens>=0) And (angle<=0) then angle:=2*pi+angle
+         elif (sens<0) then if (angle>=0) then angle:=2*pi-angle
+                                         else angle:=abs(angle)
+                            fi
+      fi,
+     $du:=u*0.555,$dn:=n*0.555,
+     draw("path",[A+u,
+            while angle>pi/2 do
+               A+u+dn,A+du+n,A+n,bezier,
+               Inc(angle,-pi/2),$v:=u,dv:=du,
+               u:=n,du:=dn,n:=-v,dn:=-dv
+            od,
+            $D:=A+R*(C-A)/Abs(C-A),
+            $ca:=cos(angle/2),$sa:=sin(angle/2),
+            $c:=4*(1-ca)*ca/(3*sqr(sa))*1.005,
+            $E:= [A+u,A+u+n] Inter [D,D+ ScrCoordV(i*RealCoordV(D-A))],
+            A+u+c*(E-A-u),D+c*(E-D),D,bezier
+           ],%6)
+    ];
+
+    Rcercle = [if %3=Nil then
+      $C:=%1,$R:=%2
+     else $A:=RealCoord(%1),$B:=RealCoord(%2),$C':=RealCoord(%3),
+          C:= [(A+B)/2,(A+B)/2+i*(B-A)] Inter [(A+C')/2,(A+C')/2+i*(C'-A)],
+          R:=abs(C-A),
+          C:=ScrCoord(C)
+     fi,
+     $u:=ScrCoordV(R),$n:=ScrCoordV(i*RealCoordV(u)),
+     $du:=u*0.555,$dn:=n*0.555,
+     draw("path",[C+u,C+u+dn,C+du+n,C+n,bezier,
+            C-du+n,C-u+dn,C-u,bezier,
+            C-u-dn,C-du-n,C-n,bezier,
+            C-n+du,C-dn+u,C+u,bezier,closepath],%4)
+    ];
+
+    Rellipse = [$C:=%1,$RX:=%2,$RY:=%3,$C':=RealCoord(%1),
+    if %4=Nil then
+        $u:=ScrCoordV(RX),$n:=ScrCoordV(RY*i),
+       else u:=ScrCoordV(RX*exp(i*%4*deg)),
+            n:=ScrCoordV(i*RY*exp(i*%4*deg))
+     fi,
+     $du:=u*0.555,$dn:=n*0.555,
+     draw("path",[C+u,C+u+dn,C+du+n,C+n,bezier,
+            C-du+n,C-u+dn,C-u,bezier,
+            C-u-dn,C-du-n,C-n,bezier,
+            C-n+du,C-dn+u,C+u,bezier,closepath],%5)
+    ];
+
+    RellipticArc = [$RX:=%4,$RY:=%5,$t:=RX/RY,$B:=RealCoord(%1),$A:=RealCoord(%2),$C:=RealCoord(%3),
+     $M:=GetMatrix(),
+     if %7=Nil then $inclin:=A+5 else inclin:=A+exp(i*%7*deg) fi,
+     $u:=i*(inclin-A),
+     SetMatrix([0,1/Xscale,i/Yscale]),
+     $mat1:=matrix( affin($z,[A,inclin],u,1/t) ),
+     $mat2:=matrix( affin(z,[A,inclin],u,t) ),
+     ComposeMatrix(mat1),
+     $B':=Mtransform(B,mat2),$C':=Mtransform(C,mat2),
+     draw("arc",[B',A,C',RX,%6],%8),
+     SetMatrix(M)
+    ];
+
+    Seg =  {Seg(A,B,[options]): dessine le segment [A,B]. Les options sont celles de l'instruction draw("seg",...).}
+    draw("seg",[%1,%2],%3);
+
+    set = [scale:=1,rotation:=0,labels:=1,labelsep:=0.45,LabelStyle:=0,
+    $a:=4*i,$b:=-3-i/2,$d:=-bar(b),$c:=-a, $v:=-5,
+    SaveAttr(),
+    $x:=%3,
+    M:=matrix(exp(i*rotation*deg)*scale*z+%2),
+    ComposeMatrix(M),
+    draw("path",[GetSpline(v,a,b,c,d,a,v),bezier],[%3,if labels then anchor:=a+labelsep*i/Abs(i),legend:=Concat("$",%1,"$") fi]),
+    mtransform(Get(Spline(v,a,b,c,d,a,v),0),M),{on renvoie la liste des points}
+    RestoreAttr()
+    ];
+
+    setB = [scale:=1,rotation:=0,labels:=1,labelsep:=0.45,LabelStyle:=0,
+    $a:=4*i,$b:=-3-i/2,$d:=-bar(b),$c:=-a, $v:=-5,
+    SaveAttr(),
+    $x:=%3,
+    M:=matrix(exp(i*rotation*deg)*scale*z+%2),
+    ComposeMatrix(M),
+    draw("path",[GetSpline(v,a,b,c,d,a,v),bezier],[%3,if labels then anchor:=a+labelsep*i/Abs(i),legend:=Concat("$",%1,"$") fi]),
+    mtransform(GetSpline([v,a,b,c,d,a,v]),M),{on renvoie la liste des points}
+    RestoreAttr()
+    ];
+
+
+    sequence = draw("line",[$x:=%2,x,$okt:=Free(%1,x),
+            for $k from 1 to %3 do
+               if okt then Assign(%1,t,x)else Assign(%1,x,x) fi,y:=%1,
+               if y=Nil then $k:=%3 else x+i*y,y*(1+i),Echange(x,y) fi
+            od
+           ],%4);
+           
+    suite = sequence(%1,%2,%3,%4);
+
+    tangente = [$long:=%3/2, $okt:=Free(%1,x),
+     for $z in %2 do
+        if okt then  
+            Assign(%1,t,z),$fx:=%1,M:=z+i*fx,Assign(%1,t,z+0.000001),
+            $df:=1+i*(%1-fx)*1000000,
+            else  
+            Assign(%1,x,z), $fx:=%1,$M:=z+i*fx,Assign(%1,x,z+0.000001),
+            $df:=1+i*(%1-fx)*1000000{Der(%1,x,%2)},
+        fi,
+        if long=Nil then draw("straightL",[M,M+df],%4) else df:=long*df/Abs(df),draw("seg",[M-df,M+df],%4) fi
+     od,t:=Nil,x:=Nil
+    ];
+
+    tangenteP = [$long:=%3/2,
+     for $z in %2 do 
+        Assign(%1,t,z),$M:=%1,Assign(%1,t,z+0.000001),$df:=(%1-M)*1000000{Der(%1,t,%2)},
+        if long=Nil then draw("straightL",[M,M+df],%4) else df:=long*df/Abs(df),draw("seg",[M-df,M+df],%4) fi
+     od,t:=Nil
+    ];
+
+    wedge = [$sens:= if %5<>Nil then %5 elif Arg((%3-%2)/(%1-%2))>0 then 1 else -1 fi,
+     $d:=%2+%4*(%1-%2)/abs(%1-%2),
+     draw("path",[d,%2,%3,%4,sens,arc,%2,line,closepath],%6)
+    ];

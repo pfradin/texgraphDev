@@ -1,0 +1,16 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Proj3D}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegKeyWord}ModelView}{\color{TegSymbol}(}\textbf{\color{TegConstant}central}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}6}{\color{TegSymbol},}{\color{TegNumeric}6}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}6}{\color{TegSymbol},}{\color{TegNumeric}6}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegMacPredef}view3D}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegNumeric}4}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}L}{\color{TegSymbol}:=}\ \textbf{\color{TegKeyWord}for}\ \textit{\color{TegIdentifier}z}\ \textbf{\color{TegKeyWord}in}\ \textbf{\color{TegKeyWord}Get}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}Cartesienne}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}sin}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}x}{\color{TegSymbol})}{\color{TegSymbol})}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}\par
+\ \ \textbf{\color{TegKeyWord}do}\ {\color{TegSymbol}[}\textit{\color{TegIdentifier}z}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol}]}\ \textbf{\color{TegKeyWord}od}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Arrows}{\color{TegSymbol}:=}{\color{TegNumeric}1}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}Axes3D}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Arrows}{\color{TegSymbol}:=}{\color{TegNumeric}0}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}8}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Ligne}{\color{TegSymbol}(}\ \textbf{\color{TegKeyWord}Proj3D}{\color{TegSymbol}(}\textit{\color{TegIdentifier}L}{\color{TegSymbol})}{\color{TegSymbol},}\ {\color{TegNumeric}0}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

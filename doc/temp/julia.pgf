@@ -1,0 +1,13 @@
+% TeXgraph version 1.99
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(2.5,0)}%
+\pgfsetyvec{\pgfxy(0,2.5)}%
+\useasboundingbox (-1.5,-1)--(1.5,1);
+%image  (User)
+\end{tikzpicture}%
+\egroup%

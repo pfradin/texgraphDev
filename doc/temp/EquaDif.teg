@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+view(-10.5,2.5,-1.5,4.5),Marges(0,0,0,0), size(7.5,0),
+draw("axes",[0,2+i],[legend:=["$x$","$t$"],Arrows:=1,
+ nbsubdiv:=[1,0]]),
+Width:=8, Color:=red, tMin:=-10, tMax:=2,
+Odeint(y+i*(t*x+y+sin(t)),0,-1+i/2, 1),
+Color:=black, LabelStyle:=stacked,
+Label(-6+2*i,
+ "$x''-x'-tx=\sin(t)$\\avec $x(0)=-1$ et $x'(0)=\frac12$")
+];

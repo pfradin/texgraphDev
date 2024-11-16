@@ -1,0 +1,18 @@
+TeXgraph#
+Cmd Marges(0,0,0,0); size(7.5);
+Include "PolyedresII.mac";
+Var A = M(3,0,0);
+Mac f = M(%1,%2,sin(%1)+cos(%2));
+Graph objet1 = [
+  background(full,lightgray),
+  ColorL:=slategray, StyleL:=12,
+  CubeAdc(Origin, A,C,T1,T2,Ar),
+  Build3D(C,T1,T2,Ar,
+     bdSurf(f(u,v),
+       [color:=steelblue,
+        u:=[-pi,pi],v:=u,
+        contrast:=0.125]),
+     bdAxes(Origin,
+       [color:=forestgreen,arrows:=1])
+     ),
+  Display3D()];

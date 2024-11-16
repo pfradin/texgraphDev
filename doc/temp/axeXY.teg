@@ -1,0 +1,22 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5),size(7.5),
+LabelSize:=footnotesize,
+//graphique du haut
+SaveWin(),
+view(-5,5,0.25,5),Width:=6, Arrows:=1,
+SetMatrix([2.5*i,2/pi,2*i]),
+axeX(0,pi/2,Nil,Nil,1,"\pi",2), axeY(0,1),
+Arrows:=0, Color:=red, Width:=8,
+tMin:=-2*pi, tMax:=2*pi, Cartesienne(sin(x)),
+Label(pi*1.65+i,"$f(x)=\sin(x)$"),RestoreWin(),
+//graphique du bas
+SaveWin(), Color:=black,
+view(-5,5,-5,-0.25), SetMatrix([-5.5*i,2,i]),
+Width:=6, Arrows:=1, usecomma:=1,
+axeX([i,0],0.5), axeY([i,0],1,Nil,Nil,1,"a"),
+Arrows:=0, Color:=blue, Width:=8,
+Cartesienne(x^2+1),
+Label(1+4.75*i,"$g(x)=x^2+a$"),
+RestoreWin()
+];

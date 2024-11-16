@@ -1,0 +1,10 @@
+TeXgraph#
+Graph image = [
+view(-3,3,-3,3), Margin(0,0,0,0), size(7.5),
+background(full,beige),
+rotate(-45),
+draw("path",[-3,-1+5*i,1-5*i,3,bezier],lineS(dashed,black,24)),
+L := Get([Bezier(-3,-1+5*i,1-5*i,3)]), //pts d'une courbe de Bézier
+B := line2strip(L, 1), // construction d'une bande de largeur 1
+draw("line",B, [close:=1,fillS(bdiag,navy),lineS(solid,crimson,24)]),
+];

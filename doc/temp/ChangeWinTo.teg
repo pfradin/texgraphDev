@@ -1,0 +1,24 @@
+TeXgraph#
+Graph image = [
+view(-10,10,-5,5),size(7.5),NbPoints:=100,
+LabelSize:=footnotesize, SaveWin(),view(-10,-1,-5,5),
+ChangeWinTo([-2-2*i,2+2*i]),
+Arrows:=1, axes(0,1+i),Arrows:=0,
+tMin:=-2, tMax:=2, Color:=red, Width:=8,
+Cartesienne(x*Ent(1/x)-1,5,1),
+Color:=blue,A:=(1+i)/4, Dparallelo(A,bar(A),-A),
+dep:=RealCoord(i*Im(A)), RestoreWin(), SaveWin(),
+//zoom
+view(1,10,-5,5), background(full,white),
+ChangeWinTo([-A,A]), Color:=black,
+arr:=RealCoord(-Re(A)+i*Im(A)*0.75),
+Arrows:=1, axes(0,A), Arrows:=0,
+tMin:=-0.25, tMax:=0.25, Color:=red, Width:=8,
+Cartesienne(x*Ent(1/x)-1,5,1),
+Color:=blue, Dparallelo(A,bar(A),-A),
+RestoreWin(),
+//trait
+Color:=blue, Arrows:=1,
+A:=ScrCoord(dep), B:=ScrCoord(arr),
+Bezier(A,A+3*exp(i*pi/2),B-3,B)
+];

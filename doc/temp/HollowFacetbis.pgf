@@ -1,0 +1,58 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.75,0)}%
+\pgfsetyvec{\pgfxy(0,0.75)}%
+\useasboundingbox (-5,-2.5)--(5,2.5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(-4,1.5)}%
+\pgfpathlineto{\pgfxy(-4,-1.5)}\pgfpathlineto{\pgfxy(-3.5,-1)}\pgfpathlineto{\pgfxy(-3.5,1)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(-4,-1.5)}%
+\pgfpathlineto{\pgfxy(-1,-1.5)}\pgfpathlineto{\pgfxy(-1.5,-1)}\pgfpathlineto{\pgfxy(-3.5,-1)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(-1,-1.5)}%
+\pgfpathlineto{\pgfxy(-1,1.5)}\pgfpathlineto{\pgfxy(-1.5,1)}\pgfpathlineto{\pgfxy(-1.5,-1)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(-1,1.5)}%
+\pgfpathlineto{\pgfxy(-4,1.5)}\pgfpathlineto{\pgfxy(-3.5,1)}\pgfpathlineto{\pgfxy(-1.5,1)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfsetarrows{to-to}%
+\pgfxyline(-4,1.625)(-3.5,1.625)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(-3.75,2)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small ep/2}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(1,-1.5)}%
+\pgfpathlineto{\pgfxy(2,-1.5)}\pgfpathlineto{\pgfxy(1,0.5)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(4,-1.5)}%
+\pgfpathlineto{\pgfxy(4,-0.5)}\pgfpathlineto{\pgfxy(2,-1.5)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(4,1.5)}%
+\pgfpathlineto{\pgfxy(3,1.5)}\pgfpathlineto{\pgfxy(4,-0.5)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfpathmoveto{\pgfxy(1,1.5)}%
+\pgfpathlineto{\pgfxy(1,0.5)}\pgfpathlineto{\pgfxy(3,1.5)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfsetarrows{to-to}%
+\pgfxyline(4,1.625)(3,1.625)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(3.5,2)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small ep}}\pgfstroke%
+\pgfputat{\pgfxy(-2.5,-2)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small mode=0}}\pgfstroke%
+\pgfputat{\pgfxy(2.5,-2)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small mode=1}}\pgfstroke%
+\end{tikzpicture}%
+\egroup%

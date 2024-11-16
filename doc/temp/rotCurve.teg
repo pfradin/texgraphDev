@@ -1,0 +1,12 @@
+TeXgraph#
+Graph image = [
+Marges(0,0.15,0,0), size(7.5),
+C:=rotCurve(
+ 2*[1.5*i+cos(3*t)*cos(t)*i,-cos(3*t)*sin(t)],
+ [0,0,0,1], -pi/2, pi/2, 0, pi, 50),
+DrawFlatFacet(C,[color:=coral]),
+tMin:=-pi/2,tMax:=pi/2, Color:=blue,
+Width:=8,
+Courbe3D(M(0,3+2*cos(3*t)*cos(t),
+     2*cos(3*t)*sin(t)))
+];

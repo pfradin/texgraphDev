@@ -1,0 +1,7 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), size(7.5),
+C:=curve2Cylinder([4*cos(t)+2*i*sin(t),-3],
+         -pi,pi,[i,6]),
+DrawFlatFacet(C,[color:=violet])
+];

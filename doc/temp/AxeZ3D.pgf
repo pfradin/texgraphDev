@@ -1,0 +1,76 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.5769,0)}%
+\pgfsetyvec{\pgfxy(0,0.5769)}%
+\useasboundingbox (-6.5,-3)--(6.5,5.5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,1}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetroundjoin%
+\pgfellipse{\pgfxy(0.0000,-0.2678)}{\pgfxy(3.046,0)}{\pgfxy(0,1.5464)}%
+\pgfsetfillcolor{rgb,1:red,0.8784;green,1;blue,1}%
+\pgffillstroke%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetarrows{-to}%
+\pgfxyline(-0.888,1.657)(-4.7697,-0.8398)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(-5.7902,-1.4962)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $x$}}\pgfstroke%
+\pgfputat{\pgfxy(-1.9347,1.5116)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-2.4315,1.1993)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-2.9739,0.8585)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $0$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.5683,0.4851)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $1$}}\pgfstroke%
+\pgfputat{\pgfxy(-4.2225,0.0741)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $2$}}\pgfstroke%
+\pgfputat{\pgfxy(-4.9461,-0.3803)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $3$}}\pgfstroke%
+\pgfxyline(-0.888,1.657)(-1.225,1.7381)%
+\pgfxyline(-1.3468,1.3619)(-1.6827,1.4475)%
+\pgfxyline(-1.8459,1.0408)(-2.1805,1.1314)%
+\pgfxyline(-2.391,0.6902)(-2.7241,0.7864)%
+\pgfxyline(-2.9887,0.3058)(-3.3199,0.4082)%
+\pgfxyline(-3.6469,-0.1176)(-3.9758,-0.008)%
+\pgfxyline(-4.3755,-0.5862)(-4.7016,-0.4685)%
+\pgfsetarrows{-to}%
+\pgfxyline(-0.888,1.657)(4.3196,0.4042)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(2.731,2.178)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $y$}}\pgfstroke%
+\pgfputat{\pgfxy(0.4458,1.9384)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(1.1539,1.7923)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(1.894,1.6402)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $0$}}\pgfstroke%
+\pgfputat{\pgfxy(2.6677,1.4814)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $1$}}\pgfstroke%
+\pgfputat{\pgfxy(3.477,1.3148)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $2$}}\pgfstroke%
+\pgfputat{\pgfxy(4.3236,1.1389)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $3$}}\pgfstroke%
+\pgfxyline(-0.888,1.657)(-0.5964,1.8445)%
+\pgfxyline(-0.1921,1.4896)(0.0914,1.6891)%
+\pgfxyline(0.5378,1.314)(0.8116,1.5266)%
+\pgfxyline(1.3043,1.1296)(1.5664,1.3565)%
+\pgfxyline(2.1104,0.9357)(2.3581,1.1782)%
+\pgfxyline(2.959,0.7315)(3.1892,0.9908)%
+\pgfxyline(3.8538,0.5163)(4.0626,0.793)%
+\pgfsetarrows{-to}%
+\pgfxyline(-0.888,1.657)(-0.9805,4.5361)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(-2.3999,2.8991)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $z$}}\pgfstroke%
+\pgfputat{\pgfxy(-1.5165,2.3652)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $1$}}\pgfstroke%
+\pgfputat{\pgfxy(-1.5432,3.1818)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $2$}}\pgfstroke%
+\pgfputat{\pgfxy(-1.5713,4.0464)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $3$}}\pgfstroke%
+\pgfxyline(-0.74,2.439)(-1.0851,2.4062)%
+\pgfxyline(-0.7658,3.2462)(-1.1113,3.2176)%
+\pgfxyline(-0.7932,4.1007)(-1.139,4.0766)%
+\pgfsetdash{{5pt}{3pt}}{0pt}%
+\pgfpathmoveto{\pgfxy(-2.391,0.6902)}%
+\pgfpathlineto{\pgfxy(0,0)}\pgfpathlineto{\pgfxy(1.3043,1.1296)}%
+\pgfsetfillcolor{rgb,1:red,0.8784;green,1;blue,1}%
+\pgffillstroke%
+\pgfsetroundcap%
+\pgfsetdash{}{0pt}%
+\pgfpathmoveto{\pgfxy(0.0853,0)}\pgfellipse{\pgfxy(0,0)}{\pgfxy(0.0000,0.0853)}{\pgfxy(-0.0853,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(0.4333,0)}{\pgftext[left]{\color{rgb,1:red,0;green,0;blue,0}\scriptsize $O$}}\pgfstroke%
+\end{tikzpicture}%
+\egroup%

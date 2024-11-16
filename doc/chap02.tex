@@ -1,0 +1,263 @@
+\chapter{Éléments graphiques de la barre Standard}\label{elemgraph}
+
+Un graphique est une superposition d'éléments graphiques \footnote{il y a un ordre d'affichage, on peut modifier
+celui-ci à la souris en faisant glisser les éléments.}, ceux-ci peuvent être créés, modifiés et supprimés
+individuellement. Les éléments graphiques sont indépendants, sauf éventuellement ceux créés par l'utilisateur.
+
+Chaque élément graphique est défini à partir d'un \co{nom} (un nom commence par une lettre et contient au plus $35$ caractères parmi 0..9, a..z, A..Z, ' et \_)  et d'une \Helpref{commande}{chapCommandes}, de plus chaque élément graphique comporte des attributs comme: les couleurs, le style de ligne, l'épaisseur du tracé ... 
+
+Il y a un certain nombre d'éléments graphiques de base, ceux-ci peuvent être créés à partir du menu, de boutons sur la barre standard, ou d'un raccourci. Ils peuvent également être créés à l'aide d'une commande graphique dans un élément \textsl{Utilisateur}. Ces éléments graphiques peuvent être créés sous deux formes :
+\begin{itemize}
+\item Une forme basique : en invoquant une fonction (ou une macro) graphique avec des arguments. Ces fonctions graphiques ne permettent pas la modification locale des paramètres du graphique (couleur, remplissage, épaisseur, ...).
+\item Une forme élaborée : avec une instruction de la forme \verb|draw("type", [données], [options])|. Sous cette forme, la modification locale des paramètres du graphique est possible dans les options. La description détaillée de cette syntaxe avec les différents types et les options possibles, sera faite \Helpref{ici}{modeleDraw2d}.
+\end{itemize}
+
+La sélection d'un élément graphique présent sur la barre standard déclenche l'ouverture d'une fenêtre d'édition pré-remplie avec la forme élaborée pour créer cet élément, en précisant toutes les options possibles. Ces éléments graphiques sont énumérés ci-après.
+
+\section{La grille}
+
+Pour tracer une grille de repérage (il peut y en avoir plusieurs).
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+G}
+\item La fenêtre qui s'ouvre contient l'\Helpref{instruction}{typegrid} avec toutes les options possibles.
+\item Il n'y pas de labels dessinés avec la grille. Si on souhaite que ceux-ci apparaissent, il suffit de créer des axes.
+\item Les macros liées aux axes sont dans le fichier \textit{axes.mac} qui est chargé automatiquement. Son contenu est détaillé \Helpref{ici}{modeleAxes}.
+\item La forme basique est la macro : \Mytextbf{Grille( <origine>, <graduationX + i*graduationY> )}.
+\end{itemize}
+
+\section{Les axes}
+
+Pour tracer des axes orthogonaux.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+A}
+\item La fenêtre qui s'ouvre contient l'\Helpref{instruction}{typeaxes} avec toutes les options possibles.
+\item Les macros liées aux axes sont dans le fichier \textit{axes.mac} qui est chargé automatiquement. Son contenu est détaillé \Helpref{ici}{modeleAxes}.
+\item La forme basique est la macro : \Mytextbf{Axes( <origine>, <graduationX + i*graduationY> [, position label origine] )},
+\end{itemize}
+
+
+\section{Courbes}
+
+Pour tracer une courbe plane: cartésienne, polaire, ou paramétrée.
+
+\begin{itemize}
+\item Raccourcis: courbe paramétrée: \textsl{Ctrl+P}, courbe polaire:  \textsl{Alt+Maj+O}, courbe cartésienne: 
+\textsl{Ctrl+R}.
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typecartesian} qui correspond et toutes les options possibles.
+\item Puis:
+    \begin{itemize}
+    \item Pour une courbe cartésienne $y=f(x)$, on donne l'expression de la fonction f(x).
+    \item Pour une courbe polaire $r=f(t)$, on donne l'expression de la fonction f(t).
+    \item Pour une courbe paramétrée $(x(t),y(t))$, on donne l'expression de la fonction $f(t)=x(t)+i*y(t)$.
+\end{itemize}
+\item On peut régler trois paramètres de la courbe: 
+\begin{itemize}
+    \item \co{x} ou \co{t}: permet de définir l'intervalle de variations de la variable. Si la variable globale \var{ForMinToMax} vaut $1$, c'est l'intervalle [Xmin,Xmax] qui est pris (correspond à la largeur de la fenêtre).
+    \item \co{nbdiv}: c'est un entier positif ou nul qui indique combien de fois TeXgraph peut partager en deux (dichotomie) l'intervalle entre deux valeurs de t consécutives (5 par défaut). Cela augmente le nombre de points là où il y a de brusques variations.
+    \item \co{discont}: 0 ou 1, si cette valeur vaut 1 et si la distance entre deux points consécutifs est supérieure à un certain seuil, alors une discontinuité est insérée dans la liste de points.
+    \end{itemize}
+\item Les formes basiques pour ces trois types de courbes sont : \Helpref{Cartesian}{cmdCartesienne}, \Helpref{Parametric}{cmdCourbe} et \Helpref{Polar}{cmdPolaire}.
+\end{itemize}
+
+\section{Équation différentielle}
+
+Solution approchée (méthode de Runge-Kutta 4) d'une équation du type: $Y'(t)=f(t,Y(t))$ avec une condition
+initiale $Y(t_0)=Y0$. La fonction $Y$ peut être une liste à $n$ éléments si $Y$ est à valeurs dans $\mathbb R^n$:
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+E}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typeodeint} qui correspond et toutes les options possibles.
+\item On donne l'expression $f(t,Y)$ (attention à la casse des caractères), les conditions initiales, l'intervalle de résolution pour la variable $t$, la méthode à utiliser, et le type de données attendues en retour.
+\item La forme basique est : \Helpref{Equadif}{cmdEquadif}, mais elle est beaucoup moins générale (ordre $2$ maximum).
+\item Il existe la macro \Helpref{OdeSolve}{macOdeSolve} qui ne fait pas de dessin, mais qui renvoie la liste des points.
+\end{itemize}
+
+\section{Fonction implicite}
+
+Ensemble des points de coordonnées $(x,y)$ tels que $f(x,y)=0$.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+I}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{macdrawimplicit} qui correspond et toutes les options possibles.
+\item La forme basique est : \Helpref{Implicit}{cmdImplicit}.
+\end{itemize}
+
+\section{Courbe de Bézier}
+
+Succession de courbes de \textsc{Bezier} (avec éventuellement des segments de droite).
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+B}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typebezier} qui correspond et toutes les options possibles.
+\item Le nombre de points calculés (par courbe) est modifiable avec la variable \var{NbPoints}.
+\item La forme basique est : \Helpref{Bezier}{cmdBezier}.
+\end{itemize}
+
+\section{Spline cubique}
+
+Courbe du troisième degré passant par des points donnés avec ou sans contrainte aux extrémités.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+S}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typespline} qui correspond et toutes les options possibles.
+\item Le nombre de points calculés (par courbe) est modifiable avec la variable \var{NbPoints}.
+\item La forme basique est : \Helpref{Spline}{cmdSpline}.
+\end{itemize}
+
+\section{Droite}
+
+Droite du plan définie par deux points, un point et un vecteur directeur, ou une équation cartésienne.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+D}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typestraightL} qui correspond et toutes les options possibles.
+\item Une droite peut être définie par :
+    \begin{itemize}
+    \item \co{[A,B]} pour une droite passant par les points d'affixes A et B.
+    \item  \co{[A,A+v]} pour une droite passant par le point d'affixe A et dirigée par le vecteur d'affixe v.
+    \item  \co{a*x+b*y=c}, c'est à dire une équation cartésienne.
+    \end{itemize}
+
+\item Il est possible de déterminer l'intersection de deux droites avec l'opération \co{Inter}. Par exemple, si A,B,C,D sont les affixes de quatre points, alors l'exécution de \co{[A,B] Inter [C,D]} donnera l'affixe du point d'intersection de (AB) et (CD) si elles sont sécantes, \Nil sinon.
+\item La forme basique est : \Helpref{StraightL}{cmdDroite}.
+\end{itemize}
+
+
+\section{Point(s)}
+
+Pour tracer un point ou un nuage de points.
+
+\begin{itemize}
+\item Raccourci: \textsl{Alt+P}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typedot} qui correspond et toutes les options possibles.
+\item Les variables \var{DotStyle} (style de point), \var{DotScale}, \var{DotAngle}, \var{DotSize} permettent de définir l'apparence des points.
+\item La forme basique est : \Helpref{Dot}{cmdPoint}.
+\end{itemize}
+
+\section{Ligne polygonale}
+
+Pour tracer une ligne polygonale (liste de points) ouverte ou fermée (polygone) ayant une ou plusieurs composantes
+connexes (on les sépare avec la constante \jump).
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+L}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typeline} qui correspond et toutes les options possibles.
+\item Un certain nombre d'éléments graphiques sont définis à partir d'une liste de points (comme les courbes, les équations différentielles...). Il est possible de récupérer cette liste de points avec la fonction \Helpref{Get}{cmdGet}, par exemple si vous avez créé une spline appelée $S1$, vous pouvez récupérer tous les points de cette courbe et les mettre par exemple dans une variable $A$ avec l'instruction: \co{A := Get(S1)}.
+\item Il est possible de déterminer l'intersection de deux lignes polygonales avec l'opération \co{InterL}. Par exemple, l'exécution de \co{Get(Courbe(t+i*t\^{}2)) InterL Get(Droite(0,1+i))} renvoie:
+
+\centerline{\res{[0,0.999368819693+0.999368819693*i]}.}
+
+\item La forme basique est : \Helpref{Line}{cmdLigne}.
+\end{itemize}
+
+\section{Path (chemin)}
+
+Pour tracer un chemin (liste de points) ouvert ou fermé.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+H}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typepath} qui correspond et toutes les options possibles.
+\item On donne le chemin sous la forme d'une liste qui est une succession de points (affixes) et d'instructions
+indiquant à quoi correspondent ces points, ces instructions sont: 
+\begin{itemize}
+ \item \textbf{line}: relie les points par une ligne polygonale,
+
+ \item  \textbf{linearc}: relie les points par une ligne polygonale mais les angles sont arrondis par un arc de cercle, la valeur précédent la commande linearc est interprétée comme le rayon de ces arcs.
+
+ \item \textbf{arc}: dessine un arc de cercle, ce qui nécessite quatre arguments: 3 points et le rayon, plus éventuellement un cinquième argument: le sens (+/- 1), le sens par défaut est 1 (sens trigonométrique).
+
+ \item \textbf{ellipticArc}: dessine un arc d'ellipse, ce qui nécessite cinq arguments: 3 points, le rayonX, le rayonY, plus éventuellement un sixième argument: le sens (+/- 1), le sens par défaut est 1 (sens trigonométrique), plus éventuellement un septième argument: l'inclinaison en degrés du grand axe par rapport à l'horizontale.
+
+ \item \textbf{curve}: relie les points par une spline cubique naturelle.
+
+ \item \textbf{bezier}: relie le premier et le quatrième point par une courbe de Bézier (les deuxième et troisième points sont les points de contrôle).
+
+ \item \textbf{circle}: dessine un cercle, ce qui nécessite deux arguments: un point et le centre, ou bien trois arguments qui sont trois points du cercle.
+
+ \item \textbf{ellipse}: dessine une ellipse, les arguments sont: un point, le centre, rayon rX, rayon rY, inclinaison du grand axe en degrés (facultatif).
+
+ \item \textbf{move}: indique un déplacement sans tracé.
+
+ \item \textbf{closepath}: ferme la composante en cours.
+\end{itemize}
+
+Par convention, le premier argument du tronçon numéro $n+1$ est le dernier point du tronçon numéro $n$.
+
+\item La forme basique est : \Helpref{Path}{cmdPath}.
+\end{itemize}
+
+
+\section{Ellipse}
+
+Pour tracer une ellipse définie par son centre et ses deux rayons rx, ry et son inclinaison par rapport à l'horizontale.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+C}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typeellipse} qui correspond et toutes les options possibles.
+\item Si le repère n'est pas orthonormé l'ellipse sera déformée. Le repère est orthonormé lorsque les variables \var{Xscale} et \var{Yscale} sont égales: voir l'option Paramètres/Fenêtre du menu. Pour avoir une ellipse non déformée lorsque le repère n'est pas orthonormé, utiliser la macro \textsl{Rellipse()}.
+\item La forme basique est : \Helpref{Ellipse}{cmdEllipse}.
+\end{itemize}
+
+\section{Arc de cercle}
+
+Pour tracer un arc de cercle défini par trois points B, A, C (qui définissent un angle orienté), un rayon r, et un sens.
+
+\begin{itemize}
+\item Raccourci: \textsl{Alt+A}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typearc} qui correspond et toutes les options possibles.
+\item Si le repère n'est pas orthonormé l'arc sera déformé. Le repère est orthonormé  lorsque les variables \var{Xscale} et \var{Yscale} sont égales: voir l'option Paramètres/Fenêtre du menu. Pour avoir un arc non déformé lorsque le repère n'est pas orthonormé, utiliser la macro \textsl{Rarc()}.
+\item La forme basique est : \Helpref{Arc}{macArc}.
+\end{itemize}
+
+
+\section{Arc d'ellipse}
+
+Pour tracer un arc d'ellipse défini par trois points B, A, C (qui définissent un angle orienté), deux rayons rx, ry, et un sens.
+
+\begin{itemize}
+\item Raccourci: \textsl{Alt+Maj+A}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typeellipticArc} qui correspond et toutes les options possibles.
+\item Si le repère n'est pas orthonormé l'arc sera déformé. Le repère est orthonormé  lorsque les variables \var{Xscale} et \var{Yscale} sont égales: voir l'option Paramètres/Fenêtre du menu. Pour avoir un arc non déformé lorsque le repère n'est pas orthonormé, utiliser la macro \textsl{RellipticArc()}.
+\item La forme basique est : \Helpref{EllipticArc}{cmdEllipticArc} mais elle ne propose pas d'inclinaison.
+\item Il y a la macro : \Helpref{ellipticArc}{macellipticArc} qui propose l'inclinaison.
+\end{itemize}
+
+\section{Label}
+
+Pour afficher du texte dans le graphique.
+
+\begin{itemize}
+\item Raccourci: \textsl{Alt+L}
+\item Une fenêtre s'ouvre avec l'\Helpref{instruction}{typelabel} qui correspond et toutes les options possibles.
+\item On peut définir le style de label (variable \var{LabelStyle}), ainsi que la taille (variable \var{LabelSize}) et l'orientation (\var{LabelAngle}).
+\item Les labels peuvent contenir des formules mathématiques et des macros de \TeX, elles seront compilées par \TeX{} dans les exportations sauf : en eps, pdf et svg (à moins que l'option globale \emph{TeXifyLabels} ait la valeur $1$).
+\item La forme basique est : \Helpref{Label}{cmdLabel}.
+\end{itemize}
+
+\section{Utilisateur}
+
+Cette option permet à l'utilisateur de créer son propre élément graphique dans la fenêtre d'édition, celui-ci sera considéré comme une seule entité.
+
+\begin{itemize}
+\item Raccourci: \textsl{Ctrl+U}
+\item On donne un nom.
+\item On entre une commande.  Celle-ci peut utiliser des commandes graphiques (droites, courbes...) ou des macros
+graphiques (ce sont des macros qui ont un effet graphique) comme celles qui sont dans le fichier TeXgraph.mac.
+\item Exemples:
+    \begin{itemize}
+    \item Voici la commande d'un élément graphique Utilisateur:
+
+\centerline{\co{[Courbe(t+i*sin(t)), Arrows:=2, tangente(sin(t), pi/3,2)]}}
+
+celle-ci trace la courbe de la fonction sinus avec les paramètres courants, on règle la variable globale Arrows à 2 (nombre de flèches),  puis on trace un morceau de la tangente\footnote{tangente est une macro graphique du fichier TeXgraph.mac.} à la courbe de sinus en $\pi$/3, de longueur 2 (unités graphiques).
+    \item Autre exemple:
+
+\centerline{\co{for m in [-1,-0.25,0.5,2] do Color:=Rgb(Rand(),Rand(),Rand()), Courbe(t+i*t\^{}m) od}}
+
+on trace une famille de courbes cartésiennes: $t \mapsto t^m$ pour $m$ variant dans la liste $[-1,-0.25,0.5,2]$, pour chaque valeur de $m$ on change également la couleur du tracé.
+    \end{itemize}
+
+\item Commande correspondante : \Helpref{NewGraph}{cmdNewGraph}.
+\end{itemize}

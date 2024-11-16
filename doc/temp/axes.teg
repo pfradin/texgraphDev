@@ -1,0 +1,25 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5),size(7.5),
+LabelSize:=footnotesize,
+//graphique du haut
+SaveWin(), view(-5,5,0.25,5),
+ChangeWinTo([-5*pi/2-1.25*i, 5*pi/2+1.25*i]),
+draw("axes", [0,pi/2+i], [labeltext:=["\pi",""],
+ labelden:=[2,1], gradlimits:=[5*pi/2*(-1+i),-1+i],
+ grid:=1,gridwidth:=2,subgridwidth:=1,nbsubdiv:=[1,2],
+ Arrows:=1]),
+draw("cartesian",sin(x), [x:=[-2*pi,2*pi],
+ Color:=red, Width:=8, legend:="$f(x)=\sin(x)$",
+ anchor:=pi/2+i,labeldir:=NE] ),
+RestoreWin(),
+//graphique du bas
+SaveWin(),view(-5,5,-5,-0.25),
+ChangeWinTo([-2.5+0.1*i, 2.5+6*i]), usecomma:=1,
+draw("axes", [i,1+i], [labeltext:=["\sqrt a","a"],
+ originpos:=[jump,jump],Arrows:=1,legend:=["$x$","$y$"]]),
+draw("cartesian",x^2+1, [Color:=blue, Width:=8,
+ legend:="$g(x)=x^2+a$", labelpos:=0,labeldir:=East] ),
+draw("line", [5*i,2+5*i,2+i],[Width:=4,LineStyle:=userdash]),
+RestoreWin()
+];

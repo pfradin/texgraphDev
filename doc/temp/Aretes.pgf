@@ -1,0 +1,29 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(1.1538,0)}%
+\pgfsetyvec{\pgfxy(0,1.1538)}%
+\useasboundingbox (-2,-2)--(3,4.5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{1.2pt}%
+\pgfsetroundcap%
+\pgfsetroundjoin%
+\pgfsetdash{{0pt}{3pt}}{0pt}%
+\pgfpathmoveto{\pgfxy(-0.75,-0.6495)}%
+\pgfpathlineto{\pgfxy(0,0)}\pgfpathlineto{\pgfxy(2.5981,-0.75)}%
+\pgfstroke%
+\pgfxyline(0,3.4641)(0,0)%
+\pgfsetbuttcap%
+\pgfsetdash{}{0pt}%
+\pgfpathmoveto{\pgfxy(0,3.4641)}%
+\pgfpathlineto{\pgfxy(2.5981,-0.75)}\pgfpathlineto{\pgfxy(0.549,-1.0245)}\pgfpathlineto{\pgfxy(-0.75,-0.6495)}\pgfpathlineto{\pgfxy(-0.75,1.0825)}%
+\pgfpathlineto{\pgfxy(0,3.4641)}%
+\pgfstroke%
+\pgfxyline(-0.75,1.0825)(0.549,-1.0245)%
+\end{tikzpicture}%
+\egroup%

@@ -1,0 +1,49 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(1.0714,0)}%
+\pgfsetyvec{\pgfxy(0,1.0714)}%
+\useasboundingbox (-2.25,-2)--(3.75,5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(3,1)}%
+\pgfpathlineto{\pgfxy(0,0)}\pgfpathlineto{\pgfxy(2,4)}%
+\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundcap%
+\pgfpathmoveto{\pgfxy(0.1181,0)}\pgfellipse{\pgfxy(0,0)}{\pgfxy(0.0000,0.1181)}{\pgfxy(-0.1181,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,1;green,0;blue,0}%
+\pgffillstroke%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(0.0000,-0.2333)}{\pgftext[top]{\color{rgb,1:red,1;green,0;blue,0}\small $A$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfpathmoveto{\pgfxy(3.1181,1)}\pgfellipse{\pgfxy(3,1)}{\pgfxy(0.0000,0.1181)}{\pgfxy(-0.1181,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,1;green,0;blue,0}%
+\pgffillstroke%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(3,1.2333)}{\pgftext[bottom]{\color{rgb,1:red,1;green,0;blue,0}\small $B$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfpathmoveto{\pgfxy(2.1181,4)}\pgfellipse{\pgfxy(2,4)}{\pgfxy(0.0000,0.1181)}{\pgfxy(-0.1181,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,1;green,0;blue,0}%
+\pgffillstroke%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(2.165,3.835)}{\pgftext[left,top]{\color{rgb,1:red,1;green,0;blue,0}\small $C$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,1}%
+\pgfsetbuttcap%
+\pgfsetarrows{-to}%
+\pgfpathmoveto{\pgfxy(1.6641,0.5547)}\pgfpatharc{33.6901}{-284.0362}{2.1429cm and 1.0714cm}%
+\pgfstroke%
+\pgfsetarrows{-}%
+\pgfsetarrows{-to}%
+\pgfpathmoveto{\pgfxy(1.9524,0.6508)}\pgfpatharc{12.5288}{53.1301}{2.1429cm and 3.2143cm}%
+\pgfstroke%
+\pgfsetarrows{-}%
+\end{tikzpicture}%
+\egroup%

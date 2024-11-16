@@ -1,0 +1,703 @@
+TeXgraph#
+{ axes.mac : axes and grids }
+Var
+    gridstyle = solid;
+    subgridstyle = solid;
+    nbsubdiv = [5,5];
+    {gridcolor = gray;}
+    subgridcolor = lightgray;
+    {gridwidth = 8;}
+    subgridwidth = 4;
+{pour les axes}
+    showaxe = 1;
+    //limits = jump;
+    gradlimits = jump;
+    unit = 1;
+    {tickdir = jump; 
+    tickpos = 0.5;
+    xyticks = 0.2;         //longueur des graduations
+    xylabelsep = 0.1;     //distance labels-graduations
+    xylabelpos = bottom+left; //position des labels
+    labelpos = bottom;     // jump/top/bottom
+    legend = "";         //dans draw2d
+    legendpos = 0.9;
+    labelstyle := ortho, right, left,..., ortho par défaut
+    nbdeci := nb de décimales, 2 par défaut
+    numericFormat = 0; format d'affichage numérique
+    grid = 0;
+    }
+    legendsep = 0.5;
+    originpos = center; //center/left/right
+    originnum = 0;
+    originloc = jump; //localisation de l'origine pour grid, axes et gradbox
+    
+    labelden = 1;
+    labeltext = "";
+    labelshift = 0; //décalage systématique des labels
+    mylabels = Nil; // labels personnels liste [indice1, texte1, ...]
+    myxlabels = Nil; // labels personnels liste [indice1, texte1, ...]
+    myylabels = Nil; // labels personnels liste [indice1, texte1, ...]
+    labeldefaultshift = 0.25; //valeur par défaut si décalage 
+    legendangle = 0;
+    title = ""; //pour gradBox
+    
+Cmd TeXifyLabels:=0; //pas de labels TeX par défaut
+    dollar:=1;
+
+Mac
+    simplFrac = {simplfrac(num,den): renvoie la fraction simplifiée}
+        [$num:=%1, $den:=%2,
+         if Ent(num)=num And Ent(den)=den then $P:=pgcd(num,den), num:=div(num,P), den:=div(den,P) fi,
+         num,den //fraction irréductible
+        ];
+
+    Incfrac = {Incfrac( frac=[a,b],[c,d]): a/b <- a/b+c/d}
+    [$C:=Copy(%2,1,1), $A:=Copy(%1,1,1), $N:=A*Copy(%2,2,1)+Copy(%1,2,1)*C,$D:=Copy(%1,2,1)*Copy(%2,2,1), 
+     if Ent(A)=A And Ent(C)=C {A et C sont entiers} then $P:=pgcd(N,D), %1:=[div(N,P),div(D,P)] else %1:=[N,D] fi];
+
+    gradLineLabel = {gradLineLabel(frac, texte)}
+        [$num:=%1[1], $den:=%1[2], $text:=%2,
+        if  num=0 then @label(0) 
+        elif text="" then
+          if den=1 then @label(@StrNum(num))
+          else 
+            if  num>0 then if dollar=1 then Concat("$\frac{", num,"}{",den,"}$") else Concat(num, "/", den) fi 
+            else if dollar=1 then Concat("$-\frac{",-num, "}{", den,"}$") else Concat(num, text, "/", den) fi 
+            fi
+          fi
+        else //texte non vide
+           if den=1 then
+                   if num=-1 then @label(Concat("-",text))
+                   elif  num=1 then @label(text)
+            else @label(Concat(@StrNum(num),text)) fi 
+          else  
+            if  num>0 then 
+                if dollar=1 then Concat("$\frac{", if num<>1 then num fi, text, "}{", den, "}$")
+                else Concat(if num<>1 then num fi, text, "/",den) fi 
+            else      if dollar=1 then Concat("$-\frac{", if num<>-1 then -num fi, text, "}{", den, "}$")
+                else Concat(if num<>-1 then num fi, text, "/",den) fi 
+            fi
+          fi
+        fi
+        ];
+
+    DrawgradLine = {DrawgradLine( [A,u], <options>) trace la droite (A,u) et les graduations A+n*u avec n entier
+        options:
+        showaxe := 0/1 affichage ou non de l'axe
+
+        limits := N1+i*N2 intervalle  représentant le segment [A+N1*u, A+N2*u], jump par défaut pour toute la droite entière
+        gradlimits := N1+i*N2 intervalle des graduations (entières), égal à limits par défaut
+        unit := 1
+        nbsubdiv := nombre de subdivisions par unité (0 par défaut)
+
+        tickpos := 0..1 (0.5 par défaut)
+        tickdir := direction graduations (ortho par défaut)
+        xyticks := 0.2 longueur des graduations
+        xylabelsep := 0.1 distance labels-graduations
+
+        originpos := jump/center/left/right, center par défaut
+        originnum := 0 labels sont: (originnum + unit*n)"labeltext"/labelden
+        
+        legend := "texte", vide par défaut
+        legendpos := 0..1, 0.9 par défaut
+        legendsep := 0.5 par defaut
+        legendangle := jump par défaut
+
+        labelpos := jump/top/bottom, bottom par défaut (par rapport à l'axe)
+        labelden := dénominateur (entier), 1 par défaut
+        labeltext := "texte" texte ajouté aux labels, vide par défaut
+        labelstyle := ortho, right, left,..., ortho par défaut
+        labelshift := 0, décalage systématique des labels
+        nbdeci := nb de décimales, 2 par défaut
+        numericFormat := 0 format d'affichage
+        mylabels := Nil labels personnels, liste [pos1,texte1, pos2,texte2,...]
+
+    }
+    [limits:=jump, gradlimits:=jump, unit:=1, showaxe:=1, tickpos:=0.5, nbsubdiv:=0, originpos:=center, labelpos:=bottom, scale:=1, labelshift:=0,
+    legendpos:=0.975, legend:="", originnum:=0, legendangle:=jump, labelden:=1, labeltext:="", labelstyle:=ortho, xyticks:=0.2, xylabelsep:=0.1,
+    labelcolor:=Color, legendsep:=0.4, tickdir:=jump, nbdeci:=2, numericFormat:=0, mylabels:=Nil,
+    SaveAttr(), $options:=%2, 
+    if %1=Nil then $A:=0, $u:=1 else $A:=%1[1], $u:=%1[2], if u=Nil then u:=1 fi fi,
+    $coinS:=Xmin+i*Ymax, $coinI:=Xmax+i*Ymin,
+    if legend=Nil then legend:="" fi, if labeltext=Nil then labeltext:="" fi,
+    $m:=GetMatrix(), $m':=[0,m[2,2]], 
+    A:=Mtransform(A,m), tickdir:=Mtransform(tickdir,m'), $v:=Mtransform(i*u,m'), u:=Mtransform(u,m'), if Im(bar(u)*v)<0 then v:=-v fi,IdMatrix(),
+    nbsubdiv:=Ent(abs(nbsubdiv)), if nbsubdiv=Nil then nbsubdiv:=0 fi, $pas:=u/(nbsubdiv+1),
+    $ep:=0.01, Fenetre(coinS-ep/Xscale+i*ep/Yscale,coinI+ep/Xscale-i*ep/Yscale), //on élargit de ep cm
+    if limits=jump then
+        $L:=Get( Droite(A,A+u),1)
+    else 
+        //$k1:=Re(limits)/unit*(nbsubdiv+1), $k2:=Im(limits)/unit*(nbsubdiv+1), 
+        //L:=Get( Ligne([A+k1*pas,A+k2*pas],0)),
+        L:=[A+Re(limits)*u,A+Im(limits)*u]
+    fi,
+    if Re(bar(u)*(L[2]-L[1]))<=0 then L:=Reverse(L) fi,
+    $k1:=abs((L[1]-A)/pas), $k2:=abs((L[2]-A)/pas),
+    if Re(bar(u)*(L[2]-A))<0 then k2:=-k2, k1:=-k1
+    elif Re(bar(u)*(L[1]-A))<0 then k1:=-k1
+    fi,    
+    k1:=Ceil(k1), k2:=Ent(k2), 
+    if gradlimits<>jump then 
+        $q1:=Ent(Re(gradlimits))*(nbsubdiv+1), $q2:=Ent(Im(gradlimits))*(nbsubdiv+1),
+        if q2<q1 then Echange(q1,q2) fi,
+        if k1<q1 then k1:=q1 fi, if q2<k2 then k2:=q2 fi 
+    fi,
+    if (k2-k1+1)/(1+nbsubdiv)> maxGrad then k1:=0,k2:=0 fi, //trop de graduations principales
+    //$B:=A+k1*pas, while not(IsIn(B)) And (k1<1) do Inc(k1,1), Inc(B,pas) od,
+    //$B:=A+k2*pas, while not(IsIn(B)) And (k2>-1) do Inc(k2,-1), Inc(B,-pas) od,
+    if k1*k2>0 then originpos:=jump fi, //origine non visible car hors segment
+
+    if tickdir=jump then $n:= v 
+    else n:=tickdir, if n=Nil Or n=0 then n:=v fi,
+         if Re(bar(n)*u)<0 then n:=-n fi
+    fi, 
+    $n1:=n/Abs(n)*xyticks*tickpos, $n2:=n/Abs(n)*xyticks*(1-tickpos),
+    if showaxe Or (legend<>"") then //tracé avec légende éventuelle
+        $ep:=0.5, Fenetre(coinS-ep/Xscale+i*ep/Yscale,coinI+ep/Xscale-i*ep/Yscale), //on élargit de ep cm
+        $xlabelcolor:=labelcolor, $xlabelpos:=labelpos, $xlegend:=legend, 
+        if legendangle=jump then
+            legendangle:=if labelstyle=ortho then RealArg(u)*180/pi else LabelAngle fi
+        fi,
+        draw("line",L,[legend:=xlegend,labelpos:=legendpos,labelcolor:=xlabelcolor, if showaxe=0 then LineStyle:=noline fi,
+                labeldir:=[legendsep, if legendpos=0 then -u elif legendpos=1 then u elif xlabelpos=bottom then n else -n fi],
+                LabelAngle:=legendangle
+        ]),
+        labelpos:=xlabelpos,
+        Fenetre(coinS,coinI), {on revient à la fenetre initiale}
+    fi,
+    oldline:= LineStyle, oldarrows:= Arrows, LineStyle:= solid, Arrows:=0, $O:= A+(k1-1)*pas,
+    Fenetre(coinS-0.5/Xscale+i*0.5/Yscale,coinI+0.5/Xscale-i*0.5/Yscale),{on élargit de 0.5cm}
+    Ligne({graduations}
+     [for $k from k1 to k2-1 do
+        Inc(O,pas), if mod(k,1+nbsubdiv)=0 then O-n1,O+n2,jump else O-n1/2,O+n2/2, jump fi
+      od, 
+      if oldarrows=0 Or Abs(O+pas-L[2])>0.2 
+      then Inc(O,pas), if mod(k2,1+nbsubdiv)=0 then O-n1,O+n2,jump else O-n1/2,O+n2/2,jump fi
+      fi
+     ],0),
+    LineStyle:=oldline,
+    $frame:=framed*mod(div(LabelStyle,16),2),
+    if frame=framed then framestyle() fi,
+    Color:=labelcolor,
+    oldlabel:= LabelStyle,   
+    if labelpos=bottom then {dessous}
+           $dep:= A-n1-2*n*xylabelsep/Abs(n),
+           if labelstyle=ortho then LabelStyle:=top+frame fi
+    elif labelpos=top then {dessus}
+         $dep:= A+n2+2*n*xylabelsep/Abs(n),
+         if labelstyle=ortho then LabelStyle:=bottom+frame fi
+    fi,
+    if labelstyle=ortho then LabelAngle:= RealArg(u)*180/pi else LabelStyle:=labelstyle+frame fi, 
+     $uDir:=u/Abs(u), $O:= dep+labelshift*uDir, 
+    if (labelpos<>jump) And (mylabels=Nil) then {afficher Labels}
+     {label origine}
+     if originpos=center then {normal} $dec:=0
+     elif originpos=right then if labelshift=0 then $dec:=abs(labeldefaultshift)*uDir else dec:=0 fi
+     elif originpos=left then if labelshift=0 then  dec:=-abs(labeldefaultshift)*uDir else dec:=0 fi
+     else dec:=Nil fi,
+     if dec<>Nil then
+        $texte:=@gradLineLabel(simplFrac(originnum,labelden),labeltext),
+        if TeXifyLabels then
+            draw("clabel",O+dec, texte, 0, 0, scale, 0)
+        else Label(O+dec,texte) fi
+     fi,
+     $valfrac:=[originnum,labelden], Inc(O,u), Incfrac(valfrac,[unit,labelden]),
+     $k2':=div(k2,1+nbsubdiv), $k1':=div(k1,1+nbsubdiv),
+     for k from 1 to k2'-1 do
+       if k>=k1' then
+        $texte:=@gradLineLabel(valfrac,labeltext),
+        if TeXifyLabels then
+            draw("clabel",O, texte, 0, 0, scale, 0)
+        else Label(O,texte) fi,
+       fi,
+        Inc(O,u), Incfrac(valfrac,[unit,labelden]),
+     od, 
+    if k2'<>0 And (oldarrows=0 Or Abs(A+k2'*u-L[2])>0.2) 
+    then 
+        $texte:=@gradLineLabel(valfrac,labeltext),
+        if TeXifyLabels then
+            draw("clabel",O, texte, 0, 0, scale, 0)
+        else Label(O,texte) fi
+    fi,
+    $O:= dep-u+labelshift*uDir, $valfrac:=[originnum,labelden], Incfrac(valfrac,[-unit,labelden]),
+    $k1':=div(-k1,1+nbsubdiv),
+    for k from 1 to k1' do
+        $texte:=@gradLineLabel(valfrac,labeltext),
+        if TeXifyLabels then
+            draw("clabel",O, texte, 0, 0, scale, 0)
+        else Label(O,texte) fi,
+        Inc(O,-u), Incfrac(valfrac,[-unit,labelden])
+     od,
+    fi, {fin labels}
+    if (labelpos<>jump) And (mylabels<>Nil) then //labels personnels
+        for $z in mylabels by 2 do
+          $x_:=Re(z[1]),
+          $pos:=dep+labelshift*uDir+x_*u,
+          $sdot:=(Im(z[1])<>0),
+          if TeXifyLabels then
+            draw("clabel",pos, z[2], 0, 0, scale, 0)
+          else Label(pos, z[2]) fi,
+          if sdot then Dot(A+x_*u) fi
+        od
+    fi,
+    LabelStyle:=oldlabel,
+    Fenetre(coinS, coinI),
+    Arrows:= oldarrows,
+    RestoreAttr(), 
+    ];
+
+    DrawaxeX = {DrawaxeX( [A,pas], [options])
+        options:
+        showaxe := 0/1 affichage ou non de l'axe
+
+        limits := x1+i*x2 représentant le segment définis par les points d'abscisse x1 et x2, jump par défaut pour toute la droite entière
+        gradlimits := x1+i*x2 représentant le segment définis par les points d'abscisse x1 et x2, jump par défaut pour toute la droite entière
+        unit := 1
+        nbsubdiv := nombre de nbsubdivisions par unité (1 par défaut)
+
+        tickpos := 0..1 (0.5 par défaut)
+        tickdir := direction graduations (ortho par défaut)
+        xyticks := 0.2 longueur des graduations
+        xylabelsep := 0.1 distance labels-graduations
+
+        originpos := jump/center/left/right, center par défaut
+        originnum := 0 labels sont: (originnum + unit*n)"labeltext"/labelden
+
+        legend := "texte", vide par défaut
+        legendpos := 0..1, 0.9 par défaut
+        legendsep := 0.5 par defaut
+
+        labelpos := jump/top/bottom, bottom par défaut (par rapport à l'horizontale)
+        labelden := dénominateur (entier), 1 par défaut
+        labeltext := "texte" texte ajouté aux labels, vide par défaut
+        labelstyle := ortho, right, left,..., ortho par défaut
+        labelshift := 0, décalage systématique des labels
+        nbdeci := nb de décimales, [2,2] par défaut
+        numericFormat := 0 format d'affichage
+        mylabels := Nil labels personnels
+        legendangle := jump
+    }
+    [if %1=Nil then $A:=0,$Xpas:=1 else $A:=%1[1], $Xpas:=Re(%1[2]) fi,
+    if Xpas=Nil Or Xpas=0 then Xpas:=1 fi,
+    draw("gradLine", [A,Xpas], [labelstyle:=top,  originnum:=Re(A), limits:=jump, gradlimits:= jump, unit:=Nil, legendangle:=jump,
+            %2, if labelpos=top then labelstyle:=bottom fi,
+            if unit=Nil then if labeltext="" then unit:=Xpas else unit:=1 fi fi,
+            if limits<>jump then 
+                $x1:=Re(limits), $x2:=Im(limits),
+                limits:= Ceil( (x1-Re(A))/Xpas )+i*Ent( (x2-Re(A))/Xpas)
+            fi,
+            if gradlimits<>jump then 
+                $x1:=Re(gradlimits), $x2:=Im(gradlimits),
+                gradlimits:=  Ceil( (x1-Re(A))/Xpas )+i*Ent((x2-Re(A))/Xpas)
+            fi,
+            if Im(RealCoordV(i*Xpas))<0 And labelpos<>jump then 
+            labelpos:=12-labelpos,
+            if originpos<>jump And originpos<>center then originpos:=3-originpos fi,
+            fi])
+    ];
+
+    DrawaxeY = {DrawaxeY( [A,pas], [options])
+        options:
+        showaxe := 0/1 affichage ou non de l'axe
+
+        limits := N1+i*N2 intervalle  représentant le segment [A+N1*u, A+N2*u], jump par défaut pour toute la droite entière
+        gradlimits := N1+i*N2 intervalle des graduations (entières), égal à limits par défaut
+        unit := 1
+        nbsubdiv := nombre de nbsubdivisions par unité (1 par défaut)
+
+        tickpos := 0..1 (0.5 par défaut)
+        tickdir := direction graduations (ortho par défaut)
+        xyticks := 0.2 longueur des graduations
+        xylabelsep := 0.1 distance labels-graduations
+
+        originpos := jump/center/top/bottom, top par défaut
+        originnum := 0 labels sont: (originnum + unit*n)"labeltext"/labelden
+
+        legend := "texte", vide par défaut
+        legendpos := 0..1, 0.975 par défaut
+        legendsep := 0.5 par defaut
+
+        labelpos := jump/left/right, left par défaut (par rapport à la verticale)
+        labelden := dénominateur (entier), 1 par défaut
+        labeltext := "texte" texte ajouté aux labels, vide par défaut
+        labelstyle := ortho, right, left,..., right par défaut
+        labelshift := 0, décalage systématique des labels
+        nbdeci := nb de décimales, [2,2] par défaut
+        numericFormat := 0 format d'affichage
+        mylabels := Nil labels personnels        
+        legendangle := jump
+        }
+    [if %1=Nil then $A:=0,$Ypas:=1 else $A:=%1[1], $Ypas:=Re(%1[2]) fi,
+    if Ypas=Nil Or Ypas=0 then Ypas:=1 fi,
+    draw("gradLine", [A,i*Ypas], [labelstyle:=right, labelpos:=left, originnum:=Im(A), unit:=Nil, legendangle:=jump, %2,
+            if labelpos=right then labelstyle:=left fi,
+            if unit=Nil then if labeltext="" then unit:=Ypas else unit:=1 fi fi,
+            if limits<>jump then 
+                $x1:=Re(limits), $x2:=Im(limits),
+                limits:= Ceil( (x1-Im(A))/Ypas )+i*Ent( (x2-Im(A))/Ypas)
+            fi,
+            if gradlimits<>jump then 
+                $x1:=Re(gradlimits), $x2:=Im(gradlimits),
+                gradlimits:= Ceil( (x1-Im(A))/Ypas )+i*Ent( (x2-Im(A))/Ypas)
+            fi,
+            if originpos<>jump And originpos<>center then originpos:=3-originpos/4 fi,
+            if labelpos<>jump then
+                labelpos:=4*labelpos, 
+                    if Im(RealCoordV(i*Ypas))<0  then 
+                    labelpos:=12-labelpos,
+                    if originpos<>jump And originpos<>center then originpos:=3-originpos fi,
+                    fi
+            fi])
+    ];
+
+    Drawaxes = {Drawaxes( [A,Xpas+i*Ypas], [options])
+        options liste à 2 éléments: pour Ox et pour Oy,
+        showaxe := [1,1] 0/1 affichage ou non de l'axe
+        drawbox := 0, 0/1 affichage de la boite
+
+        limits := [N1+i*N2, N1+i*N2] intervalle  représentant le segment [A+N1*u, A+N2*u], jump par défaut pour toute la droite entière
+        gradlimits := [N1+i*N2,N1+i*N2] intervalle des graduations (entières), égal à limits par défaut
+        unit := Nil
+        nbsubdiv := nombre de nbsubdivisions par unité ([1,1] par défaut)
+
+        tickpos := 0..1 ([0.5,0.5] par défaut)
+        xyticks := 0.2 longueur des graduations
+        xylabelsep := 0.1 distance labels-graduations
+
+        originpos := jump/center/top/bottom, [right,top] par défaut
+        originnum := [0,0] labels sont: (originnum + unit*n)"labeltext"/labelden
+        originloc := jump (localisation de l'origine, x1+i*y1 par défaut)
+        
+        legend := ["texte","texte"] vide par défaut
+        legendpos := [0..1,0..1] 0.975 par défaut
+        legendsep := [0.4,0.4] par defaut
+
+        labelpos := jump/left/right, [bottom,left] par défaut (par rapport à la verticale)
+        labelden := dénominateur (entier), [1,1] par défaut
+        labeltext := "texte" texte ajouté aux labels, vide par défaut
+        labelstyle := ortho, right, left,..., [top,right] par défaut
+        labelshift := 0, décalage systématique des labels
+        nbdeci := nb de décimales, [2,2] par défaut
+        numericFormat := [0,0] format d'affichage
+        myxlabels := Nil labels personnels sur Ox
+        myylabels := Nil labels personnels sur Oy
+        legendangle := [jump,jump]
+    }
+    [if %1=Nil then $A:=0,$Xpas:=1, $Ypas:=1 else $A:=%1[1], $Xpas:=Re(%1[2]),$Ypas:=Im(%1[2]) fi,
+    if Xpas=Nil Or Xpas=0 then Xpas:=1 fi, if Ypas=Nil Or Ypas=0 then Ypas:=1 fi,
+    myxlabels := Nil, myylabels := Nil,
+    originloc := jump, limits:=[jump,jump], gradlimits:=limits, unit:=Nil, showaxe:=[1,1], tickpos:=[0.5,0.5],
+    nbsubdiv:=[0,0], originpos:=[right,top], labelpos:=[bottom,left], scale:=[1,1], legendpos:=[0.975,0.975],
+    legend:=["",""], legendangle:=[jump,jump], numericFormat:=[0,0], nbdeci:=[2,2], originnum:=[Re(A),Im(A)], 
+    labelden:=[1,1], labeltext:=["",""], labelstyle:=[top,right], xyticks:=[0.2,0.2], xylabelsep:=[0.1,0.1],
+    labelcolor:=[Color,Color], legendsep:=[0.4,0.4], tickdir:=[jump,jump], grid:=0, drawbox:=0,
+    gridstyle := solid, subgridstyle := solid, gridcolor := gray, subgridcolor := lightgray, gridwidth := Nil,
+    subgridwidth := Nil, labelshift:=[jump,jump],
+    SaveAttr(), $options:=%2,
+    if drawbox then
+        $l1:=limits[1], $l2:=limits[2],
+        $m:=invmatrix(GetMatrix()), $u1:=Mtransform(Xmin+i*Ymin,m), $u2:=Mtransform(Xmax+i*Ymax,m),
+        if l1=jump then $x1:=Re(u1), $x2:=Re(u2) else $x1:=Re(l1), $x2:=Im(l1) fi,
+        if l2=jump then $y1:=Im(u1), $y2:=Im(u2) else $y1:=Re(l2), $y2:=Im(l2) fi,
+        draw("gradBox", [x1+i*y1,x2+i*y2,Xpas+i*Ypas], [%2,Arrows:=0, limits:=[x1+i*x2,y1+i*y2]])
+    else
+     if gridwidth=Nil then gridwidth:=Width fi, if subgridwidth=Nil then subgridwidth:=div(Width,2) fi,  
+     $limits_:=limits, $gradlimits_:=gradlimits, $unit_:=unit, $showaxe_:=showaxe, $tickpos_:=tickpos,
+     $nbsubdiv_:=nbsubdiv, $originpos_:=originpos, $labelpos_:=labelpos, $scale_:=scale, 
+     $legendpos_:=legendpos, $legend_:=legend, $nbdeci_:=nbdeci, $originnum_:=originnum, 
+     $labelden_:=labelden, $labeltext_:=labeltext, $labelstyle_:=labelstyle, $xyticks_:=xyticks,
+     $xylabelsep_:=xylabelsep, $numericFormat_:=numericFormat, $labelcolor_:=labelcolor, 
+     $legendsep_:=legendsep, $legendangle_:=legendangle, $tickdir_:=tickdir,
+     $gridstyle_:=gridstyle, $subgridstyle_:=subgridstyle, $gridcolor_:=gridcolor, 
+     $subgridcolor_:=subgridcolor, $gridwidth_:=gridwidth, 
+     $subgridwidth_:=subgridwidth, $labelshift_:=labelshift, $originloc_:=originloc,
+     if grid then
+        // pour que les labels ne soient pas sur les traits de la grille
+        if labelshift_[1]=jump then labelshift_:=[labeldefaultshift,labelshift_[2]] fi,
+        if labelshift_[2]=jump then labelshift_:=[labelshift_[1],labeldefaultshift] fi,
+        $m:=invmatrix(GetMatrix()), $u1:=Mtransform(Xmin+i*Ymin,m), $u2:=Mtransform(Xmax+i*Ymax,m),
+        if gradlimits[1]=jump then 
+            if limits[1]=jump then $x1:=Re(u1), $x2:=Re(u2) else $x1:=Re(limits[1]), $x2:=Im(limits[1]) fi
+        else 
+            $x1:=Re(gradlimits[1]), $x2:=Im(gradlimits[1])
+        fi,
+        if gradlimits[2]=jump then 
+            if limits[2]=jump then $y1:=Im(u1), $y2:=Im(u2) else $y1:=Re(limits[2]), $y2:=Im(limits[2]) fi
+        else 
+            $y1:=Re(gradlimits[2]), $y2:=Im(gradlimits[2])
+        fi,
+        Drawgrid([x1+i*y1, x2+i*y2], [unit:=[Xpas,Ypas], nbsubdiv:=nbsubdiv_, gridstyle:=gridstyle_,
+           subgridstyle:=subgridstyle_, gridcolor:=gridcolor_,subgridcolor:=subgridcolor_, 
+           gridwidth:=gridwidth_, subgridwidth:=subgridwidth_,  originloc:=originloc_])
+     else //no grid
+        if labelshift_[1]=jump then labelshift_:=[0,labelshift_[2]] fi,
+        if labelshift_[2]=jump then labelshift_:=[labelshift_[1],0] fi,
+     fi,
+     if originloc_=jump then $x1':=Re(A), $y1':=Im(A) else $x1':=Re(originloc_), $y1':=Im(originloc_) fi,
+     draw("axeX", [x1'+i*Im(A),Xpas], [
+         limits:=limits_[1], gradlimits:=gradlimits_[1], unit:=unit_[1], showaxe:=showaxe_[1], 
+         tickpos:=tickpos_[1], nbsubdiv:=nbsubdiv_[1], originpos:=originpos_[1], labelpos:=labelpos_[1],
+         scale:=scale_[1], legendpos:=legendpos_[1], legend:=legend_[1], nbdeci:=nbdeci_[1],
+         originnum:=originnum_[1], labelden:=labelden_[1], labeltext:=labeltext_[1], 
+         labelstyle:=labelstyle_[1], xyticks:=xyticks_[1], xylabelsep:=xylabelsep_[1], 
+         labelcolor:=labelcolor_[1], legendsep:=legendsep_[1], tickdir:=tickdir_[1], 
+         numericFormat:=numericFormat_[1],legendangle:=legendangle_[1],labelshift:=labelshift_[1],
+         mylabels:=myxlabels
+         ]),  
+
+     draw("axeY", [Re(A)+i*y1',Ypas], [    
+         limits:=limits_[2], gradlimits:=gradlimits_[2], unit:=unit_[2], showaxe:=showaxe_[2], 
+         tickpos:=tickpos_[2], nbsubdiv:=nbsubdiv_[2], originpos:=originpos_[2], labelpos:=labelpos_[2],
+         scale:=scale_[2], legendpos:=legendpos_[2], legend:=legend_[2], nbdeci:=nbdeci_[2],
+         originnum:=originnum_[2], labelden:=labelden_[2], labeltext:=labeltext_[2], 
+         labelstyle:=labelstyle_[2], xyticks:=xyticks_[2], xylabelsep:=xylabelsep_[2], 
+         labelcolor:=labelcolor_[2], legendsep:=legendsep_[2], tickdir:=tickdir_[2], 
+         numericFormat:=numericFormat_[2], legendangle:=legendangle_[2], labelshift:=labelshift_[2],
+         mylabels:=myylabels
+         ]),
+    fi,
+    RestoreAttr(),
+    ];
+
+    DrawgradBox = {DrawgradBox( [xmin+i*ymin,xmax+i*ymax,Xpas+i*Ypas], [options])
+        options liste à 2 éléments: pour Ox et pour Oy,
+        showaxe := [1,1] 0/1 affichage ou non de l'axe
+
+        gradlimits := [x1+i*x2,y1+i*y2] intervalle des graduations, égal à [jump,jump] par défaut
+        unit := [1,1]
+        nbsubdiv := nombre de nbsubdivisions par unité ([1,1] par défaut)
+
+        tickpos := [0..1,0..1] ([0,1] par défaut)
+        xyticks := [0.2,0.2] longueur des graduations
+        xylabelsep := [0.1,0.1] distance labels-graduations
+
+        originpos := jump/center/top/bottom, [center,center] par défaut
+        originnum := [0,0] labels sont: (originnum + unit*n)"labeltext"/labelden
+        originloc := jump (affixe de la localisation de l'origine, x1+i*y1 par défaut)
+
+        legend := ["texte","texte"] vide par défaut
+        legendpos := [0..1,0..1] 0.975 par défaut
+        legendsep := [-0.8,1] par defaut
+
+        labelpos := jump/left/right, [bottom,left] par défaut (par rapport à la verticale)
+        labelden := dénominateur (entier), [1,1] par défaut
+        labeltext := "texte" texte ajouté aux labels, vide par défaut
+        labelstyle := ortho, right, left,..., [top,right] par défaut
+        nbdeci := nb de décimales, [2,2] par défaut
+        numericFormat := [0,0] format d'affichage
+        myxlabels := Nil labels personnels sur Ox
+        myylabels := Nil labels personnels sur Oy        
+        legendangle:=[jump,Arg(i)*deg]
+        title := "" //titre de la boîte, afficher en haut.
+    }
+    [$limits_:=[Re(%1[1])+i*Re(%1[2]), Im(%1[1])+i*Im(%1[2])], $A:=%1[1], $Xpas:=Re(%1[3]),
+     if Xpas=Nil Or Xpas=0 then Xpas:=1 fi,
+     $Ypas:=Im(%1[3]), if Ypas=Nil Or Ypas=0 then Ypas:=1 fi,
+     gradlimits:=[jump,jump], unit:=Nil, tickpos:=[0,1], nbsubdiv:=[0,0], originpos:=[center,center], originloc:=jump,
+     labelpos:=[bottom,left], scale:=[1,1], legendpos:=[0.5,0.5], legend:=["",""], legendsep:=[-0.8,-1],
+     legendangle:=[RealArg(1)*rad,RealArg(i)*rad],
+     numericFormat:=[0,0], nbdeci:=[2,2], originnum:=[Re(A),Im(A)],
+     labelden:=[1,1], labeltext:=["",""], labelstyle:=[top,right], xyticks:=[0.2,0.2], xylabelsep:=[0.1,0.1],
+     labelcolor:=[Color,Color], tickdir:=[jump,jump], grid:=0, title:="",
+     gridstyle := solid, subgridstyle := solid, gridcolor := gray, subgridcolor := lightgray, 
+     gridwidth := Nil, subgridwidth := Nil, myxlabels := Nil, myylabels := Nil,
+     
+     SaveAttr(), $options:=%2, limits:=limits_, $originloc_:=originloc,
+     if gridwidth=Nil then gridwidth:=Width fi, if subgridwidth=Nil then subgridwidth:=div(Width,2) fi,
+     $gradlimits_:=gradlimits, $unit_:=unit, $showaxe_:=[0,0], $tickpos_:=tickpos, $nbsubdiv_:=nbsubdiv, $originpos_:=originpos,
+     $labelpos_:=labelpos, $scale_:=scale, $legendpos_:=legendpos, $legend_:=legend, $nbdeci_:=nbdeci, $originnum_:=originnum, $labelden_:=labelden,
+     $labeltext_:=labeltext, $labelstyle_:=labelstyle, $xyticks_:=xyticks, $xylabelsep_:=xylabelsep, $numericFormat_:=numericFormat,
+     $labelcolor_:=labelcolor, $legendsep_:=legendsep, $tickdir_:=tickdir, $legendangle_:=legendangle,
+     $gridstyle_:=gridstyle, $subgridstyle_:=subgridstyle, $gridcolor_:=gridcolor, $subgridcolor_:=subgridcolor, $gridwidth_:=gridwidth,
+     $subgridwidth_:=subgridwidth,
+     $x1:=Re(limits[1]), $x2:=Im(limits[1]), $y1:=Re(limits[2]), $y2:=Im(limits[2]),
+     Ligne([x1+i*y1,x2+i*y1,x2+i*y2,x1+i*y2],1),//cadre
+     if grid then
+        Drawgrid([x1+i*y1, x2+i*y2], [unit:=[Xpas,Ypas], nbsubdiv:=nbsubdiv_, gridstyle:=gridstyle_, subgridstyle:=subgridstyle_,
+            gridcolor:=gridcolor_, subgridcolor:=subgridcolor_, gridwidth:=gridwidth_, subgridwidth:=subgridwidth_,originloc:=originloc_])
+     fi,
+     Ligne([x1+i*y1,x2+i*y1,x2+i*y2,x1+i*y2],1),//cadre
+     if originloc_=jump then $x1':=x1, $y1':=y1 else $x1':=Re(originloc_), $y1':=Im(originloc_) fi,
+
+     draw("axeX", [x1'+i*y2,Xpas], [ //axe du haut
+        legend:=title,legendsep:=-0.25, legendpos:=0.5, LabelStyle:=bottom,
+        limits:=limits_[1], gradlimits:=gradlimits_[1], unit:=unit_[1], showaxe:=0, tickpos:=1-tickpos_[1], nbsubdiv:=nbsubdiv_[1], labeltext:=labeltext_[1],
+        labelpos:=jump, scale:=scale_[1], xyticks:=xyticks_[1],tickdir:=tickdir_[1],
+      ]),
+
+     draw("axeX", [x1'+i*y1,Xpas], [ //axe du bas
+        limits:=limits_[1], gradlimits:=gradlimits_[1], unit:=unit_[1], showaxe:=0, tickpos:=tickpos_[1],
+        nbsubdiv:=nbsubdiv_[1], originpos:=originpos_[1], labelpos:=labelpos_[1], scale:=scale_[1],
+        legendpos:=legendpos_[1], legend:=legend_[1], nbdeci:=nbdeci_[1], originnum:=originnum_[1], 
+        labelden:=labelden_[1], labeltext:=labeltext_[1], labelstyle:=labelstyle_[1], xyticks:=xyticks_[1],
+        xylabelsep:=xylabelsep_[1], labelcolor:=labelcolor_[1], legendsep:=legendsep_[1], 
+        tickdir:=tickdir_[1], numericFormat:=numericFormat_[1], mylabels:=myxlabels, legendangle:=legendangle_[1]
+       ]),
+
+     draw("axeY", [x1+i*y1',Ypas], [ // axe de gauche
+        limits:=limits_[2], gradlimits:=gradlimits_[2], unit:=unit_[2], showaxe:=0, tickpos:=tickpos_[2], 
+        nbsubdiv:=nbsubdiv_[2], originpos:=originpos_[2], labelpos:=labelpos_[2], scale:=scale_[2], 
+        legendpos:=legendpos_[2], legend:=legend_[2], nbdeci:=nbdeci_[2], originnum:=originnum_[2], 
+        labelden:=labelden_[2], labeltext:=labeltext_[2], labelstyle:=labelstyle_[2], xyticks:=xyticks_[2],
+        xylabelsep:=xylabelsep_[2], labelcolor:=labelcolor_[2], legendsep:=legendsep_[2], 
+        tickdir:=tickdir_[2], numericFormat:=numericFormat_[2],mylabels:=myylabels, legendangle:=legendangle_[2]
+       ]),
+     draw("axeY", [x2+i*y1',Ypas], [  //axe de droite
+        limits:=limits_[2], gradlimits:=gradlimits_[2], unit:=unit_[2], showaxe:=0, tickpos:=1-tickpos_[2], nbsubdiv:=nbsubdiv_[2],
+        labelpos:=jump, scale:=scale_[2], legend="", xyticks:=xyticks_[2], tickdir:=tickdir_[2]
+      ]),
+     RestoreAttr(),
+    ];
+
+
+    Drawgrid = {Drawgrid( [coin inf gauche, coin sup droit], <options> )
+        options:
+        unit := [1,1] unités sur les axes
+        gridwidth := epaisseur (8 par defaut)
+        gridcolor := couleur (gray par défaut)
+        gridstyle := solid
+        nbsubdiv := nombre de subdivisions par unité
+        subgridcolor := couleur (lightgray par defaut)
+        subgridwidth := epaisseur (4 par defaut)
+        subgridstyle := solid
+        originloc := jump (localisation de l'origine, x1+i*y1 par défaut)
+    }
+    [gridwidth:=8, subgridwidth:=4, gridcolor:=gray, subgridcolor:=lightgray, gridstyle:=solid,
+    subgridstyle:=solid, unit:=[1,1], nbsubdiv:=[0,0], originloc:=jump,
+    SaveAttr(), $O1:=%1[1], $O2:=%1[2], $options:=%2,
+    if originloc=jump then originloc:=O1 fi,
+    $xnbsubdiv:=nbsubdiv[1]+1, $ynbsubdiv:=nbsubdiv[2]+1,
+    $xdep:=Re(O1), $ydep:=Im(O1), $xfin:=Re(O2), $yfin:=Im(O2),
+    if xdep>xfin then Echange(xdep,xfin) fi,
+    if ydep>yfin then Echange(ydep,yfin) fi,
+    $pasx:=abs(unit[1]), $pasy:=abs(unit[2]),
+    $x1:=Re(originloc), $y1:=Im(originloc), pasx:=abs(pasx), pasy:=abs(pasy),
+    $k:=Ent( (x1-xdep)/pasx ), xmin :=x1-k*pasx,
+    $k:=Ent( (xfin-x1)/pasx ), xmax :=x1+k*pasx,
+    $k:=Ent( (y1-ydep)/pasy ), ymin :=y1-k*pasy,
+    $k:=Ent( (yfin-y1)/pasy ), ymax :=y1+k*pasy,
+    $xdiv:=div(xmax-xmin,pasx), $ydiv:=div(ymax-ymin,pasy),
+    Arrows:=0, FillStyle:=none,
+    {grille secondaire}
+    $subgridpasx:=pasx/xnbsubdiv, $subgridpasy:=pasy/ynbsubdiv, Color:=subgridcolor, Width:=subgridwidth,
+    LineStyle:=subgridstyle,
+    Ligne(
+        Merge([$x:=xmin,
+        for $k from 1 to Ent((xmax-xmin)*xnbsubdiv/pasx) do
+             if mod(k-1,xnbsubdiv)<>0 then x+i*ydep,x+i*yfin,jump fi,
+             Inc(x,subgridpasx)
+        od,
+        $y:=ymin,
+        for $k from 1 to Ent((ymax-ymin)*ynbsubdiv/pasy) do
+            if mod(k-1,ynbsubdiv)<>0 then  xdep+i*y,xfin+i*y,jump fi,
+            Inc(y,subgridpasy)
+        od
+        ]),0),
+    {grille principale}
+    Color:=gridcolor, Width:=gridwidth, LineStyle:=gridstyle, LineCap:=round,
+    Ligne(    Merge([
+        $x:=xmin, for $k from 0 to xdiv do x+i*ydep,x+i*yfin,jump, Inc(x,pasx) od,
+        $y:=ymin, for $k from 0 to ydiv do xdep+i*y,xfin+i*y,jump, Inc(y,pasy) od
+        ]),0),
+    RestoreAttr()
+    ];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  anciennes macros : GradDroite, axes, Axes, Grille, axeX et axeY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    GradDroite = {GradDroite( [A, origin+i*posOrigin, étendue], [u, unit], hautDiv, subdiv [, poslab, labOrienté [, num [, "texte" [, denom, [first]]]]])}
+    [$X:=%1, $A:=X[1], $x:=X[2], $Y:=%2, $nbdeci_:=nbdeci, $numericFormat_:=numericFormat, $xylabelsep_:=xylabelsep, $xyticks_:=xyticks, $xylabelpos_:=xylabelpos,
+     if x=Nil Or x=jump
+        then $origin:=0, $posOrigin:=0
+        else origin:=Re(x), posOrigin:=Im(x), 
+            posOrigin:=if posOrigin=0 then jump elif posOrigin=1 then center elif posOrigin=2 then right else left fi
+     fi,
+     $etendue:=X[3]-origin*(1+i), if etendue=Nil then etendue:=jump fi,
+     $u:=Y[1], $unit_:=Y[2], if unit_=Nil then unit_:=1 fi, $hautDiv:=%3, $nbdiv_:=if %4=Nil then 0 else %4-1 fi,
+     $labelpos_:=if %5=Nil then bottom else %5 fi, $labelstyle_:=if %6=Nil Or %6=i then ortho else %6 fi,
+     $labeltext_:=if %8=Nil then "" else %8 fi, $labelden_:=if %9=Nil then 1 else %9 fi,
+     $num_:=if %7<>Nil then $unit_:=%7 fi,  $first_:=if %10<>Nil then origin:=%10 fi,
+     draw("gradLine", [A,u], [limits:=etendue, unit:=unit_, xyticks:=hautDiv, nbsubdiv:=nbdiv_, originpos:=posOrigin, originnum:=origin, labelpos:=labelpos_,
+                              labeltext:=labeltext_, labelden:=labelden_, labelstyle:=labelstyle_, numericFormat:=numericFormat_, nbdeci:=nbdeci_,
+                              xylabelsep:=xylabelsep_, xylabelpos:=xylabelpos_, xyticks:=xyticks_
+                             ])
+    ];
+
+    axes = {axes([origine, étendueX, étendueY], gradX+i*gradY <, subdivX+i*subdivY, posOriginX+i*posOriginY, num, texte, den, firstnum>): comme la commande Axes}
+    [$origine:=Copy(%1,1,1),
+    if %4=Nil then $posorigin:=2+2*i else posorigin:=%4 fi,
+    if %3=Nil then $sub:=1+i else sub:=%3 fi,
+    $labelposy:=mod(xylabelpos,4), 
+    $labelposx:=4*mod(div(xylabelpos,4),4),
+    $etendueX:=Copy(%1,2,1), if etendueX=jump then etendueX:=Nil fi,
+    $etendueY:=Copy(%1,3,1), if etendueY=jump then etendueY:=Nil fi,
+    axeX([origine,Re(posorigin),etendueX],Re(%2),Re(sub),labelposx,%5,%6,%7,%8),
+    axeY([origine,Im(posorigin),etendueY],Im(%2),Im(sub),labelposy,%5,%6,%7,%8)
+    ];
+
+    Axes = {Axes(origine, pasX+i*pasY, posoriginX+i*posiriginY)}
+    [$O:=%1, $pas:=%2, $posOrigin:=%3,
+    axes(O,pas,Nil,posOrigin)
+    ];
+
+    Grille = {Grille(origine, pasX+i*pasY) }
+    [$O:=%1, $pasX:=Re(%2), $pasY:=Im(%2),
+     draw("grid", [Xmin+i*Ymin,Xmax+i*Ymax], [originloc:=O, unit:=[pasX,pasY], gridwidth:=Width, gridstyle:=LineStyle, gridcolor:=Color])
+    ];
+    
+
+    axeX = {axeX( [origine, posOrigine, étendue], Xpas <, subDiv, labelPos, facteur, texte, denom, first> )
+    posOrigine=0: pas de label,
+    posOrigine=1: label normal,
+    posOrigine=2: label décalé à droite [défaut]
+    posOrigine=-2 label décalé à gauche
+    labelPos=0 : pas de label
+    Re(labelpos)=top: au-dessus,
+    Re(labelPos)=bottom : en-dessous,[défaut]
+    Im(labelPos)=1: orthogonal à l'axe}
+    
+    [$labelPos:= if %4=Nil then bottom else %4 fi,
+    $Xpas:=Re(%2), $origine:=Copy(%1,1,1),
+    if Xpas=0 then Xpas:=20*(Xmax-Xmin) fi,
+    $PosOrigine:=Copy(%1,2,1),
+    $orientInv:= Im(RealCoordV(i*%2))<0,
+    if PosOrigine=Nil Or (PosOrigine=jump) then PosOrigine:=2 fi,
+    $subDiv:= if %3=Nil then 1 else %3 fi,
+    $etendue:=Copy(%1,3,1),
+    if Re(labelPos)=bottom then {dessous}
+       GradDroite([origine, Re(origine)+i*PosOrigine,etendue/Xpas], [Xpas,Xpas], xyticks, subDiv,
+                  bottom, if Im(labelPos)=0 then if orientInv then bottom else top fi else i fi, %5, %6, %7,%8)
+    elif Re(labelPos)=top then  {dessus}
+       GradDroite([origine, Re(origine)+i*PosOrigine,etendue/Xpas], [Xpas,Xpas], xyticks, subDiv,
+                  top, if Im(labelPos)=0 then if orientInv then top else bottom fi else i fi, %5, %6, %7,%8)
+    else {pas de labels}
+       GradDroite([origine, Re(origine)+i*PosOrigine,etendue/Xpas], [Xpas,Xpas], xyticks, subDiv,jump)
+    fi];
+
+    axeY = {axeY( [origine,posOrigine,étendue], Ypas <subDiv, labelPos,  facteur, texte, denom, first>, ) 
+    posOrigine=0: pas de label,
+    posOrigine=1: label normal,
+    posOrigine=2: label décalé  en haut [défaut]
+    posOrigine=-2 label décalé en bas
+    labelPos=0 : pas de label
+    Re(labelPos)=left : à gauche,[défaut]
+    Re(labelpos)=right: à droite,
+    Im(labelPos)=1: orthogonal à l'axe}
+    [$labelPos:= if %4=Nil then left else %4 fi,
+    $Ypas:=Re(%2), $origine:=Copy(%1,1,1),
+    if Ypas=0 then Ypas:=20*(Ymax-Ymin) fi,
+    $PosOrigine:=Copy(%1,2,1),
+    $orientInv:= Re(RealCoordV(-%2))>0,
+    if PosOrigine=Nil Or (PosOrigine=jump) then PosOrigine:=2 fi,
+    $subDiv:= if %3=Nil then 1 else %3 fi,
+    $etendue:=Copy(%1,3,1),
+    if Re(labelPos)=right then {à droite}
+       GradDroite([origine, Im(origine)+i*PosOrigine,etendue/Ypas], Ypas*[i,1], xyticks, subDiv,
+       bottom, if Im(labelPos)=0 then if orientInv then right else left fi else i fi, %5, %6,%7,%8)
+    elif Re(labelPos)=left then  {à gauche}
+       GradDroite([origine, Im(origine)+i*PosOrigine,etendue/Ypas], Ypas*[i,1], xyticks, subDiv,
+       top, if Im(labelPos)=0 then if orientInv then left else right fi else i fi,%5, %6,%7,%8)
+    else {pas de labels}
+       GradDroite([origine, Im(origine)+i*PosOrigine,etendue/Ypas], Ypas*[i,1], xyticks, subDiv,jump)
+    fi];

@@ -1,0 +1,22 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Get}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Cmd}\ \textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}6.25}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}1.5}{\color{TegSymbol},}{\color{TegNumeric}2}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\ \ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\ \ {\color{TegSymbol}[}\textbf{\color{TegKeyWord}tMin}{\color{TegSymbol}:=}{\color{TegNumeric}0}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}tMax}{\color{TegSymbol}:=}{\color{TegNumeric}6.25}{\color{TegSymbol}]}{\color{TegSymbol};}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}axe}\ {\color{TegSymbol}=}\ \textbf{\color{TegMacPredef}Axes}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\ \ \ \textbf{\color{TegGraphElem}C1}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}blue}{\color{TegSymbol},}\textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}8}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \textbf{\color{TegKeyWord}Cartesienne}{\color{TegSymbol}(}{\color{TegNumeric}1}{\color{TegSymbol} /}\textbf{\color{TegVarPredef}x}{\color{TegSymbol})}\ {\color{TegSymbol}]}{\color{TegSymbol};}\par
+\ \ \ \textbf{\color{TegGraphElem}C2}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}8}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \textbf{\color{TegKeyWord}Cartesienne}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}sin}{\color{TegSymbol}(}{\color{TegNumeric}2}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}x}{\color{TegSymbol})}{\color{TegSymbol}*}{\color{TegNumeric}1.5}{\color{TegSymbol})}{\color{TegSymbol}]}{\color{TegSymbol};}\par
+\ \ \ \textbf{\color{TegGraphElem}inter}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\textbf{\color{TegKeyWord}DotScale}{\color{TegSymbol}:=}{\color{TegNumeric}2}{\color{TegSymbol},}\textbf{\color{TegKeyWord}DotStyle}{\color{TegSymbol}:=}\textbf{\color{TegConstant}dotcircle}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}forestgreen}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegKeyWord}Point}{\color{TegSymbol}(}\textbf{\color{TegKeyWord}Get}{\color{TegSymbol}(}\textbf{\color{TegGraphElem}C1}{\color{TegSymbol})}\ \textbf{\color{TegKeyWord}InterL}\ \textbf{\color{TegKeyWord}Get}{\color{TegSymbol}(}\textbf{\color{TegGraphElem}C2}{\color{TegSymbol})}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}blue}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegMacPredef}LabelDot}{\color{TegSymbol}(}{\color{TegNumeric}5.5}{\color{TegSymbol}+}{\color{TegNumeric}0.1}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}"{\color{TegString} \$C\_1\$"}{\color{TegSymbol},}"{\color{TegString} N"}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegMacPredef}LabelDot}{\color{TegSymbol}(}{\color{TegNumeric}3}{\color{TegSymbol}-}\textbf{\color{TegConstant}i}{\color{TegSymbol},}"{\color{TegString} \$C\_2\$"}{\color{TegSymbol},}"{\color{TegString} E"}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ {\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

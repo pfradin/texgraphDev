@@ -1,0 +1,17 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-2.5,2.5), Marges(0,0,0,0), size(7.5),
+F:=for z in carre(3-3*i,3+3*i,1) do z,0 od,
+theta:=-pi/2,phi:=0, ep:=2,SaveWin(),
+view(-5,0,-2.5,2.5),ChangeWinTo([-5-5*i,5+5*i]),
+DrawFacet(HollowFacet(F,ep), [color:=lightblue]),
+Arrows:=2,Ligne3D([-3+3.25*i,0,(-3+ep/2)+3.25*i,0],0),
+Arrows:=0,Label(-3+ep/4+4*i,"ep/2"),
+RestoreWin(),SaveWin(),
+view(0,5,-2.5,2.5), ChangeWinTo([-5-5*i,5+5*i]),
+DrawFacet(HollowFacet(F,ep+i), [color:=lightblue]),
+Arrows:=2, Ligne3D([3+3.25*i,0,(3-ep)+3.25*i,0],0),
+Arrows:=0,Label(3-ep/2+4*i,"ep"),
+RestoreWin(),
+Label(-2.5-2*i,"mode=0"), Label(2.5-2*i,"mode=1")
+];

@@ -1,0 +1,147 @@
+object MargesForm: TMargesForm
+  Left = 916
+  Height = 137
+  Top = 410
+  Width = 383
+  HorzScrollBar.Page = 382
+  VertScrollBar.Page = 136
+  ActiveControl = Edit1
+  BorderStyle = bsDialog
+  Caption = 'Margins [in cm] around the graph'
+  ClientHeight = 137
+  ClientWidth = 383
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.3'
+  object Label1: TLabel
+    AnchorSideRight.Control = Edit1
+    Left = 28
+    Height = 17
+    Top = 18
+    Width = 33
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Left ='
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideRight.Control = Edit2
+    Left = 208
+    Height = 17
+    Top = 18
+    Width = 41
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Right ='
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideRight.Control = Edit1
+    Left = 18
+    Height = 17
+    Top = 66
+    Width = 43
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Top ='
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideRight.Control = Edit2
+    AnchorSideBottom.Side = asrBottom
+    Left = 193
+    Height = 17
+    Top = 66
+    Width = 56
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Bottom ='
+    ParentColor = False
+  end
+  object Edit1: TEdit
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrCenter
+    Left = 66
+    Height = 27
+    Top = 13
+    Width = 105
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 254
+    Height = 27
+    Top = 13
+    Width = 119
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 10
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object Edit3: TEdit
+    AnchorSideLeft.Control = Edit1
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Edit1
+    AnchorSideRight.Side = asrBottom
+    Left = 66
+    Height = 27
+    Top = 61
+    Width = 105
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object Edit4: TEdit
+    AnchorSideTop.Control = Label4
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Edit2
+    AnchorSideRight.Side = asrBottom
+    Left = 254
+    Height = 27
+    Top = 61
+    Width = 119
+    Anchors = [akTop, akRight]
+    TabOrder = 3
+    Text = 'Edit1'
+  end
+  object Button1: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 96
+    Height = 30
+    Top = 101
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    OnClick = Button1Click
+    TabOrder = 4
+  end
+  object Button2: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 208
+    Height = 30
+    Top = 102
+    Width = 75
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 5
+  end
+end

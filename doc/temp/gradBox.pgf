@@ -1,0 +1,189 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.7222,0)}%
+\pgfsetyvec{\pgfxy(0,0.65)}%
+\useasboundingbox (-5.6923,-5.7692)--(4.6923,5.7692);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(-3.1416,-4)}%
+\pgfpathlineto{\pgfxy(3.1416,-4)}\pgfpathlineto{\pgfxy(3.1416,4)}\pgfpathlineto{\pgfxy(-3.1416,4)}\pgfclosepath%
+\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,0.8275;green,0.8275;blue,0.8275}%
+\pgfsetlinewidth{0.2pt}%
+\pgfxyline(-2.3562,-4)(-2.3562,4)%
+\pgfxyline(-0.7854,-4)(-0.7854,4)%
+\pgfxyline(0.7854,-4)(0.7854,4)%
+\pgfxyline(2.3562,-4)(2.3562,4)%
+\pgfxyline(-3.1416,-3.5)(3.1416,-3.5)%
+\pgfxyline(-3.1416,-2.5)(3.1416,-2.5)%
+\pgfxyline(-3.1416,-1.5)(3.1416,-1.5)%
+\pgfxyline(-3.1416,-0.5)(3.1416,-0.5)%
+\pgfxyline(-3.1416,0.5)(3.1416,0.5)%
+\pgfxyline(-3.1416,1.5)(3.1416,1.5)%
+\pgfxyline(-3.1416,2.5)(3.1416,2.5)%
+\pgfxyline(-3.1416,3.5)(3.1416,3.5)%
+\pgfsetstrokecolor{rgb,1:red,0.502;green,0.502;blue,0.502}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundcap%
+\pgfpathmoveto{\pgfxy(3.1416,4)}%
+\pgfpathlineto{\pgfxy(3.1416,-4)}\pgfpathlineto{\pgfxy(-3.1416,-4)}\pgfpathlineto{\pgfxy(-3.1416,4)}\pgfpathlineto{\pgfxy(3.1416,4)}%
+\pgfstroke%
+\pgfxyline(-1.5708,-4)(-1.5708,4)%
+\pgfxyline(0,-4)(0,4)%
+\pgfxyline(1.5708,-4)(1.5708,4)%
+\pgfxyline(-3.1416,-3)(3.1416,-3)%
+\pgfxyline(-3.1416,-2)(3.1416,-2)%
+\pgfxyline(-3.1416,-1)(3.1416,-1)%
+\pgfxyline(-3.1416,0)(3.1416,0)%
+\pgfxyline(-3.1416,1)(3.1416,1)%
+\pgfxyline(-3.1416,2)(3.1416,2)%
+\pgfxyline(-3.1416,3)(3.1416,3)%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetbuttcap%
+\pgfpathmoveto{\pgfxy(-3.1416,-4)}%
+\pgfpathlineto{\pgfxy(3.1416,-4)}\pgfpathlineto{\pgfxy(3.1416,4)}\pgfpathlineto{\pgfxy(-3.1416,4)}\pgfclosepath%
+\pgfstroke%
+\pgfputat{\pgfxy(0,4.3846)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small {\large \textbf{Titre boite}}}}\pgfstroke%
+\pgfxyline(-3.1416,3.6923)(-3.1416,4)%
+\pgfxyline(-2.3562,3.8462)(-2.3562,4)%
+\pgfxyline(-1.5708,3.6923)(-1.5708,4)%
+\pgfxyline(-0.7854,3.8462)(-0.7854,4)%
+\pgfxyline(0,3.6923)(0,4)%
+\pgfxyline(0.7854,3.8462)(0.7854,4)%
+\pgfxyline(1.5708,3.6923)(1.5708,4)%
+\pgfxyline(2.3562,3.8462)(2.3562,4)%
+\pgfxyline(3.1416,3.6923)(3.1416,4)%
+\pgfputat{\pgfxy(0,-5.2308)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small Abscisses}}\pgfstroke%
+\pgfxyline(-3.1416,-4)(-3.1416,-3.6923)%
+\pgfxyline(-2.3562,-4)(-2.3562,-3.8462)%
+\pgfxyline(-1.5708,-4)(-1.5708,-3.6923)%
+\pgfxyline(-0.7854,-4)(-0.7854,-3.8462)%
+\pgfxyline(0,-4)(0,-3.6923)%
+\pgfxyline(0.7854,-4)(0.7854,-3.8462)%
+\pgfxyline(1.5708,-4)(1.5708,-3.6923)%
+\pgfxyline(2.3562,-4)(2.3562,-3.8462)%
+\pgfxyline(3.1416,-4)(3.1416,-3.6923)%
+\pgfputat{\pgfxy(-3.1416,-4.3077)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-\pi$}}\pgfstroke%
+\pgfputat{\pgfxy(-1.5708,-4.3077)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-\frac{\pi}{2}$}}\pgfstroke%
+\pgfputat{\pgfxy(0,-4.3077)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(1.5708,-4.3077)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $\frac{\pi}{2}$}}\pgfstroke%
+\pgfputat{\pgfxy(3.1416,-4.3077)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $\pi$}}\pgfstroke%
+\pgfputat{\pgfxy(-4.5262,0)}{\pgftext[rotate=90]{\color{rgb,1:red,0;green,0;blue,0}\small Ordonnees}}\pgfstroke%
+\pgfxyline(-2.8647,-4)(-3.1416,-4)%
+\pgfxyline(-3.0031,-3.5)(-3.1416,-3.5)%
+\pgfxyline(-2.8647,-3)(-3.1416,-3)%
+\pgfxyline(-3.0031,-2.5)(-3.1416,-2.5)%
+\pgfxyline(-2.8647,-2)(-3.1416,-2)%
+\pgfxyline(-3.0031,-1.5)(-3.1416,-1.5)%
+\pgfxyline(-2.8647,-1)(-3.1416,-1)%
+\pgfxyline(-3.0031,-0.5)(-3.1416,-0.5)%
+\pgfxyline(-2.8647,0)(-3.1416,0)%
+\pgfxyline(-3.0031,0.5)(-3.1416,0.5)%
+\pgfxyline(-2.8647,1)(-3.1416,1)%
+\pgfxyline(-3.0031,1.5)(-3.1416,1.5)%
+\pgfxyline(-2.8647,2)(-3.1416,2)%
+\pgfxyline(-3.0031,2.5)(-3.1416,2.5)%
+\pgfxyline(-2.8647,3)(-3.1416,3)%
+\pgfxyline(-3.0031,3.5)(-3.1416,3.5)%
+\pgfxyline(-2.8647,4)(-3.1416,4)%
+\pgfputat{\pgfxy(-3.4185,-4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-4$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,-3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-3$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,-2)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,-1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,0)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $1$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,2)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $2$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $3$}}\pgfstroke%
+\pgfputat{\pgfxy(-3.4185,4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $4$}}\pgfstroke%
+\pgfxyline(3.1416,-4)(2.8647,-4)%
+\pgfxyline(3.1416,-3.5)(3.0031,-3.5)%
+\pgfxyline(3.1416,-3)(2.8647,-3)%
+\pgfxyline(3.1416,-2.5)(3.0031,-2.5)%
+\pgfxyline(3.1416,-2)(2.8647,-2)%
+\pgfxyline(3.1416,-1.5)(3.0031,-1.5)%
+\pgfxyline(3.1416,-1)(2.8647,-1)%
+\pgfxyline(3.1416,-0.5)(3.0031,-0.5)%
+\pgfxyline(3.1416,0)(2.8647,0)%
+\pgfxyline(3.1416,0.5)(3.0031,0.5)%
+\pgfxyline(3.1416,1)(2.8647,1)%
+\pgfxyline(3.1416,1.5)(3.0031,1.5)%
+\pgfxyline(3.1416,2)(2.8647,2)%
+\pgfxyline(3.1416,2.5)(3.0031,2.5)%
+\pgfxyline(3.1416,3)(2.8647,3)%
+\pgfxyline(3.1416,3.5)(3.0031,3.5)%
+\pgfxyline(3.1416,4)(2.8647,4)%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{1.2pt}%
+\pgfpathmoveto{\pgfxy(-3.1416,-3.1416)}%
+\pgfpathlineto{\pgfxy(-3.1095,-3.2056)}\pgfpathlineto{\pgfxy(-3.0775,-3.2686)}\pgfpathlineto{\pgfxy(-3.0454,-3.3299)}\pgfpathlineto{\pgfxy(-3.0134,-3.3886)}%
+\pgfpathlineto{\pgfxy(-2.9813,-3.4438)}\pgfpathlineto{\pgfxy(-2.9493,-3.4948)}\pgfpathlineto{\pgfxy(-2.9172,-3.5407)}\pgfpathlineto{\pgfxy(-2.8851,-3.5808)}%
+\pgfpathlineto{\pgfxy(-2.821,-3.6412)}\pgfpathlineto{\pgfxy(-2.7569,-3.6713)}\pgfpathlineto{\pgfxy(-2.6928,-3.6677)}\pgfpathlineto{\pgfxy(-2.6287,-3.6282)}%
+\pgfpathlineto{\pgfxy(-2.5966,-3.5946)}\pgfpathlineto{\pgfxy(-2.5646,-3.5517)}\pgfpathlineto{\pgfxy(-2.5325,-3.4998)}\pgfpathlineto{\pgfxy(-2.5005,-3.4389)}%
+\pgfpathlineto{\pgfxy(-2.4684,-3.3694)}\pgfpathlineto{\pgfxy(-2.4363,-3.2915)}\pgfpathlineto{\pgfxy(-2.4043,-3.2057)}\pgfpathlineto{\pgfxy(-2.3722,-3.1125)}%
+\pgfpathlineto{\pgfxy(-2.3562,-3.0633)}\pgfpathlineto{\pgfxy(-2.3402,-3.0125)}\pgfpathlineto{\pgfxy(-2.3241,-2.9601)}\pgfpathlineto{\pgfxy(-2.3081,-2.9062)}%
+\pgfpathlineto{\pgfxy(-2.2921,-2.851)}\pgfpathlineto{\pgfxy(-2.2761,-2.7944)}\pgfpathlineto{\pgfxy(-2.26,-2.7367)}\pgfpathlineto{\pgfxy(-2.244,-2.6779)}%
+\pgfpathlineto{\pgfxy(-2.228,-2.618)}\pgfpathlineto{\pgfxy(-2.2119,-2.5573)}\pgfpathlineto{\pgfxy(-2.1959,-2.4958)}\pgfpathlineto{\pgfxy(-2.1799,-2.4335)}%
+\pgfpathlineto{\pgfxy(-2.1639,-2.3707)}\pgfpathlineto{\pgfxy(-2.1478,-2.3074)}\pgfpathlineto{\pgfxy(-2.1318,-2.2438)}\pgfpathlineto{\pgfxy(-2.1158,-2.1798)}%
+\pgfpathlineto{\pgfxy(-2.0997,-2.1158)}\pgfpathlineto{\pgfxy(-2.0837,-2.0517)}\pgfpathlineto{\pgfxy(-2.0677,-1.9876)}\pgfpathlineto{\pgfxy(-2.0517,-1.9238)}%
+\pgfpathlineto{\pgfxy(-2.0356,-1.8602)}\pgfpathlineto{\pgfxy(-2.0196,-1.7971)}\pgfpathlineto{\pgfxy(-2.0036,-1.7344)}\pgfpathlineto{\pgfxy(-1.9875,-1.6724)}%
+\pgfpathlineto{\pgfxy(-1.9715,-1.6111)}\pgfpathlineto{\pgfxy(-1.9555,-1.5507)}\pgfpathlineto{\pgfxy(-1.9395,-1.4912)}\pgfpathlineto{\pgfxy(-1.9234,-1.4327)}%
+\pgfpathlineto{\pgfxy(-1.9074,-1.3754)}\pgfpathlineto{\pgfxy(-1.8914,-1.3193)}\pgfpathlineto{\pgfxy(-1.8753,-1.2645)}\pgfpathlineto{\pgfxy(-1.8593,-1.2111)}%
+\pgfpathlineto{\pgfxy(-1.8433,-1.1592)}\pgfpathlineto{\pgfxy(-1.8273,-1.1089)}\pgfpathlineto{\pgfxy(-1.7952,-1.0134)}\pgfpathlineto{\pgfxy(-1.7631,-0.9251)}%
+\pgfpathlineto{\pgfxy(-1.7311,-0.8445)}\pgfpathlineto{\pgfxy(-1.699,-0.7721)}\pgfpathlineto{\pgfxy(-1.667,-0.7083)}\pgfpathlineto{\pgfxy(-1.6349,-0.6534)}%
+\pgfpathlineto{\pgfxy(-1.6029,-0.6075)}\pgfpathlineto{\pgfxy(-1.5708,-0.5708)}\pgfpathlineto{\pgfxy(-1.5387,-0.5434)}\pgfpathlineto{\pgfxy(-1.4746,-0.516)}%
+\pgfpathlineto{\pgfxy(-1.4105,-0.5239)}\pgfpathlineto{\pgfxy(-1.3464,-0.5646)}\pgfpathlineto{\pgfxy(-1.3143,-0.596)}\pgfpathlineto{\pgfxy(-1.2823,-0.6341)}%
+\pgfpathlineto{\pgfxy(-1.2502,-0.6781)}\pgfpathlineto{\pgfxy(-1.2182,-0.7275)}\pgfpathlineto{\pgfxy(-1.1861,-0.7813)}\pgfpathlineto{\pgfxy(-1.1541,-0.8389)}%
+\pgfpathlineto{\pgfxy(-1.122,-0.8995)}\pgfpathlineto{\pgfxy(-1.0899,-0.9621)}\pgfpathlineto{\pgfxy(-1.0579,-1.0258)}\pgfpathlineto{\pgfxy(-1.0258,-1.0899)}%
+\pgfpathlineto{\pgfxy(-0.9938,-1.1534)}\pgfpathlineto{\pgfxy(-0.9617,-1.2154)}\pgfpathlineto{\pgfxy(-0.9297,-1.275)}\pgfpathlineto{\pgfxy(-0.8976,-1.3315)}%
+\pgfpathlineto{\pgfxy(-0.8655,-1.3839)}\pgfpathlineto{\pgfxy(-0.8335,-1.4316)}\pgfpathlineto{\pgfxy(-0.8014,-1.4737)}\pgfpathlineto{\pgfxy(-0.7694,-1.5096)}%
+\pgfpathlineto{\pgfxy(-0.7053,-1.5604)}\pgfpathlineto{\pgfxy(-0.6411,-1.5796)}\pgfpathlineto{\pgfxy(-0.577,-1.5642)}\pgfpathlineto{\pgfxy(-0.5129,-1.5124)}%
+\pgfpathlineto{\pgfxy(-0.4809,-1.4726)}\pgfpathlineto{\pgfxy(-0.4488,-1.4237)}\pgfpathlineto{\pgfxy(-0.4167,-1.3658)}\pgfpathlineto{\pgfxy(-0.3847,-1.2991)}%
+\pgfpathlineto{\pgfxy(-0.3526,-1.2239)}\pgfpathlineto{\pgfxy(-0.3206,-1.1407)}\pgfpathlineto{\pgfxy(-0.2885,-1.05)}\pgfpathlineto{\pgfxy(-0.2725,-1.0019)}%
+\pgfpathlineto{\pgfxy(-0.2565,-0.9521)}\pgfpathlineto{\pgfxy(-0.2404,-0.9008)}\pgfpathlineto{\pgfxy(-0.2244,-0.8479)}\pgfpathlineto{\pgfxy(-0.2084,-0.7936)}%
+\pgfpathlineto{\pgfxy(-0.1923,-0.7379)}\pgfpathlineto{\pgfxy(-0.1763,-0.6809)}\pgfpathlineto{\pgfxy(-0.1603,-0.6228)}\pgfpathlineto{\pgfxy(-0.1443,-0.5636)}%
+\pgfpathlineto{\pgfxy(-0.1282,-0.5035)}\pgfpathlineto{\pgfxy(-0.1122,-0.4425)}\pgfpathlineto{\pgfxy(-0.0962,-0.3807)}\pgfpathlineto{\pgfxy(-0.0801,-0.3183)}%
+\pgfpathlineto{\pgfxy(-0.0641,-0.2553)}\pgfpathlineto{\pgfxy(-0.0481,-0.1918)}\pgfpathlineto{\pgfxy(-0.0321,-0.1281)}\pgfpathlineto{\pgfxy(-0.016,-0.0641)}%
+\pgfpathlineto{\pgfxy(-0.0000,-0.0000)}\pgfpathlineto{\pgfxy(0.016,0.0641)}\pgfpathlineto{\pgfxy(0.0321,0.1281)}\pgfpathlineto{\pgfxy(0.0481,0.1918)}%
+\pgfpathlineto{\pgfxy(0.0641,0.2553)}\pgfpathlineto{\pgfxy(0.0801,0.3183)}\pgfpathlineto{\pgfxy(0.0962,0.3807)}\pgfpathlineto{\pgfxy(0.1122,0.4425)}%
+\pgfpathlineto{\pgfxy(0.1282,0.5035)}\pgfpathlineto{\pgfxy(0.1443,0.5636)}\pgfpathlineto{\pgfxy(0.1603,0.6228)}\pgfpathlineto{\pgfxy(0.1763,0.6809)}%
+\pgfpathlineto{\pgfxy(0.1923,0.7379)}\pgfpathlineto{\pgfxy(0.2084,0.7936)}\pgfpathlineto{\pgfxy(0.2244,0.8479)}\pgfpathlineto{\pgfxy(0.2404,0.9008)}%
+\pgfpathlineto{\pgfxy(0.2565,0.9521)}\pgfpathlineto{\pgfxy(0.2725,1.0019)}\pgfpathlineto{\pgfxy(0.2885,1.05)}\pgfpathlineto{\pgfxy(0.3206,1.1407)}%
+\pgfpathlineto{\pgfxy(0.3526,1.2239)}\pgfpathlineto{\pgfxy(0.3847,1.2991)}\pgfpathlineto{\pgfxy(0.4167,1.3658)}\pgfpathlineto{\pgfxy(0.4488,1.4237)}%
+\pgfpathlineto{\pgfxy(0.4809,1.4726)}\pgfpathlineto{\pgfxy(0.5129,1.5124)}\pgfpathlineto{\pgfxy(0.577,1.5642)}\pgfpathlineto{\pgfxy(0.6411,1.5796)}%
+\pgfpathlineto{\pgfxy(0.7053,1.5604)}\pgfpathlineto{\pgfxy(0.7694,1.5096)}\pgfpathlineto{\pgfxy(0.8014,1.4737)}\pgfpathlineto{\pgfxy(0.8335,1.4316)}%
+\pgfpathlineto{\pgfxy(0.8655,1.3839)}\pgfpathlineto{\pgfxy(0.8976,1.3315)}\pgfpathlineto{\pgfxy(0.9297,1.275)}\pgfpathlineto{\pgfxy(0.9617,1.2154)}%
+\pgfpathlineto{\pgfxy(0.9938,1.1534)}\pgfpathlineto{\pgfxy(1.0258,1.0899)}\pgfpathlineto{\pgfxy(1.0579,1.0258)}\pgfpathlineto{\pgfxy(1.0899,0.9621)}%
+\pgfpathlineto{\pgfxy(1.122,0.8995)}\pgfpathlineto{\pgfxy(1.1541,0.8389)}\pgfpathlineto{\pgfxy(1.1861,0.7813)}\pgfpathlineto{\pgfxy(1.2182,0.7275)}%
+\pgfpathlineto{\pgfxy(1.2502,0.6781)}\pgfpathlineto{\pgfxy(1.2823,0.6341)}\pgfpathlineto{\pgfxy(1.3143,0.596)}\pgfpathlineto{\pgfxy(1.3464,0.5646)}%
+\pgfpathlineto{\pgfxy(1.4105,0.5239)}\pgfpathlineto{\pgfxy(1.4746,0.516)}\pgfpathlineto{\pgfxy(1.5387,0.5434)}\pgfpathlineto{\pgfxy(1.6029,0.6075)}%
+\pgfpathlineto{\pgfxy(1.6349,0.6534)}\pgfpathlineto{\pgfxy(1.667,0.7083)}\pgfpathlineto{\pgfxy(1.699,0.7721)}\pgfpathlineto{\pgfxy(1.7311,0.8445)}%
+\pgfpathlineto{\pgfxy(1.7631,0.9251)}\pgfpathlineto{\pgfxy(1.7952,1.0134)}\pgfpathlineto{\pgfxy(1.8273,1.1089)}\pgfpathlineto{\pgfxy(1.8433,1.1592)}%
+\pgfpathlineto{\pgfxy(1.8593,1.2111)}\pgfpathlineto{\pgfxy(1.8753,1.2645)}\pgfpathlineto{\pgfxy(1.8914,1.3193)}\pgfpathlineto{\pgfxy(1.9074,1.3754)}%
+\pgfpathlineto{\pgfxy(1.9234,1.4327)}\pgfpathlineto{\pgfxy(1.9395,1.4912)}\pgfpathlineto{\pgfxy(1.9555,1.5507)}\pgfpathlineto{\pgfxy(1.9715,1.6111)}%
+\pgfpathlineto{\pgfxy(1.9875,1.6724)}\pgfpathlineto{\pgfxy(2.0036,1.7344)}\pgfpathlineto{\pgfxy(2.0196,1.7971)}\pgfpathlineto{\pgfxy(2.0356,1.8602)}%
+\pgfpathlineto{\pgfxy(2.0517,1.9238)}\pgfpathlineto{\pgfxy(2.0677,1.9876)}\pgfpathlineto{\pgfxy(2.0837,2.0517)}\pgfpathlineto{\pgfxy(2.0997,2.1158)}%
+\pgfpathlineto{\pgfxy(2.1158,2.1798)}\pgfpathlineto{\pgfxy(2.1318,2.2438)}\pgfpathlineto{\pgfxy(2.1478,2.3074)}\pgfpathlineto{\pgfxy(2.1639,2.3707)}%
+\pgfpathlineto{\pgfxy(2.1799,2.4335)}\pgfpathlineto{\pgfxy(2.1959,2.4958)}\pgfpathlineto{\pgfxy(2.2119,2.5573)}\pgfpathlineto{\pgfxy(2.228,2.618)}%
+\pgfpathlineto{\pgfxy(2.244,2.6779)}\pgfpathlineto{\pgfxy(2.26,2.7367)}\pgfpathlineto{\pgfxy(2.2761,2.7944)}\pgfpathlineto{\pgfxy(2.2921,2.851)}%
+\pgfpathlineto{\pgfxy(2.3081,2.9062)}\pgfpathlineto{\pgfxy(2.3241,2.9601)}\pgfpathlineto{\pgfxy(2.3402,3.0125)}\pgfpathlineto{\pgfxy(2.3562,3.0633)}%
+\pgfpathlineto{\pgfxy(2.3722,3.1125)}\pgfpathlineto{\pgfxy(2.4043,3.2057)}\pgfpathlineto{\pgfxy(2.4363,3.2915)}\pgfpathlineto{\pgfxy(2.4684,3.3694)}%
+\pgfpathlineto{\pgfxy(2.5005,3.4389)}\pgfpathlineto{\pgfxy(2.5325,3.4998)}\pgfpathlineto{\pgfxy(2.5646,3.5517)}\pgfpathlineto{\pgfxy(2.5966,3.5946)}%
+\pgfpathlineto{\pgfxy(2.6287,3.6282)}\pgfpathlineto{\pgfxy(2.6928,3.6677)}\pgfpathlineto{\pgfxy(2.7569,3.6713)}\pgfpathlineto{\pgfxy(2.821,3.6412)}%
+\pgfpathlineto{\pgfxy(2.8851,3.5808)}\pgfpathlineto{\pgfxy(2.9172,3.5407)}\pgfpathlineto{\pgfxy(2.9493,3.4948)}\pgfpathlineto{\pgfxy(2.9813,3.4438)}%
+\pgfpathlineto{\pgfxy(3.0134,3.3886)}\pgfpathlineto{\pgfxy(3.0454,3.3299)}\pgfpathlineto{\pgfxy(3.0775,3.2686)}\pgfpathlineto{\pgfxy(3.1095,3.2056)}%
+\pgfpathlineto{\pgfxy(3.1416,3.1416)}%
+\pgfstroke%
+\pgfputat{\pgfxy(-0.4448,-1.8011)}{\pgftext[top]{\color{rgb,1:red,1;green,0;blue,0}\small $C_f$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0.5451}%
+\pgfsetlinewidth{0.8pt}%
+\pgfxyline(-3.1416,-3.1416)(3.1416,3.1416)%
+\pgfputat{\pgfxy(1.3392,1.8567)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0.5451}\small $D$}}\pgfstroke%
+\end{tikzpicture}%
+\egroup%

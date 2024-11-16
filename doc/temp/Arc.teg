@@ -1,0 +1,13 @@
+TeXgraph#
+Graph image = [
+view(-2.25,3.75,-1.75,4.5),Marges(0,0,0,0),size(7.5),
+A:=0, B:=3+i, C:=2+4*i, Color:=blue, Width:=8,
+draw("arc", [B,A,C,1,-1], [Arrows:=1, FillStyle:=full,
+ FillColor:=pink,legend:="$\alpha$"]),
+draw("angleD", [B,A,C,0.75], [FillStyle:=gradient,
+ FillColorB:=darkgreen]),
+draw("line",[B,A,C],[showdot:=1,dotcolor:=red,DotScale:=2]),
+draw("label","$A$",[Color:=red, anchor:=A, labeldir:=South],
+       "$B$",[anchor:=B, labeldir:=North],
+       "$C$",[anchor:=C, labeldir:=SE])
+];

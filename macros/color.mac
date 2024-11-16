@@ -1,0 +1,242 @@
+TeXgraph#
+{color.mac pour TeXgraph 1.96}
+Var
+    aliceblue = Rgb(0.9412,0.9725,1);
+    antiquewhite = Rgb(0.9804,0.9216,0.8431);
+    aqua = Rgb(0.0000,1.0000,1.0000);
+    aquamarine = Rgb(0.4980,1.0000,0.8314);
+    azure = Rgb(0.9412,1.0000,1.0000);
+    beige = Rgb(0.9608,0.9608,0.8627);
+    bisque = Rgb(1.0000,0.8941,0.7686);
+    blanchedalmond = Rgb(1.0000,0.9216,0.8039);
+    blueviolet = Rgb(0.5412,0.1686,0.8863);
+    brown = Rgb(0.6471,0.1647,0.1647);
+    burlywood = Rgb(0.8706,0.7216,0.5294);
+    cadetblue = Rgb(0.3725,0.6196,0.6275);
+    chartreuse = Rgb(0.4980,1.0000,0.0000);
+    chocolate = Rgb(0.8235,0.4118,0.1176);
+    coral = Rgb(1.0000,0.4980,0.3137);
+    cornflowerblue = Rgb(0.3922,0.5843,0.9294);
+    cornsilk = Rgb(1.0000,0.9725,0.8627);
+    crimson = Rgb(0.8627,0.0784,0.2353);
+    darkblue = Rgb(0.0000,0.0000,0.5451);
+    darkcyan = Rgb(0.0000,0.5451,0.5451);
+    darkgoldenrod = Rgb(0.7216,0.5255,0.0431);
+    darkgray = Rgb(0.6627,0.6627,0.6627);
+    darkgreen = Rgb(0.0000,0.3922,0.0000);
+    darkkhaki = Rgb(0.7412,0.7176,0.4196);
+    darkmagenta = Rgb(0.5451,0.0000,0.5451);
+    darkolivegreen = Rgb(0.3333,0.4196,0.1843);
+    darkorange = Rgb(1.0000,0.5490,0.0000);
+    darkorchid = Rgb(0.6000,0.1961,0.8000);
+    darkred = Rgb(0.5451,0.0000,0.0000);
+    darksalmon = Rgb(0.9137,0.5882,0.4784);
+    darkseagreen = Rgb(0.5608,0.7373,0.5608);
+    darkslateblue = Rgb(0.2824,0.2392,0.5451);
+    darkslategray = Rgb(0.1843,0.3098,0.3098);
+    darkturquoise = Rgb(0.0000,0.8078,0.8196);
+    darkviolet = Rgb(0.5804,0.0000,0.8275);
+    deeppink = Rgb(1.0000,0.0784,0.5765);
+    deepskyblue = Rgb(0.0000,0.7490,1.0000);
+    dimgray = Rgb(0.4118,0.4118,0.4118);
+    dodgerblue = Rgb(0.1176,0.5647,1.0000);
+    firebrick = Rgb(0.6980,0.1333,0.1333);
+    floralwhite = Rgb(1.0000,0.9804,0.9412);
+    forestgreen = Rgb(0.1333,0.5451,0.1333);
+    fuchsia = Rgb(1.0000,0.0000,1.0000);
+    gainsboro = Rgb(0.8627,0.8627,0.8627);
+    ghostwhite = Rgb(0.9725,0.9725,1.0000);
+    gold = Rgb(1.0000,0.8431,0.0000);
+    goldenrod = Rgb(0.8549,0.6471,0.1255);
+    greenyellow = Rgb(0.6784,1.0000,0.1843);
+    honeydew = Rgb(0.9412,1.0000,0.9412);
+    hotpink = Rgb(1.0000,0.4118,0.7059);
+    indianred = Rgb(0.8039,0.3608,0.3608);
+    indigo = Rgb(0.2941,0.0000,0.5098);
+    ivory = Rgb(1.0000,1.0000,0.9412);
+    khaki = Rgb(0.9412,0.9020,0.5490);
+    lavender = Rgb(0.9020,0.9020,0.9804);
+    lavenderblush = Rgb(1.0000,0.9412,0.9608);
+    lawngreen = Rgb(0.4863,0.9882,0.0000);
+    lemonchiffon = Rgb(1.0000,0.9804,0.8039);
+    lightblue = Rgb(0.6784,0.8471,0.9020);
+    lightcoral = Rgb(0.9412,0.5020,0.5020);
+    lightcyan = Rgb(0.8784,1.0000,1.0000);
+    lightgoldenrodyellow = Rgb(0.9804,0.9804,0.8235);
+    lightgreen = Rgb(0.5647,0.9333,0.5647);
+    lightgray = Rgb(0.8275,0.8275,0.8275);
+    lightpink = Rgb(1.0000,0.7137,0.7569);
+    lightsalmon = Rgb(1.0000,0.6275,0.4784);
+    lightseagreen = Rgb(0.1255,0.6980,0.6667);
+    lightskyblue = Rgb(0.5294,0.8078,0.9804);
+    lightslategray = Rgb(0.4667,0.5333,0.6000);
+    lightsteelblue = Rgb(0.6902,0.7686,0.8706);
+    lightyellow = Rgb(1.0000,1.0000,0.8784);
+    lime = Rgb(0.0000,1.0000,0.0000);
+    limegreen = Rgb(0.1961,0.8039,0.1961);
+    linen = Rgb(0.9804,0.9412,0.9020);
+    maroon = Rgb(0.5020,0.0000,0.0000);
+    mediumaquamarine = Rgb(0.4000,0.8039,0.6667);
+    mediumblue = Rgb(0.0000,0.0000,0.8039);
+    mediumorchid = Rgb(0.7294,0.3333,0.8275);
+    mediumpurple = Rgb(0.5765,0.4392,0.8588);
+    mediumseagreen = Rgb(0.2353,0.7020,0.4431);
+    mediumslateblue = Rgb(0.4824,0.4078,0.9333);
+    mediumspringgreen = Rgb(0.0000,0.9804,0.6039);
+    mediumturquoise = Rgb(0.2824,0.8196,0.8000);
+    mediumvioletred = Rgb(0.7804,0.0824,0.5216);
+    midnightblue = Rgb(0.0980,0.0980,0.4392);
+    mintcream = Rgb(0.9608,1.0000,0.9804);
+    mistyrose = Rgb(1.0000,0.8941,0.8824);
+    moccasin = Rgb(1.0000,0.8941,0.7098);
+    navajowhite = Rgb(1.0000,0.8706,0.6784);
+    navy = Rgb(0.0000,0.0000,0.5020);
+    oldlace = Rgb(0.9922,0.9608,0.9020);
+    olive = Rgb(0.5020,0.5020,0.0000);
+    olivedrab = Rgb(0.4196,0.5569,0.1373);
+    orange = Rgb(1.0000,0.6471,0.0000);
+    orangered = Rgb(1.0000,0.2706,0.0000);
+    orchid = Rgb(0.8549,0.4392,0.8392);
+    palegoldenrod = Rgb(0.9333,0.9098,0.6667);
+    palegreen = Rgb(0.5961,0.9843,0.5961);
+    paleturquoise = Rgb(0.6863,0.9333,0.9333);
+    palevioletred = Rgb(0.8588,0.4392,0.5765);
+    papayawhip = Rgb(1.0000,0.9373,0.8353);
+    peachpuff = Rgb(1.0000,0.8549,0.7255);
+    peru = Rgb(0.8039,0.5216,0.2471);
+    pink = Rgb(1.0000,0.7529,0.7961);
+    plum = Rgb(0.8667,0.6275,0.8667);
+    powderblue = Rgb(0.6902,0.8784,0.9020);
+    purple = Rgb(0.5020,0.0000,0.5020);
+    rosybrown = Rgb(0.7373,0.5608,0.5608);
+    royalblue = Rgb(0.2549,0.4118,0.8824);
+    saddlebrown = Rgb(0.5451,0.2706,0.0745);
+    salmon = Rgb(0.9804,0.5020,0.4471);
+    sandybrown = Rgb(0.9569,0.6431,0.3765);
+    seagreen = Rgb(0.1804,0.5451,0.3412);
+    seashell = Rgb(1.0000,0.9608,0.9333);
+    sienna = Rgb(0.6275,0.3216,0.1765);
+    silver = Rgb(0.7529,0.7529,0.7529);
+    skyblue = Rgb(0.5294,0.8078,0.9216);
+    slateblue = Rgb(0.4157,0.3529,0.8039);
+    slategray = Rgb(0.4392,0.5020,0.5647);
+    snow = Rgb(1.0000,0.9804,0.9804);
+    springgreen = Rgb(0.0000,1.0000,0.4980);
+    steelblue = Rgb(0.2745,0.5098,0.7059);
+    tan = Rgb(0.8235,0.7059,0.5490);
+    teal = Rgb(0.0000,0.5020,0.5020);
+    thistle = Rgb(0.8471,0.7490,0.8471);
+    tomato = Rgb(1.0000,0.3882,0.2784);
+    turquoise = Rgb(0.2510,0.8784,0.8157);
+    violet = Rgb(0.9333,0.5098,0.9333);
+    wheat = Rgb(0.9608,0.8706,0.7020);
+    whitesmoke = Rgb(0.9608,0.9608,0.9608);
+    yellowgreen = Rgb(0.6039,0.8039,0.1961);
+
+Mac
+    cinterp = %2+sqr(%1)*(3-2*%1)*(%3-%2);
+
+    Ryb = {Ryb( red, yellow, blue): couleur avec composantes rouge-jaune-bleu, renvoie la couleur au format rgb}
+	[
+	$x0:=cinterp(%3,1,0.163), $x1:=cinterp(%3,1,0), $x2:=cinterp(%3,1,0.5), $x3:=cinterp(%3,1,0.2), $y0:=cinterp(%2,x0,x1),$y1:=cinterp(%2,x2,x3),
+	$r:=cinterp(%1,y0,y1),
+	$x0:=cinterp(%3,1,0.373), $x1:=cinterp(%3,1,0.66), $x2:=cinterp(%3,0,0), $x3:=cinterp(%3,0.5,0.094), $y0:=cinterp(%2,x0,x1),$y1:=cinterp(%2,x2,x3),
+	$g:=cinterp(%1,y0,y1),
+	$x0:=cinterp(%3,1,0.6), $x1:=cinterp(%3,0,0.2), $x2:=cinterp(%3,0,0.5), $x3:=cinterp(%3,0,0), $y0:=cinterp(%2,x0,x1),$y1:=cinterp(%2,x2,x3),
+	$b:=cinterp(%1,y0,y1),
+	Rgb(r,g,b)];
+
+    Lcolor = {Lcolor(couleur, grayscale) renvoie la liste [r,g,b] en tenant compte ou pas de la valeur de GrayScale()}
+	[$r:=mod(%1,256)/255, $g:=mod(div(%1,256),256)/255, $b:=mod(div(%1,65536),256)/255,
+	 if %2=Nil Or %2=0 then r,g,b {pas de nuance de gris}
+	 else $gris:=Round(r*0.299+g*0.587+b*0.114,6), gris, gris, gris fi];
+
+    Rcolor = {Rcolor(couleur): renvoie la composante rouge} mod(%1,256)/255;
+
+    Gcolor = {Gcolor(couleur): renvoie la composante verte} mod(div(%1,256),256)/255;
+
+    Bcolor = {Bcolor(couleur): renvoie la composante bleue} mod(div(%1,65536),256)/255;
+
+    RgbL = {RgbL([r, g, b]): même effet que Rgb(r,g,b) } Rgb(Copy(%1,1,1),Copy(%1,2,1),Copy(%1,3,1));
+
+    MixColor = {MixColor( color1, proportion1, color2, proportion1, ..., colorN, proportionN): mélange les couleurs suivants les proportions}
+	[$S:=0,$C:=0,$nb:=Nargs(),
+	   for $k from 1 to nb/2 do
+	       $coef:=Args(2*k),
+	       $color:=Args(2*k-1),
+	       C:=C+coef*Lcolor(color),
+	       Inc(S,coef)
+	   od,
+	   RgbL(C/S)];
+
+    CplColor = {CplColor( color ): renvoie la couleur complémentaire} RgbL([1,1,1]-Lcolor(%1));
+
+    ColorJump = {ColorJump( color ): renvoie Re(jump)+i*(2+color) pour les fins de facettes} Re(jump)+i*(2+%1);
+
+    Hsb = {Hsb(hue (0..360), saturation (0..1), brightness (0..1) ) conversion vers Rgb}
+	[$h:=%1, $s:=%2, $v:=%3, $Hi:=mod(Ent(h/60),6), $f:=h/60-Hi, $p:=v*(1-s), $q:=v*(1-f*s), $t:=v*(1-(1-f)*s),
+	if Hi=0 then Rgb(v,t,p)
+	elif Hi=1 then Rgb(q,v,p)
+	elif Hi=2 then Rgb(p,v,t)
+	elif Hi=3 then Rgb(p,q,v)
+	elif Hi=4 then Rgb(t,p,v)
+	else Rgb(v,p,q)
+	fi];
+
+    HueColor = {HueColor(couleur): renvoie la composante Hue} Copy(Rgb2Hsb(%1),1,1);
+
+    SatColor = {SatColor(couleur): renvoie la composante Saturation} Copy(Rgb2Hsb(%1),2,1);
+
+    BrightColor = {BrightColor(couleur): renvoie la composante brightness} Copy(Rgb2Hsb(%1),3,1);
+
+    auxmac = [$x:=%1, $y:=%2, $z:=%3, $u:=%4, $v:=%5, 60*(u*(x-z)+v*(x-y))/(x-z), (x-z)/x, x];
+
+    Rgb2Hsb = {Rgb2Hsb(couleur Rgb) conversion vers [hue, saturation, brightness]}
+	[$r:=Rcolor(%1), $g:=Gcolor(%1), $b:=Bcolor(%1), $j:=4*(r>=g)+2*(g>=b)+(b>=r),
+	if j=1 then auxmac(b,g,r,3,1)
+	elif j=2 then auxmac(g,r,b,1,1)
+	elif j=3 then auxmac(g,b,r,3,-1)
+	elif j=4 then auxmac(r,b,g,5,1)
+	elif j=5 then auxmac(b,r,g,5,-1)
+	elif j=6 then auxmac(r,g,b,1,-1)
+	else [0,0,b]
+	fi];
+
+    Rgb2Gray = {Rgb2Gray( couleur Rgb) conversion en niveau de gris}
+	[$L:=Lcolor(%1), $gris:=Round(L[1]*0.299+L[2]*0.587+L[3]*0.114,6), Rgb(gris,gris,gris)];
+
+    Light = {Light(color, facteur): fait un barycentre de la couleur (facteur=0) avec le blanc (facteur=1), le facteur est entre 0 et 1 } 
+	RgbL( (1-%2)*Lcolor(%1)+%2*[1,1,1]);
+
+    Dark = {Dark(color, facteur): fait un barycentre de la couleur (facteur=0) avec le noir (facteur=1), le facteur est entre 0 et 1 } 
+	RgbL((1-%2)*Lcolor(%1));
+
+
+    Palette = {Palette([Color1, Color2, ..., Colorn], <facteur dans [0;1]>): renvoie une couleur de la palette en fonction du facteur: 0 pour la première et 1 pour la dernière}
+	[$colors:=%1, $p:=if %2=Nil then 0 else %2 fi,
+	$NbColors:=Nops(colors),
+	if NbColors>=2 then
+	   if p=1 then
+	      colors[NbColors]
+	   else
+	      $x:=p*(NbColors-1)+1, $k:=Ent(x), $p':=x-k,
+	     MixColor(colors[k],1-p',colors[k+1],p')
+	   fi
+	fi];
+
+    Rgb2Hexa = {Rgb2Hexa( couleur Rgb) renvoie une chaine représentant la couleur en héxadécimal, par exemple FF0000 pour le rouge}
+	[$L:=Lcolor(%1),
+	 for $z in L do
+	     x:=Ent(255*z),
+	     $x:=[div(x,16),mod(x,16)],
+	     for $t in x do
+	       if t<10 then t
+	       elif t=10 then "A"
+	       elif t=11 then "B"
+	       elif t=12 then "C"
+	       elif t=13 then "D"
+	       elif t=14 then "E"
+	       elif t=15 then "F"
+	       fi
+	     od
+	 od];

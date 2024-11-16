@@ -1,0 +1,207 @@
+\chapter{Introduction à TeXgraph}
+
+
+\section{Présentation}
+
+\begin{itemize}
+\item TeXgraph est un programme permettant la création de graphiques mathématiques (comme les courbes, les surfaces, les constructions géométriques...), ainsi que leur exportation sous forme de fichiers textes aux formats: LaTeX (macros eepic), ou PsTricks, ou Pgf/Tikz (macros pgf), ou Eps, ou Psf (eps+Psfrag), ou pdf (conversion eps -> pdf) ou svg ... Il existe également des exports spécifiques à la 3D.
+
+
+\item Il a été écrit pour Windows, Linux et Mac.
+
+\item TeXgraph version \version est distribué sous les termes de la licence GPL (General Public Licence). 
+
+Cette version est une version écrite en Free Pascal (3.1.1) avec \href{http://www.lazarus.freepascal.org/}{Lazarus} (1.9.0).
+
+Ce programme est libre, vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence Publique Générale GNU publiée par la Free Software Foundation (version 2 ou bien toute autre version ultérieure choisie par vous).
+
+Ce programme est distribué car potentiellement utile, mais SANS AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la Licence Publique Générale GNU pour plus de détails.
+
+Vous devez avoir reçu une copie de la Licence Publique Générale GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, États-Unis.
+
+\item Vous rendrez service à l'auteur et à la communauté en signalant les bogues:
+
+ par courrier électronique à l'adresse Email: \textcolor{blue}{texgraph@tuxfamily.org}.
+
+\item Le programme TeXgraph peut être téléchargé depuis: \url{https://texgraph.tuxfamily.org/}
+
+Des exemples peuvent également être consultés à cette même adresse. 
+
+\item Un forum de discussion  sur le logiciel (contenant aussi une rubrique Exemples) se trouve à : \url{https://texgraph.tuxfamily.org/forum/}
+
+\end{itemize}
+
+\section{Lancement de TeXgraph}
+
+Le programme nécessite une installation (voir le fichier \textit{LisezMoi.txt}), l'exécutable s'appelle \textit{TeXgraph}, et se lance par le script \textbf{startTeXgraph}.
+
+Le dossier d'installation contient le dossier \textit{TeXgraph} où se trouvent les exécutables ainsi que les dossiers
+\textit{Exemples}, \textit{doc} et \textit{macros}.
+
+\textit{TeXgraph} gère trois types de fichiers : les fichiers sources (\textit{*.teg}), les fichiers modèles (\textit{*.mod}) et les fichiers de macros (\textit{*.mac}).
+
+\begin{itemize}
+ \item Les fichiers \textit{*.teg}: sont les fichiers que l'on obtient lorsque l'on sauvegarde un graphique. Ce sont donc les fichiers sources ordinaires.
+ \item Les fichiers \textit{*.mod}: sont les fichiers modèles destinés à être chargés, on peut les considérer comme des fichiers sources prêts à l'emploi que l'on peut ensuite compléter à sa guise.
+ \item Les fichiers \textit{*.mac}: sont les fichiers de macros destinées à être chargées. Ils peuvent aussi contenir des déclarations de variables. Contrairement aux deux précédents, \Mytextbf{tout ce que contient un fichier \textit{*.mac} est considéré comme prédéfini} et ne sera donc pas sauvegardé avec le graphique (par contre le fichier source contiendra une commande ordonnant le chargement de ce fichier de macros).
+ \end{itemize}
+Ces trois types de fichiers obéissent aux mêmes règles de syntaxe, celle-ci est décrite dans la section \Helpref{src4latex}{srclatex}.
+
+
+Au lancement du programme, celui-ci charge plusieurs fichiers de macros: \textit{TeXgraph.mac}, \textit{couleurs.mac},
+\textit{errors.mac}, \textit{draw2d.mac}, \textit{draw3d.mac}, \textit{axes.mac}, et \textit{Interface.mac} (ce dernier est chargé uniquement avec la version GUI). Le contenu de ces fichiers est considéré comme prédéfini et restera en mémoire jusqu'à la fermeture du programme.
+
+Il est également possible de charger un ou plusieurs autres fichiers de macros au lancement du programme en les ajoutant
+comme paramètres dans la ligne de commande. De la même façon, les contenus ainsi chargés au démarrage sont considérés
+comme prédéfinis et ne seront supprimés de la mémoire qu'en quittant le programme.
+
+On charge un fichier de macros par le biais du menu avec l'option \textit{Fichier/Charger des macros}. Les variables et macros ainsi chargées sont également considérées comme prédéfinies et ne feront pas partie des graphiques, \Mytextbf{par contre elles seront supprimées de la mémoire au prochain changement de fichier}. Les variables et macros chargées avec l'option \textit{Fichier/Importer un modèle} viennent s'ajouter au graphique en cours, elles seront enregistrées avec lui, et \Mytextbf{elles seront supprimées au prochain changement de fichier}.
+
+Pour un fonctionnement complet et correct de TeXgraph, votre système est supposé être équipé de:
+
+\begin{enumerate}
+ \item Une distribution \TeX\ correctement installée, avec en particulier les packages \textit{tikz/pgf}, \textit{pstricks}.
+ \item La suite \href{https://www.imagemagick.org/}{ImageMagick} pour toutes les conversions d'images (bouton \textit{Snapshot} ou les gifs animés du modèle \textit{Animation.mod}).
+ \item La suite \href{http://www.swftools.org/}{swftools} si vous utilisez le modèle \textit{Animation.mod} avec une
+sortie Flash.
+ \item Le programme \href{http://www.pstoedit.net/}{pstoedit} qui est utilisé pour convertir des formules \TeX{} compilées en chemins.
+ \item Le programme \href{https://www.povray.org/}{povray} si vous utilisez le modèle \textit{povray.mod}.
+\end{enumerate}
+
+Si de plus vous utilisez les exports 3D \var{geom} et \var{jvx}, il vous faudra pour les visualiser:
+
+\begin{enumerate}
+\item Le programme \href{http://www.geomview.org/}{geomview}: pour les fichiers \textit{*.geom}.
+\item Le programme \href{http://www.javaview.de/}{javaview}: pour les fichiers \textit{*.jvx}.
+\end{enumerate}
+
+L'export 3D en \var{js} est un export en WebGL qui peut être visualisé dans un navigateur internet. Le fichier \textit{modelViewer.html} dans le dossier TeXgraph, permet de visualiser un tel fichier (nommé \textit{temp.js}). Le script \textit{modelViewer.js} est indispensable, c'est lui qui fait la visualisation proprement dite. Ce fichier utilise les scripts \textit{three.js}, \textit{TrackballControls.js} et \textit{dat.gui.min.js}.
+
+\section{Composition d'un graphique}
+
+Un graphique est la donnée de:
+
+\begin{itemize}
+\item \Helpref{Paramètres}{param}: comme les coordonnées de la fenêtre graphique, les échelles sur les axes, les marges
+....
+\item \Helpref{Variables globales}{varglob}: celles-ci contiennent en général une liste de complexes, éventuellement la
+valeur \Nil.
+\item \Helpref{Macros}{macros}: celles-ci servent à simplifier la composition du graphique.
+\item \Helpref{Eléments graphiques}{elemgraph}: comme les axes, les courbes,...
+\end{itemize}
+
+\section{Les paramètres}\label{param}
+
+Ceux-ci correspondent à l'option \textsl{Paramètres} du menu, on y trouve les options:
+
+\begin{itemize}
+\item \Mytextbf{Fenêtre}: permet de définir la zone rectangulaire du plan où s'éffectue le tracé, 
+on précise les valeurs des "constantes": \co{Xmin, Xmax, Ymin, Ymax}, puis l'échelle sur les deux axes: \co{Xscale,
+Yscale} en cm. Ces constantes peuvent être utilisées dans les commandes, mais pas modifiées directement, à moins
+d'utiliser la commande \Helpref{Fenetre}{cmdFenetre}. Le repère est orthonormé lorsque Xscale=Yscale.
+
+
+\item \Mytextbf{Marges}: permet de définir des marges autour du graphique en cas de débordement de labels par exemple.
+On précise les valeurs des "constantes": \co{margeG, margeD, margeH, margeB}, en cm.
+Ces constantes peuvent être utilisées dans les commandes, mais pas modifiées directement, à moins d'utiliser la commande
+\Helpref{Marges}{cmdMarges}.
+
+\item \Mytextbf{Exporter la bordure}: si cette option est cochée, il y aura un cadre autour du dessin lors de
+l'exportation, comme à l'écran. Ce cadre est un trait plein noir qui englobe également les marges. Cette option
+peut-être modifiée avec la commande \Helpref{Border}{cmdBorder}.
+
+\item \Mytextbf{Exporter les couleurs}: si cette option est décochée le graphique sera exporté en nuances de gris.
+
+\item \Mytextbf{Exporter les noms}: si cette option est cochée, il y aura en commentaire dans le fichier exporté le nom de
+chaque élément graphique juste avant leur tracé. Ceci permet de les retrouver facilement dans les exportations en LaTeX,
+pgf ou pstricks si on veut y effectuer des modifications.
+
+\item \Mytextbf{Afficher les variables globales}: si cette option est cochée, les variables globales sont affichées à
+l'écran (mais leur affichage ne sera pas exporté) ce qui peut servir de points de repère.
+
+\item Il est également possible de masquer les colonnes de gauche et/ou de droite de l'interface graphique, ainsi que
+monter/cacher le point d'ancrage des labels.
+\end{itemize}
+
+\section{Les couleurs}\label{chapcouleurs}
+
+
+\subsection{Couleurs prédéfinies}
+
+La liste des couleurs prédéfinies est sur cette
+page \ifhtml\url{couleurs.html}\else\href{run:html/couleurs.html}{couleurs.html}\fi.
+
+
+\subsection{Commandes et macros liées aux couleurs}
+
+\begin{itemize}
+\item \textbf[Lcolor()]{Lcolor( <couleur> [, niveau de gris] )}: macro qui renvoie les trois composantes red, green,
+blue de la couleur sous forme d'une liste [r,g,b]. Le deuxième argument est facultatif et vaut $0$ par défaut, lorsqu'il
+vaut $1$ la couleur est convertie en niveau de gris avant le calcul des composantes.
+\item \textbf[Bcolor()]{Bcolor( <couleur> )}: macro qui renvoie la composante bleue de la couleur.
+\item \textbf[Gcolor()]{Gcolor( <couleur> )}: macro qui renvoie la composante verte de la couleur.
+\item \textbf[Rcolor()]{Rcolor( <couleur> )}: macro qui renvoie la composante rouge de la couleur.
+\item \textbf[CplColor()]{CplColor( <couleur> )}: macro qui renvoie la couleur complémentaire.
+\item \textbf[Dark()]{Dark( <couleur>, <facteur> )}: macro qui fait un barycentre entre la couleur et le noir, le
+facteur est entre 0 et 1 et représente la proportion de noir (1=100\%).
+\item \textbf[Light()]{Light( <couleur>, <facteur> )}: macro qui fait un barycentre entre la couleur et le blanc, le
+facteur est entre 0 et 1 et représente la proportion de blanc (1=100\%).
+\item \textbf[GrayScale()]{GrayScale( <0/1> )}: cette commande est décrite \Helpref{ici}{cmdGrayScale}. Elle permet
+d'activer ou désactiver la conversion des couleurs en nuance de gris.
+\item \textbf[HexaColor()]{HexaColor( <valeur héxa> )}:  cette commande est décrite \Helpref{ici}{cmdHexaColor}.
+Exemple: \co{Color:=HexaColor("F5F5DC")}.
+\item \textbf[MixColor()]{MixColor( <color1>, <proportion1>, <color2>, <proportion2>, ..., <colorN>, <proportionN> )}:
+macro qui renvoie la couleur  (rgb) obtenue après le mélange des différentes couleurs passées en arguments en suivants
+les proportions correspondantes.
+\item \textbf[Palette()]{Palette( <[Color1, Color2, ..., ColorN]>, <facteur dans [0;1]>)}: renvoie une
+couleur de la palette en fonction du facteur, 0 pour la première couleur et 1 pour la dernière.
+\item \textbf[Hsb()]{Hsb( <hue (0..360)>, <saturation (0..1)>, <brightness (0..1)> )}: macro qui renvoie une couleur à
+partir de ses composantes hue, saturation , brightness. Exemple: \co{Color:=Hsb(60,1,1)}.
+\item \textbf[HueColor()]{HueColor( <couleur> )}: renvoie la composante hue de la couleur.
+\item \textbf[SatColor()]{SatColor( <couleur> )}: renvoie la composante saturation de la couleur.
+\item \textbf[BrightColor()]{BrightColor( <couleur> )}: renvoie la composante brightness de la couleur.
+
+\item \textbf[ColorJump()]{ColorJump( <couleur> )}: macro qui renvoie la constante \jump avec la \argu{couleur} dans la
+partie imaginaire. La commande \Helpref{Ligne}{cmdLigne} lit cette couleur et l'interprète comme la couleur de
+remplissage à utiliser pour peindre lorsque la variable \var{FillStyle} n'a pas a valeur \textit{none}.
+
+\item \textbf[Rgb()]{Rgb( <red (0..1)>, <green (0..1)>, <blue (0..1)> )}: cette commande est décrite
+\Helpref{ici}{cmdRgb}. Exemple: \co{Color:= Rgb(0.5, 1, 0.6)}.
+
+\item  \textbf[RgbL()]{RgbL( <[red, green, blue]> )}: cette macro a le même effet que \textit{Rgb}, sauf que les trois
+composantes sont sous forme d'une liste.
+
+\item \textbf[Ryb()]{Ryb( <red (0..1)>, <yellow (0..1)>, <blue (0..1)> )}: macro qui renvoie une couleur à partir de
+ses composantes rouge, jaune, bleu. Exemple: \co{Color:= Ryb(0.5, 0.8, 0.6)}.
+
+\item \textbf[Rgb2Hsb()]{Rgb2Hsb( <couleur> )}: macro qui convertit une couleur (rgb) en une couleur Hsb, c'est à dire
+une liste: [hue, saturation, brightness].
+
+\item \textbf[Rgb2Hexa()]{Rgb2Hexa( <couleur Rgb> )}: renvoie une chaîne représentant la couleur en hexadécimal, par
+exemple "FF0000" pour le rouge.
+
+\item \textbf[Rgb2Gray()]{Rgb2Gray( <couleur Rgb> )}: renvoie la couleur en niveau de gris (au format rgb).
+\end{itemize}
+
+\exem on colorie chaque facette en fonction de la cote du centre de gravité, on ajoute pour cela cette couleur avec la
+macro \textit{ColorJump} dans la constante \jump de fin de facette. La macro \textit{Hsb} permet de faire varier la
+couleur continûment. Pour dessiner la surface, on trie les facettes avec la commande \Helpref{SortFacet}{cmdSortFacet},
+puis elles sont dessinées.
+
+\begin{demo}{Coloration de type chaleur}{ColorJump}
+\begin{texgraph}[name=ColorJump]
+view(-6.5,6,-6.5,5.5),
+Marges(0,0,0,0),size(7.5),
+view3D(-3,3,-3,3,-3,3),ModelView(central),
+S:=GetSurface([u+i*v,2*sin(u)+cos(v)],
+               -3+3*i,-3+3*i),
+stock:=for facette in S By jump do
+   z:=Zde(isobar3d(facette)),
+   facette,
+   ColorJump(Hsb(270*(Zsup-z)/(Zsup-Zinf),1,1))
+        od,
+FillStyle:=full, LabelSize:=footnotesize,
+BoxAxes3D(grid:=1, FillColor:=lightblue),
+Ligne3D(SortFacet(stock),1)
+\end{texgraph}
+\end{demo}

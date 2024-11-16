@@ -1,0 +1,486 @@
+TeXgraph#
+{Macros pour TeXgraph 2.0 version GUI}
+
+Var
+ {Variables pour les boutons}
+    tailleB = 145+i*30;{longueur d'un bouton  et hauteur d'un bouton en pixels}
+    DeltaB = 32*i;     {écart entre deux boutons + hauteur}
+    RefPoint = 2+5*i;  {point de référence pour le premier bouton}
+    NbBoutons = 0;     {compteur de boutons}
+    NbTrackbar = 0;    {compteur de trackbars}
+
+
+Mac
+    Apercu = { macro permettant de faire un apercu du graphique en cours}
+    [Export(pgf,[TmpPath,"file.pgf"]), 
+     Exec("pdflatex", ["-interaction=nonstopmode apercu.tex"],TmpPath,1),
+     Exec(PdfReader,"apercu.pdf",TmpPath,0,1) //il faut fenêtrer pour windows
+    ];
+
+    Bouton = {Bouton(position,nom,macro[,aide]): création d'un bouton, position=x+i*y avec x y en pixels}
+    [NewButton(NbBoutons,%2,%1,tailleB,%3,%4), Inc(NbBoutons,1)];
+
+    TrackBar = {TrackBar(position, min+i*max, nom de variable [,aide]) : création d'un trackbar}
+    [if IsVar(%3)=0 then NewVar(%3,Re(%2)) else Eval(Str(%3)+":="+Str(Re(%2))) fi,
+     if %4=Nil then $aide:=Concat("Min=",Re(%2),"; Max=",Im(%2)) else aide:=%4 fi,
+     NewTrackBar(NbTrackbar,%1,tailleB, %2, %3, aide),
+     NewText(%1+Re(tailleB)+5+8*i, %3), Inc(NbTrackbar,1)
+    ];
+
+    CompVer = {CompVer("Modele" [, message]): comparaison de version}
+    [$nom:=%1, //doit être une chaine
+    $xver:=Eval(nom+"Ver"), $xvernum:=Eval(nom+"VerNum"),
+    if xver<>xvernum then
+      RaiseError([ErrFile:=Concat("Modèle ",%1),ErrLevel:="warning",
+                   ErrType:=Concat("La version actuelle est ",xvernum,LF,
+      "alors que votre fichier indique ",if xver=Nil then "???" else xver fi,".",LF,
+      "Rechargez le modèle ",nom, ".mod, puis enregistrez", LF," et rechargez votre fichier.",LF,
+      "Regardez le fichier d'aide pour les changements.",LF, %2
+      )]),
+    Eval( nom+"Ver:="+nom+"VerNum" )
+    fi];
+
+    geomview = {macro pour l'export geomview}
+    [Export(geom, [TmpPath,"temp.geom"]),
+    Exec("geomview", [TmpPath,"temp.geom"])];
+
+    WebGL = {macro pour l'export WebGL}
+    [Export(js, [TmpPath,"temp.js"]),
+     if Windows then
+        Exec("cmd /C start", [TmpPath,"modelViewer.html"])
+     else
+        Exec("xdg-open", [TmpPath,"modelViewer.html"])
+     fi];
+
+    help = {macro permettant d'ouvrir un fichier pdf du dossier Doc}
+    [//help( nom sans extension, [,dossier] )
+    $nom:=if IsString(%1) then %1 else String(%1) fi, 
+    $file:=Concat(nom,".pdf"),
+    if %2=Nil then
+        if FileExists(Concat(DocPath,file)) 
+        then Exec(PdfReader,file,DocPath,0,1)
+        elif FileExists(Concat(UserMacPath,nom,DirSep,file))
+                then Exec(PdfReader,file, Concat(UserMacPath,nom,DirSep),0,1)
+        else RaiseError([ErrFile:="Interface.mac", ErrMacro:="help()",ErrLevel:="warning", 
+                         ErrType:=Concat(file," not found.")])
+        fi
+    else Exec(PdfReader,file, Concat(%2,String(%1),DirSep),0,1)
+    fi
+    ];
+
+    javaview = {macro pour l'export javaview}
+    [Export(jvx, [TmpPath,"temp.jvx"]),
+    $taille:=Ent( 96*((Xmax-Xmin)*Xscale+i*(Ymax-Ymin)*Yscale)/2.54 ),
+    Exec(["java -jar """,JavaviewPath,"javaview.jar""", 
+          " zBuffer=Show autoRotate=Hide",
+          " size=", Re(taille), "x", Im(taille),
+          " background=""", $L:=255*Lcolor(backcolor),L[1]," ",L[2]," ",L[3],"""",
+          " viewdir=""", Round(-Xde(n()),4)," ", Round(-Yde(n()),4)," ", Round(-Zde(n()),4),"""",
+          " updir=""", Round(Xde(ScreenY()),4)," ", Round(Yde(ScreenY()),4)," ", Round(Zde(ScreenY()),4),"""",
+          " interest=""", Round(Xde(ScreenCenter()),4)," ", Round(Yde(ScreenCenter()),4)," ", Round(Zde(ScreenCenter()),4),"""",
+          " distance=", Norm(M(Xsup-Xinf,Ysup-Yinf,Zsup-Zinf))*0.85,
+          " control=Show",
+          " panel=""display""" 
+         ], [TmpPath,"temp.jvx"]
+         )];
+
+    MakeVer = {MakeVer("Modèle"): crée la variable modelever et l'affecte à modelevernum}
+    [$nom:=%1, //doit être une chaine
+    NewVar(nom+"Ver", Str(Eval(nom+"VerNum")))
+    ];
+
+    MouseZoom = {MouseZoom( ): associée par défaut à l'évenement MouseWheel}
+    [zoom(%1/abs(%1)),ReCalc()];
+
+    NewLabel = {NewLabel(%1): création de labels à la souris, à utiliser dans la macro spéciale ClicG.}
+    if Input("Texte du label=","Création d'un Label",chaine()) then
+     Inc(ComptGraph,1),
+     NewGraph("label"+Str(ComptGraph), Concat("Label(",%1,",""",chaine(),""")")),
+     ReDraw()
+    fi;
+
+    NewLabelDot = {NewLabelDot( affixe, nom, orientation, showdot, distance)}
+    [NewVar(String(%2), String(%1)), $showdot:=if nil(%4) then 1 else %4 fi,
+    if String(%3)<>"%3" then
+        if nil(%5) then
+              NewGraph( "Lab"+String(%2),
+                 Concat("LabelDot(",String(%2),",""$",String(%2),"$"",""",String(%3),""",",showdot,")"))
+         else
+              NewGraph( "Lab"+String(%2),
+                Concat("LabelDot(",String(%2),",""$",String(%2),"$"",""",String(%3),""",",showdot,",",%5,")"))
+         fi,
+          ReDraw()
+    fi];
+
+    NewLabelDot3D = {NewLabelDot(coordonnées,nom,orientation,showdot,distance)}
+    [NewVar(String(%2), String(%1)),$showdot:=if nil(%4) then 1 else %4 fi,
+     if StrComp(String(%3),"%3")=0 then
+          if nil(%5) then
+              NewGraph( "Lab"+String(%2),
+                 Concat("LabelDot(Proj3D(",String(%2),"),""$",String(%2),"$"",""",String(%3),""",",showdot,")"))
+         else
+              NewGraph( "Lab"+String(%2),
+                Concat("LabelDot(Proj3D(",String(%2),"),""$",String(%2),"$"",""",String(%3),""",",showdot,",",%5,")"))
+         fi,
+         ReDraw()
+    fi];
+
+    Snapshot = {Snapshot( export, ecran/imprimante(0/1), nom, show (0/1)): extension est non utilisée car elle est dans le nom}
+    [$rep:=%1, $show:= if %4=Nil then 1 else %4 fi, 
+    if rep<>Nil then
+        if (rep=epsc) then
+            Export(rep, TmpPath+"snapshot.eps"),
+            Exec(if Windows then "cmd /C convert" else "convert" fi, 
+                    [if %2 then "-density 1200 -depth 8 -quality 100 -alpha on -scale 25% -antialias " 
+                else "-density 96 -depth 8 -quality 100 -antialias " fi,
+                "snapshot.eps """,%3,""""], TmpPath, (show=1))
+        elif (rep=pdf) Or (rep=pdfc) Or (rep=eps) then //pour eps on passe par pdf sinon erreur ghostscript
+            Export(if rep=eps then pdf else rep fi, TmpPath+"snapshot.pdf"),
+            Exec(if Windows then "cmd /C convert" else "convert" fi, 
+                    [if %2 then "-density 1200 -depth 8 -quality 100 -alpha off -scale 25% -antialias " 
+                else "-density 96 -depth 8 -quality 100 -antialias " fi,
+                "snapshot.pdf """,%3,""""], TmpPath, (show=1))
+        elif rep=bmp then 
+            Export(rep, TmpPath+"snapshot.bmp"),
+            Exec(if Windows then "cmd /C convert" else "convert -antialias " fi, ["snapshot.bmp """,%3,""""], TmpPath, (show=1))
+        fi,
+    if show=1 then Exec(if Windows then ["cmd /C ",ImageViewer] else ImageViewer fi,["""",%3,""""],TmpPath,0)
+    elif show=0 then
+    Print("L'utilitaire convert d'ImageMagick vient d'être lancé.",LF,
+    "La conversion demandée peut être longue,",LF,
+    "attendez l'apparition de l'image dans votre navigateur de fichiers,",LF,
+    "ou surveillez la date s'il existe déjà.")
+    fi
+    fi];
+
+   VarGlob = {VarGlob(x): définit une variable globale initialisée à x}
+    if Input("Entrez le nom de la variable, puis si voulez créer le label, indiquez la position du texte (N=nord, NO=nord-ouest...), 
+    puis la distance en cm [facultative, 0.25cm par défaut]. La valeur de la variable sera l'affixe du point cliqué.
+    
+    (et choisissez les attributs)
+    
+    Exemple: A, NE", "Créer une variable",chaine())
+    then 
+    Eval(Concat("NewLabelDot(",%1,",",chaine(), ")" ))
+    fi;
+
+{% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ Saisie de chaines de caractères, fichier export, fichier en cours%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    chaine = "toto";
+    ExportName = "toto";
+    JobName = "toto";
+
+{ %%%%%%%%%%%%%%%%%%%
+  Barre d'outils 2D 
+% %%%%%%%%%%%%%%%%%%%}
+
+    NewLabelDot' = 
+    if Input(["Crée une variable et affiche son nom à côté de son affixe",LF,
+    "l'orientation peut-être: N (nord) NE (nord-est) E, SE, S, SO, O",LF,
+    "mais l'orientation peut être aussi sous la forme: [longueur, direction] (direction est un complexe).",LF,LF,
+    "DrawDot (=0/1) est facultatif, DrawDot=1 indique que l'affixe doit être dessiné (c'est la valeur par défaut)",LF,
+    "distance est également facultative (0.25cm par défaut).",LF,LF,
+    "Entrez: affixe, nom du point, orientation [, DrawDot [, distance]]",LF,
+    "(et choisissez les attributs)",LF,LF,
+    "Exemple: 1+i, A, NE"], "NewLabelDot( affixe, nom, orientation, [DrawDot, [, distance]] )",chaine()) then
+    Eval("NewLabelDot("+chaine()+")")
+    fi;
+
+{ %%%%%%%%%%%%%%%%%%%
+% Menu déroulant 2D %
+% %%%%%%%%%%%%%%%%%%}
+
+    domaine1' = 
+    [$name:=Concat("domaine1_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Délimite la partie du plan comprise entre la courbe Cf et l'axe Ox et les droites x=a, x=b",LF,
+        " //domaine1(f(x), [options])",LF,LF,
+        "domaine1(",LF,
+        "   x^2,          //expression f(x)",LF,
+        "   [//options",LF,
+        "    x:=[-2,2],  //représente les bornes x=a et x=b",LF,
+        "    discont:=0, //discontinuités ou non (0/1)",LF,
+        "    nbdiv:=5,   //niveau de subdivision du pas",LF,
+        "    FillStyle:=bdiag, FillColor:=red, Width:=12 //autres options",LF,
+        "   ])",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    domaine2' = 
+    [$name:=Concat("domaine2_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Délimite la partie du plan comprise entre les courbes Cf et Cg, et les droites x=a, x=b",LF,
+        " //domaine2(f(x), [options])",LF,LF,
+        "domaine2(",LF,
+        "   x^2,          //expression f(x)",LF,
+        "   3*cos(x),     //expression de g(x)",LF,
+        "   [//options",LF,
+        "    x:=[-2,2],  //représente les bornes x=a et x=b",LF,
+        "    discont:=0, //discontinuités ou non (0/1)",LF,
+        "    nbdiv:=5,   //niveau de subdivision du pas",LF,
+        "    FillStyle:=bdiag, FillColor:=red, Width:=12 //autres options",LF,
+        "   ])",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    domaine3' = 
+    [$name:=Concat("domaine2_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Délimite la partie du plan comprise entre les courbes Cf et Cg",LF,
+        " //domaine3(f(x), [options])",LF,LF,
+        "domaine3(",LF,
+        "   x^2,          //expression f(x)",LF,
+        "   3*cos(x),     //expression de g(x)",LF,
+        "   [//options",LF,
+        "    x:=[tMin,tMax],  //intervalle de tracé",LF,
+        "    discont:=0, //discontinuités ou non (0/1)",LF,
+        "    nbdiv:=5,   //niveau de subdivision du pas",LF,
+        "    FillStyle:=bdiag, FillColor:=red, Width:=12 //autres options",LF,
+        "   ])",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    tangente' = 
+    [$name:=Concat("tangente_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Trace la tangente à la courbe Cf au point d'abscisse x0, on trace un segment de longueur donnée (cm) ou la droite",LF,
+        " //tangente(f(x), x0, longueur, [options])",LF,LF,
+        "tangente(",LF,
+        "   sin(x),  //expression f(x)",LF,
+        "   pi/4,    //valeur de x0",LF,
+        "   Nil,     //longueur du segment, Nil pour la droite",LF,
+        "   []       //options locales de seg ou straightL (droite)",LF,
+        "    )",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    tangenteP' =
+    [$name:=Concat("tangenteP_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Trace la tangente à la courbe paramétrée par f(t) au point de paramètre t0,",LF,
+        " //on trace un segment de longueur donnée (cm) ou la droite",LF,
+        " //tangenteP(f(t), t0, longueur, [options])",LF,LF,
+        "tangenteP(",LF,
+        "   2*exp(i*t),  //expression f(x)",LF,
+        "   pi/4,        //valeur de x0",LF,
+        "   2,          //longueur du segment, Nil pour la droite",LF,
+        "   [Arrows:=2, legend:=""T""] //options locales de seg ou straightL (droite)",LF,
+        "    )",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    suite' = 
+    [$name:=Concat("suite_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Représente la construction graphique de la suite définie par u_(n+1)=f(u_n)",LF,
+        " //suite(f(x), u0, nb de termes, [options])",LF,LF,
+        "suite(",LF,
+        "   4*x*(1-x),  //expression f(x)",LF,
+        "   0.3,       //valeur de x0",LF,
+        "   15,        //nombre de termes",LF,
+        "   []         //options locales de line",LF,
+        "    )",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    periodic'= 
+    [$name:=Concat("periodic_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Trace la courbe de la fonction périodique définie par f(x) sur une cetaine période",LF,
+        " //draw(""periodic"",f(x), [options])",LF,LF,
+        "draw(""periodic"",",LF,
+        "   x^2,          //expression f(x)",LF,
+        "   [//options",LF,
+        "    period:=[0,1],  //définition d'une période",LF,
+        "    x:=[-5,5],      //intervalle de tracé",LF,
+        "    discont:=0, //discontinuités ou non (0/1)",LF,
+        "    nbdiv:=5,   //niveau de subdivision du pas",LF,
+        "    marker:=[0,Carc,1,Oarc], Width:=8 //autres options (line)",LF,
+        "   ])",LF, 
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    wedge' = 
+    [$name:=Concat("wedge_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Dessine un secteur angulaire défini par un angle BAC et un rayon r",LF,
+        "//wedge(B,A,C,r,sens,[options])",LF,LF,
+        "wedge(",LF,
+        "   1+i,     //affixe du point B",LF,
+        "   0,       //affixe du point A",LF,
+        "   1,       //affixe du point C",LF,
+        "   1,       //rayon r",LF,
+        "   1,       //sens 1=trigo, -1=inverse",LF,
+        "   []      //liste des options, ex: [FillStyle:=full, FillColor:=cyan]",LF,
+        "    )",LF,
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    axeX' = 
+    [$name:=Concat("axeX_",ComptGraph+1),
+     $commande:=Concat(
+        "[//draw(""axeX"", [A,pas], [options]) : dessine un axe horizontal avec (A,pas) comme repère",LF,LF,
+        "draw(""axeX"",",LF,
+        "   [0,1],   //affixe du point A et pas",LF,
+        "   [//liste des options et valeurs par défaut",LF,
+        "    showaxe:=1, //0/1 affichage ou non de l'axe",LF,
+        "",LF,
+        "    limits:=jump, //N1+i*N2 intervalle  représentant le segment [A+N1*u, A+N2*u], jump par défaut pour la droite entière",LF,
+        "    gradlimits:=jump, //N1+i*N2 intervalle des graduations (entières), égal à limits par défaut",LF,
+        "    unit:=1,",LF,
+        "    nbsubdiv:=0, //nombre de nbsubdivisions par unité",LF,
+        "",LF,
+        "    tickpos:=0.5, //dans [0;1]",LF,
+        "    tickdir:=jump, //direction des graduations (jump pour orthogonal)",LF,
+        "    xyticks:=0.2, //longueur des graduations, 0.2 par défaut",LF,
+        "    xylabelsep:=0.1, //distance labels-graduations, 0.1 par défaut",LF,
+        "",LF,
+        "    originpos:=center, //jump/center/left/right, center par défaut",LF,
+        "    originnum:=0, //les labels sont: (originnum + unit*n)""labeltext""/labelden",LF,
+        "",LF,
+        "    legend:="""", //légende, vide par défaut",LF,
+        "    legendpos:=0.9, //position de la légende le long de l'axe (dans [0;1]), 0.9 par défaut",LF,
+        "    legendsep:=0.5, //distance axe-légende, 0.5 par défaut",LF,
+        "    legendangle:=jump, // jump pour parallèle à l'axe, sinon angle en degrés",LF,
+        "",LF,
+        "    labelpos:=bottom, //jump/top/bottom, bottom par défaut (par rapport à l'horizontale)",LF,
+        "    labelshift:=0, //décalage systématique des labels le long de l'axe, 0 par défaut",LF,
+        "    labelden:=1, //dénominateur (entier), 1 par défaut",LF,
+        "    labeltext:="""",// texte ajouté aux labels, vide par défaut",LF,
+        "    labelstyle:=top, //ortho, right, left,..., top par défaut",LF,
+        "    nbdeci:=2, //nb de décimales, 2 par défaut",LF,
+        "    numericFormat:=0, //format d'affichage, 0 par défaut (1=scientifique, 2=ingénieur)",LF,
+        " ])",LF,
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+
+    axeY' = 
+    [$name:=Concat("axeY_",ComptGraph+1),
+     $commande:=Concat(
+        "[//draw(""axeY"", [A,pas], [options]) : dessine un axe vertical avec (A,pas) comme repère",LF,LF,
+        "draw(""axeY"",",LF,
+        "   [0,1],   //affixe du point A et pas",LF,
+        "   [//liste des options et valeurs par défaut :",LF,
+        "    showaxe:=1, //0/1 affichage ou non de l'axe",LF,
+        "",LF,
+        "    limits:=jump, //N1+i*N2 intervalle  représentant le segment [A+N1*u, A+N2*u], jump par défaut pour la droite entière",LF,
+        "    gradlimits:=jump, //N1+i*N2 intervalle des graduations (entières), égal à limits par défaut",LF,
+        "    unit:=1,",LF,
+        "    nbsubdiv:=0, //nombre de nbsubdivisions par unité",LF,
+        "",LF,
+        "    tickpos:=0.5, //dans [0;1]",LF,
+        "    tickdir:=jump, //direction des graduations (jump pour orthogonal)",LF,
+        "    xyticks:=0.2, //longueur des graduations, 0.2 par défaut",LF,
+        "    xylabelsep:=0.1, //distance labels-graduations, 0.1 par défaut",LF,
+        "",LF,
+        "    originpos:=center, //jump/center/left/right, center par défaut",LF,
+        "    originnum:=0, //les labels sont: (originnum + unit*n)""labeltext""/labelden",LF,
+        "",LF,
+        "    legend:="""", //légende, vide par défaut",LF,
+        "    legendpos:=0.9, //position de la légende le long de l'axe (dans [0;1]), 0.9 par défaut",LF,
+        "    legendsep:=0.5, //distance axe-légende, 0.5 par défaut",LF,
+        "    legendangle:=jump, // jump pour parallèle à l'axe, sinon angle en degrés",LF,
+        "",LF,
+        "    labelpos:=left, //jump/left/right, left par défaut (par rapport à la verticale)",LF,
+        "    labelshift:=0, //décalage systématique des labels le long de l'axe, 0 par défaut",LF,
+        "    labelden:=1, //dénominateur (entier), 1 par défaut",LF,
+        "    labeltext:="""", //texte ajouté aux labels, vide par défaut",LF,
+        "    labelstyle:=right, //ortho, right, left,..., right par défaut",LF,
+        "    nbdeci:=2, //nb de décimales, 2 par défaut",LF,
+        "    numericFormat:=0, //format d'affichage, 0 par défaut (1=scientifique, 2=ingénieur)",LF,
+        " ])",LF,
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+    LabelAxe' = 
+    [$name:=Concat("LabelAxe_",ComptGraph+1),
+     $commande:=Concat(
+        "[//Ajoute un label à un des axes (x ou y)",LF,
+        "//LabelAxe( x/y, affixe, label, [labelPos, decalage], mark)",LF,
+        "//Re(labelpos)=bottom signifie en dessous pour Ox et à droite pour Oy [par défaut pour Ox]",LF,
+        "//Re(labelpos)=top signifie au dessus pour Ox et à gauche pour Oy [par défaut pour Oy]",LF,
+        "//Im(labelpos)=left signifie un décalage sur la gauche pour Ox, vers le bas pour Oy",LF,
+        "//Im(labelpos)=right signifie un décalage sur la droite pour Ox, vers le haut pour Oy",LF,
+        "//Im(labelpos)=center signifie pas de décalage [défaut]",LF,LF,
+        "LabelAxe(",LF,
+        "   x,                 //pour l'axe des x",LF,
+        "   sqrt(2),           //affixe du point",LF,
+        "   ""$\sqrt{2}"",     //le label",LF,
+        "   [bottom+i*center,  //position du label",LF,
+        "   0.25],             //décalage du label",LF,
+        "   1                  //marquer le point (DotStyle courant)",LF,
+        "    )",LF,
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1) fi
+    ];
+
+
+    papiers' = 
+    [$num:=ComptGraph+1, $name:=Concat("papier_",num),
+     $commande:=Concat(
+        "[//Dessine un papier quadrillé",LF,
+        "//Le fichier papiers.mac sera chargé",LF,
+        "//Vous pouvez taper help(papiers) dans la barre de commandes",LF,
+        "//papier( type, coin inf gauche, coin sup droit , [options])",LF,
+        "//options locales :",LF,
+        "//  gridcolor:=couleur grille principale (black par défaut)]",LF,
+        "//  subgridcolor:=couleur grille secondaire (Rgb(0.66,0.66,0.5) par défaut)",LF,LF,
+        "papier(",LF,
+        "   milli,    // type milli ou petitcar ou grandcar ou point1 ou point2 ou point3",LF,
+        "   -4-4*i,   //affixe coin inférieur gauche",LF,
+        "   4+4*i,    //affixe coin supérieur droit",LF,
+        "   []        //liste des options, par ex: [gridcolor:=gray]",LF,
+        "    )",LF,
+        "]"),
+     if EditGraph(name,commande) then Inc(ComptGraph,1), InputMac("papiers.mod"), ReCalc(["papier_",num]) fi
+    ];
+
+{ %%%%%%%%%%%%%%%%%%%
+% Barre d'outils 3D %
+% %%%%%%%%%%%%%%%%%%}
+
+    NewLabelDot3D' = 
+    if Input("Crée une variable de l'espace et affiche son nom à côté du point, 
+    
+    le point peut être également affiché, 
+    
+    l'orientation peut-être: N (nord) NE (nord-est) ...
+     
+    DrawDot (=0/1) est facultatif, DrawDot=1 indique que le point doit être dessiné (c'est la valeur par défaut)
+    la distance est également facultative (0.25cm par défaut).
+    
+    Un point3D ou un vecteur de coordonnées (x,y,z) s'écrit: [x+i*y,z] ou M(x,y,z), les vecteurs de bases sont vecI, vecJ et vecK, l'origine est notée Origin et correspond à: M(0,0,0).
+    
+    Entrez: coordonnées, nom du point, orientation [, DrawDot [, distance]]
+    
+    (et choisissez les attributs) Exemple: M(1,-1,0), A, NE", "NewLabelDot3D( coordonnées, nom, orientation, [DrawDot, [, distance]])", chaine()) then
+        Eval("NewLabelDot3D("+chaine()+")")
+    fi;
+
+{Menu 2D}
+Cmd 
+    AddMenu2D("axeX'", "Axe des abscisses");
+    AddMenu2D("axeY'", "Axe des ordonnées");
+    AddMenu2D("LabelAxe'", "Ajouter un label aux axes");
+    AddMenu2D("domaine1'", "intégrale de f");
+    AddMenu2D("domaine2'", "intégrale de f-g");
+    AddMenu2D("domaine3'", "aire délimitée par f et g");
+    AddMenu2D("papiers'", "Différents papiers quadrillés");
+    AddMenu2D("periodic'", "tracer une fonction périodique");
+    AddMenu2D("suite'", "u_(n+1)=f(u_n)");
+    AddMenu2D("tangente'", "tangente courbe cartésienne");
+    AddMenu2D("tangenteP'", "tangente courbe paramétrée");
+    AddMenu2D("wedge'", "secteur angulaire");

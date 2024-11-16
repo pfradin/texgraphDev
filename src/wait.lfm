@@ -1,0 +1,15 @@
+object PleaseWait: TPleaseWait
+  Left = 599
+  Height = 76
+  Top = 409
+  Width = 252
+  HorzScrollBar.Page = 266
+  VertScrollBar.Page = 6
+  Caption = 'Please wait ...'
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnPaint = FormPaint
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '1.9.0.0'
+end

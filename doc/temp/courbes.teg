@@ -1,0 +1,19 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5), Marges(0,0,0,0), size(7.5),
+draw("line",carre(Xmin+i*Ymin,Xmax+i*Ymin,1),
+ [close:=1,LineStyle:=noline,FillStyle:=gradient,
+ GradAngle:=-45,FillColorB:=darkgray]),
+draw("polar",2*(1+cos(t)),[t:=[-pi,pi],Width:=12,
+ FillStyle:=gradient,Width:=8,FillColorB:=darkblue,
+ GradStyle:=radial, GradCenter:=0.5+0.5*i,
+ legend:="$\rho(t)=2(1+\cos(t))$",labeldir:=South]),
+draw("parametric",2*(cos(2*t)+i*sin(3*t))-2.5+2.5*i,
+ [t:=[pi/2,pi+pi/2],Width:=24,LineStyle:=gradient,
+ LineColorA:=yellow,LineColorB:=red,
+ GradLineStep:=0.25,Width:=8,legend:="$\cal C$",
+ labelpos:=0.25, labeldir:=West] ),
+draw("axes",[0,1+i],Arrows:=1),
+draw("cartesian",Ent(x),[x:=[-4,4],discont:=1,
+ Color:=seagreen, marker:=[0,dot,1,Oarc],Width:=8])
+];

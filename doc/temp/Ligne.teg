@@ -1,0 +1,10 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), size(7.5),
+A:=-5-5*i, B:=5*i, C:=5-5*i, niv:=6,
+Tr:=[A,B,C,jump], {figure initiale}
+for k from 1 to niv do
+ Tr:=[hom(Tr,A,0.5),hom(Tr,B,0.5),hom(Tr,C,0.5)]
+od,
+FillStyle:=full, FillColor:=blue, Line(Tr,1)
+];

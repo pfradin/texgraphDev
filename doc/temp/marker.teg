@@ -1,0 +1,106 @@
+TeXgraph#
+Mac
+  legende = if %1=dot then "dot"
+  elif %1=dotcircle then "dotcircle"
+  elif %1=square then "square"
+  elif %1=square' then "square'"
+  elif %1=plus then "plus"
+  elif %1=times then "times"
+  elif %1=asterisk then "asterisk"
+  elif %1=oplus then "oplus"
+  elif %1=otimes then "otimes"
+  elif %1=diamond then "diamond"
+  elif %1=diamond' then "diamond'"
+  elif %1=triangle then "triangle"
+  elif %1=triangle' then "triangle'"
+  elif %1=pentagon then "pentagon"
+  elif %1=pentagon' then "pentagon'"
+  elif %1=Oarc then "Oarc"     {arc ouvert}
+  elif %1=Carc then  "Carc"   {arc fermé}
+  elif %1=Ocro then  "Ocro"   {crochet ouvert}
+  elif %1=Ccro then  "Ccro"   {crochet fermé}
+  elif %1=Oarrow then  "Oarrow"   {flèche ouverte}
+  elif %1=Carrow then  "Carrow"     {flèche fermée}
+  elif %1=OTarrow then  "OTarrow"  {flèche triangulaire ouverte creuse}
+  elif %1=CTarrow then  "CTarrow"  {flèche triangulaire fermée creuse}
+  elif %1=OTarrow' then  "OTarrow'" {flèche triangulaire ouverte pleine}
+  elif %1=CTarrow' then  "CTarrow'" {flèche triangulaire fermée pleine}
+  elif %1=Line then  "Line"   {trait droit}
+  elif %1=Circle then  "Circle"   {cercle plein}
+  elif %1=OParrow then  "OParrow"  {flèche ouverte creuse}
+  elif %1=CParrow then  "CParrow"  {flèche fermée creuse}
+  elif %1=OParrow' then  "OParrow'" {Flèche ouverte pleine}
+  elif %1=CParrow' then  "CParrow'" {Flèche fermée pleine}
+  elif %1=Osect then  "Osect"    {Secteur angulaire ouvert creux}
+  elif %1=Csect then  "Csect"      {Secteur angulaire fermé creux}
+  elif %1=Oarc' then  "Oarc'"      {Arc de cercle ouvert}
+  elif %1=Carc' then  "Carc'"      {Arc de cercle fermé}
+  elif %1=Oarrow2 then  "Oarrow2"  {Double flèche ouverte}
+  elif %1=Carrow2 then  "Carrow2"  {Double flèche fermée}
+  elif %1=Oarrow3 then  "Oarrow3"  {Triple flèche ouverte}
+  elif %1=Carrow3 then  "Carrow3"  {Triple flèche fermée}
+  elif %1=ODarrow then  "ODarrow"  {Demi-flèche inférieure ouverte creuse}
+  elif %1=CDarrow then  "CDarrow"  {Demi-flèche inférieure fermée creuse}
+  elif %1=OUarrow then  "OUarrow"  {Demi-flèche supérieure ouverte creuse}
+  elif %1=CUarrow then  "CUarrow"  {Demi-flèche supérieure fermée creuse}
+    elif %1=ODParrow then  "ODParrow" {Demi-flèche inférieure ouverte creuse}
+  elif %1=CDParrow then  "CDParrow" {Demi-flèche inférieure fermée creuse}
+  elif %1=ODParrow' then  "ODParrow'"  {Demi-flèche inférieure ouverte pleine}
+  elif %1=CDParrow' then  "CDParrow'"  {Demi-flèche inférieure fermée pleine}
+  elif %1=OUParrow then  "OUParrow" {Demi-flèche supérieure ouverte creuse}
+  elif %1=OUParrow' then  "OUParrow'"  {Demi-flèche supérieure ouverte pleine}
+  elif %1=CUParrow then  "CUParrow" {Demi-flèche supérieure fermée creuse}
+  elif %1=CUParrow' then  "CUParrow'"  {Demi-flèche supérieure fermée pleine}
+  elif %1=ODarrow2 then  "ODarrow2" {Demi-flèche inférieure double ouverte}
+  elif %1=CDarrow2 then  "CDarrow2" {Demi-flèche inférieure double fermée}
+  elif %1=OUarrow2 then  "OUarrow2" {Demi-flèche supérieure double ouverte}
+  elif %1=CUarrow2 then  "CUarrow2" {Demi-flèche supérieure double fermée}
+  elif %1=ODarrow3 then  "ODarrow3" {Demi-flèche inférieure triple ouverte}
+  elif %1=CDarrow3 then  "CDarrow3" {Demi-flèche inférieure triple fermée}
+  elif %1=OUarrow3 then  "OUarrow3" {Demi-flèche supérieure triple ouverte}
+  elif %1=CUarrow3 then  "CUarrow3" {Demi-flèche supérieure triple fermée}
+  elif %1=Square then  "Square"     {Carré creux}
+  elif %1=TSquare then  "TSquare"  {Carré creux avec rotation}
+  elif %1=Square' then  "Square'"  {Carré plein}
+  elif %1=TSquare' then  "TSquare'" {Carré plein avec rotation}
+  elif %1=Times then  "Times"    {Croix}
+  elif %1=Plus then  "Plus"   {Plus}
+  elif %1=Dots then  "Dots"   {Droite infinie}
+  elif %1=Oscissors then  "Oscissors"  {Paire de ciseaux ouverte creuse}
+  elif %1=Cscissors then  "Cscissors"  {Paire de ciseaux fermée creuse}
+  elif %1=Oscissors' then  "Oscissors'" {Paire de ciseaux ouverte pleine}
+  elif %1=Cscissors' then  "Cscissors'" {Paire de ciseaux fermée pleine}
+    elif %1=OUdistance then  "OUdistance"
+  elif %1=CUdistance then  "CUdistance"
+  elif %1=OUdistance' then  "OUdistance'"
+  elif %1=CUdistance' then  "CUdistance'"
+  elif %1=ODdistance then  "ODdistance"
+  elif %1=CDdistance then  "CDdistance"
+  elif %1=ODdistance' then  "ODdistance'"
+  elif %1=CDdistance' then  "CDdistance'"
+  fi;
+
+Graph objet1 = [
+  liste:=[dot,dotcircle,square,square',plus,times,asterisk,oplus,otimes,diamond,diamond',triangle,triangle',
+     pentagon,pentagon',Oarc,Carc,Ocro,Ccro,Oarrow,Carrow,OTarrow,CTarrow,OTarrow',CTarrow',Line,Circle,
+   OParrow,CParrow,OParrow',CParrow',Osect,Csect,Oarc',Carc',Oarrow2,Carrow2,Oarrow3,Carrow3,
+   ODarrow,CDarrow,OUarrow,CUarrow,ODParrow,CDParrow,ODParrow',CDParrow',OUParrow,CUParrow,
+   OUParrow',CUParrow',ODarrow2,CDarrow2,OUarrow2,CUarrow2,ODarrow3,CDarrow3,OUarrow3,CUarrow3,
+   Square,TSquare,Square',TSquare',Times,Plus,Dots,Oscissors,Cscissors,Oscissors',Cscissors',
+   OUdistance,CUdistance,OUdistance',CUdistance',ODdistance,CDdistance,ODdistance',CDdistance'],
+
+  view(-6,12,-15,5), Marges(0,0,0,0), size(15), col1:=-4+5.25*i, distx:=0.75, disty:=-i*0.75,
+    LabelSize:=scriptsize, LabelStyle:=right, LineStyle:=dotted, Width:=6,
+  Droite(col1+distx,col1+i+distx), Droite(col1+distx+1+distx,col1+i+distx+1+distx),
+  Droite(col1+6+distx,col1+6+i+distx), Droite(col1+7+2*distx,col1+7+i+2*distx),
+  Droite(col1+12+distx,col1+i+12+distx), Droite(col1+13+2*distx,col1+i+13+2*distx),
+  Color:=black, LineStyle:=solid, k:=0,
+  for z in liste do
+    Inc(k,1), reste:=mod(k,3),
+    pos:= if reste=1 then Inc(col1,disty), col1
+       elif reste=2 then col1+6 else col1+12 fi,
+    Label(pos, ["($\pm$) ",@legende(z)]), Inc(pos,distx),
+    draw("line", [pos,pos+1], marker:=[0, z]), Inc(pos,1+distx),
+    draw("line", [pos,pos+1], marker:=[0, -z]),
+  od
+  ];

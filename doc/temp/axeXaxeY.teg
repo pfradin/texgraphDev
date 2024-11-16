@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+Arrows:=1, CurrentArrow:=CParrow', view(-5,5,-4,4),
+Marges(0.25,0.25,0.25,0.25), size(7.5),
+draw("axeX", [3*i,1], [limits:=-4+4*i, legend:="$x$"]),
+draw("axeX", [2*sqrt(2)-3*i,-sqrt(2)],
+ [limits:=-4+4*i, legend:="$x$", labeltext:="\sqrt{2}",
+  nbsubdiv:=1, originnum:=2]),
+draw("axeY", [-4.5,1], [legend:="$y$", unit:=2]),
+draw("axeY", [4.5,-1], [legend:="$y$",labelpos:=right])
+];

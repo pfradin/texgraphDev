@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-3,3), size(7.5),
+SetMatrix([0,1,1+i]), axes(0,1+i),
+tMin:=-5, tMax:=5,
+Color:=red, Width:=8, Cartesienne(2*sin(x)),
+Color:=black, Arrows:=2,
+tangente(2*sin(x), pi/2, 1.5),
+Arrows:=0, LineStyle:=dotted,
+Ligne( [2*i,pi/2+2*i, pi/2], 0),
+Point(pi/2+2*i),
+LabelDot( pi/2, "$\frac{\pi}2$","S",1),
+IdMatrix()
+];

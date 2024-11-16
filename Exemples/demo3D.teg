@@ -1,0 +1,37 @@
+TeXgraph#
+{version 1.98}
+Cmd
+	Window(-5+5*i, 6-5*i, 0.8+0.8*i); 
+	Margin(0, 0, 0, 0);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=0.5237, phi:=1.309, IdMatrix3D(), ModelView(central), DistCam(20)];
+	[GrayScale(0), ComptGraph:=0];
+
+Cmd	[Width:=6,FillStyle:=1,FillColor:=7973736,tMin:=-1.25,tMax:=5,DotScale:=1+i];
+Graph sphere = [$A:=[1-3*i,1], 
+	$S:=Sphere(A,1,25,25), 
+	$B:=A-0.25*(vecJ+vecK)/sqrt(2),
+	$L:=Intersection([ B,vecK+vecJ], S),
+	Dsphere(A,1,1), HideStyle:=dotted, FillStyle:=none,
+	Color:=red, DrawAretes(L,0),
+	DrawPlan( [ B, vecK+vecJ], vecJ-vecK, 3,3,-3)
+	];
+Cmd	[FillColor:=8366847];
+Graph parallele = [
+	$A:=[-3+1*i,-1], $B:=A+2*vecI, $C:=A+vecI+vecJ+2*vecK, $D:=C+2*vecI+2*vecJ,
+	$S:=Parallelep(A, 2*vecI, 3*vecJ, vecI+vecJ+2*vecK),
+	$u:=-Prodvec(D-B,C-B),  $S':=Section( [B, u], S),
+	DrawPoly(S',2), FillStyle:=none, Color:=darkseagreen,
+	DrawPlan( [(B+C+D)/3,u], D-C, 4,3.5,5)
+	];
+Cmd	[FillColor:=2088156];
+Graph cone = [Dcone( Origin, -3*vecK, 2, 2,1), Dcone( Origin, 3*vecK, 2, 2),
+	 $C:=Cone(Origin, -3*vecK, 2, 35), FillStyle:=none,
+	 $L:=Intersection( [[i,0], -vecJ], C),
+	 Color:=blue, Width:=6, DrawAretes(L,0),
+	 $C:=Cone(Origin, 3*vecK, 2, 35),
+	 $L:=Intersection( [[i,0], -vecJ], C),
+	 Color:=blue, Width:=6,  DrawAretes(L,0),
+	 DrawPlan( [ [i,0], -vecJ], vecK, 7, 6,2)
+	];

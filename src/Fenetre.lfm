@@ -1,0 +1,287 @@
+object FenetreForm: TFenetreForm
+  Left = 802
+  Height = 263
+  Top = 393
+  Width = 388
+  HorzScrollBar.Page = 387
+  VertScrollBar.Page = 262
+  ActiveControl = Edit1
+  BorderIcons = []
+  BorderStyle = bsDialog
+  Caption = 'View'
+  ClientHeight = 263
+  ClientWidth = 388
+  Font.Height = -12
+  Font.Pitch = fpVariable
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.3'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Edit1
+    Left = 10
+    Height = 15
+    Top = 40
+    Width = 35
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Right = 5
+    Caption = 'Xmin='
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 15
+    Top = 7
+    Width = 388
+    Alignment = taCenter
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 7
+    Caption = 'Define a window for the graph'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideRight.Control = Edit2
+    Left = 214
+    Height = 15
+    Top = 42
+    Width = 37
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Xmax='
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideRight.Control = Edit3
+    Left = 11
+    Height = 15
+    Top = 82
+    Width = 34
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Ymin='
+    ParentColor = False
+  end
+  object Label5: TLabel
+    AnchorSideLeft.Control = Owner
+    Left = 5
+    Height = 15
+    Top = 122
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Left = 5
+    Caption = 'Xscale='
+    ParentColor = False
+  end
+  object Label6: TLabel
+    AnchorSideRight.Control = Edit6
+    Left = 215
+    Height = 15
+    Top = 82
+    Width = 36
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Ymax='
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideRight.Control = Edit6
+    Left = 212
+    Height = 15
+    Top = 122
+    Width = 39
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'Yscale='
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideLeft.Control = Edit5
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label5
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Edit1
+    AnchorSideRight.Side = asrBottom
+    Left = 154
+    Height = 15
+    Top = 122
+    Width = 17
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 5
+    Caption = 'cm'
+    ParentColor = False
+  end
+  object Label9: TLabel
+    AnchorSideTop.Control = Label7
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 366
+    Height = 15
+    Top = 122
+    Width = 17
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 5
+    Caption = 'cm'
+    ParentColor = False
+  end
+  object Label10: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 15
+    Top = 152
+    Width = 388
+    Alignment = taCenter
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Height and width (without margins)'
+    ParentColor = False
+  end
+  object Label11: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 15
+    Top = 176
+    Width = 388
+    Alignment = taCenter
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Width=Xscale*(Xmax-Xmin)'
+    ParentColor = False
+  end
+  object Label12: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 15
+    Top = 200
+    Width = 388
+    Alignment = taCenter
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Height=Yscale*(Ymax-Ymin)'
+    ParentColor = False
+  end
+  object Edit1: TEdit
+    AnchorSideLeft.Control = Edit5
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrCenter
+    Left = 50
+    Height = 25
+    Top = 35
+    Width = 121
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    AnchorSideLeft.Control = Edit6
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 256
+    Height = 25
+    Top = 37
+    Width = 127
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 5
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object Edit3: TEdit
+    AnchorSideLeft.Control = Edit5
+    AnchorSideTop.Control = Label4
+    AnchorSideTop.Side = asrCenter
+    Left = 50
+    Height = 25
+    Top = 77
+    Width = 121
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object Edit4: TEdit
+    AnchorSideLeft.Control = Edit6
+    AnchorSideTop.Control = Label4
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 256
+    Height = 25
+    Top = 77
+    Width = 127
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 5
+    TabOrder = 3
+    Text = 'Edit1'
+  end
+  object Edit5: TEdit
+    AnchorSideLeft.Control = Label5
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label5
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    Left = 50
+    Height = 25
+    Top = 117
+    Width = 102
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    TabOrder = 4
+    Text = 'Edit1'
+  end
+  object Edit6: TEdit
+    AnchorSideTop.Control = Label7
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label9
+    Left = 256
+    Height = 25
+    Top = 117
+    Width = 110
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 5
+    Text = 'Edit1'
+  end
+  object Button1: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 56
+    Height = 30
+    Top = 228
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    Default = True
+    OnClick = Button1Click
+    TabOrder = 6
+  end
+  object Button2: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 254
+    Height = 30
+    Top = 228
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    Font.CharSet = 30
+    Font.Height = -12
+    Font.Pitch = fpVariable
+    ModalResult = 2
+    ParentFont = False
+    TabOrder = 7
+  end
+end

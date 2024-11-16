@@ -1,0 +1,62 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.75,0)}%
+\pgfsetyvec{\pgfxy(0,0.75)}%
+\useasboundingbox (-5,-5)--(5,5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundcap%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(1.9951,0.5742)}\pgfellipse{\pgfxy(1.9295,0.5742)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(1.9295,0.9075)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 1}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(-1.2609,0.0118)}\pgfellipse{\pgfxy(-1.3265,0.0118)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(-1.3265,0.3451)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 2}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(2.0917,0.1983)}\pgfellipse{\pgfxy(2.0261,0.1983)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(2.0261,0.5317)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 3}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(-1.2631,-1.8731)}\pgfellipse{\pgfxy(-1.3287,-1.8731)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(-1.3287,-1.5398)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 4}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(1.7082,-0.2789)}\pgfellipse{\pgfxy(1.6425,-0.2789)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(1.6425,0.0544)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 5}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(2.4071,0.6297)}\pgfellipse{\pgfxy(2.3415,0.6297)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(2.3415,0.9631)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 6}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(0.0952,3.9904)}\pgfellipse{\pgfxy(0.0296,3.9904)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(0.0296,4.3238)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 7}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(-1.278,-1.3691)}\pgfellipse{\pgfxy(-1.3436,-1.3691)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(-1.3436,-1.0357)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 8}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(1.7594,-1.2132)}\pgfellipse{\pgfxy(1.6937,-1.2132)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(1.6937,-0.8799)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 9}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(0.6652,3.4379)}\pgfellipse{\pgfxy(0.5996,3.4379)}{\pgfxy(0.0000,0.0656)}{\pgfxy(-0.0656,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(0.5996,3.7712)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small 10}}\pgfstroke%
+\pgfsetbuttcap%
+\pgfpathmoveto{\pgfxy(1.6937,-1.2132)}%
+\pgfpathlineto{\pgfxy(2.3415,0.6297)}\pgfpathlineto{\pgfxy(0.5996,3.4379)}\pgfpathlineto{\pgfxy(0.0296,3.9904)}\pgfpathlineto{\pgfxy(-1.3265,0.0118)}%
+\pgfpathlineto{\pgfxy(-1.3436,-1.3691)}\pgfpathlineto{\pgfxy(-1.3287,-1.8731)}\pgfclosepath%
+\pgfstroke%
+\end{tikzpicture}%
+\egroup%

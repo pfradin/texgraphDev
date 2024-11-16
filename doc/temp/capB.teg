@@ -1,0 +1,8 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0),size(7.5),
+A:=setB("A", 0, [rotation:=30]),
+B:=setB("B", 0, [rotation:=-30]),
+C:= capB(A,B),Color:=red,FillStyle:=full,
+drawSet(C, [FillOpacity:=0.5, FillColor:=pink])
+];

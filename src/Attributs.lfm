@@ -1,0 +1,1375 @@
+object AttributsForm: TAttributsForm
+  Left = 560
+  Height = 371
+  Top = 282
+  Width = 661
+  BorderIcons = []
+  BorderStyle = bsDialog
+  Caption = 'Attributes'
+  ClientHeight = 371
+  ClientWidth = 661
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.9.0.0'
+  object CheckBoxReCalc: TCheckBox
+    AnchorSideLeft.Control = GroupBoxColors
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = GroupBoxColors
+    AnchorSideTop.Side = asrBottom
+    Left = 410
+    Height = 22
+    Top = 122
+    Width = 120
+    BorderSpacing.Top = 2
+    Caption = 'Recalcul Auto.'
+    TabOrder = 0
+  end
+  object GroupBoxColors: TGroupBox
+    AnchorSideLeft.Control = PageControl1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 410
+    Height = 118
+    Top = 2
+    Width = 120
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 2
+    Caption = 'Colors'
+    ClientHeight = 96
+    ClientWidth = 116
+    TabOrder = 1
+    object Shape1: TShape
+      AnchorSideTop.Control = Button1
+      AnchorSideBottom.Control = Button1
+      AnchorSideBottom.Side = asrBottom
+      Left = 72
+      Height = 30
+      Top = 17
+      Width = 33
+      Anchors = [akTop, akLeft, akBottom]
+    end
+    object Shape2: TShape
+      AnchorSideLeft.Control = Shape1
+      AnchorSideTop.Control = Button2
+      AnchorSideBottom.Control = Button2
+      AnchorSideBottom.Side = asrBottom
+      Left = 72
+      Height = 30
+      Top = 61
+      Width = 33
+      Anchors = [akTop, akLeft, akBottom]
+    end
+    object Button1: TButton
+      Left = 5
+      Height = 30
+      Top = 17
+      Width = 60
+      BorderSpacing.InnerBorder = 4
+      Caption = 'Color'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+    object Button2: TButton
+      Left = 5
+      Height = 30
+      Top = 61
+      Width = 60
+      BorderSpacing.InnerBorder = 4
+      Caption = 'FillColor'
+      OnClick = Button2Click
+      TabOrder = 1
+    end
+  end
+  object ButtonOk: TButton
+    AnchorSideLeft.Control = GroupBoxColors
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = CheckBoxEstVisible
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBoxColors
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ButtonCancel
+    Left = 420
+    Height = 30
+    Top = 297
+    Width = 100
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 10
+    BorderSpacing.Bottom = 2
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    Default = True
+    OnClick = ButtonOkClick
+    TabOrder = 2
+  end
+  object ButtonCancel: TButton
+    AnchorSideLeft.Control = GroupBoxColors
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = ButtonOk
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBoxColors
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 420
+    Height = 32
+    Top = 337
+    Width = 100
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 10
+    BorderSpacing.Bottom = 2
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+  object GroupBoxModify: TGroupBox
+    AnchorSideLeft.Control = GroupBoxColors
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 535
+    Height = 369
+    Top = 2
+    Width = 126
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 2
+    Caption = 'Modify'
+    ClientHeight = 347
+    ClientWidth = 122
+    TabOrder = 4
+    object CheckBox6: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = GroupBoxModify
+      Left = 5
+      Height = 22
+      Top = 5
+      Width = 104
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'Parameter t'
+      Checked = True
+      OnClick = CheckBox6Click
+      State = cbChecked
+      TabOrder = 0
+    end
+    object CheckBox7: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox6
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 32
+      Width = 81
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'DotStyle'
+      Checked = True
+      OnClick = CheckBox7Click
+      State = cbChecked
+      TabOrder = 1
+    end
+    object CheckBox8: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox7
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 59
+      Width = 85
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'LineStyle'
+      Checked = True
+      OnClick = CheckBox8Click
+      State = cbChecked
+      TabOrder = 2
+    end
+    object CheckBox9: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox8
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 86
+      Width = 64
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'Width'
+      Checked = True
+      OnClick = CheckBox9Click
+      State = cbChecked
+      TabOrder = 3
+    end
+    object CheckBox10: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox9
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 113
+      Width = 66
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'Arrow'
+      Checked = True
+      OnClick = CheckBox10Click
+      State = cbChecked
+      TabOrder = 4
+    end
+    object CheckBox11: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox10
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 140
+      Width = 76
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'FillStyle'
+      Checked = True
+      OnClick = CheckBox11Click
+      State = cbChecked
+      TabOrder = 5
+    end
+    object CheckBox12: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox11
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 167
+      Width = 93
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'LabelStyle'
+      Checked = True
+      OnClick = CheckBox12Click
+      State = cbChecked
+      TabOrder = 6
+    end
+    object CheckBox13: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox12
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 194
+      Width = 100
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'LabelAngle'
+      Checked = True
+      OnClick = CheckBox13Click
+      State = cbChecked
+      TabOrder = 7
+    end
+    object CheckBox14: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox13
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 221
+      Width = 87
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'LabelSize'
+      Checked = True
+      OnClick = CheckBox14Click
+      State = cbChecked
+      TabOrder = 8
+    end
+    object CheckBox15: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox14
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 248
+      Width = 60
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'Color'
+      Checked = True
+      OnClick = CheckBox15Click
+      State = cbChecked
+      TabOrder = 9
+    end
+    object CheckBox16: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox15
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 275
+      Width = 80
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'FillColor'
+      Checked = True
+      OnClick = CheckBox16Click
+      State = cbChecked
+      TabOrder = 10
+    end
+    object CheckBox19: TCheckBox
+      AnchorSideLeft.Control = GroupBoxModify
+      AnchorSideTop.Control = CheckBox16
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 22
+      Top = 302
+      Width = 68
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      Caption = 'Matrix'
+      Checked = True
+      OnClick = CheckBox19Click
+      State = cbChecked
+      TabOrder = 11
+    end
+  end
+  object CheckBoxEstVisible: TCheckBox
+    AnchorSideLeft.Control = CheckBoxReCalc
+    AnchorSideTop.Control = CheckBoxReCalc
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CheckBoxReCalc
+    AnchorSideRight.Side = asrBottom
+    Left = 410
+    Height = 22
+    Top = 146
+    Width = 120
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 2
+    Caption = 'Visible'
+    TabOrder = 5
+  end
+  object PageControl1: TPageControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 371
+    Top = 0
+    Width = 408
+    ActivePage = TabLabel
+    Anchors = [akTop, akLeft, akBottom]
+    TabIndex = 3
+    TabOrder = 6
+    object TabParametert: TTabSheet
+      Caption = 'Parameter t'
+      ClientHeight = 333
+      ClientWidth = 402
+      object Label1: TLabel
+        AnchorSideTop.Control = Edit1
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Edit1
+        AnchorSideBottom.Control = Edit1
+        AnchorSideBottom.Side = asrCenter
+        Left = 59
+        Height = 20
+        Top = 47
+        Width = 41
+        Alignment = taRightJustify
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 2
+        BorderSpacing.Bottom = 4
+        Caption = 'tMin='
+        ParentColor = False
+      end
+      object Label2: TLabel
+        AnchorSideTop.Control = Edit2
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Edit2
+        AnchorSideBottom.Control = Edit2
+        AnchorSideBottom.Side = asrCenter
+        Left = 56
+        Height = 20
+        Top = 87
+        Width = 44
+        Alignment = taRightJustify
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 2
+        BorderSpacing.Bottom = 4
+        Caption = 'tMax='
+        ParentColor = False
+      end
+      object Label3: TLabel
+        AnchorSideTop.Control = Edit3
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Edit3
+        AnchorSideBottom.Control = Edit3
+        AnchorSideBottom.Side = asrCenter
+        Left = 28
+        Height = 20
+        Top = 127
+        Width = 72
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 2
+        BorderSpacing.Bottom = 4
+        Caption = 'NbPoints='
+        ParentColor = False
+      end
+      object Edit1: TEdit
+        AnchorSideLeft.Control = CheckBoxForMinToMax
+        AnchorSideTop.Control = CheckBoxForMinToMax
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabParametert
+        AnchorSideRight.Side = asrBottom
+        Cursor = crIBeam
+        Left = 102
+        Height = 30
+        Top = 42
+        Width = 298
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 10
+        BorderSpacing.Right = 2
+        TabOrder = 0
+        Text = 'Edit1'
+      end
+      object Edit2: TEdit
+        AnchorSideLeft.Control = Edit1
+        AnchorSideTop.Control = Edit1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabParametert
+        AnchorSideRight.Side = asrBottom
+        Cursor = crIBeam
+        Left = 102
+        Height = 30
+        Top = 82
+        Width = 298
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 10
+        BorderSpacing.Right = 2
+        TabOrder = 1
+        Text = 'Edit1'
+      end
+      object Edit3: TEdit
+        AnchorSideLeft.Control = Edit1
+        AnchorSideTop.Control = Edit2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabParametert
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrCenter
+        Cursor = crIBeam
+        Left = 102
+        Height = 30
+        Top = 122
+        Width = 298
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 10
+        BorderSpacing.Right = 2
+        TabOrder = 2
+        Text = 'Edit1'
+      end
+      object CheckBoxForMinToMax: TCheckBox
+        AnchorSideTop.Control = TabParametert
+        AnchorSideRight.Side = asrBottom
+        Left = 102
+        Height = 22
+        Top = 10
+        Width = 174
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 10
+        BorderSpacing.Right = 4
+        Caption = 'Interval [Xmin;Xmax]'
+        OnClick = CheckBoxForMinToMaxClick
+        TabOrder = 3
+      end
+    end
+    object TabDot: TTabSheet
+      Caption = 'Dot'
+      ClientHeight = 333
+      ClientWidth = 402
+      object LabelDotScale: TLabel
+        AnchorSideLeft.Control = RadioGroupDot
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = RadioGroupDot
+        AnchorSideRight.Control = EditDotscale
+        Left = 123
+        Height = 17
+        Top = 12
+        Width = 89
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 5
+        BorderSpacing.Top = 10
+        BorderSpacing.Right = 2
+        Caption = 'DotScale='
+        ParentColor = False
+      end
+      object LabelDotAngle: TLabel
+        AnchorSideLeft.Control = RadioGroupDot
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = LabelDotScale
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = LabelDotScale
+        AnchorSideRight.Side = asrBottom
+        Left = 123
+        Height = 17
+        Top = 39
+        Width = 89
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 5
+        BorderSpacing.Top = 10
+        Caption = 'DotAngle='
+        ParentColor = False
+      end
+      object LabelDotSize: TLabel
+        AnchorSideLeft.Control = RadioGroupDot
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = LabelDotAngle
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = LabelDotScale
+        AnchorSideRight.Side = asrBottom
+        Left = 123
+        Height = 17
+        Top = 66
+        Width = 89
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 5
+        BorderSpacing.Top = 10
+        Caption = 'DotSize='
+        ParentColor = False
+      end
+      object LabeldotangleHelp: TLabel
+        AnchorSideLeft.Control = EditDotAngle
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditDotAngle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = TabDot
+        AnchorSideRight.Side = asrBottom
+        Left = 321
+        Height = 17
+        Top = 39
+        Width = 81
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 3
+        Caption = 'degrees'
+        ParentColor = False
+      end
+      object LabeldotscaleHelp: TLabel
+        AnchorSideLeft.Control = EditDotscale
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditDotscale
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = TabDot
+        AnchorSideRight.Side = asrBottom
+        Left = 320
+        Height = 17
+        Top = 12
+        Width = 82
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        Caption = 'X+i*Y'
+        ParentColor = False
+      end
+      object LabeldotsizeHelp: TLabel
+        AnchorSideLeft.Control = EditDotSize
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditDotSize
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = TabDot
+        AnchorSideRight.Side = asrBottom
+        Left = 320
+        Height = 17
+        Top = 66
+        Width = 82
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        Caption = 'nb1+i*nb2'
+        ParentColor = False
+      end
+      object RadioGroupDot: TRadioGroup
+        AnchorSideLeft.Control = TabDot
+        AnchorSideTop.Control = TabDot
+        AnchorSideBottom.Control = TabDot
+        AnchorSideBottom.Side = asrBottom
+        Left = 2
+        Height = 334
+        Top = 2
+        Width = 116
+        Anchors = [akTop, akLeft, akBottom]
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'DotStyle'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 312
+        ClientWidth = 112
+        Items.Strings = (
+          'dot'
+          'dotcircle'
+          'square'
+          'square'''
+          'plus'
+          'times'
+          'asterisk'
+          'oplus'
+          'otimes'
+          'diamond'
+          'diamond'''
+          'triangle'
+          'triangle'''
+          'pentagon'
+          'pentagon'''
+        )
+        TabOrder = 0
+      end
+      object EditDotscale: TEdit
+        AnchorSideTop.Control = LabelDotScale
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = TabDot
+        AnchorSideRight.Side = asrBottom
+        Left = 214
+        Height = 27
+        Top = 7
+        Width = 104
+        TabOrder = 1
+        Text = 'EditDotscale'
+      end
+      object EditDotAngle: TEdit
+        AnchorSideLeft.Control = EditDotscale
+        AnchorSideTop.Control = LabelDotAngle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = EditDotscale
+        AnchorSideRight.Side = asrBottom
+        Left = 214
+        Height = 27
+        Top = 34
+        Width = 104
+        Anchors = [akTop, akLeft, akRight]
+        TabOrder = 2
+        Text = 'EditDotAngle'
+      end
+      object EditDotSize: TEdit
+        AnchorSideLeft.Control = EditDotscale
+        AnchorSideTop.Control = LabelDotSize
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = EditDotscale
+        AnchorSideRight.Side = asrBottom
+        Left = 214
+        Height = 27
+        Top = 61
+        Width = 104
+        Anchors = [akTop, akLeft, akRight]
+        TabOrder = 3
+        Text = 'EditDotSize'
+      end
+      object Label9: TLabel
+        AnchorSideLeft.Control = RadioGroupDot
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditDotSize
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabDot
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TabDot
+        AnchorSideBottom.Side = asrBottom
+        Left = 120
+        Height = 244
+        Top = 90
+        Width = 280
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Bottom = 2
+        Caption = 'DotScale := scaleX + i*scaleY'#10'Can be used to enlarge or reduce the size of  the dot, when the imaginary part is zero, we agree that scaleY=scaleX.'#10'DotScale default value is 1.'#10'DotAngle := angle in degrees (default 0).'#10'DotSize := nb1 + i*nb2'#10'These length are in TeX points (pt), the diameter of the dot is nb1 + nb2 x (line width).'#10'DotSize default value is 2+2*i.'
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+    object TabLine: TTabSheet
+      Caption = 'Lines'
+      ClientHeight = 333
+      ClientWidth = 402
+      object LabelDashPattern: TLabel
+        AnchorSideLeft.Control = TabLine
+        AnchorSideTop.Control = EditDashpattern
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = EditDashpattern
+        Left = 2
+        Height = 17
+        Top = 244
+        Width = 99
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        Caption = 'DashPattern='
+        ParentColor = False
+      end
+      object LabelMiterlimit: TLabel
+        AnchorSideLeft.Control = LabelDashPattern
+        AnchorSideTop.Control = EditMiterlimit
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = LabelDashPattern
+        AnchorSideRight.Side = asrBottom
+        Left = 2
+        Height = 17
+        Top = 315
+        Width = 99
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'MiterLimit='
+        ParentColor = False
+      end
+      object LabelStrokeOpacity: TLabel
+        AnchorSideLeft.Control = LabelDashPattern
+        AnchorSideTop.Control = EditStrokeOpacity
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = EditDashpattern
+        AnchorSideBottom.Side = asrCenter
+        Left = 2
+        Height = 17
+        Top = 279
+        Width = 101
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'StrokeOpacity='
+        ParentColor = False
+      end
+      object LabelDashPatternHelp: TLabel
+        AnchorSideLeft.Control = EditDashpattern
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditDashpattern
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = TabLine
+        AnchorSideRight.Side = asrBottom
+        Left = 272
+        Height = 17
+        Top = 244
+        Width = 128
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        Caption = '[ on, off, ...] (pt)'
+        ParentColor = False
+      end
+      object Groupwidth: TGroupBox
+        AnchorSideLeft.Control = Radiolinestyle
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabLine
+        AnchorSideRight.Control = Radioarrows
+        AnchorSideBottom.Control = Radiolinestyle
+        AnchorSideBottom.Side = asrBottom
+        Left = 103
+        Height = 226
+        Top = 2
+        Width = 135
+        Anchors = [akTop, akLeft, akBottom]
+        BorderSpacing.Left = 1
+        BorderSpacing.Top = 2
+        Caption = 'Width'
+        ClientHeight = 204
+        ClientWidth = 131
+        TabOrder = 0
+        object Label4: TLabel
+          AnchorSideLeft.Control = Edit4
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Edit4
+          AnchorSideTop.Side = asrCenter
+          Left = 71
+          Height = 17
+          Top = 12
+          Width = 44
+          BorderSpacing.Left = 2
+          Caption = 'x 0.1 pt'
+          ParentColor = False
+        end
+        object Label5: TLabel
+          Left = 8
+          Height = 17
+          Top = 56
+          Width = 71
+          Caption = '2 = thinlines'
+          ParentColor = False
+        end
+        object Label6: TLabel
+          Left = 8
+          Height = 17
+          Top = 96
+          Width = 76
+          Caption = '8 = thicklines'
+          ParentColor = False
+        end
+        object Label7: TLabel
+          Left = 8
+          Height = 17
+          Top = 144
+          Width = 85
+          Caption = '14 = Thicklines'
+          ParentColor = False
+        end
+        object Edit4: TEdit
+          Cursor = crIBeam
+          Left = 8
+          Height = 27
+          Top = 7
+          Width = 61
+          TabOrder = 0
+          Text = 'Edit4'
+        end
+      end
+      object Radiolinestyle: TRadioGroup
+        AnchorSideLeft.Control = TabLine
+        AnchorSideTop.Control = TabLine
+        AnchorSideBottom.Control = TabLine
+        AnchorSideBottom.Side = asrBottom
+        Left = 2
+        Height = 226
+        Top = 2
+        Width = 100
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'LineStyle'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 204
+        ClientWidth = 96
+        Items.Strings = (
+          'noline'
+          'solid'
+          'dashed'
+          'dotted'
+          'userdash'
+        )
+        OnClick = RadiolinestyleClick
+        TabOrder = 1
+      end
+      object Radioarrows: TRadioGroup
+        AnchorSideLeft.Control = Groupwidth
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabLine
+        AnchorSideRight.Control = TabLine
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Radiolinestyle
+        AnchorSideBottom.Side = asrBottom
+        Left = 240
+        Height = 226
+        Top = 2
+        Width = 74
+        Anchors = [akTop, akLeft, akBottom]
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'Arrows'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 204
+        ClientWidth = 70
+        Items.Strings = (
+          'no'
+          'one'
+          'two'
+        )
+        TabOrder = 2
+      end
+      object Radiolinecap: TRadioGroup
+        AnchorSideLeft.Control = Radioarrows
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabLine
+        AnchorSideRight.Control = TabLine
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Radioarrows
+        AnchorSideBottom.Side = asrBottom
+        Left = 316
+        Height = 106
+        Top = 2
+        Width = 86
+        Anchors = [akTop, akLeft, akRight]
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'LineCap'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 84
+        ClientWidth = 82
+        Items.Strings = (
+          'butt'
+          'round'
+          'square'
+        )
+        TabOrder = 3
+      end
+      object Radiolinejoin: TRadioGroup
+        AnchorSideLeft.Control = Radioarrows
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Radiolinecap
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabLine
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Radioarrows
+        AnchorSideBottom.Side = asrBottom
+        Left = 316
+        Height = 118
+        Top = 110
+        Width = 84
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 2
+        Caption = 'LineJoin'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 96
+        ClientWidth = 80
+        Items.Strings = (
+          'miter'
+          'round'
+          'bevel'
+        )
+        TabOrder = 4
+      end
+      object EditDashpattern: TEdit
+        AnchorSideLeft.Control = Groupwidth
+        AnchorSideTop.Control = Radiolinestyle
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Radioarrows
+        Left = 103
+        Height = 27
+        Top = 239
+        Width = 167
+        BorderSpacing.Top = 11
+        TabOrder = 5
+        Text = 'EditDashpattern'
+      end
+      object EditMiterlimit: TEdit
+        AnchorSideLeft.Control = EditDashpattern
+        AnchorSideTop.Control = EditStrokeOpacity
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = EditDashpattern
+        AnchorSideRight.Side = asrBottom
+        Left = 103
+        Height = 27
+        Top = 310
+        Width = 167
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 9
+        TabOrder = 6
+        Text = 'EditMiterlimit'
+      end
+      object EditStrokeOpacity: TEdit
+        AnchorSideLeft.Control = EditDashpattern
+        AnchorSideTop.Control = EditDashpattern
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = EditDashpattern
+        AnchorSideRight.Side = asrBottom
+        Left = 103
+        Height = 27
+        Top = 274
+        Width = 167
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 8
+        TabOrder = 7
+        Text = 'EditStrokeOpacity'
+      end
+    end
+    object TabLabel: TTabSheet
+      Caption = 'Labels'
+      ClientHeight = 333
+      ClientWidth = 402
+      object Grouplabelstyle: TGroupBox
+        AnchorSideLeft.Control = TabLabel
+        AnchorSideTop.Control = TabLabel
+        AnchorSideRight.Control = Radiolabelsize
+        Left = 2
+        Height = 264
+        Top = 2
+        Width = 221
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'LabelStyle'
+        ClientHeight = 242
+        ClientWidth = 217
+        TabOrder = 0
+        object RadioGroup7: TRadioGroup
+          AnchorSideLeft.Control = Grouplabelstyle
+          AnchorSideTop.Control = Grouplabelstyle
+          Left = 0
+          Height = 113
+          Top = 0
+          Width = 105
+          AutoFill = True
+          Caption = 'Horizontal'
+          ChildSizing.LeftRightSpacing = 6
+          ChildSizing.TopBottomSpacing = 6
+          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+          ChildSizing.EnlargeVertical = crsHomogenousChildResize
+          ChildSizing.ShrinkHorizontal = crsScaleChilds
+          ChildSizing.ShrinkVertical = crsScaleChilds
+          ChildSizing.Layout = cclLeftToRightThenTopToBottom
+          ChildSizing.ControlsPerLine = 1
+          ClientHeight = 91
+          ClientWidth = 101
+          Items.Strings = (
+            'center'
+            'left'
+            'right'
+          )
+          TabOrder = 0
+        end
+        object RadioGroup8: TRadioGroup
+          AnchorSideLeft.Control = RadioGroup7
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideRight.Control = Grouplabelstyle
+          AnchorSideRight.Side = asrBottom
+          Left = 105
+          Height = 113
+          Top = 0
+          Width = 112
+          Anchors = [akTop, akLeft, akRight]
+          AutoFill = True
+          Caption = 'Vertical'
+          ChildSizing.LeftRightSpacing = 6
+          ChildSizing.TopBottomSpacing = 6
+          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+          ChildSizing.EnlargeVertical = crsHomogenousChildResize
+          ChildSizing.ShrinkHorizontal = crsScaleChilds
+          ChildSizing.ShrinkVertical = crsScaleChilds
+          ChildSizing.Layout = cclLeftToRightThenTopToBottom
+          ChildSizing.ControlsPerLine = 1
+          ClientHeight = 91
+          ClientWidth = 108
+          Items.Strings = (
+            'center'
+            'top'
+            'bottom'
+            'baseline'
+          )
+          TabOrder = 1
+        end
+        object CheckBox2: TCheckBox
+          AnchorSideLeft.Control = RadioGroup7
+          AnchorSideTop.Control = RadioGroup8
+          AnchorSideTop.Side = asrBottom
+          Left = 0
+          Height = 22
+          Top = 123
+          Width = 179
+          BorderSpacing.Top = 10
+          Caption = 'framed (label encadré)'
+          TabOrder = 2
+        end
+        object CheckBox3: TCheckBox
+          AnchorSideLeft.Control = RadioGroup7
+          AnchorSideTop.Control = CheckBox2
+          AnchorSideTop.Side = asrBottom
+          Left = 0
+          Height = 22
+          Top = 155
+          Width = 174
+          BorderSpacing.Top = 10
+          Caption = 'stacked (texte avec \\)'
+          TabOrder = 3
+        end
+        object CheckBox17: TCheckBox
+          AnchorSideLeft.Control = CheckBox4
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = CheckBox3
+          AnchorSideTop.Side = asrBottom
+          Left = 80
+          Height = 22
+          Top = 187
+          Width = 81
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 10
+          Caption = 'Formule'
+          TabOrder = 4
+        end
+        object CheckBox4: TCheckBox
+          AnchorSideLeft.Control = RadioGroup7
+          AnchorSideTop.Control = CheckBox3
+          AnchorSideTop.Side = asrBottom
+          Left = 0
+          Height = 22
+          Top = 187
+          Width = 70
+          BorderSpacing.Top = 10
+          Caption = 'special'
+          TabOrder = 5
+        end
+      end
+      object Grouplabelangle: TGroupBox
+        AnchorSideLeft.Control = TabLabel
+        AnchorSideTop.Control = Grouplabelstyle
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Radiolabelsize
+        AnchorSideBottom.Control = TabLabel
+        AnchorSideBottom.Side = asrBottom
+        Left = 5
+        Height = 62
+        Top = 271
+        Width = 218
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Top = 5
+        Caption = 'LabelAngle'
+        ClientHeight = 40
+        ClientWidth = 214
+        TabOrder = 1
+        object Label8: TLabel
+          Left = 54
+          Height = 20
+          Top = 23
+          Width = 153
+          Caption = 'degrees in [-360; 360]'
+          ParentColor = False
+        end
+        object Edit5: TEdit
+          Cursor = crIBeam
+          Left = 6
+          Height = 30
+          Top = 16
+          Width = 41
+          TabOrder = 0
+          Text = 'Edit5'
+        end
+      end
+      object Radiolabelsize: TRadioGroup
+        AnchorSideLeft.Control = Grouplabelangle
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabLabel
+        AnchorSideRight.Control = TabLabel
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TabLabel
+        AnchorSideBottom.Side = asrBottom
+        Left = 228
+        Height = 331
+        Top = 2
+        Width = 174
+        Anchors = [akTop, akRight, akBottom]
+        AutoFill = True
+        BorderSpacing.Left = 5
+        BorderSpacing.Top = 2
+        Caption = 'LabelSize'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 309
+        ClientWidth = 170
+        Items.Strings = (
+          'tiny'
+          'scriptsize'
+          'footnotesize'
+          'small'
+          'normalsize'
+          'large'
+          'Large'
+          'LARGE'
+          'huge'
+          'Huge'
+        )
+        TabOrder = 2
+      end
+    end
+    object TabFill: TTabSheet
+      Caption = 'Fill'
+      ClientHeight = 333
+      ClientWidth = 402
+      object LabelFillOpacity: TLabel
+        AnchorSideLeft.Control = RadioGroupFillStyle
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditFillopacity
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = EditFillopacity
+        AnchorSideBottom.Side = asrCenter
+        Left = 232
+        Height = 20
+        Top = 14
+        Width = 82
+        Alignment = taRightJustify
+        Anchors = [akLeft]
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 5
+        Caption = 'FillOpacity='
+        ParentColor = False
+      end
+      object RadioGroupFillStyle: TRadioGroup
+        AnchorSideLeft.Control = TabFill
+        AnchorSideTop.Control = TabFill
+        Left = 2
+        Height = 185
+        Top = 2
+        Width = 220
+        AutoFill = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'FillStyle'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 2
+        ClientHeight = 163
+        ClientWidth = 216
+        Columns = 2
+        Items.Strings = (
+          'none'
+          'full'
+          'bdiag'
+          'hvcross'
+          'diagcross'
+          'fdiag'
+          'horizontal'
+          'vertical'
+          'gradient'
+        )
+        OnClick = RadioGroupFillStyleClick
+        TabOrder = 0
+      end
+      object EditFillopacity: TEdit
+        AnchorSideLeft.Control = LabelFillOpacity
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabFill
+        AnchorSideRight.Control = TabFill
+        AnchorSideRight.Side = asrBottom
+        Cursor = crIBeam
+        Left = 319
+        Height = 30
+        Top = 12
+        Width = 83
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 12
+        TabOrder = 1
+        Text = 'EditFillopacity'
+      end
+      object CheckBoxEofill: TCheckBox
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EditFillopacity
+        AnchorSideTop.Side = asrBottom
+        Left = 294
+        Height = 22
+        Top = 57
+        Width = 61
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 15
+        Caption = 'Eofill'
+        TabOrder = 2
+      end
+    end
+    object TabMatrix: TTabSheet
+      Caption = 'Matrix'
+      ClientHeight = 333
+      ClientWidth = 402
+      object EditMatrix: TEdit
+        AnchorSideLeft.Control = TabMatrix
+        AnchorSideTop.Control = TabMatrix
+        AnchorSideRight.Control = TabMatrix
+        AnchorSideRight.Side = asrBottom
+        Cursor = crIBeam
+        Left = 2
+        Height = 27
+        Top = 2
+        Width = 398
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 2
+        TabOrder = 0
+        Text = 'EditMatrix'
+      end
+      object Label10: TLabel
+        AnchorSideLeft.Control = TabMatrix
+        AnchorSideTop.Control = EditMatrix
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabMatrix
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TabMatrix
+        AnchorSideBottom.Side = asrBottom
+        Left = 2
+        Height = 303
+        Top = 31
+        Width = 398
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Bottom = 2
+        Caption = 'Matrix := [u, v, w]'#10'If f is a affin ransformation of the plane, its matrix is the list [u, v, w] where:'#10'u = f(0)  [translation vector]'#10'v = f(1) - u [image of the first vector of the base  by the linear part]'#10'w = f(i) - u [image of the second vector of the base by the linear part]'
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+  end
+  object ColorDialog1: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    Left = 464
+    Top = 208
+  end
+end

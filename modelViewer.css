@@ -1,0 +1,54 @@
+html{
+height : 100%;
+}
+
+body {
+    background: #FDFDCB;
+    background-attachment:fixed;
+    padding:0;
+    margin:1% 8% 1% 8%;
+    height:90%;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 10pt;
+}
+
+
+#haut{
+    position:relative;
+    height: 60px;
+    background: #1C4E63; /*#c3c1ff;*/
+    background-repeat:no-repeat;
+    border: 1px solid black;
+    text-align:center;
+    color: white;
+    -webkit-box-shadow: #343434 10px 10px 10px ;
+    -moz-box-shadow: #343434 10px 10px 10px ;
+    box-shadow: #343434 10px 10px 10px ;
+}
+
+/* Style du haut */
+#haut .titre {
+    font-size:2em;
+    color: white;
+    font-weight:bolder;
+    padding: 0% 2%;
+}
+
+#mycanvas {
+    position: relative;
+    /*z-index:0;*/
+    height:90%;
+    background:#3F3F3F; /*#EEE;*/
+    border:1px solid #AAA;
+    margin-top:22px;
+    -webkit-box-shadow: #343434 10px 10px 10px ;
+    -moz-box-shadow: #343434 10px 10px 10px ;
+    box-shadow: #343434 10px 10px 10px ;
+}
+
+#panel {
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+

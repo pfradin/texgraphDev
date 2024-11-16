@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+view(-0.1,1.1,-0.1,1.1), size(7.5),
+draw("axes", 0,1/2+i/4, Arrows:=1),
+u0:=0.3, nb:=20, Width:=6,
+draw("straightL", x-y=0, [Color:=darkseagreen]),
+draw("cartesian", 4*x*(1-x), [x:=[0,1],Color:=red,Width:=8]),
+Color:=blue, LabelDot(u0, "$u_0$","S",1),
+sequence(4*x*(1-x), u0, nb, [legend:="$u_{n+1}=4u_n(1-u_n)$",
+ anchor:=0.5+1.05*i])
+];

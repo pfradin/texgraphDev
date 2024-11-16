@@ -1,0 +1,25 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), ModelView(central), DistCam(20),
+view(-6,6,-6,6), size(7.5),
+theta:=-10*deg, phi:=60*deg,
+P1:=planEqn([1,1,1,2]),P2:=[Origin, vecK-vecJ],
+D:= interPP(P1,P2),
+a:=Copy(getdroite(D),1,2),
+b:=Copy(getplan(P1,0.75),11,2),
+c:=Copy(getplan(P2,0.75),3,2),
+Build3D(
+ bdPlan(P1, [color:=red, opacity:=0.7,
+        scale:=0.75 ]),
+ bdPlan(P2, [color:=blue,opacity:=0.7,
+       scale:=0.75]),
+ bdDroite(D, [color:=darkgreen,
+        width:=12]),
+ bdAxes([0,0],[color:=gold,
+        width:=8, arrows:=1]),
+ bdLabel(a,"$D$",[labelpos:=[0.5,-i]]),
+ bdLabel(b,"$P_1$",[labelpos:=[0.5,i]]),
+ bdLabel(c,"$P_2$",[labelpos:=[0.5,i]])
+     ),
+Display3D()
+];

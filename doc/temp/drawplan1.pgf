@@ -1,0 +1,57 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.8,0)}%
+\pgfsetyvec{\pgfxy(0,0.8)}%
+\useasboundingbox (-5,-5)--(5,5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfxyline(0.0615,0)(-0.0615,0)%
+\pgfxyline(0,0.0615)(0,-0.0615)%
+\pgfputat{\pgfxy(0.221,0.221)}{\pgftext[left,bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $A$}}\pgfstroke%
+\pgfsetarrows{-to}%
+\pgfxyline(0,0)(0,2)%
+\pgfsetarrows{-}%
+\pgfpathmoveto{\pgfxy(0,0.3125)}%
+\pgfpathlineto{\pgfxy(-0.3125,0.3125)}\pgfpathlineto{\pgfxy(-0.3125,0)}%
+\pgfstroke%
+\pgfputat{\pgfxy(-0.3125,1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $\vec{u}$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetarrows{-to}%
+\pgfxyline(-2,-3)(4,-3)%
+\pgfsetarrows{-}%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfputat{\pgfxy(1,-3.3125)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $\dfrac{L_1\cdot\vec{v}}{\|\vec{v}\|}$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetarrows{-to}%
+\pgfxyline(4,-3)(2,3)%
+\pgfsetarrows{-}%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfputat{\pgfxy(3.3125,0)}{\pgftext[left]{\color{rgb,1:red,0;green,0;blue,0}\small $\dfrac{L2\cdot\vec{w}}{\|\vec{w}\|}$}}\pgfstroke%
+\pgfxyline(-3.9385,3)(-4.0615,3)%
+\pgfxyline(-4,3.0615)(-4,2.9385)%
+\pgfputat{\pgfxy(-4.221,3.221)}{\pgftext[right,bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $M4$}}\pgfstroke%
+\pgfxyline(-1.9385,-3)(-2.0615,-3)%
+\pgfxyline(-2,-2.9385)(-2,-3.0615)%
+\pgfputat{\pgfxy(-2.221,-3.221)}{\pgftext[right,top]{\color{rgb,1:red,0;green,0;blue,0}\small $M1$}}\pgfstroke%
+\pgfxyline(4.0615,-3)(3.9385,-3)%
+\pgfxyline(4,-2.9385)(4,-3.0615)%
+\pgfputat{\pgfxy(4.221,-3.221)}{\pgftext[left,top]{\color{rgb,1:red,0;green,0;blue,0}\small $M2$}}\pgfstroke%
+\pgfxyline(2.0615,3)(1.9385,3)%
+\pgfxyline(2,3.0615)(2,2.9385)%
+\pgfputat{\pgfxy(2.221,3.221)}{\pgftext[left,bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $M3$}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(2,3)}%
+\pgfpathlineto{\pgfxy(-4,3)}\pgfpathlineto{\pgfxy(-2,-3)}%
+\pgfstroke%
+\end{tikzpicture}%
+\egroup%

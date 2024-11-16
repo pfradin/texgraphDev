@@ -1,0 +1,49 @@
+TeXgraph#
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+gradients pour TeXgraph 2.0, chargé par draw2d.mac, il fournit la macro:
+
+gradLine( <ligne polyg.>, [options])
+    options:
+            LineColorA, LineColorB: couleur début et fin
+            GradLineStep: pas pour le style de ligne gradLine (0.25 par défaut)
+            close: 0/1 (0 par défaut)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+Var
+    LineColorA = white;
+    LineColorB = red;
+    GradLineStep = 0.25; {pas pour le style de ligne gradLine}
+
+Mac
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+           gestion des lignes avec un gradient
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    gradLine = {gradLine( <ligne polyg.>, [options])
+    options:
+            LineColorA, LineColorB: couleur début et fin
+            GradLineStep = 0.25
+            close: 0/1 (0 par défaut)
+    }
+    [SaveAttr(),  LineColorA:=white, LineColorB:=red,GradLineStep:=0.25,close:=0,
+     $aux:=%2 {options}, GradLineStep:=max([GradLineStep, Width/mm/20]), 
+     qgradLine(%1), RestoreAttr()
+    ];
+    
+    qgradLine = 
+    [$oldLineCap:=LineCap, LineStyle:=solid,FillStyle:=none,Arrows:=0,
+    for L in %1 By jump do
+       $B:=L[1],  if close then Insert(L,B) fi,
+       L':=[for z in L[2,0] do  {découpage par longueurs de GradLineStep}
+          $A:=B, $B:=z, $d:=Abs(B-A),
+              N:= Ent(d/GradLineStep), if N>0 then $u:=(B-A)/N else $u:=0 fi,
+              for $k from 0 to N do A+k*u od
+            od, if Abs(A+N*u-B)>0.0001 then B fi],
+       $N:=Nops(L'), $B:=L'[1], $k:=0,
+       for z in L'[2,0] do   {dessin des tronçons}
+             $A:=B, $B:=z, Inc(k,1),
+             Color:=MixColor(LineColorA, (N-k-1)/(N-2), LineColorB, (k-1)/(N-2)),
+             Ligne([A,B],0),
+         if k=1 then LineCap:=square elif k=N-2 then LineCap:=oldLineCap fi
+        od
+     od
+    ];

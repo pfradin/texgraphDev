@@ -1,0 +1,18 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5),Marges(0,0,0.25,0.25),size(7.5),
+draw("path",[carre(Xmin+i*Ymin,Xmax+i*Ymin,1),line,closepath],
+ [FillStyle:=gradient, GradAngle:=-90, FillColorB:=lightgray,
+ LineStyle:=noline]),
+draw("path",[-4.5+2*i,-2+2*i,circle],[doubleline:=1,
+ doublecolor:=red,Width:=24,FillStyle:=gradient,
+ GradStyle:=radial,GradColor:=white+i*darkblue,
+ legend:="$S$"]),
+draw("path",[-4-4*i,-1,3-3*i,4+i,bezier],
+ [LineStyle:=gradient,LineColorA:=yellow,Width:=12,
+ Arrows:=1,marker:=[0,Line,0.5,Carrow],scale:=1.5,
+ legend:="$L$",labelpos:=0.55, labeldir:=North]),
+draw("path",[carre(-1-0.6*i,1.7-0.6*i,-1),line,closepath],
+ [Width:=20,lineborder:=6,Color:=darkgreen,FillStyle:=full,
+  FillOpacity:=0.3,FillColor:=cyan])
+];

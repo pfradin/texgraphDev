@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <General>
+      <Flags>
+        <LRSInOutputDirectory Value="False"/>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <Title Value="TeXgraph 2.0"/>
+      <UseAppBundle Value="False"/>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+      <OutDir Value="languages"/>
+    </i18n>
+    <MacroValues Count="7">
+      <Macro7 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro8 Name="LCLWidgetType" Value="win32"/>
+      <Macro9 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro10 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro11 Name="LCLWidgetType" Value="win32"/>
+      <Macro12 Name="LCLWidgetType" Value="gtk2"/>
+    </MacroValues>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+      <SharedMatrixOptions Count="12">
+        <Item1 ID="367744760151" Modes="default"/>
+        <Item2 ID="288717915375" Modes="default"/>
+        <Item3 ID="853106321280" Modes="default" Type="IDEMacro"/>
+        <Item4 ID="861255736512" Modes="default"/>
+        <Item5 ID="541182940811" Type="IDEMacro"/>
+        <Item6 ID="396793168942" Value="-dDisableUTF8RTL"/>
+        <Item7 ID="833360664554" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item8 ID="456895148293" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item9 ID="680142832495" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item10 ID="742059516145" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item11 ID="055746516254" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item12 ID="462930681032" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+      </SharedMatrixOptions>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <DestinationDirectory Value="/home/pfradin/DevTeXgraphLazarus/TeXgraph/src1/"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
+    </RunParams>
+    <RequiredPackages Count="4">
+      <Item1>
+        <PackageName Value="BGRABitmapPack"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="SynEdit"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCLBase"/>
+        <MinVersion Major="1" Release="1" Valid="True"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
+    </RequiredPackages>
+    <Units Count="60">
+      <Unit0>
+        <Filename Value="TeXgraph.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="25"/>
+        <CursorPos X="37" Y="44"/>
+        <UsageCount Value="201"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <CursorPos X="71" Y="3"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="calculs1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="command5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="6262"/>
+        <CursorPos X="86" Y="6272"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="graph1_6.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="576"/>
+        <CursorPos X="57" Y="592"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="graph2_7.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="2987"/>
+        <CursorPos X="5" Y="2987"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="surface8.pas"/>
+        <TopLine Value="401"/>
+        <CursorPos X="22" Y="422"/>
+        <UsageCount Value="2"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="saisies.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="201"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Fenetre.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FenetreForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="201"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Marges.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MargesForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <TopLine Value="34"/>
+        <CursorPos X="31" Y="50"/>
+        <UsageCount Value="201"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Varglobs.pas"/>
+        <ComponentName Value="VarGlobsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="23"/>
+        <CursorPos Y="38"/>
+        <UsageCount Value="112"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="Editeur.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EditForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="641"/>
+        <CursorPos X="21" Y="662"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="Attributs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AttributsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="203"/>
+        <CursorPos X="14" Y="229"/>
+        <UsageCount Value="201"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="AxesGrille.pas"/>
+        <ComponentName Value="AxesGrilleForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="82"/>
+        <CursorPos X="17" Y="97"/>
+        <UsageCount Value="121"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="Parametree.pas"/>
+        <ComponentName Value="ParametreeForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <TopLine Value="40"/>
+        <CursorPos X="35" Y="61"/>
+        <UsageCount Value="121"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="SimpleGraph.pas"/>
+        <ComponentName Value="SimpleGraphForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="161"/>
+        <CursorPos X="49" Y="176"/>
+        <UsageCount Value="121"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="Input.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="InputForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="3" Y="19"/>
+        <UsageCount Value="201"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="Apropos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AproposForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="5" Y="60"/>
+        <UsageCount Value="201"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="analyse4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="2472"/>
+        <CursorPos X="5" Y="2507"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="PressePap.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PressePapier"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="29"/>
+        <CursorPos X="24" Y="47"/>
+        <UsageCount Value="201"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="command53d.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="649"/>
+        <CursorPos X="26" Y="677"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="command10.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="1318"/>
+        <CursorPos X="16" Y="1344"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="listes2.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="22"/>
+        <CursorPos X="5" Y="38"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="command9.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="1052"/>
+        <CursorPos X="56" Y="1073"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="SynCompletion2.pas"/>
+        <CursorPos X="16" Y="39"/>
+        <UsageCount Value="105"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="command11.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="147"/>
+        <CursorPos Y="161"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="complex3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="13"/>
+        <UsageCount Value="204"/>
+        <Loaded Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="camera.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CameraForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="18" Y="9"/>
+        <UsageCount Value="201"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="config.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ConfigFile"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="13"/>
+        <TopLine Value="40"/>
+        <CursorPos X="52" Y="67"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="../../../aidescene3d.txt~"/>
+        <ComponentName Value="snapshot"/>
+        <TopLine Value="28"/>
+        <CursorPos X="35" Y="39"/>
+        <UsageCount Value="112"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="snapshot.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="snapshot"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="67"/>
+        <CursorPos X="24" Y="91"/>
+        <UsageCount Value="214"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="update13.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="78"/>
+        <UsageCount Value="200"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="untres.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="70"/>
+        <CursorPos X="20" Y="92"/>
+        <UsageCount Value="207"/>
+        <Loaded Value="True"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="message.pas"/>
+        <ComponentName Value="MessageForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Message"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="33"/>
+        <CursorPos X="33" Y="54"/>
+        <UsageCount Value="47"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="133"/>
+        <CursorPos X="3" Y="148"/>
+        <UsageCount Value="32"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="../../../../portable/Téléchargements/bgrabitmap-master/bgrabitmap/geometrytypes.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <CursorPos X="7" Y="35"/>
+        <UsageCount Value="20"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="../../../../portable/Téléchargements/bgrabitmap-master/bgrabitmap/bgracanvas2d.pas"/>
+        <UnitName Value="BGRACanvas2D"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="84"/>
+        <CursorPos X="34" Y="109"/>
+        <UsageCount Value="61"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="../../../../portable/Téléchargements/bgrabitmap-master/bgrabitmap/bgrapath.pas"/>
+        <UnitName Value="BGRAPath"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="314"/>
+        <CursorPos X="14" Y="342"/>
+        <UsageCount Value="66"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="../../../../fpcupdeluxe/ccr/bgrabitmap/bgrabitmap-master/bgrabitmap/bezier.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="270"/>
+        <CursorPos X="42" Y="270"/>
+        <UsageCount Value="6"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="wait.pas"/>
+        <ComponentName Value="PleaseWait"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="6" Y="36"/>
+        <UsageCount Value="6"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/interfaces/win32/win32int.pp"/>
+        <UnitName Value="Win32Int"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="18"/>
+        <CursorPos X="3" Y="31"/>
+        <UsageCount Value="6"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/interfaces/gtk2/gtk2proc.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3351"/>
+        <CursorPos X="91" Y="3372"/>
+        <UsageCount Value="6"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="729"/>
+        <CursorPos X="15" Y="743"/>
+        <UsageCount Value="10"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="../../../../fpcdeluxe/lazarus/lcl/interfaces/win32/win32int.pp"/>
+        <UnitName Value="Win32Int"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="3" Y="31"/>
+        <UsageCount Value="2"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/rtl/objpas/fgl.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="140"/>
+        <CursorPos X="22" Y="116"/>
+        <UsageCount Value="7"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/components/lazutils/stringhashlist.pas"/>
+        <UnitName Value="StringHashList"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="340"/>
+        <CursorPos X="35" Y="228"/>
+        <UsageCount Value="3"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/rtl/objpas/math.pp"/>
+        <UnitName Value="Math"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1331"/>
+        <CursorPos X="19" Y="1044"/>
+        <UsageCount Value="4"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="calculs2.pas"/>
+        <UnitName Value="calculs1"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="3"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="455"/>
+        <CursorPos X="14" Y="488"/>
+        <UsageCount Value="11"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="960"/>
+        <CursorPos X="22" Y="969"/>
+        <UsageCount Value="10"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/components/synedit/synedit.pp"/>
+        <UnitName Value="SynEdit"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <UsageCount Value="10"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/components/synedit/synedittypes.pp"/>
+        <UnitName Value="SynEditTypes"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="83"/>
+        <CursorPos X="38" Y="90"/>
+        <UsageCount Value="10"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/components/synedit/synpopupmenu.pas"/>
+        <UnitName Value="SynPopupMenu"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="98"/>
+        <CursorPos X="46" Y="124"/>
+        <UsageCount Value="10"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/interfaces/gtk2/gtk2proc.pp"/>
+        <UnitName Value="Gtk2Proc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="875"/>
+        <CursorPos X="37" Y="891"/>
+        <UsageCount Value="10"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="unitgl.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="178"/>
+        <UsageCount Value="10"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="Unitlog.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/packages/fcl-web/src/base/fphttpclient.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="304"/>
+        <CursorPos X="3" Y="336"/>
+        <UsageCount Value="11"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/packages/openssl/src/openssl.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="76"/>
+        <UsageCount Value="10"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="../../../../fpcupdeluxe/fpcsrc/rtl/objpas/sysutils/filutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="184"/>
+        <CursorPos X="10" Y="200"/>
+        <UsageCount Value="10"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="../../../../fpcupdeluxe/lazarus/lcl/helpintfs.pas"/>
+        <UnitName Value="HelpIntfs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="238"/>
+        <CursorPos X="10" Y="254"/>
+        <UsageCount Value="10"/>
+      </Unit59>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="command10.pas"/>
+      </Position1>
+      <Position2>
+        <Filename Value="command10.pas"/>
+        <Caret Line="1309" Column="16" TopLine="1286"/>
+      </Position2>
+      <Position3>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="905" TopLine="879"/>
+      </Position3>
+      <Position4>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="2040" TopLine="2034"/>
+      </Position4>
+      <Position5>
+        <Filename Value="Unit1.pas"/>
+      </Position5>
+      <Position6>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="64" Column="17" TopLine="38"/>
+      </Position6>
+      <Position7>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="305" Column="27" TopLine="279"/>
+      </Position7>
+      <Position8>
+        <Filename Value="untres.pas"/>
+        <Caret Line="609" TopLine="537"/>
+      </Position8>
+      <Position9>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="910" Column="30" TopLine="879"/>
+      </Position9>
+      <Position10>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="2149" Column="41" TopLine="2125"/>
+      </Position10>
+      <Position11>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="2307" Column="39" TopLine="2281"/>
+      </Position11>
+      <Position12>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="1980" TopLine="1928"/>
+      </Position12>
+      <Position13>
+        <Filename Value="config.pas"/>
+      </Position13>
+      <Position14>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="1917" Column="13" TopLine="1902"/>
+      </Position14>
+      <Position15>
+        <Filename Value="config.pas"/>
+        <Caret Line="79" Column="7" TopLine="74"/>
+      </Position15>
+      <Position16>
+        <Filename Value="config.pas"/>
+        <Caret Line="137" Column="25" TopLine="110"/>
+      </Position16>
+      <Position17>
+        <Filename Value="config.pas"/>
+      </Position17>
+      <Position18>
+        <Filename Value="config.pas"/>
+        <Caret Line="67" Column="52" TopLine="40"/>
+      </Position18>
+      <Position19>
+        <Filename Value="config.pas"/>
+        <Caret Line="137" Column="25" TopLine="110"/>
+      </Position19>
+      <Position20>
+        <Filename Value="config.pas"/>
+        <Caret Line="173" Column="42" TopLine="146"/>
+      </Position20>
+      <Position21>
+        <Filename Value="config.pas"/>
+        <Caret Line="174" Column="29" TopLine="147"/>
+      </Position21>
+      <Position22>
+        <Filename Value="config.pas"/>
+        <Caret Line="175" Column="73" TopLine="149"/>
+      </Position22>
+      <Position23>
+        <Filename Value="config.pas"/>
+        <Caret Line="183" Column="10" TopLine="153"/>
+      </Position23>
+      <Position24>
+        <Filename Value="config.pas"/>
+      </Position24>
+      <Position25>
+        <Filename Value="Unit1.pas"/>
+        <Caret Line="1983" Column="53" TopLine="1975"/>
+      </Position25>
+      <Position26>
+        <Filename Value="Unit1.pas"/>
+      </Position26>
+      <Position27>
+        <Filename Value="command5.pas"/>
+        <Caret Line="6279" Column="60" TopLine="6252"/>
+      </Position27>
+      <Position28>
+        <Filename Value="command5.pas"/>
+        <Caret Line="6295" Column="76" TopLine="6256"/>
+      </Position28>
+      <Position29>
+        <Filename Value="command5.pas"/>
+      </Position29>
+      <Position30>
+        <Filename Value="command5.pas"/>
+        <Caret Line="6195" Column="6" TopLine="6178"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <SearchPaths>
+      <IncludeFiles Value="$(LazarusDir)/components/synedit"/>
+      <OtherUnitFiles Value="$(LazarusDir)/components/synedit"/>
+      <UnitOutputDirectory Value="ExecutableGUI"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="fpc"/>
+        <CStyleOperator Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <Optimizations>
+        <OptimizationLevel Value="2"/>
+        <VariablesInRegisters Value="True"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+        <UseLineInfoUnit Value="False"/>
+        <StripSymbols Value="True"/>
+      </Debugging>
+      <LinkSmart Value="True"/>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShowDebugInfo Value="True"/>
+      </Verbosity>
+      <WriteFPCLogo Value="False"/>
+      <CustomOptions Value="-dGUI"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+view(-5.25,5.25,-5.25,5.25), Marges(0,0,0,0), size(7.5),
+background(full,blue), Width:=4, Color:=white,
+inclin:=[0,35,-35],
+for z in inclin do
+ Ellipse(0,5,2,z)
+od,
+Width:=2*mm, Ellipse(0,1.5,4.5),
+Label(-0.1, "\resizebox{6cm}{3.5cm}{R\ T\ F}")
+];

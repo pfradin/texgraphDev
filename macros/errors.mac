@@ -1,0 +1,93 @@
+TeXgraph#
+{
+================ errors.mac =====================
+
+Auteur : Alphonse Capriani
+
+Version : 1.0
+Date de création : 02 novembre 2013
+Dernière mise à jour : 11 novembre 2013
+
+Description : 
+Gestion des erreurs sous TeXgraph
+    
+====================================================
+}
+
+Var
+    
+    {Messages d'erreur}
+    ErrFile           = Nil;   {Fichier à l'origine de l'erreur}
+    ErrFileVer        = Nil;   {Version du fichier à l'origine de l'erreur}
+    ErrMacro          = Nil;   {Macro à l'origine de l'erreur}
+    ErrLevel          = Nil;   {Niveau de l'erreur : Informatif/Warning/Sévère/Autre)}
+    ErrType           = Nil;   {Libellé de l'erreur rencontrée}
+    ErrMsg            = Nil;   {Message d'erreur}
+    ErrRet            = Nil;   {Valeur à retourner par la macro ayant planté}
+    ErrShow           = 1;     {Booléen permettant l'affichage ou non de l'erreur}
+    ErrSave           = 0;     {Booléen permettant ou non la sauvegarde des erreurs rencontrées}
+    ErrHist           = Nil;   {Liste des erreurs rencontrées} 
+    ErrNb             = 0;     {Nombre d'erreurs sauvegardées}
+
+Mac
+    RaiseError = {RaiseError([Options]) : Traitement d'une erreur détectée dans une macro}
+    [   ErrInit(), //valeurs par défaut
+        $options:=%1, //évaluations des options
+        {Définition du message d'erreur} 
+        ErrMsg:=Concat("====== Error found ======", LF),  
+        if ErrFile<>Nil then
+            ErrMsg:=Concat(ErrMsg, "In File      : ", ErrFile, LF)
+        fi, 
+        if ErrFileVer<>Nil then
+            ErrMsg:=Concat(ErrMsg, "File version : ", ErrFileVer, LF)
+        fi, 
+        if ErrMacro<>Nil then
+            ErrMsg:=Concat(ErrMsg, "In macro     : ", ErrMacro, LF)
+        fi, 
+        if ErrLevel<>Nil then
+            ErrMsg:=Concat(ErrMsg, "Error level  : ", ErrLevel, LF)
+        fi, 
+        if ErrType<>Nil then
+            ErrMsg:=Concat(ErrMsg, "Error type   : ", ErrType, LF)
+        fi, 
+         
+        {Affichage du message d'erreur}
+        if ErrShow = 1 then
+            ErrPrint()
+        fi, 
+        
+        {Sauvegarde du message}
+        if ErrSave = 1 then
+            ErrHist := Concat(ErrHist, LF, ErrMsg), 
+            Inc(ErrNb, 1)
+        fi,
+        ErrRet, //code retour
+    ];
+    
+    ErrInit = {Réinitialisation des options locales}
+    [   ErrFile:=Nil, 
+        ErrFileVer:=Nil, 
+        ErrMacro:=Nil, 
+        ErrLevel:=Nil, 
+        ErrType:=Nil,
+        ErrMsg:=Nil, 
+        ErrRet:=Nil, 
+    ];
+    
+    ErrPrint = {ErrPrint() : Affiche le message d'erreur courant}
+    [
+        Message(ErrMsg)
+    ];
+    
+    ErrHistShow = {ErrHistShow() : Affiche l'historique des erreurs rencontrées}
+    [
+        Message(ErrHist)
+    ];
+
+    ErrHistDel = {ErrHistDel : Détruit l'historique des erreurs}
+    [
+        ErrHist:=Nil,
+        ErrNb:=0
+    ];
+    
+    

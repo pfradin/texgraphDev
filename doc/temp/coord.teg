@@ -1,0 +1,13 @@
+TeXgraph#
+Graph image = [
+view(-3.5,4.5,-3,4), view3D(-3.5,3.5,-3.5,3.5,-3.5,3.5), size(7.5), Marges(0,0,0,0),
+A:=M(3,3,3), Width:=8, Arrows:=1, Axes3D(0,0,0),
+LabelDot3D(Origin, "$O$","NO",1),
+Arc3D(px(A),Origin,pxy(A),1.5,1), Arc3D(pz(A),Origin,A,1.5,1),
+Arrows:=0, LineStyle:=userdash,
+Ligne3D([px(A),pxy(A),py(A), jump, A, pxy(A),Origin],0),
+Arrows:=1, LineStyle:=solid, Ligne3D([Origin ,A],0),
+LabelDot3D(A,"$\vec{n}$", "NE"),
+Label(0.1228-1.0377*i,"$\theta$"),
+Label(0.3509+1.3396*i,"$\varphi$")
+];

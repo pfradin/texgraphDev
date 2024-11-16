@@ -1,0 +1,34 @@
+TeXgraph#
+Cmd [Fenetre(-6+5.5*i,6-5.5*i,0.625+0.625*i), Marges(0,0,0,0), Border(0)];
+  [OriginalCoord(1),IdMatrix()];
+  [theta:=0.0872, phi:=1.1345, IdMatrix3D(), ModelView(ortho)];
+Var
+  A = [-4.5*i,4];
+  B = [-4.5*i,-1];
+  C = [0,-5];
+Mac
+  plan = [ a:=%1, type:=%2, Arrows:=0,
+   LabelDot(Proj3D(%1),"$A$","E",1,0.2),
+   Width:=8,
+   DrawPlan( [a,vecK], vecJ, 2, 2, type),
+   angleD( Proj3D(a+vecK), Proj3D(a), Proj3D(a-vecJ), 0.15),
+   Arrows:=1,
+   Ligne( Proj3D( [a, a+vecK]),0),
+   LabelDot( Proj3D([a+vecK]), "$\vec{u}$", "N",0)
+  ];
+Graph objet1 = [
+  Width:=8, Marges(0,0,0,0), size(7.5),
+  plan(A,1), plan( A+3*vecJ,2), plan( A+6*vecJ,3),plan( A+9*vecJ,4),
+  plan(B,-1), plan( B+3*vecJ,-2), plan( B+6*vecJ,-3),plan( B+9*vecJ,-4),
+  plan(C),
+  Arrows:=0,LabelSize:=footnotesize,
+  Label(-4.5+2.7564*i,"type=$1$"),
+  Label(-1.2529+2.7564*i,"type=$2$"),
+  Label(1.5+2.7564*i,"type=$3$"),
+  Label(4.4824+2.7564*i,"type=$4$"),
+  Label(-4.7471-2.0032*i,"type=$-1$"),
+  Label(-1.5-2.0032*i,"type=$-2$"),
+  Label(1.5-2.0032*i,"type=$-3$"),
+  Label(4.2529-2.0032*i,"type=$-4$"),
+  Label(-0.2471-5.2532*i,"pas de type")
+  ];

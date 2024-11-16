@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(2.75,4,0,1),
+Marges(0.75,0.5,0.5,0.5),size(7.5),
+Axes(Xmin+i*Ymin,0.25+0.2*i,1+i),
+pas:=0.001, Color:=red,
+DotScale:=0.1,
+Dot(
+ for r from Xmin to Xmax step pas do
+ u:=0.5,
+ for k from 1 to 25 do u:=r*u*(1-u) od,
+ for k from 1 to 25 do u:=r*u*(1-u), r+i*u od
+ od)
+];

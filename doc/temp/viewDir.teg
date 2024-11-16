@@ -1,0 +1,31 @@
+TeXgraph#
+Mac
+  dessin = [ BoxAxes3D(grid:=1, zlabelstyle:=right,
+     zlabelsep:=0.15, xlabelsep:=0.25,
+       ylabelsep:=0.25,
+     xlegendsep:=0.35, ylegendsep:=0.35,
+     FillColor:=lightcyan),
+   Ligne3D(SortFacet(stock),1), RestoreWin()];
+
+Cmd [tMin:=-5,tMax:=0,DotScale:=1+i];
+Graph objet1 = [view(-6,6,-6,6), Marges(0,0,0,0),
+     size(7.5),
+   view3D(-3,3,-3,3,-3,3),
+   S:=GetSurface([u+i*v,2*sin(u)+cos(v)],
+          -3+3*i,-3+3*i),
+   stock:=for facette in S By jump do
+      z:=Zde(isobar3d(facette)),
+      facette,
+      ColorJump(Hsb(270*(Zsup-z)/(Zsup-Zinf),1,1))
+     od,
+
+   FillStyle:=full, LabelSize:=tiny,
+   ModelView(central), SaveTphi(), SaveWin(),
+   view(-6,0,0,6), ChangeWinTo([-8-7*i,6+6*i]),
+   dessin(), SaveWin(), ModelView(ortho),
+   view(0,6,0,6), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(xOy), dessin(), SaveWin(),
+   view(-6,0,-6,0), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(yOz), dessin(), SaveWin(),
+   view(0,6,-6,0), ChangeWinTo([-6-6*i,4+5*i]),
+   viewDir(xOz), dessin(), RestoreTphi() ];

@@ -1,0 +1,103 @@
+TeXgraph#
+{version 2.0}
+
+Var
+    serverAddress = "https://pfradin.github.io/texgraph/telechargement/";
+
+Mac
+    updateTeXgraph = [{updateTeXgraph()}
+    //récupération de la version serveur
+    mode:="stable",
+    if Windows then
+       Exec("cmd /C del /Q","version.txt",TmpPath,1)
+    else
+       Exec("bash -c ""rm -f","version.txt""",TmpPath,1)
+    fi,
+    Exec(WebLoad, Concat(serverAddress,"version.txt"), TmpPath,1),
+    if FileExists(TmpPath+"version.txt") then
+     $L:=ReadData(TmpPath+"version.txt"),
+     $serVer:=L[2], $date:=L[3], $statut:=L[4],
+     $ok:= Input([LF," The current version is ",serVer," (",date,", ",statut,").",LF,LF,
+              "And your version is ",version,".",LF,LF,
+              "Do you want to proceed? (Ok or Cancel)"],
+              "Updating TeXgraph",
+              ""),
+
+     if ok then
+       if Windows then updateTeXgraphWin(mode, serVer)
+       else  updateTeXgraphLin(mode, serVer)
+       fi
+     fi
+    else Message("Loading version.txt: failed!")
+    fi
+    ];
+
+    updateTeXgraphLin = [
+    {updateTeXgraphLin(mode, serveurVer), mode="test" ou "stable"}
+    $mode:=%1,
+    OS:=64,
+    $p:=StrPos("/TeXgraph",InitialPath),
+    $prefix:=StrCopy(InitialPath,1,p-1),
+    root:=(prefix="/usr/local/share"),
+    if root then prefix:="/usr/local" fi,
+    $serveurVer:=%2,
+    $ok:= Input([LF,
+                 "That will be done :",LF,LF,
+                 "-> update to the ",mode," ",serveurVer," version",LF,
+                 if root then "-> as root",LF fi,
+                 "-> in the folder ",prefix, if root then "/share" fi, "/TeXgraph",LF,
+                 "-> with ",OS," bits binaries",LF,LF,
+                 "Do you confirm (Ok ou Cancel) ?",LF,
+                 "If you are ok, you will have to wait during the installation.",LF,
+                 "Then: A TERMINAL WILL OPEN, FOLLOW THE INSTRUCTIONS CAREFULLY."],
+                 "Do you confirm ?"),
+    if ok then
+          $fichier:=Concat("TeXgraph",serveurVer,"-Linux-64bits.tar"),
+          Exec(WebLoad, serverAddress+fichier+".gz", TmpPath,1),
+          if FileExists(TmpPath+fichier+".gz") then
+             Exec("gzip -d", fichier+".gz", TmpPath,1),
+            Exec("tar -xf", fichier, TmpPath,1),
+            Exec("bash -c ""rm -f",[fichier,""""],TmpPath,1),
+            Exec("bash -c ""rm -f",[fichier,".gz"""],TmpPath,1),
+            if root then
+              Input([LF,"Installation as root.",LF,LF,
+               "Enter your commmand to be root (eg: sudo, gksu, su, beesu,...)"],
+                "Execution as root","sudo"),
+              Exec(Concat("xterm -e '""",chaine(),""" ./install.sh"), Concat("""",prefix,"""'"),    Concat(TmpPath,"TeXgraph",serveurVer,"/"), 1)
+            else //no root
+              Exec("xterm -e './install.sh", Concat("""",prefix,"""'"), Concat(TmpPath,"TeXgraph",serveurVer,"/"),1)
+            fi,
+            Exec("bash -c ""rm -rf", Concat("TeXgraph",serveurVer,""""), TmpPath,1),
+            Print("Update Complete!",LF,
+                     "You close the program and restart it.")
+          else Print("Sorry, I can't load ",serverAddress,fichier,".gz!",LF,
+                     "Update canceled.")
+          fi
+    fi
+    ];
+    updateTeXgraphWin = [
+    {updateTeXgraphWin(mode, serveurVer), mode="test" ou "stable"}
+    $mode:=%1,
+    $p:=StrPos("\TeXgraph",InitialPath),
+    $prefix:=StrCopy(InitialPath,1,p-1),
+    $serveurVer:=%2,
+    $ok:= Input([LF,
+                 "That will be done :",LF,LF,
+                 "-> update to the ",mode," ",serveurVer," version",LF,
+                 "-> in the folder ",prefix, "\TeXgraph",LF,LF,
+                 "Do you confirm (Ok ou Cancel) ?",LF,
+                 "If you are ok, you will have to wait during the installation.",LF,
+                 "Then: A TERMINAL WILL OPEN, FOLLOW THE INSTRUCTIONS CAREFULLY."],
+                 "Do you confirm ?"),
+    if ok then
+          $fichier:=Concat("TeXgraph",serveurVer,"-Windows-64bits.zip"),
+          Exec(WebLoad, serverAddress+fichier, TmpPath,1),
+          if FileExists(TmpPath+fichier) then
+            Exec("unzip -o", fichier, TmpPath,1),
+            Exec("cmd /C del /Q", fichier, TmpPath,1),
+            Exec("cmd /C install.bat", String2Teg(prefix), Concat(TmpPath,"TeXgraph",serveurVer,"\"), 0,1),
+          else Print("Sorry, I can't load ",serverAddress+fichier," !",LF,
+                     "Update canceled.")
+          fi
+    fi
+    ];

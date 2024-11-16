@@ -1,0 +1,1203 @@
+TeXgraph#
+{Mouse.mac: version 0.3 du 22/08/2021}
+{macros pour le dessin à la souris dans TeXgraph 2.0}
+
+Var
+    MouseVerNum = 0.3;
+    MouseRefPoint = RefPoint;
+{types}
+    Tdroite = 1;
+    Tarc = 2;
+    Tligne = 3;
+    Tdot = 4;
+    Tcercle = 5;
+    Tbezier = 6;
+    Tcurve = 7;
+    Tlabel = 8;
+    Tcarre = 9;
+    Trectangle = 10;
+    Tpolyreg = 11;
+    Tellipse = 12;
+    Tparallelo = 13;
+    Tctrldot = 14;
+    Tparabole = 15;
+    Thyperbole = 16;
+{compteurs}
+    C1 = 0;
+    C2 = 0;
+    C3 = 0;
+    C4 = 0;
+    C5 = 0;
+    C6 = 0;
+    C7 = 0;
+    C8 = 0;
+    C9 = 0;
+    C10 = 0;
+    C11 = 0;
+    C12 = 0;
+    C13 = 0;
+    C14 = 0;
+    C15 = 0;
+    C16 = 0;
+    compt = 0;
+    NbCtrlDot = 0;
+{variables}
+    num = 0;
+    EnCours = 0;
+    Ancien = 0;
+    Clicd = 0;
+    drawing = 0;
+    lineclosed = 0;
+    ShowRef = 0;
+    ShowLabel = 0;
+    SLabelEnCours = 0;
+    Collage = 0;
+    lastpoint = 0;
+    GridNbDiv = 4;
+    LineArc = 0;
+    new = 1;
+    SaveParam = Nil;
+    SaveDotState = Nil;
+    SaveCtrlDot = Nil;
+    NbDot = 0;
+    flechage = Nil;
+{listes}
+    controles = Nil;
+    CtrlDot = Nil;
+    DotState = Nil;
+    LaListe = Nil;
+    flechages = Nil;
+{Attributs}
+    couleur = black;
+    Mwidth = 4;
+    Mlinestyle = 0;
+    fill = none;
+    fillcolor = white;
+    Mdotstyle = dot;
+    Marrows = 0;
+    Mlabelstyle = 0;
+    nbpoints = NbPoints;
+    fillopacity = FillOpacity;
+    Mmatrix = [0,1,i];
+    labelangle = 0;
+    Mlabelsize = LabelSize;
+    Tminmax = -5+5*i;
+
+Cmd CompVer("MouseVer");
+
+Mac
+    byte = {byte(x,num) renvoie le byte numéro num}
+    mod(Ent(%1/2^%2),2);
+
+    Statut = {renvoie le statut du point numéro}
+    Im(DotState[%1]);
+
+    c = if {byte(Statut(%1),2)}0 then Eval(["c",%1]) else Copy(CtrlDot,%1,1) fi;
+
+    changeStatut = { changeStatut(num) pour Bezier}
+    [$pos:=mod(%1+1-lineclosed,3),
+     if pos=2 {sommet} then $x:=controles[%1]
+     elif pos=1 {pred} then $x:=controles[%1+1]
+     else {succ} $x:=controles[%1-1]
+     fi,
+     $y:=DotState[x], $S:=Im(y),$A:=Ent(S/4), $B:=mod(S,4), Subs(DotState,x,Re(y)+i*(4*A+mod(1+B,3)))
+    ];
+
+    liberer = {liberer( <liste des index à libérer> )}
+    for $z1 in %1 do
+        $index:=z1, $x:=DotState[index], Inc(x,-1),
+        if x=0 then Subs(CtrlDot,index,jump), Subs(DotState,index,0)
+               else Subs(DotState,index,x)
+        fi
+    od;
+
+    reserver = {reserver( index )}
+    [$x:=DotState[%1], Inc(x,1),
+     Subs(DotState,%1,x)
+    ];
+
+    getCtrlDot = { getCtrlDot( <n> ): renvoie n index disponibles}
+    [$k:=1, $m:=0,
+     while (k<=NbCtrlDot) And (m<%1) do if Re(DotState[k])=0 then  k, Subs(DotState,k,1), Inc(m,1) fi, Inc(k,1) od,
+     if m<%1
+        then  for $j from 0 to %1-m-1 do k+j od,
+              Insert(CtrlDot, Seq(jump,j,0,%1-m-1)), Insert(DotState, Seq(1,j,0,%1-m-1)),
+              Inc(NbCtrlDot,%1-m)
+     fi
+    ];
+
+    replace2 = {replace2(num, val): même chose que replace dans CtrlDot, mais que si le point est non assigné}
+    if byte(Statut(%1),2)=0 then Subs(CtrlDot,%1,%2) fi;
+
+    NotInControles =
+    [ok:=1, for $z in controles do if z=%1 then ok:=0 fi od, ok];
+
+    square =
+    [if byte(Statut(%1),2) then Color:=gray else Color:=blue fi, DotScale:=3,
+    {$L:=0.15/Yscale, $a:=c(%1)-L/2*(1+i),} Point(c(%1)) //Ligne([a,a+L,a+L*(1+i),a+i*L],1)
+    ];
+
+    ShowSelect =
+    [DefaultAttr(),
+    if ShowRef then
+    Set(Color,red), Set(LineStyle, 0),Set(Width,4), Set(FillStyle,0), LabelSize:=small, LabelStyle:=0,
+    $old:=jump,$r:=0.1/Yscale,
+    for $z in LaListe do
+        if old=jump then Cercle(c(z),r) fi,
+        old:=z
+    od
+    fi,
+    if ShowLabel Or SLabelEnCours
+        then
+            Width:=4, Color:=black,
+            $k:=0,
+            $stock:=if ShowLabel then
+                        for $z in DotState do
+                            Inc(k,1),
+                            if Re(z)>0 then
+                                k,
+                                if NotInControles(k) then Point(c(k)) fi
+                            fi
+                        od
+                        else controles fi,
+            LabelStyle:=0, LabelSize:=footnotesize,
+            for z in stock do
+                if byte(Statut(z),2)=0 then Color:=blue else Color:=gray fi, {point assigné en gris}
+                Label(c(z)+0.25*i/Yscale,Re(z))
+            od
+    fi];
+
+    ShowCtrl = { dessine les points de controles }
+     if EnCours>0
+        then
+            SaveAttr(), DefaultAttr(),
+            if EnCours=Tbezier
+                then
+                    LineStyle:=dotted,$liste:=reverse(controles),
+                    if lineclosed then permute(liste) fi,
+                    $k:=0, $ok:=1/0,
+                    $liste:= for $z in liste do
+                                Inc(k,1),
+                                if k=1 {sommet} then ok:=(mod(Statut(z),4)=2)=0 {pas segment}, z
+                                    else if ok then z-i else jump fi
+                                fi,
+                                if k=3 then k:=0 fi
+                            od,
+                    if lineclosed then $z1:=liste[1] else z1:=1/0 fi,
+                    Ligne(Map(if z=jump then jump else c(z) fi,z,[liste,z1]),0),
+                    for z in liste do
+                        if z=jump then 1/0
+                        else
+                            if Im(z)=-1 {tangente} then DotStyle:=square else DotStyle:=square' fi,
+                            square(Re(z))
+                        fi
+                    od
+            elif EnCours=Tellipse Or EnCours=Tparabole Or EnCours=Thyperbole
+                then
+                    Set(LineStyle,dashed),Set($a,c(Copy(controles,1,1))), Set($b,c(Copy(controles,2,1))),
+                    Droite(a,b), Droite(a,a+i*(b-a))
+            elif EnCours=Tarc
+                then
+                    Set(LineStyle,dashed),
+                    Set($a,c(Copy(controles,1,1))), Set($b,c(Copy(controles,2,1))), Set($c,c(Copy(controles,3,1))),
+                    Ddroite(a,b), Ddroite(a,c)
+            fi,
+            if (EnCours=Tbezier)=0
+                then
+                    DotStyle:=square', Map( square(z), z, controles)
+            fi,
+            FillStyle:=0, $r:=0.15/Yscale, Color:=red, LineStyle:=solid,
+            Cercle(c(controles[1]),r), //, Ellipse(c(controles[1]),r,r),
+            RestoreAttr()
+    fi; 
+
+    Curve = [Set($ligne,%1), Set($N,Nops(ligne)),
+     Set($A,Copy(ligne,1,1)), Set($B,Copy(ligne,2,1)),
+     Si(%2, [Insert(ligne,A), Set($C,Copy(ligne,N,1)), Inc(N,1), Set($L,abs(B-A)),
+                     Set($v1, (B-C)/abs(B-C)*L)],
+                    Set(v1,0)
+        ),
+     Spline(v1,ligne,v1)
+    ];
+
+    Contour =
+    if %2 then {closed}
+    Path( if Nops(%1)>3 then
+        [ $u1:=%1[1], $u2:=%1[2],c(u2),
+        $liste:=1/0, $k:=-2,
+        for $z in %1 do
+            Inc(k,1),
+                if (k=1) Or (k=2) then Insert(liste,c(z)) fi,
+            if k=3 then
+                        if mod(Statut(z),4)=2 then c(z),line else liste,c(z),bezier fi,
+                k:=0, liste:=1/0
+            fi
+        od,
+        if mod(Statut(u2),4)=2 then c(u2),line else liste,c(u1),c(u2),bezier fi
+    ] fi,1)
+    else
+    Bezier( [
+        $liste:=1/0, $k:=-1,
+        for $z in %1 do
+        Inc(k,1),
+        if k=0 then c(z)
+        else Insert(liste,c(z)) fi,
+        if k=3 then
+            if mod(Statut(z),4)=2 then jump,c(z) else liste fi,
+            k:=0, liste:=1/0
+        fi
+        od
+    ])
+    fi;
+
+    darc = Arc(%2, %1, %3, abs(%2-%1),1-2*%4);
+
+    dparabole = { dparabole(sommet, axe) }
+    [$p:=abs(%2-%1),$u:=(%2-%1)/p,
+     Courbe(%1+t^2/(4*p)*u+t*i*u,Si(nil(%3),0,%3))
+    ];
+
+    dhyperbole = { dhyperbole(centre, sommet, tangente) }
+    [$a:=abs(%2-%1),$M:=proj(%3,%1,%1+i*(%2-%1)), $b:=abs(M-%1), $u:=(%2-%1)/a,
+     Courbe(%1+a*ch(t)*u+b*sh(t)*i*u,Si(nil(%4),0,%4)),
+     Courbe(%1-a*ch(t)*u+b*sh(t)*i*u,Si(nil(%4),0,%4))
+    ];
+
+    Save = [
+    Set(couleur, Color), Set(Mwidth, Width), Set(Mlinestyle, LineStyle), Set(Mdotstyle, DotStyle),
+    Set(fill, FillStyle), Set(fillcolor, FillColor), Set(Marrows, Arrows), Set(Mlabelstyle, LabelStyle),
+    Set(nbpoints,NbPoints), Set(labelangle, LabelAngle), Set(Mlabelsize, LabelSize), Set(Tminmax,tMin+i*tMax),
+    Mmatrix:=GetMatrix(),fillopacity:=FillOpacity
+    ];
+
+    Restore = [
+    Set(Color, couleur), Set(Width, Mwidth), Set(LineStyle,Mlinestyle), Set(FillStyle, fill),
+    Set(FillColor, fillcolor), Set(DotStyle, Mdotstyle), Set(Arrows,Marrows), Set(LabelStyle, Mlabelstyle),
+    Set(NbPoints,nbpoints), Set(LabelAngle, labelangle), Set(LabelSize, Mlabelsize), tMin:=Re(Tminmax), tMax:=Im(Tminmax),
+    SetMatrix(Mmatrix),FillOpacity:=fillopacity
+    ];
+
+    tangentes = {tangentes(affixe, num) règle le problème des tangentes libres/liées pour Bézier}
+    [$ok:=mod(%2+1-lineclosed,3),
+     if ok=2 {on est sur un sommet}
+        then $pred:=controles[%2-1], $sommet:=controles[%2], $succ:=controles[%2+1],
+             $x:=c(pred), $s:=c(sommet), $y:=c(succ),
+             Subs(CtrlDot,sommet, %1),
+             if (mod(Statut(sommet),4)=1)=0 {lié}
+                then $delta:=%1-s,
+                    if %2-1>0 then Subs(CtrlDot, pred,x+delta) fi,
+                    if nil(y)=0 then Subs(CtrlDot,succ,y+delta) fi
+
+            fi
+        elif ok=1 {clic sur pred}
+            then pred:=controles[%2], sommet:=controles[%2+1], succ:=controles[%2+2],
+                 x:=%1, s:=c(sommet), y:=c(succ),
+                 Subs(CtrlDot,pred, x),
+                 if (mod(Statut(sommet),4)=1)=0 {lié} And (nil(y)=0)
+                     then Subs(CtrlDot,succ, s+abs(y-s)*(s-x)/abs(s-x))
+                 fi
+        elif ok=0 {clic sur succ}
+            then $pred:=controles[%2-2],
+                 sommet:=controles[%2-1], $succ:=controles[%2],
+                 $x:=c(pred), $s:=c(sommet), $y:=%1,
+                 Subs(CtrlDot,succ, y),
+                 if (mod(Statut(sommet),4)=1)=0 {lié} And (%2-2>0)
+                    then Subs(CtrlDot,pred, s+abs(x-s)*(s-y)/abs(s-y))
+                 fi
+     fi
+    ];
+
+    creer = { dessine un nouvel objet }
+    [if new then DelGraph("Controles","Selection"),ReDraw() else new:=1 fi, $type:=%1, Restore(),
+     //PenMode:=1,
+    if type=Tdroite then
+        NewGraph(["Mdroite",compt], ["Droite(c(Copy(controles,1,1)),c(Copy(controles,2,1)))"]),
+        NewMac("SelectName",["Mdroite",compt]),
+        NewMac("SelectBody", "[""Droite(c("",Copy(controles,1,1),""),c("",Copy(controles,2,1),""))""]")
+        
+    elif type=Tligne then
+         NewGraph(["Mligne",compt], ["Ligne(Map(c(z),z,controles),",lineclosed,",LineArc)"]),
+         NewMac("SelectName",["Mligne",compt]),
+         NewMac("SelectBody","[""Ligne(Map(c(z),z,"",Str(controles),""),"",lineclosed,"","",LineArc,"")""]")
+         
+    elif type=Tdot then
+        NewGraph(["Mpoint",compt], ["Point(Map(c(z),z,controles))"]),
+         NewMac("SelectName",["Mpoint",compt]),
+         NewMac("SelectBody","[""Point(Map(c(z),z,"",Str(controles),""))""]")
+         
+    elif type=Tcercle then
+        NewGraph(["Mcercle",compt], ["Cercle(c(Copy(controles,1,1)),abs(c(Copy(controles,2,1))-c(Copy(controles,1,1))))"]),
+        NewMac("SelectName",["Mcercle",compt]),
+        NewMac("SelectBody","[""Cercle(c("",Copy(controles,1,1),""),   abs(c("",Copy(controles,2,1),"")-c("",Copy(controles,1,1),"")))""]")
+        
+    elif type=Tcurve then
+        NewGraph(["Mcourbe",compt], ["[NbPoints:=NbPoints*(Nops(controles)+",lineclosed,"-1), Curve(Map(c(z),z,controles),",lineclosed,")]"]),
+         NewMac("SelectName",["Mcourbe",compt]),
+         NewMac("SelectBody","[""[NbPoints:=NbPoints*("", Nops(controles)+lineclosed-1,""),Curve(Map(c(z),z,"",Str(controles),""),"",lineclosed,"")]""]")
+         
+    elif type=Tlabel then
+        NewGraph(["Mlabel",compt], ["Label(c(Copy(controles,1,1)),\label",compt,")"]),
+        NewMac("SelectName",["Mlabel",compt]),
+        NewMac("SelectBody", "[""Label(c("",Copy(controles,1,1),""),\label"",compt,"")""]")
+
+    elif type=Tcarre then
+        NewGraph(["Mcarre",compt], "Dcarre(c(Copy(controles,1,1)),c(Copy(controles,2,1)),1,LineArc)"),
+         NewMac("SelectName",["Mcarre",compt]),
+         NewMac("SelectBody","[""Dcarre(c("",Copy(controles,1,1),""),c("",Copy(controles,2,1),""),"",LineArc,"")""]")
+
+    elif type=Trectangle then
+        NewGraph(["Mrectangl",compt], "Drectangle(c(Copy(controles,1,1)),c(Copy(controles,2,1)),c(Copy(controles,3,1)),LineArc)"),
+         NewMac("SelectName",["Mrectangl",compt]),
+         NewMac("SelectBody","[""Drectangle(c("",Copy(controles,1,1),""), c("",Copy(controles,2,1),""),c("",Copy(controles,3,1),""),"",LineArc,"")""]")
+
+    elif type=Tpolyreg then
+        NewGraph(["Mpolyreg",compt], ["Dpolyreg(c(Copy(controles,1,1)),c(Copy(controles,2,1)),nbCotes",compt,",LineArc)"]),
+         NewMac("SelectName",["Mpolyreg",compt]),
+         NewMac("SelectBody","[""Dpolyreg(c("",Copy(controles,1,1),""), c("",Copy(controles,2,1),""),nbCotes"",compt,"","",LineArc,"")""]")
+         
+    elif type= Tellipse then
+        NewGraph(["Mellipse",compt], "[Set($O, c(Copy(controles,1,1))),Set($A, c(Copy(controles,2,1))-O),
+         Set($B, proj(c(Copy(controles,3,1)),O,O+i*A)),Ellipse(O,abs(A),abs(B-O),Arg(A)*180/pi,0)]"),
+        NewMac("SelectName",["Mellipse",compt]),
+        NewMac("SelectBody","[""[Set($O, c("",Copy(controles,1,1),"")),Set($A, c("",Copy(controles,2,1),"")-O), Set($B, proj(c("",Copy(controles,3,1),""),O,O+i*A)),Ellipse(O,abs(A),abs(B-O),Arg(A)*180/pi,1)]""]")
+        
+    elif type=Tparallelo then
+        NewGraph(["Mparallelo",compt], "Dparallelo(c(Copy(controles,1,1)),c(Copy(controles,2,1)),c(Copy(controles,3,1)),LineArc)"),
+         NewMac("SelectName",["Mparallelo",compt]),
+         NewMac("SelectBody", "[""Dparallelo(c("",Copy(controles,1,1),""),c("",Copy(controles,2,1),""),c("",Copy(controles,3,1),""),"",LineArc,"")""]")
+         
+    elif type=Tbezier then
+         NewGraph(["Mbezier",compt], ["Contour(controles,",lineclosed,")"]),
+         NewMac("SelectName",["Mbezier",compt]),
+         NewMac("SelectBody","[""Contour("",Str(controles),"","",lineclosed,"")""]")
+         
+    elif type=Tctrldot then
+         NewGraph(["Mctrldot",compt], "1/0"),
+         NewMac("SelectName",["Mctrldot",compt]), NewMac("SelectBody","1/0")
+         
+    elif type=Tarc then
+        NewGraph(["Marc",compt], "darc(c(Copy(controles,1,1)),c(Copy(controles,2,1)),c(Copy(controles,3,1)),lineclosed)"),
+         NewMac("SelectName",["Marc",compt]),
+         NewMac("SelectBody", "[""darc(c("",Copy(controles,1,1),""),c("",Copy(controles,2,1),""),c("",Copy(controles,3,1),""),"",lineclosed,"")""]")
+         
+    elif type=Thyperbole then
+        NewGraph(["Mhyperbole",compt], "dhyperbole(c(Copy(controles,1,1)),c(Copy(controles,2,1)),c(Copy(controles,3,1)),0)"),
+        NewMac("SelectName",["Mhyperbole",compt]),
+        NewMac("SelectBody","[""dhyperbole(c("",Copy(controles,1,1),""), c("",Copy(controles,2,1),""),c("",Copy(controles,3,1),""),1)""]")
+        
+    elif type=Tparabole then
+        NewGraph(["Mparabole",compt], "dparabole(c(Copy(controles,1,1)),c(Copy(controles,2,1)),0)"),
+        NewMac("SelectName",["Mparabole",compt]),
+        NewMac("SelectBody","[""dparabole(c("",Copy(controles,1,1),""),c("",Copy(controles,2,1),""),1)""]")
+    fi,
+    NewGraph("Controles","ShowCtrl()"),
+    if nil(flechage)=0 then
+        NewGraph([Str(SelectName),"f"], ["flecher(Get(",Str(SelectName),"),",flechage,")"])
+    fi,
+    //PenMode:=0,
+    NewGraph("Selection", "ShowSelect()"), ReDraw()
+    ];
+
+    Newdroite = [valider(), Inc(C1,1),Set(compt,C1), Etat(1,"droite"),
+    NbDot:=2,
+    Set(EnCours,Tdroite), creer(EnCours)
+    ];
+
+    Newcircle = [valider(),Inc(C5,1),Set(compt,C5),Etat(1,"cercle"),
+    NbDot:=2,
+    Set(EnCours,Tcercle),
+    creer(Tcercle)
+    ];
+
+    Newlabel = [valider(),
+    if  Input("Entrez le <texte> (placement à la souris)", "Ajouter une légende")
+        then
+            Save(), Set(EnCours,Tlabel),Inc(C8,1),Set(compt,C8), Etat(1,"label"),
+            DefMac(["label",compt],["""",chaine(),""""]),
+            NbDot:=1,
+            creer(Tlabel)
+    fi
+    ];
+
+    Newligne = [valider(),Set(lineclosed,%1),Inc(C3,1),Set(compt,C3),Etat(1,"ligne"),
+    Set(EnCours,Tligne),
+    NbDot:=50,
+    creer(Tligne)
+    ];
+
+    Newarc = [valider(),Set(lineclosed,%1),Inc(C2,1),Set(compt,C2),Etat(1,"arc"),
+    NbDot:=3,
+    Set(EnCours,Tarc), Marrows:=1,
+    creer(Tarc)
+    ];
+
+    Newdot = [valider(),Inc(C4,1),Set(compt,C4),Etat(1,"point"),
+    NbDot:=50,
+    Set(EnCours,Tdot),
+    creer(Tdot)
+    ];
+
+    Newctrldot = [valider(),Inc(C14,1),Set(compt,C14),Etat(1,"ctrldot"),
+    NbDot:=50,
+    Set(EnCours,Tctrldot),
+    creer(Tctrldot)
+    ];
+
+    Newbezier = [valider(),Set(lineclosed,%1), Inc(C6,1),Set(compt,C6),Etat(1,"bezier"),
+    NbDot:=150,
+    Set(EnCours,Tbezier), nbpoints:=50,
+    creer(Tbezier)
+    ];
+
+    Newcurve = [valider(),Set(lineclosed,%1), Inc(C7,1),Set(compt,C7),Etat(1,"courbe"),
+    NbDot:=50,
+    Set(EnCours,Tcurve), nbpoints:=50,
+    creer(Tcurve)
+    ];
+
+    Newcarre = [valider(),Inc(C9,1),Set(compt,C9),Etat(1,"carre"),
+    NbDot:=2,
+    Set(EnCours,Tcarre),
+    creer(Tcarre)
+    ];
+
+    Newrectang = [valider(),Inc(C10,1),Set(compt,C10),Etat(1,"rectangle"),
+    NbDot:=3,
+    Set(EnCours,Trectangle),
+    creer(Trectangle)
+    ];
+
+    Newparall = [valider(),Inc(C13,1),Set(compt,C13),Etat(1,"parallelo"),
+    NbDot:=3,
+    Set(EnCours,Tparallelo),
+    creer(Tparallelo)
+    ];
+
+    Newellipse = [valider(),Inc(C12,1),Set(compt,C12),Etat(1,"ellipse"),
+    NbDot:=3,
+    Set(EnCours,Tellipse), nbpoints:=50,
+    creer(Tellipse)
+    ];
+
+    Newhyperbole = [valider(),Inc(C16,1),Set(compt,C16),Etat(1,"hyperbole"),
+    NbDot:=3,
+    Set(EnCours,Thyperbole), nbpoints:=50,Tminmax:=-5+5*i,
+    creer(Thyperbole)
+    ];
+
+    Newparabole = [valider(),Inc(C15,1),Set(compt,C15),Etat(1,"parabole"),
+    NbDot:=2,
+    Set(EnCours,Tparabole), nbpoints:=50, Tminmax:=-5+5*i,
+    creer(Tparabole)
+    ];
+
+    Newpolyreg =
+    if Input("Nombre de cotés=","Polygone régulier")
+        then
+            valider(),Inc(C11,1),Set(compt,C11),Etat(1,"polyreg"),
+            DefVar(["nbCotes",compt],Eval(chaine())),
+            NbDot:=2,
+            Set(EnCours,Tpolyreg),
+            creer(Tpolyreg)
+    fi;
+
+    dessiner = { dessine l'élément en cours}
+    [ $type:=%1, if nil(type) then type:=1 fi,
+      if EnCours=Tlabel
+        then if type then  ReCalc(Controles),
+                       if drawing=0 then ReCalc(Concat("Mlabel",compt)), ReDraw() fi
+                     else DelGraph(["Mlabel",compt]), ReCalc()
+                 fi
+      elif EnCours=Tctrldot
+            then if type then //Move(Controles),
+                      if {drawing=0} 1 then ReCalc(Concat("Mctrldot",compt),Controles) fi
+                     else DelGraph(["Mctrldot",compt]), ReCalc()
+                 fi
+      else if type then ReCalc(Str(SelectName),Controles),
+                        if nil(flechage)=0 then ReCalc(Str(SelectName)+"f") fi
+               else DelGraph(Str(SelectName)), ReCalc()
+           fi
+    fi,
+    {if type=0 then ReCalc(Controles) fi,}
+    if (drawing=0) And (ShowLabel Or SLabelEnCours) then ReCalc(Selection),ReDraw() fi
+    ];
+
+    Etat = { affichage du nom de l'objet en cours si %1=0, suppression si %1=0 }
+    if %1 then
+        NewGraph("etat",
+    ["[LabelStyle:=framed, LineStyle:=solid, FillStyle:=none, LabelAngle:=0, LabelSize:=small, Color:=black, $coin1:=Xmin+i*Ymax,
+     $coin2:=Xmax+i*Ymin, Fenetre(Xmin+i*(Ymax+0.5/Yscale), Xmax+i*Ymin), Label((Xmax+Xmin)/2+
+     (Ymax-0.25/Yscale)*i, [""",%2,""", compt, "" (Collage="", Collage, "")""]), Fenetre(coin1,coin2)]"])
+    else NewGraph("etat"," ")
+    fi;
+
+    enregistrer = [ {enregistre l'objet en cours dans liste }
+    Restore(),
+    Insert(%1, [Copy(controles,1,1), EnCours+i*compt,Color+i*Width, LineStyle+i*DotStyle,
+     FillStyle+i*FillColor, Arrows+i*LabelStyle,NbPoints+i*lineclosed,LabelAngle+i*LabelSize,tMin+i*tMax,NbDot+i*LineArc,FillOpacity,GetMatrix(),
+    controles,jump])];
+
+    stroke = [Restore(), NewGraph(Str(SelectName), GetStr(SelectBody), controles[1])
+    ];
+
+    DefaultSettings = [
+    couleur:=0, Mwidth:=4, Mlinestyle:=0, Mdotstyle:=0,
+    fill:=0, fillcolor:=white, Marrows:=0, Mlabelstyle:=0,Mlabelsize:=small,
+    nbpoints:=50, labelangle:=0, Tminmax:=-5+5*i,LineArc:=0, flechage:=1/0,
+    fillopacity:=1, Mmatrix:=[0,1,i],
+    Restore()
+    ];
+
+    annuler =
+    if nil(SaveParam)=0 then
+                $k:=1, $k2:=Nops(SaveParam),
+                Set($k1,k+1),
+                Set($z,Copy(SaveParam,k1,1)), Set(EnCours,Re(z)), Set(compt,Im(z)),Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(Color, Re(z)), Set(Width,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(LineStyle, Re(z)), Set(DotStyle,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(FillStyle, Re(z)), Set(FillColor,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(Arrows, Re(z)), Set(LabelStyle,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(NbPoints, Re(z)), Set(lineclosed,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(LabelAngle, Re(z)), Set(LabelSize,Im(z)),  Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(tMin, Re(z)), Set(tMax,Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(NbDot, Re(z)), Set(LineArc, Im(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,1)), Set(FillOpacity, Re(z)), Inc(k1,1),
+                Set(z,Copy(SaveParam,k1,3)), SetMatrix(z), Inc(k1,3),
+                Save(),
+                Set(controles, Copy(SaveParam,k1,k2-k1)),
+                DotState:=SaveDotState, CtrlDot:=SaveCtrlDot,
+                RestoreEtat(),
+                if Collage=1 then ToutAligner() fi,
+                creer(EnCours)
+    fi;
+
+    valider = { valide l'objet en cours }
+    if EnCours>0
+        then
+            Etat(0), SaveParam:=Nil,
+            if controles=Nil then supprimer()
+            else
+                stroke(),
+                enregistrer(LaListe),
+                if flechage<>Nil then
+                    ReDraw(Concat(Str(SelectName),"f")),
+                    Insert(flechages,[controles[1],-flechage,jump])
+                fi,
+                free(controles), EnCours:=0,
+                ReCalc(Selection,Controles),
+                ReDraw(),
+            fi,
+            DefaultSettings(),
+    fi;
+
+    ClicGraph =
+    if %1>0 then
+        num:=0, $k:=0, $old:=jump,
+        for $z in LaListe do
+            Inc(k,1),
+            if old=jump then if z=%1 then num:=k fi fi,
+        old:=z
+        od,
+        if num>0 then depiler(num) fi
+    fi;
+
+    RestoreEtat =
+    if  EnCours=Tdroite
+        then  Etat(1,"Mdroite")
+    elif EnCours=Tcercle
+        then Etat(1,"Mcercle")
+    elif EnCours=Tarc
+        then Etat(1,"Marc")
+    elif EnCours=Tlabel
+        then Etat(1,"Mlabel")
+    elif EnCours=Tligne
+        then Etat(1,"Mligne")
+    elif EnCours=Tdot
+        then Etat(1,"Mpoint")
+    elif EnCours=Tcurve
+        then Etat(1,"Mcourbe")
+    elif EnCours=Tcarre
+        then Etat(1,"Mcarre")
+    elif EnCours=Trectangle
+        then Etat(1,"Mrectangle")
+    elif EnCours=Tparallelo
+        then Etat(1,"Mparallelo")
+    elif EnCours=Tpolyreg
+        then Etat(1,"Mpolyreg")
+    elif EnCours=Tellipse
+        then Etat(1,"Mellipse")
+    elif EnCours=Tparabole
+        then Etat(1,"Mparabole")
+    elif EnCours=Thyperbole
+        then Etat(1,"Mhyperbole")
+    elif EnCours=Tctrldot
+        then Etat(1,"Mctrldot")
+    elif EnCours=Tbezier
+        then Etat(1,"Mbezier")
+    fi;
+
+    depiler = [ {depiler un objet de la liste à partir de l'indice %1 }
+    valider(),Set($k,%1),
+    Set($k2,k), Loop(Inc(k2,1), Copy(LaListe,k2,1)=jump),
+    Set($k1,k+1),
+    Set($z,Copy(LaListe,k1,1)), Set(EnCours,Re(z)), Set(compt,Im(z)),Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(Color, Re(z)), Set(Width,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(LineStyle, Re(z)), Set(DotStyle,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(FillStyle, Re(z)), Set(FillColor,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(Arrows, Re(z)), Set(LabelStyle,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(NbPoints, Re(z)), Set(lineclosed,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(LabelAngle, Re(z)), Set(LabelSize,Im(z)),  Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(tMin, Re(z)), Set(tMax,Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(NbDot, Re(z)), Set(LineArc, Im(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,1)), Set(FillOpacity, Re(z)), Inc(k1,1),
+    Set(z,Copy(LaListe,k1,3)), SetMatrix(z), Inc(k1,3),
+    Save(),
+    Set(controles, Copy(LaListe,k1,k2-k1)),
+    SaveParam:=Copy(LaListe,k,k2-k+1),
+    SaveDotState:=DotState, SaveCtrlDot:=CtrlDot, Del(LaListe,k,k2-k+1),
+    flechage:=1/0, k:=0, k1:=controles[1], $pred:=jump, $ok:=0,
+    for $z in flechages do
+    Inc(k,1),
+    if pred=jump
+           then if (z=k1) then ok:=1, k2:=k fi
+           elif ok then if z=jump then k3:=k, ok:=0 else Insert(flechage,-z) fi
+    fi,
+    pred:=z
+    od,
+    if nil(flechage)=0 then Del(flechages,k2,k3-k2+1) fi,
+    RestoreEtat(),
+    new:=0,
+    if Collage=1 then ToutAligner()fi,
+    creer(EnCours)
+    ];
+
+    deplacer = { translate l'objet courant }
+    if EnCours>0
+        then
+         if Input("Entrez l'affixe de la nouvelle position du point de référence:", "Translater l'objet en cours",c(controles[1]))
+            then
+                Set($pos, Eval(chaine())), Set($u, pos-c(Copy(controles,1,1))),
+                Map(replace2(Re(z),c(z)+u),z,controles),
+                dessiner()
+        fi
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    symetrie = {dessine le symétrique de l'objet en cours}
+    if EnCours>0
+        then
+         if Input("Entrez: A,B", "Symétrique de l'objet en cours par rapport à une droite (AB)",chaine())
+            then
+                $x:=Eval(["[", chaine(),"]"]), $A:=x[1], $B:=x[2],
+                if nil(A)=0 And nil(B)=0 then
+                            NewGraph( ["sym",Str(SelectName)], ["Ligne(sym(Get(",Str(SelectName),"),",chaine(),"),-1)"]), ReDraw()
+                fi
+        fi
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    projection = {dessine le projeté de l'objet en cours}
+    if EnCours>0
+        then
+         if Input("Entrez: A,B", "projection de l'objet en cours sur une droite (AB)",chaine())
+            then
+                $x:=Eval(Concat("[", chaine(),"]")), $A:=x[1], $B:=x[2],
+                if nil(A)=0 And nil(B)=0 then
+                            NewGraph( ["proj",Str(SelectName)], ["Ligne(proj(Get(",Str(SelectName),"),",chaine(),"),-1)"]), ReDraw()
+                fi
+        fi
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    tourner =
+    if EnCours>0
+        then
+            if Input("Entrez l'angle de la rotation en degrés:", "Tourner l'objet en cours autour de son point de référence")
+                then
+                    Set($pos, exp(i*Eval(chaine())*pi/180)),
+                    if nil(pos)=0
+                        then
+                            if EnCours=Tlabel
+                                then Inc(labelangle,Eval(chaine())), new:=0, creer(EnCours), ReDraw()
+                                else
+                                    Set($u, c(Copy(controles,1,1))),
+                                    Map(replace2(Re(z),(c(z)-u)*pos+u),z,controles),
+                                    dessiner()
+                                fi
+                        else Message("Valeur invalide")
+                    fi
+            fi
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    echelle =
+    if EnCours>0
+        then
+            if Input("Entrez le facteur d'échelle (>0):", "Réduire/agrandir l'objet en cours à partir de son point de référence")
+                then
+                    Set($pos, abs(Eval(chaine()))),
+                    if nil(pos)=0 And pos>0
+                        then
+                            Set($u, c(Copy(controles,1,1))),
+                            Map(replace2(Re(z),(c(z)-u)*pos+u),z,controles),
+                            dessiner()
+                        else Message("Valeur invalide")
+                    fi
+             fi
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    dupliquer =
+    if EnCours>0
+        then
+            enregistrer(LaListe),
+            if nil(flechage)=0 then Insert(flechages,[controles[1],-flechage,jump]) fi,
+                    stroke(),
+            Eval(["Inc(C",EnCours,",1)"]),Set($old,compt), Set(compt,Eval(["C",EnCours])),
+            if EnCours=Tlabel then DefMac(["label",compt],Str(["label",old])) fi,
+            if EnCours=Tpolyreg then DefVar(["nbCotes",compt],["nbCotes",old]) fi,
+            $x:= getCtrlDot(Nops(controles)), $k:=1,
+            x:=for $z in x do
+                            $u:=Copy(controles,k,1),
+                Subs(CtrlDot,z,c(u)), $X:=Im(DotState[u]), $Y:=Re(DotState[z]),
+                if byte(X,2) then Inc(X,-4) fi,
+                Subs(DotState,z,Y+i*X), z, Inc(k,1)
+                       od,
+            Echange(controles,x),
+            new:=1, creer(EnCours),
+            if nil(flechage)=0 then
+              //PenMode:=1,
+              NewGraph([Str(SelectName),"f"], ["flecher(Get(",Str(SelectName),"),",flechage,")"]),
+                      //PenMode:=0
+            fi,
+            ReCalc(etat), ReDraw()
+        else Message("Aucun object sélectionné!")
+    fi;
+
+    attributs = {modifier les attributs de l'objet en cours}
+    if EnCours>0
+        then
+            Restore(), $ok:=Attributs(Str(SelectName)),
+            if ok then Save(), new:=0, creer(EnCours)  fi
+        else Message("Aucun objet sélectionné!")
+    fi;
+
+    supprimer = {supprimer l'objet en cours}
+    if EnCours>0
+        then
+            if nil(SaveParam) then
+                enregistrer(SaveParam),
+                SaveDotState:=DotState,
+                SaveCtrlDot:=CtrlDot
+            fi,
+            Etat(0), liberer(controles), free(controles), dessiner(0),
+            EnCours:=0,
+            DefaultSettings()
+        else Message("Aucun objet sélectionné!")
+    fi;
+
+    Modifier = {1=Ajouter, -1=supprimer, 0=substituer}
+    if (EnCours=Tligne) Or (EnCours=Tcurve) then
+    if %1=1
+        then
+            if Input("Entrez l'index du point après lequel doit se faire l'insertion (0 pour mettre en tête), puis les index des points à insérer s'ils existent déjà (rien sinon):",
+         "Ajouter un point à une ligne polygonale ou une courbe")
+                then $x:=Eval(["[",chaine(),"]"]), Ajouter(x)
+                fi
+    elif %1=-1
+        then
+            if Input("Entrez l'index du point à supprimer", "Supprimer un point d'une ligne polygonale ou d'une courbe")
+                    then x:=Eval(["[",chaine(),"]"]), Supprimer(x)
+            fi
+    fi
+    else Message("Ligne polygonale ou Courbe uniquement.")
+    fi;
+
+    Ajouter = { Ajouter([index1, index2]): ajoute un point sur une ligne polygonale ou une courbe après le point c(index1) }
+    [$index1:=Copy(%1,1,1), $index2:=Copy(%1,2,0),$ok:=(nil(index2)=0),$x:=1/0,
+    if ok=0
+        then $x:=getCtrlDot(1)
+        else
+            for $z in index2 do
+                 if NotInControles(z) And (Re(DotState[z])>0) then reserver(z), Insert(x,z) fi
+            od
+    fi,
+    if index1=0 then place:=1
+      else
+        $k:=0, $place:=0,
+        for $z in controles do
+            Inc(k,1), if (z=index1) then place:= k+1 fi
+        od
+    fi,
+    if (place>0) then
+        Insert(controles, x, place) ,
+        if ok=0 then {nouveau point}
+            $y:= controles[place+1],
+            $z:= controles[place-1],
+            if nil(y) then y:=0 else y:=c(y) fi, if nil(z) then z:=0  else z:=c(z) fi,
+            Subs( CtrlDot, x, (z+ y)/2 ),
+            dessiner()
+            fi
+    fi
+    ];
+
+    Supprimer = { Supprimer(index) supprime le point c(index) sur une ligne polygonale ou une courbe}
+    if (EnCours=Tligne) Or (EnCours=Tcurve)
+        then
+            for $x in %1 do
+                $k:=0, $place:=0,
+                for $z in controles do
+                    Inc(k,1), if (z=x) then place:= k fi
+                od,
+                if place>0
+                    then
+                        Del(controles, place,1) ,
+                        liberer(x)
+                fi
+            od,
+            dessiner()
+    fi;
+
+    defVar =
+    if Input("Entrez la commande définissant la variable:", ["Assigner le point c(",%1,") à la variable c",%1])
+        then NewVar(["c",%1], chaine()), 1
+        else 0
+    fi;
+
+    Assigner = { associe/désassocie un point de controle à une variable }
+    [$x:=%1, $ok:=1, $Z:=DotState[x],
+     if (byte(Statut(x),2)=0)
+        then if defVar(x)=0  then x:=0 fi
+        else ok:=-1
+     fi,
+     $y:=Eval(["c",x,"[1]"]),
+     if nil(y)=0 then Subs(CtrlDot,x,y) fi,
+     if x>0 then
+        Subs(DotState,x,Z+4*ok*i),
+        dessiner()
+     fi];
+
+    Flecher =
+    if EnCours>0 then
+        if Input("Position des flèches: nombres entre 0 et 1, ajouter +i pour inverser la flèche, exemple: 0, 1+i
+    Pour supprimer une flèche entrez un réel <0","(Dé)Flècher une ligne polygonale",flechage)
+        then x:=Eval(["[",chaine(),"]"]),
+                 flechage:=x,
+                 if nil(x) then DelGraph([Str(SelectName),"f"])
+                    else
+              //PenMode:=1,
+              NewGraph([Str(SelectName),"f"], ["flecher(Get(",Str(SelectName),"),",x,")"]),
+              //PenMode:=0
+                 fi,
+             ReDraw(),
+        fi
+    fi;
+
+    Clipper =
+    if EnCours>0 then
+            NewGraph([Str(SelectName),"C"], ["Clip(Get(",Str(SelectName),"))"]),
+            ReDraw()
+    fi;
+
+    select = { select(): pour sélectionner un objet }
+    if Input("Entrez l'index de l'un de ses points:", "Sélectionner un objet")
+        then
+            $num:=0, $k:=0, $ref:=0, $old:=jump, $rep:=Eval(chaine()), $donnee:=0,
+            for $z in LaListe do
+                Inc(k,1), Inc(donnee,1),
+                if old=jump then ref:=k, donnee:=0 fi,
+                if (donnee>9) And (z=rep) then num:=ref fi,
+                old:=z
+            od,
+            if num>0 then depiler(num) fi
+    fi;
+
+    arrondir = [$n:=Ent(%1), if %1<n+0.5 then n else n+1 fi];
+
+    AlignDot = {renvoit le point aligné}
+    (arrondir(GridNbDiv*Re(%1))+i*arrondir(GridNbDiv*Im(%1)))/GridNbDiv;
+
+    ToutAligner = [
+    for $z1 in controles do
+        $x:=Re(c(z1)), $y:=Im(c(z1)),
+        $new:=(arrondir(GridNbDiv*x)+i*arrondir(GridNbDiv*y))/GridNbDiv,
+        Subs(CtrlDot, z1, new)
+    od
+    ];
+
+    testClic = {détecte si on clique un point de controle de l'objet courant }
+    [num:=0, $k:=0,
+    for $z in controles do Inc(k,1), if abs(c(z)-%1)<=0.1/Yscale then num:=k fi od
+    ];
+
+    testClic2 = [ {détecte si on clique un point de référence d'un objet }
+    $k:=0, $old:=jump,
+    for $z in LaListe do
+        Inc(k,1),
+        if old=jump then if abs(c(z)-%1)<=0.1/Yscale then num:=k fi fi,
+        old:=z
+    od
+    ];
+
+    CtrlClicG =
+    [testClic(%1), Clicd:=0,
+     if (num>0) And (EnCours>0) {clic sur l'objet}
+        then Assigner(controles[num])
+     fi
+    ];
+
+    ClicG = {gestion du bouton gauche}
+    [testClic(%1), Clicd:=0,
+     if (num>0) And (EnCours>0) {clic sur l'objet}
+        then Set(drawing,1)
+        else
+            num:=0, if EnCours=0 then testClic2(%1) fi,
+            if num>0 {clic sur un point de référence}
+                then depiler(num)
+            else
+                    if (EnCours>0) And ((EnCours=Tbezier)=0) And Nops(controles)<NbDot
+                        then
+                            Set($x,getCtrlDot(1)), Insert(controles,x),
+                            if Collage>0 then Subs(CtrlDot,x,AlignDot(%1)) else Subs(CtrlDot,x,%1) fi,
+                            dessiner()
+                    elif EnCours=Tbezier
+                        then
+                            if nil(controles) then
+                              if lineclosed
+                                then $x:=getCtrlDot(3), controles:=x, Subs(CtrlDot,x[1],%1-0.5/Xscale-0.5*i/Yscale),
+                                     Subs(CtrlDot,x[2],%1), Subs(CtrlDot,x[3],%1+0.5/Xscale+0.5*i/Yscale)
+                                else x:=getCtrlDot(1), controles:=x, Subs(CtrlDot,x,%1)
+                              fi
+                             else
+                                x:=getCtrlDot(3),
+                                if Collage>0 then $y:=AlignDot(%1) else y:=%1 fi,
+                                $N:=Nops(controles),if N>1 then $z1:=c(controles[N-1]) fi,$z2:=c(controles[N]),
+                                if lineclosed
+                                    then
+                                        z1:=sym(z2,(y+z1)/2,(y+z1)/2+i*(y-z1)),
+                                        z2:=2*y-z1,
+                                        Subs(CtrlDot,x[1],z1), Subs(CtrlDot,x[2],y),Subs(CtrlDot,x[3],z2)
+                                    else
+                                        if nil(z1) then z1:=1/3*exp(i*pi/3)*(y-z2)+z2
+                                                   else z1:=z2+abs(y-z2)*(z2-z1)/abs(z2-z1)/3
+                                        fi,
+                                        z2:=sym(z1,(y+z2)/2,(y+z2)/2+i*(y-z2)),
+                                        Subs(CtrlDot,x[1],z1), Subs(CtrlDot,x[2],z2),Subs(CtrlDot,x[3],y)
+                                fi,
+                            Insert(controles,x)
+                            fi,
+                        dessiner()
+                    fi
+             fi
+    fi
+    ];
+
+    isIn = Xmin<=Re(%1) And Re(%1)<=Xmax And Ymin<=Im(%1) And Im(%1)<=Ymax;
+
+    nearest = [$out1:=Copy(%1,1,1), $d1:=abs(%2-out1),
+    $out2:=Copy(%1,2,1), $d2:=abs(%2-out2),
+    if d1>d2 then Echange(out1,out2), Echange(d1,d2) fi,
+    for z in %1 do
+     $x:=abs(z-%2),
+     if x<d1 then out2:=out1, out1:=z, d2:=d1, d1:=x
+     elif x<d2 then out2:=z, d2:=x
+    fi
+    od,
+    (d2*out1+d1*out2)/(d2+d1)
+    ];
+
+    MouseMove =
+    if drawing  And isIn(%1) then
+    if (byte(Statut(controles[num]),2)=0)
+        then
+            if num>0
+                then
+                    if Clicd And (num=1)
+                        then
+                            Set($old,c(Copy(controles,1,1))), Set(u,%1-old),
+                            Map(replace2(z,c(z)+u),z,controles)
+                        else
+                            if EnCours=Tbezier
+                                then tangentes(%1, num),
+                                     if Collage=2 then lastpoint:=Re(controles[num])
+                                          else lastpoint:=0 fi
+                                else if Collage=2 then lastpoint:=controles[num] else lastpoint:=0 fi,
+                                     Subs(CtrlDot,controles[num],%1)
+                            fi
+                    fi,
+                   dessiner()
+            fi
+    elif (Clicd=0) {point assigné}
+        then
+            $x:=nearest( Eval(["c",controles[num]]), %1),
+                if x<>Nil then
+            Subs(CtrlDot,controles[num],x[1]),
+                dessiner()
+            fi
+    fi
+    fi;
+
+    LButtonUp =
+    if drawing then
+        drawing:=0,
+        if Collage=1 then ToutAligner(),dessiner()
+        elif (EnCours=Tlabel) Or (EnCours=Tctrldot) then dessiner()
+        elif ((Collage=2) And (lastpoint>0))
+            then $x:=AlignDot(c(lastpoint)),
+                 if EnCours=Tbezier
+                    then
+                        tangentes(x,num)
+                    else
+                         Subs(CtrlDot,lastpoint,x)
+                 fi, lastpoint:=0, dessiner()
+        else if ShowLabel Or SLabelEnCours then ReCalc(Selection),ReDraw() fi
+        fi
+    fi;
+
+    CtrlClicD =
+    [testClic(%1),
+     if num>0  then
+        if Input("Affixe de la nouvelle position","Déplacer le point")
+                then Set($x,Eval(chaine())), if Collage>0 then x:=AlignDot(x) fi,
+                     if EnCours=Tbezier then tangentes(x,num)
+                            else Subs(CtrlDot,controles[num],x)
+                     fi,
+                     dessiner()
+        fi
+     fi];
+
+    ClicD =
+    [testClic(%1), Set(Clicd,1),
+     if num=1 then
+         if EnCours=Tlabel
+            then
+               RenMac("chaine","old"), RenMac(["label",compt],"chaine"),
+                       if Input("Nouveau texte:","Modifier un label",chaine())
+                          then DefMac(["label",compt],["""",chaine(),""""]),dessiner()
+                  else RenMac("chaine", ["label",compt])
+              fi,
+                 RenMac("old","chaine")
+            else Set(drawing,1)
+        fi
+     elif num>0  then
+        if EnCours=Tbezier then changeStatut(num), dessiner() fi
+     else {num=0}
+        $N:=Nops(controles),
+        if ((EnCours=Tbezier)=0) And N>0
+            then liberer(Copy(controles,N,1)), Del(controles,N,1),dessiner()
+        elif EnCours=Tbezier And N>4
+            then liberer(Copy(controles,N-2,3)), Del(controles,N-2,3),dessiner()
+        else VarGlob(%1)
+        fi
+    fi];
+
+    RButtonUp =
+    if drawing then
+        drawing:=0,
+        if Collage=1 then ToutAligner(), dessiner()
+                        else if EnCours=Tctrldot then ReCalc()
+                      elif ShowLabel Or SLabelEnCours then ReCalc(Selection),ReDraw() fi
+        fi
+    fi;
+
+    initialise = [
+    DelGraph(), EnCours:=0,
+    for $k from 1 to 16 do Eval(["Set(C",$k,",0)"]) od,
+    NbCtrlDot:=0, CtrlDot:=1/0, LaListe:=1/0, controles:=1/0, DotState:=1/0,
+    ShowRef:=1, ShowLabel:=0,SLabelEnCours:=0,flechage:=1/0,flechages:=1/0,
+    SaveParam:=1/0,  SaveDotState:=1/0, SaveCtrlDot:=1/0,
+    NewGraph("repere", ["[LineStyle:=0, LabelSize:=footnotesize, FillStyle:=none,",LF,
+    " Color:=Rgb(0.75,0.75,0.75), Grille(0,(1+i)/GridNbDiv),",LF,
+    " Color:=black, Axes(Xmin+i*Ymin,1+i)]"]),
+    NewGraph("etat", " "),
+    NewGraph("Selection", "ShowSelect()"),
+    ReCalc()];
+
+    MouseBsave =
+    [
+    if (ExportMode=teg) Or (ExportMode=src4latex) then
+        if MouseVer=Nil then NewVar("MouseVer",MouseVerNum) fi,
+    valider(), ShowRef:=0, ShowLabel:=0, SLabelEnCours:=0, ReCalc(Selection),ReDraw(),
+    DefMac("ctrldot",CtrlDot),
+    DefMac("laliste",LaListe),
+    DefMac("dotstate",DotState),
+    DefMac("fleches",flechages),
+    DefMac("Init", ["[C1:=",C1,", C2:=",C2,", C3:=",C3,", C4:=",C4,", C5:=",C5,", C6:=",C6,",",
+    " C7:=",C7,", C8:=",C8,", C9:=",C9,", C10:=",C10,", C11:=",C11,", C12:=",C12,",",
+    " C13:=",C13,", C14:=",C14,", C15:=",C15,", C16:=",C16,", NbCtrlDot:=",NbCtrlDot,",",
+    " CtrlDot:=ctrldot(), LaListe:=laliste(), DotState:=dotstate(), ShowRef:=0, ",
+    " ShowLabel:=0, SLabelEnCours:=0, flechage:=fleches(), ReCalc() ]"])
+    fi,
+    oldMouseBsave()
+    ];
+
+    parametre = {1= LineArc, 2=GridNbDiv}
+    if %1=1 then
+     if Input("Rayon en cm pour arrondir les angles des lignes polygonales","LineArc",LineArc)
+        then LineArc:=Eval(chaine()), if EnCours>0 then dessiner() fi
+     fi
+    else
+     if Input("Nombre de divisions par unité pour la grille de repèrage","GridNbDiv",GridNbDiv)
+        then GridNbDiv:=Ent(abs(Eval(chaine()))), ReCalc(repere), ReDraw()
+     fi
+    fi;
+
+    Init = [$x:=0, 
+    NewItem("Arc", " Newarc(0)"), 
+    NewItem("Arc*", " Newarc(1)"),
+    NewItem("Bezier"," Newbezier(0)"),
+    NewItem("Bezier*","Newbezier(1)"),
+    NewItem("Carré",  "Newcarre()"),
+    NewItem("Cercle"," Newcircle()"),
+    NewItem("Courbe", "Newcurve(0)"),
+    NewItem("Courbe*","Newcurve(1)"), 
+    NewItem("Ctrl dot",  "Newctrldot()"),
+    NewItem("Droite", "Newdroite()"),
+    NewItem("Ellipse",  "Newellipse()"),
+    NewItem("Hyperbole", "Newhyperbole()"),
+    NewItem("Label",  "Newlabel()"),
+    NewItem("Ligne polyg.", "Newligne(0)"),
+    NewItem("Parabole", "Newparabole()"),
+    NewItem("Parallèlo.",  "Newparall()"),
+    NewItem("Point(s)", "Newdot()"),
+    NewItem("Poly. reg.",  "Newpolyreg()"),
+    NewItem("Polygone", "Newligne(1)"),
+    NewItem("Rectangle",  "Newrectang()"),
+    
+    Bouton(RefPoint+x*DeltaB, "Réinitialise",   " initialise() ", "remet tout à zéro"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "A&ttributs",   " attributs() ", "pour modifier les attributs de l'objet sélectionné"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "LineArc",   " parametre(1) ", "pour lignes polygonales, carrés, rectangles, parallélogrammes"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Translater",  " deplacer() ","translater l'objet sélectionné"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Tourner",    " tourner() ","rotation autour du point de référence"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Dilater",    " echelle() ","homothétie de centre le point de référence"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Symétrie",    " symetrie() ","dessine le symétrique de l'objet par rapport à une droite"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Projection",    " projection() ","dessine la  projection de l'objet sur une droite"),    Inc(x,1.25),
+    
+    Bouton(RefPoint+x*DeltaB, "&Dupliquer",  " dupliquer() ","faire une copie de l'objet sélectionné"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Flècher",  " Flecher() ","ajouter des flèches à l'objet en cours"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Clipper",  " Clipper() ","clipper avec l'objet en cours"),   Inc(x,1.25),
+     
+    Bouton(RefPoint+x*DeltaB, "&Valider",  " valider()","valide l'objet en cours"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "&Annuler",    " annuler() ","annule les modifications"),     Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "&Supprimer",    " supprimer() ","détruire l'objet sélectionné"),     Inc(x,1.25),
+    
+    Bouton(RefPoint+x*DeltaB, "GridNbDiv",   " parametre(2) ", "nombre de divisions par unité pour la grille de repèrage"),   Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "&Coller sur la grille",    "[ToutAligner(), dessiner()]","positionnement sur le point de la grille le plus proche"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "&Mode collage" ,"[Collage:=mod(1+Collage,3),ReCalc(etat),ReDraw()]", "mode de collage à la grille(0=aucun, 1=tout, 2=par point)"),
+    Inc(x,1.25),
+ 
+    Bouton(RefPoint+x*DeltaB, "Sélectionner",    " select() ","sélectionne un objet à partir d'un de ses points de controle"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Ajouter un point",    "Modifier(1)","pour les lignes polygonales ou les courbes"),    Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "Supprimer un point",    "Modifier(-1)","pour les lignes polygonales ou les courbes"),    Inc(x,1.25),
+      
+    Bouton(RefPoint+x*DeltaB, "Points de réf." ,   " [Set(ShowRef,1-ShowRef),ReCalc(Selection),ReDraw()]","montrer/cacher les points de référence"),Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "T&ous les index" ,   " [Set(ShowLabel,1-ShowLabel),ReCalc(Selection),ReDraw()]", "montrer/cacher les index de tous les points"),Inc(x,1),
+    Bouton(RefPoint+x*DeltaB, "&Index en cours" ,   "if EnCours>0 then SLabelEnCours:=1-SLabelEnCours,ReCalc(Selection),ReDraw() fi", "montrer/cacher les index des points de contrôle de l'objet en cours"),Inc(x,1.25),
+    Inc(RefPoint,x*DeltaB),
+    RenMac("Bsave", "oldMouseBsave"), RenMac("MouseBsave", "Bsave"),
+    ];
+
+    Exit = [
+    RefPoint:=MouseRefPoint,
+    RenMac("Bsave", "MouseBSave"), RenMac("oldMouseBsave", "Bsave")
+    ];

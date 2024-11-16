@@ -1,0 +1,201 @@
+\chapter{Les opérations et les fonctions mathématiques}
+
+\section{Les opérations}
+
+\subsection{Opérations usuelles}
+
+\begin{itemize}
+ \item Ce sont les opérations: \textsl{+, -, *, /}. Ces symboles sont obligatoires dans les expressions, par exemple:
+\co{2x} à la place de \co{2*x} va générer une erreur.
+ \item On peut ajouter deux listes: \co{[1,2,3]+[4,5]} donnera \res{[5,7,3]}.
+ \item On peut soustraire deux listes: \co{[1,2,3]-[4,5,6,7]} donnera \res{[-3,-3,-3,-7]}.
+ \item On peut multiplier ou diviser deux listes (terme à terme) :  \co{[1,2,3]*[4,5,6,7]} donnera \res{[4,10,18,7]}.
+ \item On peut multiplier une liste par un complexe: \co{5*[1,2,3]} ou \co{[1,2,3]*5 } donnera \res{[5,10,15]}.
+ \item On peut diviser une liste par un complexe: \co{[1,2,3]/2} donnera \res{[0.5,1,1.5]}.
+ \item On dispose en plus de l'opération \verb|x^y| qui correspond à la fonction puissance $x^y$. L'exposant doit être réel, mais lorsque $x$ est complexe non réel, l'exposant $y$ doit être entier.
+\end{itemize}
+
+\subsection{Opérations logiques}
+
+\begin{itemize}
+ \item Il s'agit des opérations \textbf{And} et \textbf{Or}, les valeurs booléennes {True} et {False} correspondent respectivement aux valeurs numériques 1 et 0. La macro \Helpref{{not()}}{macnot} permet de prendre la négation.
+ \item \exem \co{1 And 0} donne \res{0}, mais \co{2 Or 1} donne \Nil.
+\end{itemize}
+
+\subsection{Opérations de comparaison}
+
+Il s'agit d'opérations dont le résultat est une valeur booléenne (0 ou 1), voici la liste:
+
+\begin{itemize}
+ \item \textbf{Egal} (ou encore =): teste l'égalité entre deux objets dont la valeur peut être soit une liste, soit la valeur \Nil.
+ \item \textbf{Negal} (ou encore <> ): teste la différence entre deux objets dont la valeur peut être soit une liste, soit la valeur \Nil.
+ \item \textbf{Inf} (ou encore <): teste la relation "strictement inférieur à" (entre deux réels).
+ \item \textbf{InfOuE} (ou encore <=): teste la relation "inférieur ou égal à".
+ \item \textbf{Sup} (ou encore > ): teste la relation "strictement supérieur à".
+ \item \textbf{SupOuE} (ou encore >=): teste la relation "supérieur ou égal à".
+ \item \textbf{Inside}: teste si le premier argument (qui doit être un affixe) est à l'intérieur (bord exclu) du polygone représenté par le deuxième argument (qui doit donc être une liste fermée).
+ \item \exem \co{1 Inside [-1,2+3*i,4-i,-1]} donne \res{1} et \co{i Inside [-1,2+3*i,4-i,-1]} donne \res{0}.
+\end{itemize}
+
+\subsection{Opérations d'intersection}
+
+Elles sont au nombre de deux:
+
+\begin{itemize}
+ \item \textbf{Inter}: les deux arguments doivent être des listes de deux éléments (il peut y en avoir plus, mais seuls les deux premiers sont pris en compte), ils sont alors interprétés comme deux droites [définies par deux points], l'opération \textsl{Inter} détermine et renvoie le point d'intersection. Lorsque les deux droites sont parallèles, le résultat est \Nil.
+ \item \textbf{InterL}: les deux arguments doivent être des listes d'au moins deux éléments, ils sont alors interprétés comme deux lignes polygonales, l'opération \textsl{InterL} détermine et renvoie la liste des points d'intersection de ces deux lignes. \Mytextbf{Les points d'intersection sont rangés suivant le même "sens de parcours" que le premier argument} (et si plusieurs points sont sur le même segment alors ils sont rangés dans le sens de parcours du deuxième argument).
+\end{itemize}
+
+\subsection{Opérations de coupure}
+
+Elles sont au nombre de deux:
+
+\begin{itemize}
+ \item \textbf{CutA}: (cut after) le premier argument doit être une liste et le second un complexe (qui est censé être sur la ligne polygonale définie par les points de la liste). L'opération \textsl{CutA} détermine et renvoie les points de la liste situés \Mytextbf{avant le complexe}.
+ \item \exem \co{[1,2,3,4,5] CutA 3.5} donne \res{[1,2,3,3.5]} et \co{[1,2,3,4,5] CutA 6} donne \Nil.
+ \item \textbf{CutB}: (cut before) le premier argument doit être une liste et le second un complexe (qui est censé être sur la ligne polygonale définie par les points de la liste). L'opération \textsl{CutB} détermine et renvoie les points de la liste situés \Mytextbf{après le complexe}.
+
+\end{itemize}
+
+
+\section{Les fonctions mathématiques prédéfinies}
+
+Ce sont des fonctions d'une variable \Mytextbf{réelle} ou \Mytextbf{complexe} suivant les cas, et qui renvoient un
+complexe.
+
+
+\subsection{abs}
+
+\begin{itemize}
+ \item \util \textbf[abs()]{abs( <argument> )}.
+ \item \desc c'est la fonction module des complexes.
+\end{itemize}
+
+\subsection{arccos, arccsin, arctan, arccot}
+
+\begin{itemize}
+ \item \util \textbf[arccos()]{arccos( <argument> )}, \textbf[arcsin()]{arcsin( <argument> )}, \textbf[arctan()]{arctan( <argument> )} et \textbf[arccot()]{arccot( <argument> )}.
+ \item \desc ce sont les fonctions circulaires réciproques usuelles à variable réelle.
+\end{itemize}
+
+\subsection{Arg}
+
+\begin{itemize}
+ \item \util \textbf[Arg()]{Arg( <argument> )}.
+ \item \desc c'est la fonction argument principal (dans l'intervalle ]-$\pi$;$\pi$]).
+\end{itemize}
+
+\subsection{argch, argsh, argth, argcth}
+
+\begin{itemize}
+ \item \util \textbf[argch()]{argch( <argument> )}, \textbf[argsh()]{argsh( <argument> )}, \textbf[argth()]{argth(
+<argument> )} et \textbf[argcth()]{argcth( <argument> )}.
+ \item \desc ce sont les fonctions hyperboliques réciproques usuelles à variable réelle.
+\end{itemize}
+
+\subsection{bar}
+
+\begin{itemize}
+ \item \util \textbf[bar()]{bar( <argument> )}. 
+ \item \desc c'est la conjugaison des complexes.
+\end{itemize}
+
+\subsection{ch, cos}
+
+\begin{itemize}
+ \item \util \textbf[ch()]{ch( <argument> )} et \textbf[cos()]{cos( <argument> )}.
+ \item \desc cosinus hyperbolique et cosinus trigonométrique à variable réelle.
+\end{itemize}
+
+\subsection{Ent}
+
+\begin{itemize}
+ \item \util \textbf[Ent()]{Ent( <argument> )}.
+ \item \desc c'est la fonction partie entière à variable réelle.
+\end{itemize}
+
+\subsection{exp}
+
+\begin{itemize}
+ \item \util \textbf[exp()]{exp( <argument> )}.
+ \item \desc  c'est la fonction exponentielle à variable \Mytextbf{complexe}.
+\end{itemize}
+
+\subsection{Im}
+
+\begin{itemize}
+ \item \util \textbf[Im()]{Im( <argument> )}.
+ \item \desc fonction partie imaginaire, l'argument est un \Mytextbf{complexe}.
+\end{itemize}
+
+\subsection{ln}
+
+\begin{itemize}
+ \item \util \textbf[ln()]{ln( <argument> )}.
+ \item \desc fonction logarithme népérien, l'argument est un réel.
+\end{itemize}
+
+\subsection{M}\label{cmdM}
+
+\begin{itemize}
+ \item \util \textbf[M()]{M( <a>, <b> )} ou \Mytextbf{M( <a>, <b>, <c> )}.
+ \item \desc les arguments sont des réels, cette fonction renvoie le complexe a+ib ou bien le point de l'espace [a+ib,c]. L'interêt de cette fonction est un codage plus compact en mémoire.
+\end{itemize}
+
+\subsection{opp}
+
+\begin{itemize}
+ \item \util \textbf[opp()]{opp( <argument> )}.
+ \item \desc fonction opposée, l'argument est un \Mytextbf{complexe}.
+\end{itemize}
+
+\subsection{Rand}
+
+\begin{itemize}
+ \item \util \textbf[Rand()]{Rand( [argument] )}.
+ \item \desc Cette fonction génère un nombre aléatoire: si l'\argu{argument} est omis (\textsl{ Rand()}) alors la valeur renvoyée est un nombre de l'intervalle [0;1[, sinon la valeur renvoyée est un entier compris entre 0 et la valeur absolue de l'\argu{argument} (exclue).
+ \item \exem \co{Rand(256)} renvoit en entier entre $0$ et $255$.
+\end{itemize}
+
+\subsection{Re}
+
+\begin{itemize}
+ \item \util \textbf[Re()]{Re( <argument> )}.
+ \item \desc fonction partie réelle, l'argument est un \Mytextbf{complexe}.
+\end{itemize}
+
+\subsection{Round}\label{cmdRound}
+
+\begin{itemize}
+ \item \util \textbf[Round()]{Round( <complexe> [, nb décimales] )}.
+ \item \desc Cette fonction renvoie le \argu{complexe} en arrondissant au plus proche les parties réelle et imaginaire avec le nombre de décimales souhaité (0 par défaut).
+\end{itemize}
+
+\subsection{sh, sin}
+
+\begin{itemize}
+ \item \util \textbf[sh()]{sh( <argument> )} et \textbf[sin()]{sin( <argument> )}.
+ \item \desc  sinus hyperbolique et sinus trigonométrique, à variable réelle.
+\end{itemize}
+
+\subsection{sqr}
+
+\begin{itemize}
+ \item \util \textbf[sqr()]{sqr( <argument> )}.
+ \item \desc fonction carré, l'argument est un \Mytextbf{complexe}.
+\end{itemize}
+
+\subsection{sqrt}
+
+\begin{itemize}
+ \item \util \textbf[sqrt()]{sqrt( <argument> )}.
+ \item \desc fonction racine carrée, l'argument est un réel.
+\end{itemize} 
+
+\subsection{tan, th, cot, cth}
+
+\begin{itemize}
+ \item \util \textbf[tan()]{tan( <argument> )}, \textbf[th()]{th( <argument> )}, \textbf[cot()]{cot( <argument> )} et
+\textbf[cth()]{cth( <argument> )}.
+ \item \desc tangente trigonométrique, tangente hyperbolique, cotangente trigonométrique et cotangente hyperbolique,à variable réelle.
+\end{itemize}

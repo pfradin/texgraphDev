@@ -1,0 +1,14 @@
+TeXgraph#
+Cmd Fenetre(-5+5*i,5-5*i,0.5+0.5*i);
+   Marges(0,0,0,0);
+   viewDir(1,83);
+
+Graph objet1 = [ size(7.5),
+  background(full, lightgray),
+  C1:=Cylindre(M(-4,0,0),8*vecI,2,25),
+  C2:= Cylindre(M(0,0,-4),8*vecK,3,25),
+  stock:= Clip3D(C2,C1,1),
+  draw("SmoothFacet", stock,
+          [color:=darkseagreen,
+           contrast:=0.5])
+];

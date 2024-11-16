@@ -1,0 +1,45 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(1.3636,0)}%
+\pgfsetyvec{\pgfxy(0,1.3636)}%
+\useasboundingbox (-2,-2.5)--(3,3);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(0,2.5981)}%
+\pgfpathlineto{\pgfxy(-0.75,1.9486)}\pgfpathlineto{\pgfxy(1.8481,1.1986)}\pgfpathlineto{\pgfxy(2.5981,1.8481)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.5294;green,0.102;blue,0.102}%
+\pgffill%
+\pgfpathmoveto{\pgfxy(2.5981,1.8481)}%
+\pgfpathlineto{\pgfxy(1.8481,1.1986)}\pgfpathlineto{\pgfxy(1.0981,-2.049)}\pgfpathlineto{\pgfxy(2.5981,-0.75)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.498;green,0.0941;blue,0.0941}%
+\pgffill%
+\pgfpathmoveto{\pgfxy(-1.5,-1.299)}%
+\pgfpathlineto{\pgfxy(1.0981,-2.049)}\pgfpathlineto{\pgfxy(1.8481,1.1986)}\pgfpathlineto{\pgfxy(-0.75,1.9486)}\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0.6667;green,0.1294;blue,0.1294}%
+\pgffill%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetroundcap%
+\pgfsetdash{{0pt}{3pt}}{0pt}%
+\pgfpathmoveto{\pgfxy(-1.5,-1.299)}%
+\pgfpathlineto{\pgfxy(0,0)}\pgfpathlineto{\pgfxy(2.5981,-0.75)}%
+\pgfstroke%
+\pgfxyline(0,2.5981)(0,0)%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetbuttcap%
+\pgfsetdash{}{0pt}%
+\pgfpathmoveto{\pgfxy(2.5981,1.8481)}%
+\pgfpathlineto{\pgfxy(2.5981,-0.75)}\pgfpathlineto{\pgfxy(1.0981,-2.049)}\pgfpathlineto{\pgfxy(-1.5,-1.299)}\pgfpathlineto{\pgfxy(-0.75,1.9486)}%
+\pgfstroke%
+\pgfpathmoveto{\pgfxy(0,2.5981)}%
+\pgfpathlineto{\pgfxy(-0.75,1.9486)}\pgfpathlineto{\pgfxy(1.8481,1.1986)}\pgfpathlineto{\pgfxy(2.5981,1.8481)}\pgfpathlineto{\pgfxy(0,2.5981)}%
+\pgfstroke%
+\pgfxyline(1.8481,1.1986)(1.0981,-2.049)%
+\end{tikzpicture}%
+\egroup%

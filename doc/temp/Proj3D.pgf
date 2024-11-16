@@ -1,0 +1,57 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.625,0)}%
+\pgfsetyvec{\pgfxy(0,0.625)}%
+\useasboundingbox (-6,-6)--(6,6);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfsetarrows{-to}%
+\pgfxyline(2,1.7321)(-3.3333,-2.8868)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(-4.18,-3.62)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small $x$}}\pgfstroke%
+\pgfsetarrows{-to}%
+\pgfxyline(-3.1055,0.8965)(3.9163,-1.1305)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(4.9924,-1.4412)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small $y$}}\pgfstroke%
+\pgfsetarrows{-to}%
+\pgfxyline(-0.0000,-3.0566)(-0.0000,3.997)%
+\pgfsetarrows{-}%
+\pgfputat{\pgfxy(-0.0000,5.117)}{\pgftext{\color{rgb,1:red,0;green,0;blue,0}\small $z$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfpathmoveto{\pgfxy(2.7247,1.5751)}%
+\pgfpathlineto{\pgfxy(2.7128,1.5414)}\pgfpathlineto{\pgfxy(2.6927,1.5091)}\pgfpathlineto{\pgfxy(2.6644,1.4783)}\pgfpathlineto{\pgfxy(2.6277,1.449)}%
+\pgfpathlineto{\pgfxy(2.5825,1.4213)}\pgfpathlineto{\pgfxy(2.529,1.3951)}\pgfpathlineto{\pgfxy(2.4674,1.3705)}\pgfpathlineto{\pgfxy(2.3978,1.3474)}%
+\pgfpathlineto{\pgfxy(2.3207,1.3258)}\pgfpathlineto{\pgfxy(2.2365,1.3056)}\pgfpathlineto{\pgfxy(2.1457,1.2867)}\pgfpathlineto{\pgfxy(2.0489,1.2689)}%
+\pgfpathlineto{\pgfxy(1.9469,1.2522)}\pgfpathlineto{\pgfxy(1.8401,1.2364)}\pgfpathlineto{\pgfxy(1.7296,1.2213)}\pgfpathlineto{\pgfxy(1.6159,1.2068)}%
+\pgfpathlineto{\pgfxy(1.5,1.1926)}\pgfpathlineto{\pgfxy(1.3826,1.1786)}\pgfpathlineto{\pgfxy(1.2646,1.1647)}\pgfpathlineto{\pgfxy(1.1468,1.1505)}%
+\pgfpathlineto{\pgfxy(1.03,1.1359)}\pgfpathlineto{\pgfxy(0.9151,1.1207)}\pgfpathlineto{\pgfxy(0.8027,1.1046)}\pgfpathlineto{\pgfxy(0.6936,1.0876)}%
+\pgfpathlineto{\pgfxy(0.5886,1.0694)}\pgfpathlineto{\pgfxy(0.4881,1.0498)}\pgfpathlineto{\pgfxy(0.3929,1.0287)}\pgfpathlineto{\pgfxy(0.3034,1.0059)}%
+\pgfpathlineto{\pgfxy(0.2202,0.9812)}\pgfpathlineto{\pgfxy(0.1436,0.9545)}\pgfpathlineto{\pgfxy(0.0739,0.9257)}\pgfpathlineto{\pgfxy(0.0116,0.8947)}%
+\pgfpathlineto{\pgfxy(-0.0433,0.8613)}\pgfpathlineto{\pgfxy(-0.0905,0.8256)}\pgfpathlineto{\pgfxy(-0.13,0.7873)}\pgfpathlineto{\pgfxy(-0.1618,0.7466)}%
+\pgfpathlineto{\pgfxy(-0.1859,0.7032)}\pgfpathlineto{\pgfxy(-0.2026,0.6573)}\pgfpathlineto{\pgfxy(-0.2119,0.6089)}\pgfpathlineto{\pgfxy(-0.2142,0.5579)}%
+\pgfpathlineto{\pgfxy(-0.2099,0.5044)}\pgfpathlineto{\pgfxy(-0.1993,0.4486)}\pgfpathlineto{\pgfxy(-0.183,0.3904)}\pgfpathlineto{\pgfxy(-0.1614,0.3299)}%
+\pgfpathlineto{\pgfxy(-0.1354,0.2674)}\pgfpathlineto{\pgfxy(-0.1054,0.203)}\pgfpathlineto{\pgfxy(-0.0723,0.1368)}\pgfpathlineto{\pgfxy(-0.0369,0.0691)}%
+\pgfpathlineto{\pgfxy(-0.0000,0.0000)}\pgfpathlineto{\pgfxy(0.0375,-0.0702)}\pgfpathlineto{\pgfxy(0.0747,-0.1413)}\pgfpathlineto{\pgfxy(0.1106,-0.213)}%
+\pgfpathlineto{\pgfxy(0.1443,-0.2851)}\pgfpathlineto{\pgfxy(0.1747,-0.3572)}\pgfpathlineto{\pgfxy(0.2011,-0.429)}\pgfpathlineto{\pgfxy(0.2223,-0.5004)}%
+\pgfpathlineto{\pgfxy(0.2375,-0.571)}\pgfpathlineto{\pgfxy(0.2459,-0.6404)}\pgfpathlineto{\pgfxy(0.2466,-0.7085)}\pgfpathlineto{\pgfxy(0.2388,-0.775)}%
+\pgfpathlineto{\pgfxy(0.222,-0.8396)}\pgfpathlineto{\pgfxy(0.1955,-0.9021)}\pgfpathlineto{\pgfxy(0.1589,-0.9623)}\pgfpathlineto{\pgfxy(0.1118,-1.0201)}%
+\pgfpathlineto{\pgfxy(0.054,-1.0752)}\pgfpathlineto{\pgfxy(-0.0146,-1.1277)}\pgfpathlineto{\pgfxy(-0.094,-1.1775)}\pgfpathlineto{\pgfxy(-0.1841,-1.2245)}%
+\pgfpathlineto{\pgfxy(-0.2847,-1.2687)}\pgfpathlineto{\pgfxy(-0.3952,-1.3103)}\pgfpathlineto{\pgfxy(-0.5153,-1.3493)}\pgfpathlineto{\pgfxy(-0.6443,-1.3858)}%
+\pgfpathlineto{\pgfxy(-0.7816,-1.4202)}\pgfpathlineto{\pgfxy(-0.9263,-1.4524)}\pgfpathlineto{\pgfxy(-1.0776,-1.483)}\pgfpathlineto{\pgfxy(-1.2346,-1.512)}%
+\pgfpathlineto{\pgfxy(-1.3963,-1.5398)}\pgfpathlineto{\pgfxy(-1.5617,-1.5667)}\pgfpathlineto{\pgfxy(-1.7299,-1.5932)}\pgfpathlineto{\pgfxy(-1.8997,-1.6194)}%
+\pgfpathlineto{\pgfxy(-2.0701,-1.6459)}\pgfpathlineto{\pgfxy(-2.2402,-1.673)}\pgfpathlineto{\pgfxy(-2.409,-1.7011)}\pgfpathlineto{\pgfxy(-2.5755,-1.7305)}%
+\pgfpathlineto{\pgfxy(-2.7389,-1.7616)}\pgfpathlineto{\pgfxy(-2.8983,-1.7949)}\pgfpathlineto{\pgfxy(-3.0529,-1.8307)}\pgfpathlineto{\pgfxy(-3.2019,-1.8692)}%
+\pgfpathlineto{\pgfxy(-3.3448,-1.9109)}\pgfpathlineto{\pgfxy(-3.481,-1.9562)}\pgfpathlineto{\pgfxy(-3.6099,-2.0052)}\pgfpathlineto{\pgfxy(-3.7312,-2.0583)}%
+\pgfpathlineto{\pgfxy(-3.8443,-2.1157)}\pgfpathlineto{\pgfxy(-3.9492,-2.1777)}\pgfpathlineto{\pgfxy(-4.0455,-2.2446)}\pgfpathlineto{\pgfxy(-4.1332,-2.3164)}%
+\pgfpathlineto{\pgfxy(-4.2122,-2.3934)}\pgfpathlineto{\pgfxy(-4.2825,-2.4757)}%
+\pgfstroke%
+\end{tikzpicture}%
+\egroup%

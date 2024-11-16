@@ -1,0 +1,12 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Implicit}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegNumeric}5}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Arrows}{\color{TegSymbol}:=}{\color{TegNumeric}1}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}Axes}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Arrows}{\color{TegSymbol}:=}{\color{TegNumeric}0}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}8}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Implicit}{\color{TegSymbol}(}\ \textbf{\color{TegKeyWord}sin}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}x}{\color{TegSymbol}*}\textit{\color{TegIdentifier}y}{\color{TegSymbol})}\ {\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

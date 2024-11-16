@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0),size(7.5),
+A:=set("A", 0, [rotation:=30]),
+B:=set("B", 0, [rotation:=-30]),
+C:= cup(A,B),Color:=red,FillStyle:=full,
+FillOpacity:=0.5, FillColor:=pink,
+Ligne(C,0)
+];

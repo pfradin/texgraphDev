@@ -1,0 +1,214 @@
+TeXgraph#
+{version 2.0}
+Cmd
+	Window(-1.25+0.5*i, 5-8.8*i, 1+i); 
+	Margin(0.5, 0.5, 0.5, 0.5);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=0.5236, phi:=1.0472, IdMatrix3D(), ModelView(central), DistCam(20)];
+	[GrayScale(0), ComptGraph:=6];
+
+Var
+    N0 = 1.8375;
+    arbre0 = [0,1,2,3,4];
+    Ajuster = 0;
+    Dir1 = -i;
+    Dir2 = 1;
+    Export = 0;
+    Index = [1,1,1,1,1+3*i,1+3*i,1+3*i,1+7*i,1+8*i,1+8*i,1+5*i,1+5*i,1+5*i];
+    treelabelsep = 0.1;
+    treesep = 0.85;
+    nodeep = 0.375;
+    treeheight = 2;
+    niveau = 4;
+    linetype = 2;
+    armpos = 0.35;
+    labeloriente = 1;
+    treeposition = [3.0625,4.9,4.9,4.9,5.5125];
+    N1 = -2*i;
+    N2 = 1.225-2*i;
+    N3 = 2.45-2*i;
+    N4 = 3.675-2*i;
+    arbre3 = [3,5,6,7];
+    N5 = 1.225-4*i;
+    N6 = 2.45-4*i;
+    N7 = 3.675-4*i;
+    arbre7 = [7,8];
+    N8 = 3.675-6*i;
+    arbre8 = [8,9,10];
+    N9 = 3.0625-8*i;
+    N10 = 4.2875-8*i;
+    arbre5 = [5,11,12,13];
+    N11 = -6*i;
+    N12 = 1.225-6*i;
+    N13 = 2.45-6*i;
+    treelabelpos = 0;
+    arbreVer = 0.1;
+    MouseVer = 0.1;
+
+Include
+	"Mouse.mac";
+	"Arbres.mac";
+
+Mac
+    lab1 = "0.25";
+
+    lab2 = "0.15";
+
+    lab3 = "0.15";
+
+    lab4 = "0.45";
+
+    Init = [C1:=0, C2:=0, C3:=2, C4:=0, C5:=0, C6:=4, C7:=0, C8:=0, C9:=0, C10:=0, C11:=0, 
+	C12:=1, C13:=0, C14:=0, C15:=0, C16:=0, NbCtrlDot:=19, CtrlDot:=ctrldot(), LaListe:=laliste()
+	, DotState:=dotstate(), ShowRef:=0,  ShowLabel:=0, SLabelEnCours:=0, flechage:=fleches()
+	, ReCalc() ];
+
+    node0 = "$A$";
+
+    node1 = "$A_0$";
+
+    node2 = "$A_1$";
+
+    node3 = "$A_2$";
+
+    node4 = "$A_3$";
+
+    node5 = "$B_0$";
+
+    node6 = "$B_1$";
+
+    node7 = "$B_2$";
+
+    node8 = "$C_3$";
+
+    node9 = "$D_0$";
+
+    node10 = "$D_1$";
+
+    node11 = "$C_0$";
+
+    node12 = "$C_1$";
+
+    node13 = "$C_2$";
+
+    MyInit = [];
+
+    laliste = [1,3+i,12*i,0,16777215*i,1,50,3*i,-5+5*i,50,1,0,1,i,1,2,3,4,jump,5,3+2*i,12*i,0,
+	16777215*i,1,50,3*i,-5+5*i,50,1,0,1,i,5,6,7,8,jump,9,12+i,8232291+8*i,0,2+11796387*i,
+	0,50,3*i,-5+5*i,3,1,0,1,i,9,10,11,jump,16,6+4*i,12*i,1,16777215*i,1,25,3*i,-5+5*i,
+	150,1,0,1,i,16,17,18,19,jump,12,6+3*i,12*i,0,16777215*i,1,25,3*i,-5+5*i,150,1,0,
+	1,i,12,13,14,15,jump];
+
+    ctrldot = [4.25-2*i,4.75-2*i,4.75-6*i,4.25-6*i,-0.5-2*i,-1-2*i,-1-8*i,2.5-8*i,1.25-6*i,3.13294491525424-5.99544807965861*i,
+	2.25-5.25*i,1.08262108262108-3.49080459770115*i,0.96618973880597-2.99005882352941*i,
+	0.70314458955223-2.59169019607843*i,0.34203237704918-2.32786827094474*i,0.25829163346613-2.39655793226381*i,
+	0.37587430278884-2.73445454545454*i,0.71656254980079-3.24431639928698*i,1.005996812749-3.50980659536541*i];
+
+    dotstate = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+
+    drawAnode = [{drawAnode(indice): on dessine le node indice %1, les attributs sont ceux de l'élément graphique styleNodes}
+	$z:= Eval(["N",%1]),
+	draw("circle",[z,nodeep], [Arrows:=0, FillStyle:=gradient, GradStyle:=radial]),
+	Label(z,Eval(["\node",%1]))
+	];
+
+    drawAline = [ { drawAline(affixe depart, vecteur direction, indice1, indice2): on relie le node indice1 (son affixe est %1) au node indice2 (la direction est %2), les attributs sont ceux de l'élément graphique arbre}
+	 $dep:=%1, $dir:=%2,
+	 if %3=0 then $oldtype:=linetype, linetype:=1 fi,
+	 $u:=Re(dir*bar(Dir1))*Dir1, {composante du vecteur direction suivant Dir1}
+	 $v:=Re(dir*bar(Dir2))*Dir2, {composante du vecteur direction suivant Dir2}
+	 if linetype=0 {segment de droite}
+	   then Ligne([dep,dep+dir],0) 
+	 elif linetype=1 {segment à un coude}
+	   then u:=u*armpos, Ligne( [dep, dep+u+v, dep+dir],0)
+	 elif linetype=2 {segment à 2 coudes}
+	   then u:=u*armpos, Ligne( [dep, dep+u, dep+dir-u, dep+dir],0)
+	 elif linetype=3 {courbe de bézier}
+	   then Bezier(dep, dep+u/2, dep+u/2+v, dep+dir)
+	 elif linetype=4 {tube}
+	   then oldwidth:=Width,  Width:=Width*2,
+	        Ligne([dep,dep+dir],0), $oldcolor:=Color, 
+	        Color:=FillColor, Width:=oldwidth,
+	        Ligne([dep,dep+dir],0), Color:=oldcolor
+	 fi,
+	if %3=0 then linetype:=oldtype fi
+	];
+
+    UserBsave = Nil;
+
+    SelectName = Mbezier3;
+
+    drawAlabel = [ $dep:=%1, $dir:=%2, 
+	if %4=0 then $oldtype:=linetype, linetype:=1 fi,
+	 if (linetype=0) Or (linetype=4) then  $v:=dir {baton ou tube}
+	 elif (linetype=1) then  {segment à 1 coude} 
+	  $v:=Re(dir*bar(Dir1))*Dir1, $w:=Re(dir*bar(Dir2))*Dir2,
+	  dep:=dep+v*armpos+w, v:=v*(1-armpos)
+	elif (linetype=2) then  {segment à 2 coude2} 
+	  $v:=Re(dir*bar(Dir1))*Dir1, 
+	  dep:=dep+dir-v*armpos, v:=v*armpos
+	  elif linetype=3 then {bézier}
+	    $v:=Re(dir*bar(Dir1))*Dir1/2, $w:=Re(dir*bar(Dir2))*Dir2,
+	    dep:=dep+v/2, v:= v+w
+	  fi,
+	   $u:=ortho(v), $angle:= arg(v)*180/pi,
+	 if labeloriente then
+	   if treelabelpos=0.5 then $pos:=0 {centré}
+	    elif treelabelpos<0.5 then pos:=left
+	   else pos:=right
+	  fi,
+	  if Re(v)>=0 
+	     then LabelAngle:= angle else LabelAngle:= 180+angle,u:=-u 
+	  fi, 
+	  if ((angle>=0) And (Im(Dir1)=0)) Or ((angle<0)  And (Re(Dir1)=0)) 
+	    then  LabelStyle:=bottom+pos, Label(dep+v*treelabelpos+treelabelsep*u,%3)
+	    else  LabelStyle:=top+pos, Label(dep+v*treelabelpos-treelabelsep*u,%3)
+	  fi 
+	  else {labels horizontaux}
+	     if Im(v)<0 then pos:=left elif Im(v)>0 then pos:=right else pos:=0 fi,
+	     if Re(v)<0 then LabelStyle:=top+pos 
+	     elif Re(v)>0 then LabelStyle:=bottom+pos 
+	     else LabelStyle:=pos
+	     fi,
+	     Label(dep+v*treelabelpos+treelabelsep*u,%3)
+	  fi,
+	if %4=0 then linetype:=oldtype fi
+	];
+
+    SelectBody = ["Contour(",Str(controles),",",lineclosed,")"];
+
+Cmd	[IsVisible:=0,Arrows:=1,tMin:=-5,tMax:=4.5,DotScale:=1+i];
+Graph repere = [LineStyle:=0, LabelSize:=footnotesize,
+	FillStyle:=none, Width:=0, Color:=Rgb(0.75,0.75,0.75),
+	Grille(0,(1+i)/GridNbDiv), Color:=0, Axes(Xmin+i*Ymin,1+i)];
+Cmd	[Width:=12,IsVisible:=1,NbPoints:=25,tMax:=5];
+Graph etat = Nil;
+Cmd	[Width:=2,LineStyle:=-1,NbPoints:=50,FillStyle:=1,FillColor:=13684944,tMin:=-0.25,tMax:=3.75];
+Graph fond = Drectangle(Xmin+i*Ymin, Xmax+i*Ymin, Xmax+i*Ymax);
+Cmd	[LineStyle:=0,FillColor:=255,tMin:=-2.75,tMax:=2.75];
+Graph styleNodes = 1/0;
+Cmd	[Width:=8,Color:=8232291,MouseCode:=9,Arrows:=0,FillStyle:=2,FillColor:=11796387,tMin:=-5,tMax:=5];
+Graph Mellipse1 = [Set($O, c(9)),Set($A, c(10)-O), Set($B, proj(c(11),O,O+i*A)),Ellipse(O,abs(A),abs(B-O)
+	,Arg(A)*180/pi,1)];
+Cmd	[Width:=12,Color:=0,MouseCode:=-1,Arrows:=1,FillStyle:=0,FillColor:=8366847,tMin:=-2.75,tMax:=2.75,DotStyle:=1,LabelSize:=0];
+Graph arbre = Dessiner();
+Cmd	[Width:=8,FillStyle:=1,FillColor:=16777215,LabelSize:=2];
+Graph indices = [
+	 if Export=0 then
+	    Color:=red,
+	    drawIndices(0),
+	    Label(N0-0.25*i/Yscale, "0")
+	 fi 
+	];
+Cmd	[Width:=12,MouseCode:=1,FillStyle:=0,tMin:=-5,tMax:=5,DotStyle:=0,LabelSize:=3];
+Graph Mligne1 = Ligne(Map(c(z),z,[1,2,3,4]),0,0);
+Cmd	[MouseCode:=5];
+Graph Mligne2 = Ligne(Map(c(z),z,[5,6,7,8]),0,0);
+Cmd	[MouseCode:=12,NbPoints:=25];
+Graph Mbezier3 = Contour([12,13,14,15],0);
+Cmd	[MouseCode:=16,LineStyle:=1];
+Graph Mbezier4 = Contour([16,17,18,19],0);
+Cmd	[MouseCode:=-1,LineStyle:=0];
+Graph Controles = ShowCtrl();
+Graph Selection = ShowSelect();

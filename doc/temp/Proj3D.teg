@@ -1,0 +1,11 @@
+TeXgraph#
+Graph image = [
+ModelView(central), view(-6,6,-6,6),
+view3D(-5,5,-4,4,-4,4),
+Marges(0,0,0,0), size(7.5),
+L:= for z in Get(Cartesienne(sin(x)),0)
+  do [z,0] od,
+Arrows:=1, Axes3D(0,0,0),
+Arrows:=0, Width:=8,
+Color:=red, Ligne( Proj3D(L), 0)
+];

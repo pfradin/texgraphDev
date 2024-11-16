@@ -1,0 +1,16 @@
+TeXgraph#
+Graph image = [
+ModelView(central), Marges(0,0,0,0), size(7.5),
+background(full,darkblue),
+P:=Parallelep(M(-2.5,-2.5,-2.5), 5*vecI,
+       5*vecJ, 5*vecK), nb:=15,
+Y:=[1,1,0], R:=[1,0,0],
+Build3D(
+  for k from 1 to nb do
+   P:=HollowFacet(P, 0.25+i, aux),
+   C:=((nb-k+1)*R+(k-1)*Y)/nb,
+   bdFacet(P, [color:=RgbL(C)]),
+   P:=aux, sep3D
+  od),
+Display3D()
+];

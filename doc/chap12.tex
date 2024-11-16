@@ -1,0 +1,361 @@
+\chapter[Du code TeXgraph dans LaTeX]{Du code TeXgraph dans un fichier LaTeX}\label{chapcodeindoc}
+
+\renewcommand*{\opt}[2]{\textcolor{\coloropt}{#1 = < #2 >}\ifhtml\else\index{#1~(option)}\fi}
+
+\section{Installation}
+
+Sous windows, il vous faudra copier le fichier \textit{texgraph.sty} dans votre arborescence \TeX\ et mettre la base à jour. Sous linux, l'installation du paquet \textit{texgraph.sty} est faite automatiquement lors de l'exécution du script \textit{install.sh}.
+
+\medskip
+
+\Mytextbf{IMPORTANT: la compilation d'un document \LaTeX\ utilisant ce paquet, doit se faire avec l'option --shell-escape (ou --enable-write18 suivant la distribution).}
+
+
+\section{L'environnement \textit{texgraph}}
+
+Une fois déclaré le paquet avec: \verb|\usepackage{texgraph}|, vous pouvez utiliser l'environnement graphique:
+\begin{verbatim}
+                      \begin{texgraph}[<options>]
+                       <code TeXgraph>
+                      \end{texgraph}
+\end{verbatim}
+
+Lors de la compilation le code est copié dans un fichier \textit{<nom>.teg} (fichier source de TeXgraph) en tant qu'élément graphique Utilisateur (par défaut), puis le programme \textit{TeXgraphCmd} est appelé, il charge le fichier \textit{<nom>.teg}, exporte le résultat dans le format demandé, enfin, le compilateur \LaTeX\ reprend la main et le fichier résultant est chargé avec \verb|\input| ou bien \verb|\includegraphics| suivant l'export demandé.
+
+Pour être tout à fait exact, c'est un script qui est appelé: \textit{CmdTeXgraph}.
+
+\medskip
+
+\Mytextbf{Les options possibles sont}:
+
+\begin{itemize}
+ \item \opt{name}{nom}: permet de donner un nom à l'image (sans extension), par défaut ce nom est le nom du fichier courant suivi du numéro d'apparition de l'environnement (fichier1, fichier2, ...). Ce paramètre doit être indiqué en premier lorsqu'il n'est pas omis.
+
+ \item \opt{export}{none/pst/pgf/tkz/eps/psf/pdf/epsc/pdfc/teg/texsrc}: ce paramètre peut prendre les valeurs suivantes: \textit{none} (aucun fichier n'est exporté), \textit{pst} (pstricks, option par défaut), \textit{pgf}, \textit{tkz} (pgf en fait mais dans un environnement tikzpicture ce qui permet d'ajouter des instructions tikz), \textit{eps}, \textit{psf} (eps+psfrag), \textit{pdf}, \textit{epsc} (eps compilé), \textit{pdfc} (pdf compilé), \textit{teg} (fichier source texgraph) ou \textit{texsrc} (fichier source texgraph colorisé pour \TeX). Il détermine automatiquement le type d'export ainsi que le mode d'inclusion (input ou includegraphics ou rien).
+
+ \item \opt{call}{true/false}:  ce booléen vaut \textit{true} par défaut, il indique si on appelle réellement TeXgraph, dans la négative le code TeXgraph est ignoré, ce qui permet d'éviter les appels inutiles en cas de compilations multiples, le fichier image est cependant inclus, en fonction du paramètre \textit{auto}. Lorsque \textit{call} a la valeur \textit{true}, un \textit{<fichier>.teg} est créé, il est compilé par \textit{TeXgraphCmd} qui exporte ensuite un fichier image et un fichier log.
+
+ \item \opt{auto}{true/false}: ce booléen vaut \textit{true} par défaut, il indique si le fichier image doit être inclus automatiquement à l'aide des macros input ou includegraphics. Dans la négative le fichier image n'est pas chargé. Lorsqu'elle n'est pas omise, cette option doit être indiquée après l'option export.
+
+ \item \opt{commandchars}{true/false}: ce booléen vaut \textit{false} par défaut, lorsqu'il a la valeur \textit{true},  l'environnement peut contenir des appels à des commandes \TeX{} à condition de remplacer $\backslash$ par \# devant le nom des commandes, ex: \verb|#commande{...}|. Si cette commande contient des macros qui ne doivent pas être développées,  elles devront être précédées de \verb|\noexpand|.
+
+ \item \opt{src}{true/false}: ce booléen vaut \textit{false} par défaut, lorsqu'il a la valeur \textit{true}, \TeX{}graph exportera en plus du graphique, le fichier source colorisé en \TeX{} (fichier avec l'extension \textit{src}), et c'est ce fichier source qui est  inclus à la place de l'environnement, comme dans tous les exemples que l'on peut voir dans ce document. Les différentes couleurs sont prédéfinies dans le fichier \textit{texgraph.sty} et peuvent être redéfinies par l'utilisateur dans son document. Voici les définitions: 
+ 
+\begin{verbatim}
+\newcommand*{\TegSrcFontSize}{small}%taille des caractères
+\definecolor{TegIdentifier}{rgb}{0.5451,0.2706,0.0745}%
+\definecolor{TegComment}{rgb}{0.502,0.502,0.502}%
+\definecolor{TegNumeric}{rgb}{0.0000,0.5020,0.5020}%
+\definecolor{TegConstant}{rgb}{0.5020,0.5020,0.0000}%
+\definecolor{TegString}{rgb}{0,0,1}%
+\definecolor{TegSymbol}{rgb}{1,0,0}%
+\definecolor{TegKeyWord}{rgb}{0,0,0}%
+\definecolor{TegVarGlob}{rgb}{0.0000,0.0000,0.5020}%
+\definecolor{TegMacUser}{rgb}{0.5020,0.0000,0.5020}%
+\definecolor{TegVarPredef}{rgb}{0.0000,0.3922,0.0000}%
+\definecolor{TegMacPredef}{rgb}{0.5020,0.0000,0.0000}%
+\definecolor{TegParam}{rgb}{1.0000,0.0000,1.0000}%
+\definecolor{TegGraphElem}{rgb}{0.4392,0.5020,0.5647}%
+\end{verbatim}
+
+ \item \opt{file}{true/false}: ce booléen vaut \textit{false}  par défaut, il indique si le contenu de l'environnement est un fichier source TeXgraph complet (\textit{file=true}), ou bien seulement un élément graphique Utilisateur (\textit{file=false}).
+
+ \item \opt{preload}{\{"<fichier1>";"<fichier2>";...\}}: permet de charger un ou plusieurs paquets avant de créer le graphique, ex: \textit{preload=\{"papiers.mod";"draw2d.mod"\}}.
+
+ \item \opt{cmdi}{commande}: permet d'importer le graphique à l'intérieur la commande, ex: \verb|cmdi={\raisebox{-2cm}}|
+
+ \item \opt{cmdii}{commande}: applique une deuxième commande  par dessus la première (\textit{cmdi}).
+\end{itemize}
+
+\medskip
+
+\centerline{Le paquet possède trois options globales qui sont:}
+
+\begin{itemize}
+ \item \textcolor{\coloropt}{nocall}: cette option permet de redéfinir la valeur par défaut de l'option \textit{call} à la valeur \textit{false}, par conséquent les environnements texgraph n'appelleront le programme \textit{TeXgraphCmd} que si l'option \textit{call} (ou \textit{call=true}) est mentionnée.
+
+ \item \textcolor{\coloropt}{src}: cette option permet de redéfinir la valeur par défaut de l'option \textit{src} à la valeur \textit{true} pour tous les environnements texgraph.
+
+ \item \opt{export}{pst/pgf/tkz/eps/psf/pdf/epsc/pdfc}: cette option permet de redéfinir l'export par défaut.
+
+ \item \textcolor{\coloropt}{server}: cette option permet de lancer TeXgraph en mode serveur, et de refermer le programme en fin de compilation. Ainsi le programme n'est exécuté qu'une seule fois pour tout le document.
+
+\noindent\textbf{Mise en garde} : si la compilation du document \TeX{} n'aboutit pas, alors la fermeture des fichiers temporaires par TeXgraph peut être compromise ce qui risque de provoquer des erreurs à la compilation suivante, il vous faudra alors effacer à la main les fichiers \textit{TeXgraphServer.*} dans le dossier \verb|$HOME/.TeXgraph| sous unix ou bien \verb|c:\tmp| sous windows (et seulement ceux-là !).
+\end{itemize}
+
+\medskip
+
+Exemples: \verb|\usepackage[nocall]{texgraph}| ou encore \verb|\usepackage[export=tkz,server]{texgraph}|.
+
+\medskip
+
+\textbf{Mises en garde}
+\begin{itemize}
+ \item les commandes et macros relatives à l'interface graphique (la souris, le menu, les boutons, les items, le timer, ...) sont ignorées.
+ \item débuter une ligne par un commentaire entre accolades provoque une erreur lorsque l'option \textit{commandchars} est activée,  par contre on peut commenter en début de ligne de la manière suivante: \verb|//blablabla| (toute la ligne est alors en commentaire).
+\end{itemize}
+
+\section{Exemples}
+
+Avec l'option \textit{file=false} (option par défaut), le code TeXgraph est inclus dans un élément graphique utilisateur avant d'être envoyé au programme \textit{TeXgraphCmd}: 
+
+\begin{center}
+\begin{tabular}{|m{9cm}|m{8cm}|}
+\hline
+\begin{minipage}{9cm}
+\par\medskip
+\begin{small}
+\begin{verbatim}
+\begin{texgraph}[name=surf1]
+view(-7,7,-7,7), Marges(0,0,0,0),
+size(7.5), FillStyle:=full,
+FillColor:=lightblue,
+Dsurface( M(u,v,cos(u)+sin(v)),
+          -5+5*i,
+          -5+5*i, 25+25*i) 
+\end{texgraph}
+\end{verbatim}
+\end{small}
+\end{minipage}
+&
+\begin{minipage}{8cm}
+\ifhtml\ \includegraphics[height=7.5cm]{surf1.png}%
+\else\input{temp/surf1.pgf}%
+\fi%
+\end{minipage}
+\\
+\hline
+\end{tabular}
+\ifhtml{Un exemple avec file=false}\label{surf1}%
+\else\captionof{figure}{Un exemple avec file=false}\label{surf1}%
+\fi%
+\end{center}
+
+Dans ce premier exemple, le fichier véritablement envoyé au programme est:
+\begin{verbatim}
+                      TeXgraph#
+                      Graph image = [
+                         view(-7,7,-7,7), Marges(0,0,0,0),
+                         size(7.5), FillStyle:=full,
+                         FillColor:=lightblue,
+                         Dsurface( M(u,v,cos(u)+sin(v)),
+                                   -5+5*i,
+                                   -5+5*i, 25+25*i)
+                         ];
+\end{verbatim}
+
+Avec l'option \textit{file=true}, le code TeXgraph est considéré comme un fichier source pour le programme \textit{TeXgraphCmd}:
+
+\begin{center}
+\begin{tabular}{|m{9cm}|m{8cm}|}
+\hline
+\begin{minipage}{9cm}
+\par\medskip
+\begin{small}
+\begin{verbatim}
+\begin{texgraph}[name=polyedre,file]
+Cmd Marges(0,0,0,0); size(7.5);
+Include "PolyedresII.mac";
+Var A = M(3,0,0);
+Mac f = M(%1,%2,sin(%1)+cos(%2));
+Graph objet1 = [
+  background(full,lightgray),
+  ColorL:=slategray, StyleL:=12,
+  CubeAdc(Origin, A,C,T1,T2,Ar),
+  Build3D(C,T1,T2,Ar,
+     bdSurf(f(u,v),
+       [color:=steelblue,
+        u:=[-pi,pi],v:=u,
+        contrast:=0.125]),
+     bdAxes(Origin,
+       [color:=forestgreen,arrows:=1])
+     ),
+  Display3D()];
+\end{texgraph}
+\end{verbatim}
+\end{small}
+\end{minipage}
+&
+\begin{minipage}{8cm}
+\ifhtml\ \includegraphics[height=7.5cm]{polyedre.png}%
+\else\input{temp/polyedre.pgf}%
+\fi%
+\end{minipage}
+\\
+\hline
+\end{tabular}
+\ifhtml{Un exemple avec file=true}\label{polyedre}%
+\else\captionof{figure}{Un exemple avec file=true}\label{polyedre}%
+\fi%
+\end{center}
+
+
+\section{Syntaxe d'un fichier source}\label{srclatex}
+
+Dans ce deuxième exemple, le véritable fichier envoyé au programme est:
+\begin{verbatim}
+                TeXgraph#
+                Cmd Marges(0,0,0,0); size(7.5);
+                Include "PolyedresII.mac";
+                Var A = M(3,0,0);
+                Mac f = M(%1,%2,sin(%1)+cos(%2));
+                Graph objet1 = [
+                  background(full,lightgray),
+                  ColorL:=slategray, StyleL:=12,
+                 CubeAdc(Origin, A,C,T1,T2,Ar),
+                 Build3D(C,T1,T2,Ar,
+                     bdSurf(f(u,v),
+                       [color:=steelblue,
+                        u:=[-pi,pi],v:=u,
+                        contrast:=0.125]),
+                     bdAxes(Origin,
+                       [color:=forestgreen,arrows:=1])
+                     ),
+                  Display3D()];
+\end{verbatim}
+
+\begin{itemize}
+ \item La première ligne (\verb|TeXgraph#|) est automatiquement ajoutée, elle annonce un fichier source (pour la version 1.95 et les suivantes, les sources des anciennes versions sont néanmoins compatibles).
+
+ \item La rubrique \textbf{Cmd} annonce des commandes, chaque commande se termine par un point-virgule, les commandes sont exécutées au fur et à mesure de la lecture du fichier.
+
+ \item La rubrique \textbf{Include} annonce des fichiers à charger, chaque nom de fichier est une chaîne suivie par un point-virgule, les fichiers sont chargés au fur et à mesure de la lecture.
+
+ \item La rubrique \textbf{Var} annonce la déclaration des variables globales, la syntaxe de cette déclaration est:
+
+\centerline{<nom> = <expression> ;}
+
+ L'\argu{expression} est évaluée numériquement avant d'être affectée à la variable globale \argu{nom}. Les déclarations sont exécutées au fur et à mesure de la lecture du fichier.
+
+ \item La rubrique \textbf{Mac} annonce la déclaration des macros, la syntaxe de cette déclaration est:
+
+\centerline{<nom> = <expression> ;}
+
+ L'\argu{expression} est analysée et s'il n'y a pas d'erreur une macro appelée \argu{nom} est créée avec cette \argu{expression}. Les déclarations sont exécutées au fur et à mesure de la lecture du fichier.
+
+ \item La rubrique \textbf{Graph} annonce la déclaration des éléments graphiques Utilisateurs, la syntaxe de cette déclaration est:
+
+\centerline{<nom> = <expression> ;}
+
+ L'\argu{expression} est analysée et s'il n'y a pas d'erreur un élément graphique appelé \argu{nom} est créé avec cette \argu{expression}. Les éléments graphiques sont créés au fur et à mesure de la lecture du fichier.
+\end{itemize}
+
+\medskip
+
+Quelques règles:
+
+\begin{enumerate}
+ \item La première ligne est obligatoire.
+ \item Il peut y avoir plusieurs rubriques \textit{Cmd}, \textit{Include}, \textit{Var}, \textit{Mac} et \textit{Graph}.
+ \item Il n'y a pas d'ordre impératif à respecter sur les rubriques, il faut simplement se souvenir qu'une variable globale (ou une macro), n'existe qu'après avoir été déclarée. 
+\end{enumerate}
+
+\section{L'environnement \textit{tegprog} et la macro \textit{tegrun} }
+
+Le paquet \textit{texgraph.sty} propose également l'environnement:
+\begin{verbatim}
+                      \begin{tegprog}[<options>]{nom}
+                       <code TeXgraph>
+                      \end{tegprog}
+\end{verbatim}
+
+Cet environnement enregistre le programme \argu{nom}.teg, ce programme est destiné à être exécuté par la commande \textit{tegrun}, les paramètres avec lesquels le programme sera exécuté seront dans la variable globale \textit{param} (liste) du programme, ce programme dispose également d'une macro \textit{Return(chaîne)}, qui écrit la chaîne dans un fichier de sortie, ce fichier sera automatiquement inclus par la commande \textit{tegrun}.
+
+Les options possibles sont:
+\begin{itemize}
+ \item \textcolor{\coloropt}{file}: cette option indique que le contenu de l'environnement est un fichier source TeXgraph complet, sinon, c'est seulement une commande.
+
+ \item \textcolor{\coloropt}{commandchars}: avec cette option l'environnement peut contenir des appels à des commandes \TeX{} à condition de remplacer $\backslash$ par \# devant le nom des commandes, ex: \verb|#commande{...}|. Si cette commande contient des macros qui ne doivent pas être développées, elles devront être précédées de \verb|\noexpand|.
+
+ \item \opt{preload}{\{"<fichier1>";"<fichier2>";...\}}: permet de charger un ou plusieurs modèles avant de créer le graphique, ex: \textit{preload=\{"papiers.mod";"variations.mod"\}}.
+\end{itemize}
+
+Une fois enregistré, on peut exécuter un programme dans un document \TeX{} avec la commande:\par
+\verb|\tegrun{nom}{param1 param2 ...}|, celle-ci enregistre les paramètres dans le fichier \argu{nom}.prm, demande à TeXgraph d'exécuter le programme \argu{nom}.teg, puis inclut le fichier de résultat \argu{nom}.res. Voici un exemple:
+\begin{small}
+\begin{verbatim}
+\begin{tegprog}{PrintPgcd}
+ a:=param[1], b:=param[2], 
+ if a<b then Echange(a,b) fi,
+ Return("\begin{tabular}{|c|c|c|}\par\hline{}a&b&r\tabularnewline\hline"),
+ r:=b,
+ while r>0 do 
+    r:=mod(a,b),
+    Return(Concat(a,"&",b,"&",r,"\tabularnewline\hline")),
+    a:=b, b:=r
+ od,
+ Return("\end{tabular}")
+\end{tegprog}
+\newcommand{\PrintPgcd}[2]{\tegrun{PrintPgcd}{#1 #2}}%
+\end{verbatim}
+\end{small}
+
+\begin{tegprog}{PrintPgcd}
+a:=param[1], b:=param[2], 
+if a<b then Echange(a,b) fi,
+Return("\begin{tabular}{|c|c|c|}\par\hline{}a&b&r\tabularnewline\hline"),
+r:=b,
+while r>0 do 
+    r:=mod(a,b),
+    Return(Concat(a,"&",b,"&",r,"\tabularnewline\hline")),
+    a:=b, b:=r
+od,
+Return("\end{tabular}")
+\end{tegprog}
+
+\newcommand{\PrintPgcd}[2]{\tegrun{PrintPgcd}{#1 #2}}%
+
+Dans cet exemple on crée le programme \textit{PrintPgcd.teg}, il calcule le pgcd entre deux entiers $a$ et $b$ en donnant les différentes étapes de l'algorithme d'Euclide sous forme d'un tableau. La liste des paramètres est dans la variable \textit{param}\footnote{Le programme initialise cette variable en lisant le fichier \textit{PrintPgcd.prm} qui contient la liste des paramètres.}. La macro \textit{Return} écrit dans le fichier de sortie qui est \textit{PrintPgcd.res}.
+
+On définit ensuite une macro \textit{PrintPgcd} à deux arguments, celle-ci appelle la commande \verb|\tegrun{PrintPgcd}{#1 #2}|, elle a pour effet d'écrire les deux arguments dans le fichier de paramètres \textit{PrintPgcd.prm}, puis de demander à TeXgraph d'exécuter le programme \textit{PrintPgcd.teg}, et enfin, elle inclut le fichier \textit{PrintPgcd.res}.
+
+L'exécution de \verb|\PrintPgcd{456}{166}| donne \PrintPgcd{456}{166}.
+
+\section{L'environnement \textit{tegcode} et la macro \textit{directTeg}}
+
+Lorsque le paquet \textit{texgraph.sty} est appelé avec l'option \textit{server}, il propose en plus l'environnement:
+\begin{verbatim}
+                      \begin{tegcode}
+                       <fichier TeXgraph>
+                      \end{tegcode}
+\end{verbatim}
+
+La syntaxe est celle d'un fichier source sans la première ligne: \texttt{TeXgraph\#}, qui sera automatiquement ajoutée. Le fichier peut contenir des macros \TeX{} à condition de remplacer $\backslash$ par \# devant le nom des commandes, ex: \verb|#commande{...}|. Une fois déclaré, le fichier est lu par Texgraph et \Mytextbf{restera en mémoire jusqu'à la fin du document}. Les variables et macros définies dans ce fichier seront donc utilisables lors des appels ultérieurs à TeXgraph. Ces macros peuvent utiliser l'instruction \textit{Return(chaîne)}, à condition qu'elles soient utilisées ensuite par la macro \verb|\directTeg|.
+
+La macro \verb|\directTeg{commande}| fait exécuter la \argu{commande} par TeXgraph, cette \argu{commande} peut utiliser la macro \textit{Return(chaîne)}, celle-ci écrit la chaîne dans un fichier de sortie (\textit{tegdirect.res}), et celui-ci sera automatiquement inclus par la macro \verb|\directTeg|. Voici un exemple:
+\begin{small}
+\begin{verbatim}
+\begin{tegcode}
+Mac Gcd = [//Gcd(liste d’entiers)
+        $L:=%1, $N:=Nops(L),
+        if N<2 then "error !"
+        else
+            $r:=pgcd(L[1],L[2]),
+            if r=1 then 1
+            elif N=2 then r
+            else Gcd( [r,L[3,0]] )
+            fi
+        fi
+        ];
+\end{tegcode}
+\newcommand*{\Gcd}[1]{\directTeg{Return(Gcd([#1]))}}%
+\end{verbatim}
+\end{small}
+
+\begin{tegcode}
+Mac Gcd = [//Gcd(liste d’entiers)
+        $L:=%1, $N:=Nops(L),
+        if N<2 then "error !"
+        else
+            $r:=pgcd(L[1],L[2]),
+            if r=1 then 1
+            elif N=2 then r
+            else Gcd( [r,L[3,0]] )
+            fi
+        fi
+        ];
+\end{tegcode}
+\newcommand*{\Gcd}[1]{\directTeg{Return(Gcd([#1]))}}%
+
+L'exécution de \verb|\Gcd{12,68,36}| donne \Gcd{12,68,36}.
+ L'exécution de \verb|\Gcd{12}| donne \Gcd{12}.

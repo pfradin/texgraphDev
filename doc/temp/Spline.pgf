@@ -1,0 +1,102 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.7,0)}%
+\pgfsetyvec{\pgfxy(0,0.7)}%
+\useasboundingbox (-5.3571,-5.3571)--(5.3571,5.3571);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfxyline(-5.0143,0)(5.0143,0)%
+\pgfxyline(-5,-0.1429)(-5,0.1429)%
+\pgfxyline(-4,-0.1429)(-4,0.1429)%
+\pgfxyline(-3,-0.1429)(-3,0.1429)%
+\pgfxyline(-2,-0.1429)(-2,0.1429)%
+\pgfxyline(-1,-0.1429)(-1,0.1429)%
+\pgfxyline(0,-0.1429)(0,0.1429)%
+\pgfxyline(1,-0.1429)(1,0.1429)%
+\pgfxyline(2,-0.1429)(2,0.1429)%
+\pgfxyline(3,-0.1429)(3,0.1429)%
+\pgfxyline(4,-0.1429)(4,0.1429)%
+\pgfxyline(5,-0.1429)(5,0.1429)%
+\pgfputat{\pgfxy(0.3571,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(1,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $1$}}\pgfstroke%
+\pgfputat{\pgfxy(2,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $2$}}\pgfstroke%
+\pgfputat{\pgfxy(3,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $3$}}\pgfstroke%
+\pgfputat{\pgfxy(4,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $4$}}\pgfstroke%
+\pgfputat{\pgfxy(5,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $5$}}\pgfstroke%
+\pgfputat{\pgfxy(-1,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-2,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-3,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-3$}}\pgfstroke%
+\pgfputat{\pgfxy(-4,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-4$}}\pgfstroke%
+\pgfputat{\pgfxy(-5,-0.4286)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-5$}}\pgfstroke%
+\pgfxyline(0,-5.0143)(0,5.0143)%
+\pgfxyline(0.1429,-5)(-0.1429,-5)%
+\pgfxyline(0.1429,-4)(-0.1429,-4)%
+\pgfxyline(0.1429,-3)(-0.1429,-3)%
+\pgfxyline(0.1429,-2)(-0.1429,-2)%
+\pgfxyline(0.1429,-1)(-0.1429,-1)%
+\pgfxyline(0.1429,0)(-0.1429,0)%
+\pgfxyline(0.1429,1)(-0.1429,1)%
+\pgfxyline(0.1429,2)(-0.1429,2)%
+\pgfxyline(0.1429,3)(-0.1429,3)%
+\pgfxyline(0.1429,4)(-0.1429,4)%
+\pgfxyline(0.1429,5)(-0.1429,5)%
+\pgfputat{\pgfxy(-0.4286,0.3571)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $1$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,2)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $2$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $3$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $4$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,5)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $5$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,-1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,-2)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,-3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-3$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,-4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-4$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4286,-5)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-5$}}\pgfstroke%
+\pgfsetroundcap%
+\pgfpathmoveto{\pgfxy(-3.9297,-3)}\pgfellipse{\pgfxy(-4,-3)}{\pgfxy(0.0000,0.0703)}{\pgfxy(-0.0703,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(-4,-3.3571)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $A$}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(-1.9297,2)}\pgfellipse{\pgfxy(-2,2)}{\pgfxy(0.0000,0.0703)}{\pgfxy(-0.0703,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(-2,2.3571)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $B$}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(1.0703,-3)}\pgfellipse{\pgfxy(1,-3)}{\pgfxy(0.0000,0.0703)}{\pgfxy(-0.0703,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(1,-3.3571)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $C$}}\pgfstroke%
+\pgfpathmoveto{\pgfxy(4.0703,3)}\pgfellipse{\pgfxy(4,3)}{\pgfxy(0.0000,0.0703)}{\pgfxy(-0.0703,0.0000)}%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,0}%
+\pgffillstroke%
+\pgfputat{\pgfxy(3.6429,3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $D$}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetbuttcap%
+\pgfpathmoveto{\pgfxy(-4,-3)}%
+\pgfpathcurveto{\pgfxy(-3.4222,-0.2)}{\pgfxy(-2.8444,2.6)}{\pgfxy(-2,2)}%
+\pgfpathcurveto{\pgfxy(-1.1556,1.4)}{\pgfxy(-0.0444,-2.6)}{\pgfxy(1,-3)}%
+\pgfpathcurveto{\pgfxy(2.0444,-3.4)}{\pgfxy(3.0222,-0.2)}{\pgfxy(4,3)}%
+\pgfstroke%
+\pgfxyline(-4.5,4.5)(-4,4.5)%
+\pgfputat{\pgfxy(-3.5,4.5)}{\pgftext[left]{\color{rgb,1:red,1;green,0;blue,0}\small libre}}\pgfstroke%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,1}%
+\pgfpathmoveto{\pgfxy(-4,-3)}%
+\pgfpathcurveto{\pgfxy(-2.3333,-3)}{\pgfxy(-2.4889,1.9556)}{\pgfxy(-2,2)}%
+\pgfpathcurveto{\pgfxy(-1.5111,2.0444)}{\pgfxy(-0.3778,-2.8222)}{\pgfxy(1,-3)}%
+\pgfpathcurveto{\pgfxy(2.3778,-3.1778)}{\pgfxy(4,1.3333)}{\pgfxy(4,3)}%
+\pgfstroke%
+\pgfxyline(-4.5,3.5)(-4,3.5)%
+\pgfputat{\pgfxy(-3.5,3.5)}{\pgftext[left]{\color{rgb,1:red,0;green,0;blue,1}\small contrainte}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetarrows{-to}%
+\pgfxyline(-4,-3)(-2,-3)%
+\pgfxyline(4,3)(4,5)%
+\pgfsetarrows{-}%
+\end{tikzpicture}%
+\egroup%

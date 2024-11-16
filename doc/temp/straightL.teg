@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+view(-4,4,-4,4), Marges(0.25,0.25,0.25,0.25), size(7.5),
+draw("axes",[0,1+i],[Arrows:=1, nbsubdiv:=[2,2],grid:=1]),
+Width:=8,
+draw("straightL",x+2*y=2,[Color:=blue,legend:="$x+2y=2$",
+ rotation:=1]),
+draw("straightL",x=-3,[Color:=crimson,labelpos:=0.1,
+ legend:="$x=-3$",LabelStyle:=left]),
+draw("straightL",[-2-2*i,1],[Color:=darkgreen,
+ labelpos:=0.85,legend:="$\cal D$"]),
+draw("label","$A$", [anchor:=-2-2*i,labeldir:=NW,showdot:=1],
+       "$B$", [anchor:=1])
+];

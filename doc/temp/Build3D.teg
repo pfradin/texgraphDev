@@ -1,0 +1,21 @@
+TeXgraph#
+Graph image = [
+ view(-5.5,5.5,-5.5,5.5),Marges(0,0,0,0),
+ size(7.5),background(full,beige),
+ z:=-2,
+ Build3D(
+  bdPlan([M(0,0,z), vecK],
+   [color:=gold,border:=0,bordercolor:=black]),
+  bdCylinder(M(-2,3,2), 7*M(2/3,-1,-2/3), 1,
+   [color:=slategray,smooth:=1]),
+  bdSphere(Origin, 3,
+   [color:=darkseagreen, clip:=-1,
+   clipwin:=[M(2,1,1),M(-1,-1,-1)],
+   smooth:=1, backculling:=0]),
+  bdCercle(M(0,0,z),sqrt(5),vecK,
+   [color:=blue, width:=12]),
+  bdAxes([0,0],
+   [hidden:=1, arrows:=1,color:=firebrick])
+  ),
+ Display3D()
+];

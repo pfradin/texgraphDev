@@ -1,0 +1,7 @@
+TeXgraph#
+Cmd outFile := "tegdirect.res";
+ OpenFile(outFile);
+[
+Return(Gcd([12]))
+];
+CloseFile(outFile);

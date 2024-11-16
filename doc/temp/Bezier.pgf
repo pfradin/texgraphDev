@@ -1,0 +1,73 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.8333,0)}%
+\pgfsetyvec{\pgfxy(0,0.8333)}%
+\useasboundingbox (-4,-4)--(4,5);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,1;green,0;blue,0}%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetroundjoin%
+\pgfpathmoveto{\pgfxy(-3,4)}%
+\pgfpathcurveto{\pgfxy(0,4.5)}{\pgfxy(0,-2)}{\pgfxy(3,1)}%
+\pgfpathlineto{\pgfxy(3,-3)}%
+\pgfpathcurveto{\pgfxy(2,-1)}{\pgfxy(-2,0)}{\pgfxy(-3,-3)}%
+\pgfpathlineto{\pgfxy(-3,4)}%
+\pgfsetfillcolor{rgb,1:red,0.6784;green,0.8471;blue,0.902}%
+\pgffillstroke%
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(-2.8482,4)(-3.1518,4)%
+\pgfxyline(-3,4.1518)(-3,3.8482)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(-3,4.3)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $A$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(3.1518,1)(2.8482,1)%
+\pgfxyline(3,1.1518)(3,0.8482)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(3.3,1)}{\pgftext[left]{\color{rgb,1:red,0;green,0;blue,0}\small $B$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(3.1518,-3)(2.8482,-3)%
+\pgfxyline(3,-2.8482)(3,-3.1518)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(3.2121,-3.2121)}{\pgftext[left,top]{\color{rgb,1:red,0;green,0;blue,0}\small $C$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(-2.8482,-3)(-3.1518,-3)%
+\pgfxyline(-3,-2.8482)(-3,-3.1518)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(-3.2121,-3.2121)}{\pgftext[right,top]{\color{rgb,1:red,0;green,0;blue,0}\small $D$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(0.1518,4.5)(-0.1518,4.5)%
+\pgfxyline(0,4.6518)(0,4.3482)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(0.3,4.5)}{\pgftext[left]{\color{rgb,1:red,0;green,0;blue,0}\small $C_1$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(0.1518,-2)(-0.1518,-2)%
+\pgfxyline(0,-1.8482)(0,-2.1518)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(-0.2121,-2.2121)}{\pgftext[right,top]{\color{rgb,1:red,0;green,0;blue,0}\small $C_2$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(2.1518,-1)(1.8482,-1)%
+\pgfxyline(2,-0.8482)(2,-1.1518)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(2,-0.7)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $C_3$}}\pgfstroke%
+\pgfsetlinewidth{0.4pt}%
+\pgfxyline(-1.8482,0)(-2.1518,0)%
+\pgfxyline(-2,0.1518)(-2,-0.1518)%
+\pgfsetlinewidth{0.8pt}%
+\pgfputat{\pgfxy(-2,0.3)}{\pgftext[bottom]{\color{rgb,1:red,0;green,0;blue,0}\small $C_4$}}\pgfstroke%
+\pgfsetlinewidth{0.6pt}%
+\pgfsetdash{{5pt}{2pt}{0.5pt}{2pt}}{0pt}%
+\pgfpathmoveto{\pgfxy(-3,4)}%
+\pgfpathlineto{\pgfxy(0,4.5)}\pgfpathlineto{\pgfxy(0,-2)}\pgfpathlineto{\pgfxy(3,1)}%
+\pgfstroke%
+\pgfpathmoveto{\pgfxy(3,-3)}%
+\pgfpathlineto{\pgfxy(2,-1)}%
+\pgfpathlineto{\pgfxy(-2,0)}\pgfpathlineto{\pgfxy(-3,-3)}%
+\pgfstroke%
+\end{tikzpicture}%
+\egroup%

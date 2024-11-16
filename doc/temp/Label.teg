@@ -1,0 +1,12 @@
+TeXgraph#
+Include "PolyedresII.mac";
+Graph image = [
+view(-5,5,-5,5),Marges(0,0,0,0), size(7.5,0),
+C:=Cube(Origin, M(3,3,0)), S:=Sommets(C),
+Point3D(S), DrawPoly(C,0), k:=0,
+for Z in S by 2 do
+ Inc(k,1),
+ Label(Proj3D(Z)+if k>4 then 0.5*i else -0.5*i fi,
+   ["$S_",k,"$"])
+od
+];

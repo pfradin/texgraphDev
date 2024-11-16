@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+ view(-1,1,-0.75,1.25), view3D(-2,2,-2,2,-2,2),
+ Marges(0,0,0,0), size(7.5),
+ P:=Tetra(Origin, vecI, vecJ, vecK),
+ P':=ClipFacet(P, [M(0,0,0.5), -vecK],A,I),
+ DrawFacet( P', [FillOpacity:=0.6,color:=pink]),
+ SaveAttr(),
+ Color:=blue, Width:=8, fillS(bdiag,blue),
+ Ligne3D(Vertices(I),1),
+ RestoreAttr(),
+ DrawFacet(shift3d(A,0.25*vecK),
+   [FillOpacity:=0.6,color:=pink])
+];

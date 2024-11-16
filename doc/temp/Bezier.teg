@@ -1,0 +1,17 @@
+TeXgraph#
+Graph image = [
+view(-4,4,-4,5),Marges(0,0,0,0),size(7.5),Width:=8,
+A:=-3+4*i, B:=3+i, C:=3-3*i, D:=-3-3*i,
+C1:=4.5*i,C2:=-2*i, C3:=2-i, C4:=-2,
+FillStyle:=full, FillColor:=lightblue,Color:=red,
+Bezier([A,C1,C2,B,jump,C,C3,C4,D,jump,A]),
+FillStyle:=none, Color:=black, DotStyle:=cross, DotScale:=2,
+L:=[A,"$A$","N",B,"$B$","E",C,"$C$","SE",D,"$D$","SO",
+C1,"$C_1$","E",C2,"$C_2$","SO",C3,"$C_3$","N",
+C4,"$C_4$","N"],
+for Z in L By 3 do
+ draw("label",Z[2],[anchor:=Z[1],labeldir:=Z[3],showdot:=1])
+od,
+LineStyle:=userdash, DashPattern:=[5,2,0.5,2],Width:=6,
+Line([A,C1,C2,B,jump,C,C3,C4,D])
+];

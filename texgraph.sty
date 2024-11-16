@@ -1,0 +1,357 @@
+% texgraph.sty 1.5 du 27/07/2020
+%% ---------------------------------------
+%% Copyright (C) 2007-2020 Fradin Patrick
+%% ---------------------------------------
+% Ce package fournit l'environnement graphique texgraph:
+% il y a un conflit avec fancybox qui redéfinit ^^M
+% déclarer le package texgraph après fancybox.
+%
+% \begin{texgraph}[<options>]
+%  <code texgraph>
+% \end{texgraph}
+%
+%%%%%% Les options sont:
+%
+% name=         : nom de l'image créée (il y a un nom par défaut: \jobname\imgcount),
+% call=         : (true ou false): appelle ou non texgraph, true par defaut,
+% export=       : (tex, pst, pgf, eps, pdf, epsc, pdfc, tkz, texsrc, html): type d'exportation de l'image,
+% auto=     : (true ou false): inclut ou non automatiquement l'image, true par defaut,
+% file=         : (true ou false): permet ou non l'inclusion d'un fichier source texgraph entier, false par defaut.
+% preload="..." : permet de charger un ou plusieurs paquets avant de créer le graphique, ex: preload="marker.mod" ou
+%                 preload={"PolyedresII.mac"; "draw2d.mod"} on notera le point-virgule!
+% src=          : (true ou false): exporte le source en TeX en plus de l'image, c'est le source qui est chargé automatiquement
+% commandchars  : (true ou false): avec cette option l'environnement peut contenir des appels à des commandes TeX à condition de 
+%                 remplacer \ par # devant le nom des commandes, ex: #commande{...},  si cette commande contient des macros 
+%                 qui ne doivent pas être développées, elles devront être précédées de \noexpand.
+% cmdi= <commande>: permet d'importer le graphique à l'intérieur  la commande, ex: cmdi={\raisebox{-2cm}}
+% cmdii= <commande>: applique une deuxième commande  par dessus la première (cmdi)
+%
+%
+%%%% Les options globales du package sont au nombre de 2:
+%
+% nocall  : redéfinit la valeur par defaut de l'option call a la valeur false,
+%           par conséquent les environnements texgraph
+%           n'appelleront le programme TeXgraphCmd que si l'option call (ou call=true) est mentionnee.
+% export= : permet de redefinir l'export par defaut.
+% src     : pour avoir le source en TeX
+% server  : lancement de texgraph en mode serveur
+%
+%
+% NB: La compilation doit se faire avec l'option --shell-escape (ou --enable-write18 suivant les distributions)
+%
+%
+% Ce package fournit également l'environnement tegprog et la commande \tegrun{nom}{param1 param2 ...}:
+%
+% \begin{tegprog}[options]{nom}
+%  <code texgraph>
+% \end{tegprog}
+%
+% cet environnement enregistre le programme nom.teg, ce programme pourra être exécuté par la macro \tegrun, les paramètres avec lesquels 
+% le programme sera exécuté seront dans la variable globale param (liste) du programme, ce programme dispose également d'une macro Return( chaine ), 
+% qui écrit la chaîne dans un fichier de sortie, celui-ci sera automatiquement inclus par la commande tegrun.
+% Les options possibles sont:
+% file         :  permet d'écrire un fichier source texgraph entier. Par défaut, le code est interprété comme une commande (rubrique Cmd),
+%                 c'est à dire une liste d'instructions.
+% commandchars  : avec cette option l'environnement peut contenir des appels à des macros TeX à condition de 
+%                 remplacer \ par # devant le nom des commandes, ex: #commande{...},  si cette commande contient des macros 
+%                 qui ne doivent pas être développées, elles devront être précédées de \noexpand.
+% preload="..." : permet de charger un ou plusieurs paquets avant de lire le code, ex: preload="marker.mod" ou
+%                 preload={"PolyedresII.mac"; "draw2d.mod"} on notera le point-virgule !
+%
+% La macro \tegrun{nom}{param1 param2 ...} exécute le programme nom.teg en lui passant les paramètres spécifiés dans le deuxième argument,
+% et inclut le fichier de sortie.
+%
+% En mode server, ce package fournit également l'environnement tegcode et la macro \directTeg{commande}
+%
+% \begin{tegcode}
+%  <fichier texgraph>
+% \end{tegcode}
+% ce code est lu par texgraph et restera en mémoire jusqu'à la fin du document. Les macros définies dans cet environnement sont utilisables 
+% lors des appels à TeXgraph qui suivront. Ces macros peuvent utiliser la commande Return(chaine), à condition qu'elles soient utilisées par la commande \directTeg.
+% La macro \directTeg{commande} fait exécuter la commande par TeXgraph, la macro Return(chaine) est disponible, elle écrit la chaîne dans un fichier de sortie,
+% et celui-ci sera automatiquement inclus par la commande \directTeg.
+%
+\NeedsTeXFormat{LaTeX2e}% 
+\RequirePackage{verbatim,ifthen,fancyvrb,xkeyval,xcolor}%
+\RequirePackage{shellesc}% pour compilation avec lualatex, sinon les \write18 ne sont pas exécutés
+\ProvidesPackage{texgraph}[2020/07/27 v1.5 texgraph environment]%
+%
+\def\TgImgDir{}%
+\def\DefaultExport{pst}%
+\newif\ifDefaultCall\DefaultCalltrue%
+\newif\ifDefaultSrc\DefaultSrcfalse%
+\newif\ifServerMode\ServerModefalse%
+\define@key{texgraph.sty}{nocall}[]{\DefaultCallfalse}%
+\define@key{texgraph.sty}{src}[]{\DefaultSrctrue}%
+\define@key{texgraph.sty}{server}[]{\ServerModetrue}%
+\define@choicekey{texgraph.sty}{export}{pst,pgf,eps,pdf,tex,epsc,pdfc,tkz,psf,html}{\def\DefaultExport{#1}}%
+\ProcessOptionsX%
+%
+\def\TeXgraphDir{}%
+%
+\bgroup%
+\catcode`\#=12%
+\gdef\@dopreload{\ifx\@preload\empty\else\immediate\write\FV@OutFile{Include \@preload;}\fi}%
+\gdef\@defaultbcode{\immediate\write\FV@OutFile{TeXgraph#}\@dopreload}%
+\gdef\@addbcode{\immediate\write\FV@OutFile{Graph image = [}}%
+\gdef\@defaultecode{\immediate\write\FV@OutFile{];}}%
+\egroup%
+%
+\def\@bcode{}%
+\def\@ecode{}%
+%% Modification du code de Timothy Van Zandt <tvz@zandtwerk.kellogg.nwu.edu>
+%% pour ajouter du code avant et après celui de l'utilisateur dans VerbatimOut
+\def\FVB@VerbatimOut#1{%
+\@bsphack%
+\begingroup%
+\FV@UseKeyValues%
+\FV@DefineWhiteSpace%
+\def\FV@Space{\space}%
+\FV@DefineTabOut%
+\def\FV@ProcessLine{\immediate\write\FV@OutFile}%
+\immediate\openout\FV@OutFile #1\relax%
+\let\FV@FontScanPrep\relax%
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+\let\@noligs\relax%
+%% DG/SR modification end
+\@bcode% <-- ajout au code initial
+\FV@Scan}%
+\def\FVE@VerbatimOut{%
+\@ecode% <-- ajout au code initial
+\immediate\closeout\FV@OutFile\endgroup\@esphack%
+}%
+%% fin de modification
+%
+\newcounter{imgcount}%
+\setcounter{imgcount}{0}%
+%
+\def\@preload{}%
+\def\@nom{\TgImgDir\jobname}%
+\def\@ext{pst}%
+\def\@loading{\input{\@nom.\@ext}}%
+\def\@cmdi{}%
+\def\@cmdii{}%
+%
+\define@choicekey{Tg}{export}{none,pst,pgf,eps,pdf,tex,epsc,pdfc,tkz,psf,teg,texsrc,html,\DefaultExport}[\DefaultExport]{%
+\gdef\@ext{#1}%
+\ifthenelse{\equal{#1}{pst}\or\equal{#1}{pgf}\or\equal{#1}{tex}\or\equal{#1}{psf}\or\equal{#1}{tkz}\or\equal{#1}{teg}}%
+{\def\@loading{\input{\@nom.#1}}}%
+{%else
+\ifthenelse{\equal{#1}{texsrc}}%
+{%then
+\def\@loading{\input{\@nom.tex}}}%
+{%else
+\ifthenelse{\equal{#1}{eps}\or\equal{#1}{epsc}}%
+{%then
+\def\@loading{\includegraphics{\@nom.eps}}}%
+{%else
+\ifthenelse{\equal{#1}{pdf}\or\equal{#1}{pdfc}}%
+{%then
+\def\@loading{\includegraphics{\@nom.pdf}}}%
+{%else
+\def\@loading{}}
+}%
+}%
+}%
+}%
+%
+\define@key{Tg}{name}{\def\@nom{\TgImgDir#1}}%
+\define@key{Tg}{preload}{\def\@preload{#1}}%
+\define@key{Tg}{cmdi}{\def\@cmdi{#1}}%
+\define@key{Tg}{cmdii}{\def\@cmdii{#1}}%
+%
+\define@boolkey{Tg}{call}[true]{%
+\ifKV@Tg@call%
+\def\@dep{\envtexgraph}%
+\def\@enddep{\endenvtexgraph}%
+\else%
+\def\@dep{\comment}%
+\def\@enddep{\endcomment}%
+\fi%
+}%
+%
+\define@boolkey{Tg}{auto}[true]{%
+\ifKV@Tg@auto%
+\else%
+\def\@loading{}%
+\fi%
+}%
+\define@boolkey{Tg}{src}[true]{%
+\ifKV@Tg@src%
+\def\@src{src}%
+\def\@loading{\input{\@nom.src}}%
+\else%
+\def\@src{nosrc}%
+\fi%
+}%
+%
+\define@boolkey{Tg}{file}[true]{%
+\ifKV@Tg@file%
+\gdef\@bcode{\@defaultbcode}%
+\gdef\@ecode{}%
+\else%
+\gdef\@bcode{\@defaultbcode\@addbcode}%
+\gdef\@ecode{\@defaultecode}%
+\fi%
+}%
+%
+\define@boolkey{Tg}{commandchars}[true]{%
+\ifKV@Tg@commandchars%
+\gdef\vrbout{\VerbatimOut[commandchars=\#\{\}]{\@nom.teg}}%
+\else%
+\gdef\vrbout{\VerbatimOut{\@nom.teg}}%
+\fi
+}%
+%
+\newcommand\teg@killienc{}% <- astuce due à mpg sur fctt pour une sortie utf8
+\@tempcnta128%
+\@whilenum\@tempcnta<\@cclvi\do{%
+\edef\teg@killienc{\teg@killienc\catcode\the\@tempcnta=12}%
+\advance\@tempcnta\@ne}%
+%
+\def\envtexgraph{%beginenvtexgraph
+\begingroup\teg@killienc% pour une sortie utf8
+\vrbout}%
+%
+\def\endenvtexgraph{%
+\endVerbatimOut%
+\endgroup%
+\immediate\write18{\TeXgraphDir CmdTeXgraph -\@ext\space -\@src\space \@nom}%
+}%fin
+%
+\ifDefaultCall%
+\presetkeys{Tg}{name=\jobname\theimgcount,export=\DefaultExport,commandchars=false,call,auto,file=false}{}%
+\else%
+\presetkeys{Tg}{name=\jobname\theimgcount,export=\DefaultExport,commandchars=false,call=false,auto,file=false}{}%
+\fi%
+\ifDefaultSrc\presetkeys{Tg}{src=true}{}\else\presetkeys{Tg}{src=false}{}\fi%
+%
+\newsavebox{\fig@box}%pour éviter les décalages parasites provoques par fancyvrb
+\newenvironment*{texgraph}[1][]{%
+\addtocounter{imgcount}{1}%
+\setkeys{Tg}{#1}%
+\setbox\fig@box\hbox%
+\bgroup%
+\@dep%
+}%
+{%
+\@enddep%
+\egroup%
+\gdef\@bcode{}%
+\gdef\@ecode{}%
+\gdef\@preload{}%
+\@cmdii{\@cmdi{\@loading}}%
+}%
+%
+%% definitions des attributs pour l'option src ou l'export texsrc
+\newcommand*{\TegSrcFontSize}{small}%
+\definecolor{TegIdentifier}{rgb}{0.5451,0.2706,0.0745}%
+\definecolor{TegComment}{rgb}{0.502,0.502,0.502}%
+\definecolor{TegNumeric}{rgb}{0.0000,0.5020,0.5020}%
+\definecolor{TegConstant}{rgb}{0.5020,0.5020,0.0000}%
+\definecolor{TegString}{rgb}{0,0,1}%
+\definecolor{TegSymbol}{rgb}{1,0,0}%
+\definecolor{TegKeyWord}{rgb}{0,0,0}%
+\definecolor{TegVarGlob}{rgb}{0.0000,0.0000,0.5020}%
+\definecolor{TegMacUser}{rgb}{0.5020,0.0000,0.5020}%
+\definecolor{TegVarPredef}{rgb}{0.0000,0.3922,0.0000}%
+\definecolor{TegMacPredef}{rgb}{0.5020,0.0000,0.0000}%
+\definecolor{TegParam}{rgb}{1.0000,0.0000,1.0000}%
+\definecolor{TegGraphElem}{rgb}{0.4392,0.5020,0.5647}%
+%
+%%%%%%%%%%%%%%%%%%%%%%% Environnement tegprog et commande tegrun %%%%%%%%%%%%%%%%%%%%%%
+\bgroup%
+\catcode`\#=12%
+\catcode`\~=14% commentaire
+\catcode`\%=12~
+\gdef\@tegprogbcode{~ début du programme
+\immediate\write\FV@OutFile{TeXgraph#}\@dopreload~
+\immediate\write\FV@OutFile{Var name = "\@nom";}~
+\immediate\write\FV@OutFile{    param = ReadData(Concat(name,".prm"),1);}~ chargement des paramètres dans la variable param
+\ifServerMode~ en mode serveur la macro Return et la variable outFile sont déjà définies
+\immediate\write\FV@OutFile{Cmd  outFile := Concat(name,".res");}~ fichier de sortie a redéfinir
+\else~
+\immediate\write\FV@OutFile{    outFile = Concat(name,".res");}~ fichier de sortie
+\immediate\write\FV@OutFile{Mac Return = WriteFile(outFile,Concat(Concat(Args()),"%"));}~ définition de la macro Return
+\fi~
+\immediate\write\FV@OutFile{Cmd OpenFile(outFile);}~ ouverture du fichier de sortie
+\ifKV@Tg@file\else\immediate\write\FV@OutFile{[}\fi~ par défaut on ouvre une liste dans la rubrique Cmd
+}~
+\egroup%
+%
+\newenvironment*{tegprog}[2][]{% définition de tegprog
+\setkeys{Tg}{#1}%options file ou commandchars
+\gdef\@nom{#2}%
+\gdef\@bcode{\@tegprogbcode}%
+\gdef\@ecode{%
+\ifKV@Tg@file\else\immediate\write\FV@OutFile{];}\fi% par défaut il faut fermer la liste après l'entrée du code
+\immediate\write\FV@OutFile{Cmd CloseFile(outFile);}}% on ferme le fichier de sortie pour l'enregistrer
+\setbox\fig@box\hbox%
+\bgroup%
+\vrbout%
+}%
+{%
+\endVerbatimOut%
+\egroup%
+\gdef\@bcode{}%
+\gdef\@ecode{}%
+}% fin de le définition de tegprog
+\newwrite\tegcode@Out%
+\newcommand*{\tegrun}[2]{%{nom}{param}
+\immediate\openout\tegcode@Out #1.prm\relax% ouverture du fichier de paramètres
+\immediate\write\tegcode@Out{#2}% écriture des paramètres
+\immediate\closeout\tegcode@Out\relax% fermeture du fichier de paramètres
+\immediate\write18{CmdTeXgraph -none -nosrc #1}% exécution du programme sans export
+\input{#1.res}% inclusion du fichier de sortie
+}%
+%
+%%%%%%%%%%%%%%%%%%%%%%% Fonctionnement en mode serveur %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifServerMode%
+\immediate\write18{\TeXgraphDir CmdTeXgraph server on}%
+\AtEndDocument{\immediate\write18{\TeXgraphDir CmdTeXgraph server off}}%
+%%%%%%%%%%%%%% Environnement tegcode %%%%%%%%%%%%%%%%%%%%%%
+\bgroup%
+\catcode`\#=12%
+\gdef\@tegcodebcode{% début du programme
+\immediate\write\FV@OutFile{TeXgraph#}%
+}\egroup%
+%
+\newenvironment*{tegcode}{% définition de tegcode
+\gdef\@bcode{\@tegcodebcode}%
+\setbox\fig@box\hbox%
+\bgroup%
+\VerbatimOut[commandchars=\#\{\}]{tegcode.teg}%
+}%
+{%
+\endVerbatimOut%
+\egroup%
+\gdef\@bcode{}%
+\immediate\write18{CmdTeXgraph -none -keep tegcode}% chargement du code en mémoire
+}% fin de la définition de tegcode
+% on définit maintenant la variable globale outFile et la macro Return
+\begin{tegcode}
+Var outFile = "tegdirect.res";
+Mac Return = WriteFile(outFile,Concat(Concat(Args()),"%"));
+\end{tegcode}
+%%%%%%%%%%%% définition \directTeg %%%%%%%%%%%%%%%
+\bgroup%
+\catcode`\#=12%
+\gdef\@tegdirectbcode{%
+\immediate\write\tegcode@Out{TeXgraph#}%
+\immediate\write\tegcode@Out{Cmd outFile := "tegdirect.res";}% définition du fichier de sortie
+\immediate\write\tegcode@Out{    OpenFile(outFile);}% ouverture du fichier de sortie
+\immediate\write\tegcode@Out{[}}% ouverture de la commande
+\egroup%
+\newcommand*{\directTeg}[1]{%
+\immediate\openout\tegcode@Out tegdirect.teg\relax%
+\@tegdirectbcode%
+\immediate\write\tegcode@Out{#1}% écriture de la commande
+\immediate\write\tegcode@Out{];}% fermeture commande
+\immediate\write\tegcode@Out{CloseFile(outFile);}% on ferme le fichier de sortie pour l'enregistrer
+\immediate\closeout\tegcode@Out\relax% fermeture du fichier
+\immediate\write18{CmdTeXgraph -none -nosrc tegdirect}% exécution de la commande
+\input{tegdirect.res}% inclusion du fichier de sortie
+}%
+\fi%
+\endinput%
+%%%%%%%%%%%%%%%% fin definition %%%%%%%%%%%%%%%%

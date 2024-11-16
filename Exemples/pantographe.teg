@@ -1,0 +1,65 @@
+TeXgraph#
+{version 2.0}
+Cmd
+	Window(-6+2*i, 4-6*i, 1+i); 
+	Margin(0.5, 0.5, 0.5, 0.5);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=0.5236, phi:=1.0472, IdMatrix3D(), ModelView(ortho)];
+	[GrayScale(0), ComptGraph:=12];
+
+Var
+    DotAff = [-5.35185185185185-2.4297520661157*i,-0.321193559207009-5.1034497837617*i,
+	0.95767195767196-3.56694214876033*i];
+    UseDot = [1,1,1];
+    CtrlColorDot = blue;
+    CtrlDotStyle = plus;
+    CtrlColorAssign = gray;
+    DelayAnim = 100;
+    SaveAnim = 0;
+    Dotperline = 25;
+    A = DotAff[1];
+    B = DotAff[2];
+    C = [$x:=abs(B-A)/2, $h:=sqrt(long^2-x^2), (A+B)/2+h*i*(B-A)/2/x];
+    D = (A+C/rapport)/(1+1/rapport);
+    E = (B/rapport+C)/(1+1/rapport);
+    F = E+D-C;
+    rapport = 2;
+    long = 5;
+    G = DotAff[3];
+    CaptureVer = 1.3;
+    lieuVer = 0.4;
+    DotName = ["A","B","G"];
+    AssignB = [3,Get(Cercle(G,2,%4))];
+
+Include
+	"MacrosAnim.mac";
+	"Capture.mac";
+	"lieu.mac";
+
+Mac
+    Nom = "pentographe";
+
+    Init = ReCalc();
+
+Cmd	[Width:=8,Color:=8344917,MouseCode:=0,FillColor:=255,tMin:=-5,tMax:=5,DotStyle:=2,DotScale:=1+i,LabelStyle:=1];
+Graph pantographe = Ligne([ A,C,B, jump,E,F,D ],0);
+Cmd	[Color:=16711680,FillStyle:=2,FillColor:=1,DotStyle:=4];
+Graph LabA = LabelDot(A,"A","N",1);
+Cmd	[Color:=0,DotStyle:=1];
+Graph LabD = LabelDot(D,"$D$","NO",1);
+Graph LabE = LabelDot(E,"$E$","E",1);
+Cmd	[Width:=2,Color:=255,FillColor:=16777215];
+Graph LabF = LabelDot(F,"$F$","E",1);
+Cmd	[Color:=0,FillStyle:=0,FillColor:=1,tMin:=-4.3474,tMax:=5.6526,DotStyle:=4];
+Graph LabB = [
+	Color:=CtrlColorAssign, DotScale:=CtrlDotScale, DotStyle:=CtrlDotStyle, Width:=8,
+	
+	LabelDot(B,"B","N",1)
+	];
+Cmd	[Width:=8,FillStyle:=2,DotStyle:=1];
+Graph LabC = LabelDot(C,"$C$","N",1);
+Cmd	[Color:=16711680,FillColor:=16777215,DotStyle:=4];
+Graph LabG = LabelDot(G,"G","N",1);
+Cmd	[Width:=2,Color:=0,FillStyle:=0,FillColor:=1];
+Graph cercle = Cercle(G,2);

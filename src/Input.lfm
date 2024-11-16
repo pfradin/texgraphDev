@@ -1,0 +1,97 @@
+object InputForm: TInputForm
+  Left = 769
+  Height = 390
+  Top = 297
+  Width = 595
+  HorzScrollBar.Page = 594
+  VertScrollBar.Page = 389
+  ActiveControl = Edit1
+  BorderIcons = []
+  Caption = 'InputForm'
+  ClientHeight = 390
+  ClientWidth = 595
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.3'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Edit1
+    Left = 1
+    Height = 323
+    Top = 1
+    Width = 593
+    Alignment = taCenter
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = False
+    BorderSpacing.Left = 1
+    BorderSpacing.Top = 1
+    BorderSpacing.Right = 1
+    Caption = 'Label1'
+    Color = clSilver
+    ParentColor = False
+    Transparent = False
+    WordWrap = True
+  end
+  object Edit1: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Cursor = crIBeam
+    Left = 0
+    Height = 27
+    Top = 324
+    Width = 595
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Bottom = 4
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Button1: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 112
+    Height = 30
+    Top = 355
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object Button2: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 260
+    Height = 30
+    Top = 355
+    Width = 75
+    Anchors = [akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object Button3: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 408
+    Height = 30
+    Top = 355
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Attributes'
+    OnClick = Button3Click
+    TabOrder = 3
+  end
+end

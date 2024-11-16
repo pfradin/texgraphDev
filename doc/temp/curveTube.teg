@@ -1,0 +1,6 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0), size(7.5),
+S:=curveTube([i*t,2.5*sin(t)],0.75,-pi,pi,50,12),
+DrawFlatFacet(S,[color:=darkseagreen])
+];

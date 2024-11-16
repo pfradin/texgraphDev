@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+view(-7,7,-7,7), Marges(0,0,0,0),
+size(7.5), FillStyle:=full,
+FillColor:=lightblue,
+Dsurface( M(u,v,cos(u)+sin(v)),
+          -5+5*i,
+          -5+5*i, 25+25*i)
+];

@@ -1,0 +1,15 @@
+TeXgraph#
+Graph image = [
+view(-1.5,1.5,-1,1), Marges(0,0,0,0), size(7.5),
+NewBitmap(), T:=100, m:=MaxPixels(), c:=-0.181-0.667*i,
+for x from 0 to Re(m) do
+ Pixel(
+   for y from 0 to Im(m) do
+     N:=0, z:=Pixel2Scr(x+i*y),
+     repeat
+       z:=z^2+c, Inc(N,1)
+     until (N=T) Or (abs(z)>2) od,
+     x+i*y, MixColor(darkred,1-N/T,yellow,N/T)
+ od)
+od
+];

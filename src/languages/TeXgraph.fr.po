@@ -1,0 +1,2255 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: untres.tg10carmax
+msgid ""
+msgstr "(10 car. max, commence par une lettre)"
+
+#: untres.tgaccfmissing
+msgid ""
+msgstr "Fin de commentaire \"}\" manquante."
+
+#: untres.tgaccomissing
+msgid ""
+msgstr "Début de commentaire \"{\" manquante."
+
+#: untres.tgaide
+msgid ""
+msgstr "Aide"
+
+#: untres.tgall
+msgid ""
+msgstr "Tout"
+
+#: untres.tgallhint
+msgid ""
+msgstr "Supprimer tout"
+
+#: untres.tgand
+msgid ""
+msgstr " et "
+
+#: untres.tgapropos
+msgid ""
+msgstr "A propos"
+
+#: untres.tgarcbutton
+msgid ""
+msgstr "Arc de cercle (Alt+A)"
+
+#: untres.tgasksavefile
+msgid ""
+msgstr "Voulez-vous sauvegarder"
+
+#: untres.tgattributes
+msgid ""
+msgstr "Attributs"
+
+#: untres.tgattributeshint
+msgid ""
+msgstr "Modifier les attributs"
+
+#: untres.tgattributesselection
+msgid ""
+msgstr "Attributs-Sélection"
+
+#: untres.tgattributeswin
+msgid ""
+msgstr "Attributs-"
+
+#: untres.tgaxes
+msgid ""
+msgstr "Axes"
+
+#: untres.tgmessageinterrupted
+msgid ""
+msgstr "Interrompu."
+
+#: untres.TgExecuter
+msgid ""
+msgstr "Exécuter"
+
+#: untres.tgaxeshelp
+msgid ""
+msgstr ""
+"[//draw(\"axes\", [A,Xpas+i*Ypas], [options]) : dessine les axes avec A comme origine\n\n"
+"draw(\"axes\",\n"
+"   [0,1+i],     //affixe du point A et pas sur Ox et sur Oy\n"
+"   [//options locales et valeurs par défaut:\n"
+"    showaxe:=[1,1], // affichage ou non des axes (0/1), [1,1] par défaut\n"
+"    drawbox:=0, //affichage ou non d'une boite graduée (0/1), 0 par défaut\n"
+"    title:="", //titre, uniquement si drawbox vaut 1\n"
+"  //graduations\n"
+"    limits:=[jump,jump], //[N1+i*N2, N1+i*N2] intervalle représentant le segment [A+N1*u, A+N2*u], jump par défaut pour la droite\n"
+"    gradlimits:=[jump,jump], //[N1+i*N2, N1+i*N2] intervalle des graduations (entières), égal à limits par défaut\n"
+"    unit:=[1,1], //valeur d'une graduation, [1,1] par défaut\n"
+"    nbsubdiv:=[0,0], //nombre de nbsubdivisions par unité, [0,0] par défaut\n"
+"    tickpos:=[0.5,0.5], //position des graduations (dans [0;1]), [0.5,0.5] par défaut\n"
+"    tickdir:=[jump,jump], //direction des graduations (jump par défaut pour orthogonal)\n"
+"    xyticks:=[0.2,0.2], //longueur des graduations, [0.2,0.2] par défaut\n"
+"    xylabelsep:=[0.1,0.1], //distance labels-graduations, [0.1,0.1] par défaut\n"
+"  //origine\n"
+"    originpos:=[right,top], //position du label origine (center/jump/center/left/right), [right,top] par défaut\n"
+"    originloc:=jump, //complexe représentant l'origine des graduations, jump signifie que c'est A\n"
+"    originnum:=[0,0], //les labels sont: (originnum + unit*n)\"labeltext\"/labelden, [0,0] par défaut\n"
+"  //labels\n"
+"    labelpos:=[bottom,left], //position des labels par rapport aux axes (jump=pas de label), [bottom, left] par défaut\n"
+"    labelden:=[1,1], //dénominateur (entier) des labels, [1,1] par défaut\n"
+"    labeltext:=[\"\",\"\"], //texte ajouté aux labels, vide par défaut\n"
+"    labelstyle:=[top,right], //style des labels (ortho, right, left,...), [top,right] par défaut\n"
+"    labelshift:=[jump,jump], //décalage systématique des labels le long de l'axe, jump=auto si grid=1\n"
+"    nbdeci:=[2,2], //nb de décimales, [2,2] par défaut\n"
+"    numericFormat:=[0,0], //format d'affichage, (0=défaut, 1=scientifique, 2=ingénieur), [0,0] par défaut\n"
+"    myxlabels := Nil, //liste de labels personnels sur Ox de la forme [index1, texte1 index2, texte2, ...],\n"
+"     //index1 est l'abscisse sur l'axe gradué [A,Xpas], si la partie imaginaire de index1 est non nulle,\n"
+"     //un point est dessiné (with DotStyle).\n"
+"    myylabels := Nil, //liste de labels personnels sur Oy de la forme [index1, texte1 index2, texte2, ...],\n"
+"     //index1 est l'abscisse sur l'axe gradué [A,i*Ypas], si la partie imaginaire de index1 est non nulle,\n"
+"     //un point est dessiné (with DotStyle).\n"
+"  //légende\n"
+"    legend:=[\"\",\"\"], //légendes des axes, vides par défaut\n"
+"    legendpos:=[0.975,0.975], // position de la légende le long des axes, [0.975,0.975] par défaut\n"
+"    legendsep:=[0.5,0.5], //distance aux axes, [0.5,0.5] par défaut\n"
+"    legendangle:=[jump,jump], //angle en degrés, jump pour parallèle à l'axe, [jump,jump] par défaut\n"
+"  //grille\n"
+"    grid:=0, //affichage d'une grille ou non (0/1), 0 par défaut\n"
+"    gridstyle:=solid, //style de ligne de la grille principale, solid par défaut\n"
+"    subgridstyle:=solid, //style de ligne de la grille secondaire, solid par défaut\n"
+"    gridcolor:=gray, //couleur grille principale, gray par défaut\n"
+"    subgridcolor:=lightgray, //couleur grille secondaire, lightgray par défaut\n"
+"    gridwidth:=Nil, //épaisseur trait grille principale (celle des graduations principales par défaut)\n"
+"    subgridwidth:=Nil, //épaisseur trait grille secondaire (celle des graduations secondaires par défaut)\n"
+"  //Autres\n"
+"    Arrows:=1\n"
+"   ])\n"
+"]"
+
+#: untres.tggridhelp
+msgid ""
+msgstr ""
+"[//draw(\"grid\", [coin inf gauche, coin sup droit], [options]) : dessine une grille dans la zone spécifiée\n\n"
+"draw(\"grid\",\n"
+"   [-5-5*i,5+5*i],     //coin inf gauche, coin sup droit\n"
+"   [//options locales et valeurs par défaut\n"
+"    unit:=[1,1], //unités sur les axes,  [1,1] par défaut\n"
+"    nbsubdiv:=[0,0], //nombre de nbsubdivisions par unité, [0,0] par défaut\n"
+"    gridstyle:=solid, //style de ligne de la grille principale, solid par défaut\n"
+"    subgridstyle:=solid, //style de ligne de la grille secondaire, solid par défaut\n"
+"    gridcolor:=gray, //couleur grille principale, gray par défaut\n"
+"    subgridcolor:=lightgray, //couleur grille secondaire, lightgray par défaut\n"
+"    gridwidth:=8, //épaisseur trait grille principale, 8 par défaut\n"
+"    subgridwidth:=4, //épaisseur trait grille secondaire, 4 par défaut\n"
+"    originloc:=jump, //complexe représentant l'origine des graduations, jump signifie que c'est le coin inférieur gauche\n"
+"   ])\n"
+"]"
+
+#: untres.tgbezier
+msgid ""
+msgstr "Bézier"
+
+#: untres.tgbezierhelp
+msgid ""
+msgstr ""
+"[//draw(\"bezier\",[A1,c1,c2,A2,c3,c4,A3,...], [options]) :\n"
+"//dessine une courbe de bézier passant par A1,...,An.\n"
+"//Les points c1,c2,c3,c4,... sont les points de contrôle,\n"
+"//deux points de contrôle consécutifs peuvent être remplacés par un jump pour représenter un segment.\n"
+"draw(\"bezier\",\n"
+"   [-2, -1+i, i, 1, jump, 1-i, jump, -2-i, jump, -2],  //liste [A1,c1,c2,A2,c3,c4,A3,...]\n"
+"   [//options locales pour le tracé : celles de path, exemple :\n"
+"    marker:=Nil\n"
+"   ]),\n"
+"]"
+
+#: untres.tgborder
+msgid ""
+msgstr "Exporter la bordure"
+
+#: untres.tgbottom
+msgid ""
+msgstr "Bas"
+
+#: untres.tgbuttonexists
+msgid ""
+msgstr "Ce bouton existe déjà"
+
+#: untres.tgcamera
+msgid ""
+msgstr "Caméra"
+
+#: untres.tgcamerahelp
+msgid ""
+msgstr "La caméra est toujours dirigée vers l'origine sur l'axe porté par un vecteur unitaire normal au plan de projection (\\n), ce plan passe par l'origine."
+
+#: untres.tgcannotcreatefile
+msgid ""
+msgstr "Impossible de créer le fichier"
+
+#: untres.tgcartesian
+msgid ""
+msgstr "Cartésienne"
+
+#: untres.tgcartesianhelp
+msgid ""
+msgstr ""
+"[//draw(\"cartesian\", f(x), [options]) : dessine une courbe cartésienne\n\n"
+"draw(\"cartesian\",\n"
+"   x^2,  //expression f(x)\n"
+"   [//options locales et valeurs par défaut\n"
+"    x:=[-5,5],  //représente l'intervalle de tracé, [tMin,tMax] par défaut\n"
+"    discont:=0, //discontinuités ou non (0/1)\n"
+"    nbdiv:=5,   //niveau de subdivision du pas\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color, NbPoints...\n"
+"    \n"
+"   ])\n"
+"]"
+
+#: untres.tgcat_dothelp
+msgid ""
+msgstr ""
+"[//draw(\"dot\",liste de points, [options]) : dessine un nuage de points\n\n"
+"draw(\"dot\",\n"
+"   [for k from 1 to 6 do exp(i*k*pi/3) od],  //liste de points\n"
+"   [//options locales pour le tracé : Color, DotStyle, DotScale...\n"
+"   ]),\n"
+"]"
+
+#: untres.tgcentralproj
+msgid ""
+msgstr "[3D] projection centrale"
+
+#: untres.tgchangeunit
+msgid ""
+msgstr "Changer de repère à l'export"
+
+#: untres.tgchemin
+msgid ""
+msgstr "Path"
+
+#: untres.tgchercher
+msgid ""
+msgstr "Chercher"
+
+#: untres.tgchercherregexp
+msgid ""
+msgstr "Chercher (RegExp)"
+
+#: untres.tgchoixdensite
+msgid ""
+msgstr "Créer une image pour"
+
+#: untres.tgchoixexport
+msgid ""
+msgstr "Export"
+
+#: untres.tgcirclearc
+msgid ""
+msgstr "Arc de cercle"
+
+#: untres.tgclipboardcaption
+msgid ""
+msgstr "Presse-papier"
+
+#: untres.tgclose
+msgid ""
+msgstr "Fermer"
+
+#: untres.tgcoller
+msgid ""
+msgstr "Coller"
+
+#: untres.tgcolor
+msgid ""
+msgstr "Exporter les couleurs"
+
+#: untres.tgcoloration
+msgid ""
+msgstr "Coloration"
+
+#: untres.tgcombobox3
+msgid ""
+msgstr "Résolution écran"
+
+#: untres.tgcommand
+msgid ""
+msgstr "Commande= (F2 pour la complétion)"
+
+#: untres.tgcommandline
+msgid ""
+msgstr "Commande ="
+
+#: untres.tgcomment
+msgid ""
+msgstr "Exporter les commentaires"
+
+#: untres.tgconfigfile
+msgid ""
+msgstr "Ouvrir le fichier de configuration"
+
+#: untres.tgconfigfileform
+msgid ""
+msgstr "Fichier de configuration"
+
+#: untres.tgconversion
+msgid ""
+msgstr "Conversion (soyez patient)"
+
+#: untres.tgcopier
+msgid ""
+msgstr "Copier"
+
+#: untres.tgcopier_en_html
+msgid ""
+msgstr "Copier en html"
+
+#: untres.tgcopier_en_tex
+msgid ""
+msgstr "Copier en TeX"
+
+#: untres.tgcopyclose
+msgid ""
+msgstr "Copier et fermer"
+
+#: untres.tgcouper
+msgid ""
+msgstr "Couper"
+
+#: untres.tgcreate
+msgid ""
+msgstr "Créer"
+
+#: untres.tgcrochetsnonequilibres
+msgid ""
+msgstr "Crochets non équilibrés"
+
+#: untres.tgcubicspline
+msgid ""
+msgstr "Spline cubique"
+
+#: untres.tgcurves
+msgid ""
+msgstr "Courbes"
+
+#: untres.tgdataerror
+msgid ""
+msgstr "Données corrompues dans "
+
+#: untres.tgdefinition
+msgid ""
+msgstr "Définir"
+
+#: untres.tgdelete
+msgid ""
+msgstr "Suppr."
+
+#: untres.tgdeletehint
+msgid ""
+msgstr "Supprimer la sélection"
+
+#: untres.tgdelpicture
+msgid ""
+msgstr "Supprimer l'image"
+
+#: untres.tgdensite1
+msgid ""
+msgstr "écran (96 dpi)  "
+
+#: untres.tgdensite2
+msgid ""
+msgstr "imprimante (300 dpi)  "
+
+#: untres.tgdistance
+msgid ""
+msgstr "Distance caméra - origine"
+
+#: untres.tgdocpdf
+msgid ""
+msgstr "Ouvrir doc pdf"
+
+#: untres.tgTeXgraph_Docpdf
+msgid ""
+msgstr "Doc de TeXgraph"
+
+#: untres.tgMouse_Docpdf
+msgid ""
+msgstr "Doc de Mouse"
+
+#: untres.tgModels_Docpdf
+msgid ""
+msgstr "Doc des modèles"
+
+#: untres.tgdothelp
+msgid ""
+msgstr ""
+"* DotScale := scaleX + i*scaleY\n"
+"Permet d'augmenter ou réduire la taille du point, quand la partie imaginaire est nulle, on convient que scaleY=scaleX.\n"
+"Par défaut DotScale vaut 1.\n"
+"* DotAngle := angle en degrees (0 par défaut).\n"
+"* DotSize := nb1 + i*nb2\n"
+"nb1 et nb2 sont deux longueurs sont exprimées en points (pt), le diamètre du point est nb1 + nb2 x (épaisseur de ligne).\n"
+"DotSize default value is 2+2*i.\n"
+
+#: untres.tgdownloads
+msgid ""
+msgstr "Télécharger avec"
+
+#: untres.tgdroite
+msgid ""
+msgstr "Droite"
+
+#: untres.tgdroitehelp
+msgid ""
+msgstr ""
+"[//draw(\"straightL\",a*x+b*y=c ou [a,b,c] ou [A,B], [options]) : trace une droite\n"
+"draw(\"straightL\",\n"
+"   2*x-y=1,   //équation ou liste de deux points\n"
+"   [//options locales et valeurs par défaut\n"
+"    anchor:=Nil,    //affixe pour imposer la position d'un éventuel label\n"
+"    rotation:=1,    //pour tourner ou non l'éventuel label (0/1)\n"
+"    labelpos:=0.5,  //nombre dans [0;1] position du label le long du segment (si anchor=Nil)\n"
+"    labelsep:=0.35, //distance du label à la droite\n"
+"    legend:=\"\",    //pour définir un label\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color,...\n"
+"    \n"
+"   ]),\n"
+"]"
+
+#: untres.tgedit
+msgid ""
+msgstr "Edition"
+
+#: untres.tgeditatext
+msgid ""
+msgstr "Editer un texte"
+
+#: untres.tgeditionfont
+msgid ""
+msgstr "Fonte pour l'édition"
+
+#: untres.tgeditwindow
+msgid ""
+msgstr "Fenêtre d'édition"
+
+#: untres.tgeffacer
+msgid ""
+msgstr "Nettoyer tout"
+
+#: untres.tgarchelp
+msgid ""
+msgstr ""
+"[//draw(\"arc\",[B,A,C,r,sens],[options])\n"
+"//dessine un arc de cercle de centre A, de rayon r, allant de B à C \n"
+"//dans le sens trigo ou inverse\n\n"
+"draw(\"arc\",\n"
+"  [1+i,     //affixe du point B\n"
+"   0,       //affixe du point A\n"
+"   1,       //affixe du point C\n"
+"   2,       //rayon r\n"
+"   -1],     //sens 1=trigo, -1=inverse\n"
+"   [//options locales pour le tracé : celles de path, exemple :\n"
+"    marker:=Nil\n"
+"   ])\n"
+"]"
+
+#: untres.tgellipse
+msgid ""
+msgstr "Ellipse (Ctrl+C)"
+
+#: untres.tgellipsearc
+msgid ""
+msgstr "Arc d'ellipse (Alt+Maj+A)"
+
+#: untres.tgellipsecercle
+msgid ""
+msgstr "Cercle ou ellipse"
+
+#: untres.tgellipsehelp
+msgid ""
+msgstr ""
+"[//draw(\"ellipse\",[centre, rayonX, rayonY, inclinaison], [options]) :\n"
+"//dessine une ellipse. L'inclinaison est en degrés, par rapport à Ox.\n"
+"//L'inclinaison est facultative et vaut 0 par défaut.\n\n"
+"draw(\"ellipse\",\n"
+"  [0,     //affixe du centre\n"
+"   3,     //rayonX\n"
+"   2,     //rayonY\n"
+"   0],    //inclinaison en degrés\n"
+"   [//options locales pour le tracé : celles de path, exemple :\n"
+"    marker:=Nil\n"
+"   ]),\n"
+"]"
+
+#: untres.tgellipticarc
+msgid ""
+msgstr "Arc elliptique"
+
+#: untres.tgellipticarchelp
+msgid ""
+msgstr ""
+"[//draw(\"ellipticArc\",[B,A,C,rX,rY,sens,inclinaison],[options])\n"
+"//dessine un arc d'ellipse de centre A, de rayons rX et rY, allant de B à C \n"
+"//dans le sens trigo ou inverse,\n"
+"//et avec une inclinaison par rapport à Ox (0 degré par défaut)\n\n"
+"draw(\"ellipticArc\",\n"
+"  [1+i,     //affixe du point B\n"
+"   0,       //affixe du point A\n"
+"   1,       //affixe du point C\n"
+"   2,       //rayon rX\n"
+"   3,       //rayon rY\n"
+"   1,       //sens 1=trigo, -1=inverse\n"
+"   0],      //inclinaison en degré\n"
+"   [//options locales pour le tracé : celles de path, exemple :\n"
+"    marker:=Nil\n"
+"   ])\n"
+"]"
+
+#: untres.tgcirclehelp
+msgid ""
+msgstr ""
+"[//Dcircle(O,R,Nil,(options]) ou Dcircle(A,B,C,[options]) : dessine le\n"
+"//cercle de centre O et de rayon R, ou passant par trois points A,B et C\n\n"
+"Dcircle(\n"
+"   0,       //affixe du centre ou d'un point du cercle\n"
+"   1,       // rayon ou affixe d'un deuxième point\n"
+"   Nil,     //Nil ou troisième point\n"
+"   []       //liste des options, ex: LineStyle:=userdash\n"
+"    )\n"
+"]"
+
+#: untres.tgdparallelhelp
+msgid ""
+msgstr ""
+"[//Dparallel([A,B], C, [options]) : dessine la\n"
+"//parallèle à une droite [A,B] passant par un point C\n\n"
+"Dparallel(\n"
+"   [0, 1], //affixes de deux points A et B de la droite\n"
+"   i,      //affixe du point C\n"
+"   []      //liste des options, ex: LineStyle:=userdash\n"
+"    )\n"
+"]"
+
+#: untres.tgdperphelp
+msgid ""
+msgstr ""
+"[//Dperp([A,B], C, angle droit, [options]) : dessine la\n"
+"//perpendiculaire à une droite [A,B] passant par un point C\n\n"
+"Dperp(\n"
+"   [0, 1], //affixes de deux points A et B de la droite\n"
+"   i,      //affixe du point C\n"
+"   0,      //dessine ou non un angle droit (0/1)\n"
+"   []      //liste des options, ex: LineStyle:=userdash\n"
+"    )\n"
+"]"
+
+#: untres.tgdmedhelp
+msgid ""
+msgstr ""
+"[//Dmed(A, B, angle droit, [options]) : dessine la\n"
+"//médiatrice du segment [A,B]\n\n"
+"Dmed(\n"
+"   0,      //affixe du point A\n"
+"   i,      //affixe du point B\n"
+"   0,      //dessine ou non un angle droit (0/1)\n"
+"   []      //liste des options, ex: LineStyle:=userdash\n"
+"    )\n"
+"]"
+
+#: untres.tgdbissechelp
+msgid ""
+msgstr ""
+"[//Dbissec(B, A, C, intérieure, [options]) : dessine la\n"
+"//bissectrice de l'angle BAC\n\n"
+"Dbissec(\n"
+"   i,      //affixe du point B\n"
+"   0,      //affixe du point A\n"
+"   1,      //affixe du point C\n"
+"   1,      //intérieure ou non (0/1)\n"
+"   []      //liste des options, ex: LineStyle:=userdash\n"
+"    )\n"
+"]"
+
+#: untres.tgdparallelohelp
+msgid ""
+msgstr ""
+"[//Dparallelo(A,B,C, [options]) : dessine un parallèlogramme\n"
+"//défini par trois sommets consécutifs, A, B et C\n\n"
+"Dparallelo(\n"
+"   0,      //affixe du point A\n"
+"   1,      //affixe du point B\n"
+"   2+i,    //affixe du point C\n"
+"   []      //liste des options, ex: [radius:=0.25, Width:=12]\n"
+"    )\n"
+"]"
+
+#: untres.tgdrectanglehelp
+msgid ""
+msgstr ""
+"[//Drectangle(A,B,C, [options]) : dessine un rectangle défini par deux sommets consécutifs\n"
+"//A, B, et un point C du côté opposé\n\n"
+"Drectangle(\n"
+"   0,      //affixe du point A\n"
+"   1,      //affixe du point B\n"
+"   3+2*i,  //affixe du point C\n"
+"   []      //liste des options, ex: [radius:=0.25, Width:=12]\n"
+"    )\n"
+"]"
+
+#: untres.tgdpolyreghelp
+msgid ""
+msgstr ""
+"[//Dpolyreg(centre,sommet,nb côtés,[options]) ou Dpolyreg(sommet1,sommet2,nb côtés +sens*i,[options])\n"
+"//dessine un polygone régulier défini le nb de côtés et le centre et un sommet,\n"
+"//ou bien deux sommets consécutifs et le sens (trigo ou inverse)\n\n"
+"Dpolyreg(\n"
+"   0,      //affixe du centre (ou sommet1)\n"
+"   1,      //affixe d'un sommet (ou sommet2)\n"
+"   3,      //nb côtés (ou nb côtes+sens*i avec sens=+/-1)\n"
+"   []      //liste des options, ex: [radius:=0.25, Width:=12]\n"
+"    )\n"
+"]"
+
+#: untres.tgmarkseghelp
+msgid ""
+msgstr ""
+"[//markseg(A,B,n,espacement,longueur, degrés) :\n"
+"//marque un segment [A;B] avec n hachures (traits penchés)\n\n"
+"markseg(\n"
+"   -1,      //affixe du point A\n"
+"   1,       //affixe du point B\n"
+"   2,       //nombre n de hachures\n"
+"   0.15,    //espacement entre deux hachures\n"
+"   0.45,    //longueur d'une hachure\n"
+"   45       //angle en degrés par rapport à (AB)\n"
+"    )\n"
+"]"
+
+#: untres.tgmarkanglehelp
+msgid ""
+msgstr ""
+"[//markangle(B,A,C,r,n,espacement,longueur)\n"
+"//marque un angle BAC, de rayon r et de sens direct, avec n hachures)\n\n"
+"markangle(\n"
+"   1+2*i,   //affixe du point B\n"
+"   0,       //affixe du point A\n"
+"   1,       //affixe du point C\n"
+"   1,       //valeur du rayon r\n"
+"   2,       //nombre n de hachures\n"
+"   0.1,     //espacement entre deux hachures\n"
+"   0.45,    //longueur d'une hachure\n"
+"    )\n"
+"]"
+
+#: untres.tgddroitehelp
+msgid ""
+msgstr ""
+"[//Ddroite(A,B, [options]) : dessine une demi-droite [A,B)\n\n"
+"Ddroite(\n"
+"   0,       //affixe du point A\n"
+"   1+i,     //affixe du point B\n"
+"   []      //options, ex: [legend:=\"$D$\",labelpos:=0.5,labeldir:=\"S\"]\n"
+"    )\n"
+"]"
+
+#: untres.tgintersechelp
+msgid ""
+msgstr ""
+"[//Dessine les points d'intersection de deux objets graphiques.\n"
+"//Intersec( objet1, objet2) : renvoie la liste de ces points\n\n"
+"draw(\"dot\",\n"
+"   Intersec(\n"
+"     Cercle(0,1),     //nom de l'objet1 ou commande graphique\n"
+"     Cartesian(x^2)   //nom de l'objet2 ou commande graphique\n"
+"   ),\n"
+"   []      //options locales de dot, ex: [Color:=blue, DotStyle:=circle]\n"
+"    )\n"
+"]"
+
+#: untres.tggraddroitehelp
+msgid ""
+msgstr ""
+"[//draw(\"gradLine\", [A,u], <options>) trace la droite (A,u) et les graduations A+n*u avec n entier\n\n"
+"draw(\"gradLine\",\n"
+"   [0,1],   //affixe du point A et du vecteur u\n"
+"   [//liste des options possibles et valeurs par défaut\n"
+"    showaxe:=1, // affichage ou non de l'axe (0/1), 1 par défaut\n"
+"    limits:=jump, //N1+i*N2 intervalle représentant [A+N1*u, A+N2*u], jump par défaut pour toute la droite\n"
+"    gradlimits:= jump, //N1+i*N2 intervalle des graduations (entières), égal à limits par défaut\n"
+"    unit:=1, //valeur d'une graduation, 1 par défaut\n"
+"    nbsubdiv:=0, //nombre de subdivisions par unité (0 par défaut)\n"
+"    tickpos:=0.5, // nombre dans [0;1], 0.5 par défaut\n"
+"    tickdir:=ortho, //direction graduations, ortho par défaut\n"
+"    xyticks:=0.2, // longueur des graduations, 0.2 par défaut\n"
+"    xylabelsep:=0.1, //distance labels-graduations, 0.1 par défaut\n"
+"    originpos:=center, // valeurs : jump/center/left/right, center par défaut\n"
+"    originnum:=0, //les labels affichés sont: (originnum + unit*n)\"labeltext\"/labelden, 0 par défaut\n"
+"    legend:=\"\", //légende de l'axe, vide par défaut\n"
+"    legendpos:=0.9, //position de la légende le long de la droite, 0.9 par défaut\n"
+"    legendsep:=0.5, //distance à l'axe, 0.5 par défaut\n"
+"    legendangle:=jump, //angle en degrés, jump par défaut (parallèle à l'axe)\n"
+"    labelpos:=bottom, //valeurs: jump/top/bottom (positions par rapport à l'axe), bottom par défaut\n"
+"    labelden:=1, //dénominateur des labels (entier), 1 par défaut\n"
+"    labeltext:=\"\", //texte ajouté aux labels, vide par défaut\n"
+"    labelstyle:=ortho, //valeurs :right, left,..., ortho par défaut\n"
+"    labelshift:=0, //décalage systématique des labels, 0 par défaut\n"
+"    nbdeci:=2, //nb de décimales, 2 par défaut\n"
+"    numericFormat:=0, //format d'affichage, (0=défaut, 1=scientifique, 2=ingénieur), 0 par défaut\n"
+"    mylabels := Nil, //liste de labels personnels de la forme [index1, texte1 index2, texte2, ...],\n"
+"     //index1 est l'abscisse sur l'axe gradué [A,u], si la partie imaginaire de index1 est non nulle,\n"
+"     //un point est dessiné (with DotStyle).\n"
+"    // Autres options locales supplémentaires, ex Color, LineStyle,...\n"
+"\n"
+"    ])\n"
+"]"
+
+#: untres.tgdsurfacehelp
+msgid ""
+msgstr ""
+"[//Dsurface(f(u,v), uMin+i*uMax, vMin+i*vMax, uNbLg+i*vNbLg, smooth+i*contraste)\n"
+"//dessine une surface paramétrée par f(u,v), à valeurs dans l'espace.\n\n"
+"Dsurface(\n"
+"   M(u,v,sin(u)+cos(v)),   //paramétrage, on peut aussi écrire [u+i*v,sin(u)+cos(v)]\n"
+"   -2*pi+2*i*pi, //uMin+i*uMax : intervalle pour le paramètre u\n"
+"   -2*pi+2*i*pi, //vMin+i*vMax : intervalle pour le paramètre v\n"
+"    35+i*35,   //uNbLg+i*vNbLg : nombre de sudivisions pour u et pour v\n"
+"    i          //smooth+i*contraste (smooth=0/1 et contraste entre 0 et 1, utilise FillColor)\n"
+"    )\n"
+"]"
+
+#: untres.tgaxes3dhelp
+msgid ""
+msgstr ""
+"[//Axes3D(Ox, Oy, Oz, gradX, gradY, gradZ)\n"
+"//dessine les axes dans l'espace.\n\n"
+"Axes3D(\n"
+"   0, // abscisse de l'origine\n"
+"   0, // ordonnée de l'origine\n"
+"   0, // cote de l'origine\n"
+"   1, // pas de la graduation sur Ox\n"
+"   1, // pas de la graduation sur Oy\n"
+"   1, // pas de la graduation sur Oz\n"
+"    )\n"
+"]"
+
+#: untres.tgboxaxes3dhelp
+msgid ""
+"[//BoxAxes3D(option1, option2,...)\n"
+"//dessine les axes dans l'espace. Voir l'aide pour la liste des options.\n\n"
+"BoxAxes3D(\n"
+"   grid:=1, // montre la grille\n"
+"   xlimits:=[-3,3], // intervalle pour x\n"
+"   ylimits:=[-3,3], // intervalle pour y\n"
+"   zlimits:=[-3,3], // intervalle pour z\n"
+"   FillStyle:=full, // remplissage de la grille\n"
+"   FillColor:=lightgray, \n"
+"    )\n"
+"]"
+
+#: untres.tgcourbe3dhelp
+msgid ""
+msgstr ""
+"[//Courbe3D( M(x(t), y(t), z(t)), nombre de divisions, discontinuité (0/1))\n"
+"//dessine une courbe paramétrique dans l'espace, t dans [tMin, tMax]\n\n"
+"Courbe3D( M(\n"
+"    2*cos(t) , //x(t)\n"
+"    t/2,       //y(t)\n"
+"    2*sin(t)   //z(t)\n"
+"           ),\n"
+"    5, // nombre de divisions\n"
+"    0, // discontinuité (0/1)\n"
+"    )\n"
+"]"
+
+#: untres.tgdconehelp
+msgid ""
+msgstr ""
+"[//Dcone(sommet, vecteur, rayon, mode)\n"
+"//dessine un cône depuis son sommet, avec un vecteur de l'axe, et un rayon \n"
+"//le mode peut être 0 = fil de fer, 1 = lignes visibles (éventuellement remplissage), 2 = lignes visibles + arêtes cachées (éventuellement remplissage).\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n\n"
+"Dcone(\n"
+"    M(0,0,0), // sommet (point 3D)\n"
+"    3*vecK,   // vecteur de l'axe\n"
+"    2,        // rayon à la base\n"
+"    0         // mode de tracé\n"
+"    )\n"
+"]"
+
+#: untres.tgdcylindrehelp
+msgid ""
+msgstr ""
+"[//Dcylindre(sommet, vecteur, rayon, mode)\n"
+"//dessine un cylindre depuis un point, avec un vecteur de l'axe, et un rayon \n"
+"//le mode peut être 0 = fil de fer, 1 = lignes visibles (éventuellement remplissage), 2 = lignes visibles + arêtes cachées (éventuellement remplissage).\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n\n"
+"Dcylindre(\n"
+"    M(0,0,0), // sommet (point 3D)\n"
+"    3*vecK,   // vecteur de l'axe\n"
+"    2,        // rayon à la base\n"
+"    0         // mode de tracé\n"
+"    )\n"
+"]"
+
+#: untres.tgdspherehelp
+msgid ""
+msgstr ""
+"[//Dsphere(centre (point 3D), rayon, mode)\n"
+"//dessine une sphère à partir de son centre, et un rayon \n"
+"//le mode peut être 0 = fil de fer, 1 = lignes visibles (éventuellement remplissage), 2 = lignes visibles + arêtes cachées (éventuellement remplissage).\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n\n"
+"Dsphere(\n"
+"    M(0,0,0), // sommet (point 3D)\n"
+"    3,        // rayon\n"
+"    0         // mode de tracé\n"
+"    )\n"
+"]"
+
+#: untres.tgdparallelephelp
+msgid ""
+msgstr ""
+"[//Dparallelep( sommet (point 3D), vecteur3D_1, vecteur3D_2, vecteur3D_3, mode, contraste)\n"
+"//dessine un parallélépipède d'un sommet et trois vecteurs dans le sens direct\n"
+"//le mode peut être 0 = fil de fer, 1 or 3 = facettes visibles (éventuellement pleines), 2 or 4 = facettes visibles + arêtes cachées.\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n"
+"//quand mode=4, le paramètre contraste (nombre positif, 1 par défaut) permet de modifier le contraste de la couleur des facettes,\n"
+"//la valeur 0 donnera une couleur unie comme dans les modes 1 et 2.\n\n"
+"Dparallelep(\n"
+"    M(0,0,0), // un sommet (point 3D)\n"
+"    M(4,0,0), // vecteur3D_1\n"
+"    M(0,4,0), // vecteur3D_2\n"
+"    M(1,1,3), // vecteur3D_2\n"
+"    0,        // mode\n"
+"    1,        // contraste\n"
+"    )\n"
+"]"
+
+#: untres.tgdtetraedrehelp
+msgid ""
+msgstr ""
+"[//Dtetraedre( sommet (point 3D), vecteur3D_1, vecteur3D_2, vecteur3D_3, mode, contraste)\n"
+"//dessine un tétraèdre d'un sommet et trois vecteurs dans le sens direct\n"
+"//le mode peut être 0 = fil de fer, 1 or 3 = facettes visibles (éventuellement pleines), 2 or 4 = facettes visibles + arêtes cachées.\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n"
+"//quand mode=4, le paramètre contraste (nombre positif, 1 par défaut) permet de modifier le contraste de la couleur des facettes,\n"
+"//la valeur 0 donnera une couleur unie comme dans les modes 1 et 2.\n\n"
+"Dtetraedre(\n"
+"    M(0,0,0), // un sommet (point 3D)\n"
+"    M(4,0,0), // vecteur3D_1\n"
+"    M(0,4,0), // vecteur3D_2\n"
+"    M(1,1,3), // vecteur3D_2\n"
+"    0,        // mode\n"
+"    1,        // contraste\n"
+"    )\n"
+"]"
+
+#: untres.tgdprismehelp
+msgid ""
+msgstr ""
+"[//Dprisme( base, vecteur3D , mode, contrast)\n"
+"//dessine un prisme à partir d'une base et d'un vecteur3D représentant le\n"
+"//vecteur de translation de la base à la base opposée.\n"
+"//la base est une liste de points3D coplanaires orientée dans le sens direct pour,\n"
+"//l'orientation induite par le vecteur de translation.\n"
+"//le mode peut être 0 = fil de fer, 1 or 3 = facettes visibles (éventuellement pleines), 2 or 4 = facettes visibles + arêtes cachées.\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n"
+"//quand mode=4, le paramètre contraste (nombre positif, 1 par défaut) permet de modifier le contraste de la couleur des facettes,\n"
+"//la valeur 0 donnera une couleur unie comme dans les modes 1 et 2.\n\n"
+"Dprisme(\n"
+"    [M(3,0,0), M(0,3,0), M(-3,0,0)], // liste de points3D coplanaires\n"
+"    3*vecK, // vecteur de translation\n"
+"    0,        // mode\n"
+"    1,        // contraste\n"
+"    )\n"
+"]"
+
+#: untres.tgdpyramidehelp
+msgid ""
+msgstr ""
+"[//Dpyramide( base, sommet , mode, contrast)\n"
+"//dessine une pyramidee à partir d'une base et d'un sommet (point 3D)\n"
+"//la base est une liste de points3D coplanaires orientée dans le sens direct pour,\n"
+"//l'orientation induite par le sommet.\n"
+"//le mode peut être 0 = fil de fer, 1 or 3 = facettes visibles (éventuellement pleines), 2 or 4 = facettes visibles + arêtes cachées.\n"
+"//utiliser les variables HideStyle, HideWidth et HideColor variables pour modifier le style des arêtes cachées.\n"
+"//quand mode=4, le paramètre contraste (nombre positif, 1 par défaut) permet de modifier le contraste de la couleur des facettes,\n"
+"//la valeur 0 donnera une couleur unie comme dans les modes 1 et 2.\n\n"
+"Dpyramide(\n"
+"    [M(0,-4,0), M(4,0,0), M(0,4,0),M(-4,0,0)], // liste de points3D coplanaires\n"
+"    4*vecK, // sommet\n"
+"    0,        // mode\n"
+"    1,        // contraste\n"
+"    )\n"
+"]"
+
+#: untres.tgligne3dhelp
+msgid ""
+msgstr ""
+"[//Ligne3D( liste de points 3D, fermée (0/1))\n"
+"//dessine une ligne polygonale de l'espace\n\n"
+"Ligne3D(\n"
+"        [M(3,0,0), M(0,4,0), M(0,0,4)], //liste de points 3D\n"
+"         1  //fermée (1=Oui)\n"
+"        )\n"
+"]"
+
+#: untres.tgarc3dhelp
+msgid ""
+msgstr ""
+"[//Arc3D( début (point 3D), centre (point 3D), fin (point 3D), rayon, orientation [, vecteur 3D normal])\n"
+"//dessine un arc dans le plan défini par les trois points an arc, orienté positivement si orientation est strictement positif,\n"
+"//un vecteur normal doit être précisé lorsque les trois points sont alignés.\n\n"
+"Arc3D(\n"
+"       M(0,1,0), //début\n"
+"       Origin,   // centre\n"
+"       M(1,0,0), // fin\n"
+"       2,        // rayon\n"
+"       -1        // orientation\n"
+"     )\n"
+"]"
+
+#: untres.tgcercle3dhelp
+msgid ""
+msgstr ""
+"[//Cercle3D(centre (point 3D), rayon, vecteur 3D normal)\n"
+"//dessine un cercle dans le plan défini par le centre et le vecteur normal.\n\n"
+"Cercle3D(\n"
+"       Origin,   // centre\n"
+"       3,        // rayon\n"
+"       M(0,0,1)  // vecteur normal\n"
+"     )\n"
+"]"
+
+#: untres.tgdrawdroitehelp
+msgid ""
+msgstr ""
+"[//DrawDroite( [point 3D, direction (vecteur)], longueur1, longueur2)\n"
+"//dessine une droite de l'espace représentée par la liste [point 3D, vecteur 3D].\n"
+"//S'il n'y a pas d'autre argument, la droite est dessinée entièrement, sinon,\n"
+"//si A est le point et u le vecteur, c'est le segment joignant\n"
+"//A-longueur1*u/||u|| to A+longueur2*u/||u|| qui est dessiné.\n\n"
+"DrawDroite(\n"
+"           [Origin, M(1,-1,0)], // point 3D et direction\n"
+"           1, 1   //longueur1 et longueur2\n"
+"          )\n"
+"]"
+
+#: untres.tgdrawplanhelp
+msgid ""
+msgstr ""
+"[//DrawPlan( [point 3D, vecteur3D normal], vecteur du plan, longueur1, longueur2, mode)\n"
+"//dessine un plan de l'espace, celui-ci est représenté par la liste [point 3D, vecteur3D normal],\n"
+"//si A est le point et u le vecteur normal, le paramètre suivant est un vecteur du plan (appelons le v),\n"
+"//la macro cacule le produit 0ectoriel w=u x v et détermine un parallélogramme construit sur v et w,\n"
+"//les valeurs possibles du paramètre mode sont : -1, -2, -3, -4, 1, 2, 3, 4.\n\n"
+"DrawPlan(\n"
+"          [Origin, vecK] // le plan\n"
+"          ,vecI          // vecteur du plan\n"
+"          ,4,3          // longueur 1 and 2\n"
+"          //,1             // mode\n"
+"           )\n"
+"]"
+
+#: untres.tgangledhelp
+msgid ""
+msgstr ""
+"[//angleD(B,A,C,r,[options]) : \n"
+"//dessine l'angle BAC avec un parallèlogramme de coté r (deux côtés sont dessinés)\n\n"
+"angleD(\n"
+"   1+i,     //affixe du point B\n"
+"   0,       //affixe du point A\n"
+"   1,       //affixe du point C\n"
+"   0.5,     //longueur r du côté\n"
+"   []       //liste des options, ex: [FillStyle:=full, FillColor:=cyan]\n"
+"    )\n"
+"]"
+
+#: untres.tgdcarrehelp
+msgid ""
+msgstr ""
+"[//Dcarre(A,B,sens, [options]) : dessine un carré défini par deux sommets consécutifs,\n"
+"//et le sens (trigo ou inverse)\n\n"
+"Dcarre(\n"
+"   0,      //affixe du point A\n"
+"   1,      //affixe du point B\n"
+"   1,      //sens 1=trigo, -1=inverse\n"
+"   []      //liste des options, ex: [radius:=0.25, Width:=12]\n"
+"    )\n"
+"]"
+
+
+
+#: untres.tgemptyarg
+msgid ""
+msgstr "Argument vide"
+
+#: untres.tgemptystring
+msgid ""
+msgstr "Votre commande est une chaîne vide"
+
+#: untres.tgreading
+msgid ""
+msgstr "Lecture"
+
+#: untres.tgendreading
+msgid ""
+msgstr "Lecture terminée"
+
+#: untres.tgendstringmissing
+msgid ""
+msgstr "Il manque une fin de chaîne"
+
+#: untres.tgenvironmentvariablenotdef
+msgid ""
+msgstr "cette variable d'environnement doit être définie"
+
+#: untres.tgequadiffhelp
+msgid ""
+msgstr ""
+"[//draw(\"odeint\", [\"f(t,Y)\", t0, Y0], [options]) : trace une résolution numérique de Y'=f(t,Y)\n"
+"//\"f(t,Y)\" est une chaîne représentant l'expression de f(t,Y)\n"
+"//t0, Y0 représente la condition initiale\n\n"
+"draw(\"odeint\",//exemple: Y'=Y avec Y(0)=1\n"
+"   [\"Y\",//expression f(t,Y)\n"
+"   0,  //valeur de t0\n"
+"   1],  //valeur de Y0\n"
+"   [//options locales et valeurs par défaut\n"
+"    t:=[tMin,tMax],       //intervalle de résolution\n"
+"    odeMethod:=\"rk4\",     //ou \"rkf45\" (Runge-Kutta-Fehlberg)\n"
+"    odeReturn:=\"t+i*Y\",   //expression retournée\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color, NbPoints...\n"
+"    \n"
+"   ]),\n"
+"]"
+
+#: untres.tgequalmissing
+msgid ""
+msgstr "Il manque le symbole = après"
+
+#: untres.tgerrorafterpourcent
+msgid ""
+msgstr "Erreur, un entier et attendu après un \"%\""
+
+#: untres.tgstringexpected
+msgid ""
+msgstr "Une chaîne de caractères est attendue"
+
+#: untres.tgerrorwhilereading
+msgid ""
+msgstr "erreur pendant la lecture"
+
+#: untres.tgexit
+msgid ""
+msgstr "Quitter"
+
+#: untres.tgexpectednotfound
+msgid ""
+msgstr "symbole ; attendu mais non trouvé."
+
+#: untres.tgexport1
+msgid ""
+msgstr "eps (Gouraud possible, pas de transparence, pas de label TeX)    "
+
+#: untres.tgexport2
+msgid ""
+msgstr "epsc (Gouraud possible, transparence, labels TeX)   "
+
+#: untres.tgexport3
+msgid ""
+msgstr "pdf (Gouraud possible, transparence pas de label TeX)    "
+
+#: untres.tgexport4
+msgid ""
+msgstr "pdfc (transparence, labels TeX, mais de lissage Gouraud)    "
+
+#: untres.tgexport5
+msgid ""
+msgstr "bmp (capture de la zone graphique)   "
+
+#: untres.tgexportepsctitle
+msgid ""
+msgstr "Compiler et exporter en eps"
+
+#: untres.tgexportepsfilter
+msgid ""
+msgstr "fichier eps"
+
+#: untres.tgexportepstitle
+msgid ""
+msgstr "Exporter en eps"
+
+#: untres.tgexportgeomfilter
+msgid ""
+msgstr "Fichier geom"
+
+#: untres.tgexportgeomtitle
+msgid ""
+msgstr "Exporter la scène 3D (Build3D) vers geomview"
+
+#: untres.tgexportjvxfilter
+msgid ""
+msgstr "Fichier jvx"
+
+#: untres.tgexportjvxtitle
+msgid ""
+msgstr "Exporter la scène 3D (Build3D) vers javaview"
+
+#: untres.tgexportjsfilter
+msgid ""
+msgstr "Fichier js"
+
+#: untres.tgexportjstitle
+msgid ""
+msgstr "Exporter la scène 3D (Build3D) vers javascript"
+
+
+#: untres.tgexportlatexfilter
+msgid ""
+msgstr "Fichier tex"
+
+#: untres.tgexportlatextitle
+msgid ""
+msgstr "Exporter en LaTeX (epic/eepic)"
+
+#: untres.tgexportobjfilter
+msgid ""
+msgstr "Fichier obj"
+
+#: untres.tgexportobjtitle
+msgid ""
+msgstr "Exporter la scène 3D (Build3D) en obj"
+
+#: untres.tgexportpdfctitle
+msgid ""
+msgstr "Compiler et expoter en pdf"
+
+#: untres.tgexportpdffilter
+msgid ""
+msgstr "Fichier pdf"
+
+#: untres.tgexportpdftitle
+msgid ""
+msgstr "Exporter en pdf (eps->pdf)"
+
+#: untres.tgexportpgffilter
+msgid ""
+msgstr "Fichier pgf"
+
+#: untres.tgexportpgftitle
+msgid ""
+msgstr "Exporter en pgf"
+
+#: untres.tgexportpsffilter
+msgid ""
+msgstr "Fichier psf"
+
+#: untres.tgexportpsftitle
+msgid ""
+msgstr "Exporter en psf (fichier eps + fichier psfrag)"
+
+#: untres.tgexportpstfilter
+msgid ""
+msgstr "Fichier pst"
+
+#: untres.tgexportpsttitle
+msgid ""
+msgstr "Exporter en pstricks"
+
+#: untres.tgexportsrc
+msgid ""
+msgstr "texsrc (source coloré pour TeX)"
+
+#: untres.tgexportsrc4latex
+msgid ""
+msgstr "src4LaTeX (fichier source pour LaTeX)"
+
+#: untres.tgexportsrcfilter
+msgid ""
+msgstr "Fichier src"
+
+#: untres.tgexportsrctitle
+msgid ""
+msgstr "Exporter en source coloré pour TeX"
+
+#: untres.tgexportsrctotex
+msgid ""
+msgstr "Exporter le source pour TeX"
+
+#: untres.tgexportsvgfilter
+msgid ""
+msgstr "Fichier svg"
+
+#: untres.tgexportsvgtitle
+msgid ""
+msgstr "Exporter en svg"
+
+#: untres.tgexportteg
+msgid ""
+msgstr "teg (fichier source pour TeXgraph)"
+
+#: untres.tgexporttkzfilter
+msgid ""
+msgstr "Fichier tkz"
+
+#: untres.tgexporttkztitle
+msgid ""
+msgstr "Exporter en tikz"
+
+#: untres.tgexporttoeepic
+msgid ""
+msgstr "Export en eepic"
+
+#: untres.tgexporttoeps
+msgid ""
+msgstr "Exporter en eps"
+
+#: untres.tgexporttoepsc
+msgid ""
+msgstr "Expoter en eps compilé"
+
+#: untres.tgexporttogeom
+msgid ""
+msgstr "Exporter la scène 3D en geom"
+
+#: untres.tgexporttojvx
+msgid ""
+msgstr "Exporter la scène 3D en jvx"
+
+#: untres.tgexporttojs
+msgid ""
+msgstr "Exporter la scène 3D en js"
+
+#: untres.tgexporttoobj
+msgid ""
+msgstr "Exporter la scène 3D en obj"
+
+#: untres.tgexporttopdf
+msgid ""
+msgstr "Exporter en pdf"
+
+#: untres.tgexporttopdfc
+msgid ""
+msgstr "Exporter en pdf compilé"
+
+#: untres.tgexporttopgf
+msgid ""
+msgstr "Exporter en pgf"
+
+#: untres.tgexporttopsf
+msgid ""
+msgstr "Exporter en psf (eps+Psfrag)"
+
+#: untres.tgexporttopstricks
+msgid ""
+msgstr "Exporter en pstricks"
+
+#: untres.tgexporttosvg
+msgid ""
+msgstr "Exporter en svg"
+
+#: untres.tgexporttotikz
+msgid ""
+msgstr "Exporter en tikz"
+
+#: untres.tgfermer
+msgid ""
+msgstr "Fermer"
+
+#: untres.tgremove
+msgid ""
+msgstr "Suppression de"
+
+#: untres.tgexportto
+msgid ""
+msgstr "Export vers"
+
+#: untres.tgexportfinished
+msgid ""
+msgstr "Export terminé"
+
+#: untres.tgnoexport
+msgid ""
+msgstr "Pas d'export"
+
+#: untres.tgemptyfile
+msgid ""
+msgstr "Fichier vide"
+
+#: untres.tgservermode
+msgid ""
+msgstr "Ouverture de TeXgraphCmd en mode serveur"
+
+#: untres.tgfile
+msgid ""
+msgstr "Fichier"
+
+#: untres.tgfileloaded
+msgid ""
+msgstr "fichier déjà chargé"
+
+#: untres.tgfilenotfound
+msgid ""
+msgstr "fichier non trouvé"
+
+#: untres.tgfindfile
+msgid ""
+msgstr "Nécessite le fichier"
+
+#: untres.tgfisansif
+msgid ""
+msgstr "Il y a un \"fi\" mais il manque le \"if\""
+
+#: untres.tgformatcopy
+msgid ""
+msgstr "Copier vers le format"
+
+#: untres.tgfound
+msgid ""
+msgstr "trouvé"
+
+#: untres.tggivethetaphi
+msgid ""
+msgstr "Entrer theta et phi (degrés)"
+
+#: untres.tgglobalvar
+msgid ""
+msgstr "Variable globale"
+
+#: untres.tggraphelement
+msgid ""
+msgstr "Elément graphique"
+
+#: untres.tggraphicobjects
+msgid ""
+msgstr "Eléments graphiques"
+
+#: untres.tggrid
+msgid ""
+msgstr "Grille"
+
+#: untres.tghauteur
+msgid ""
+msgstr "Hauteur="
+
+#: untres.tgheight
+msgid ""
+msgstr "Hauteur=Yscale*(Ymax-Ymin)"
+
+#: untres.tgheightandwidth
+msgid ""
+msgstr "Hauteur et largeur (sans les marges)"
+
+#: untres.tgidentifierafter
+msgid ""
+msgstr "Un nom est attendu après"
+
+#: untres.tgidentifierexpected
+msgid ""
+msgstr "Identificateur attendu"
+
+#: untres.tgimplicit
+msgid ""
+msgstr "Implicite"
+
+#: untres.tgimplicitcaption
+msgid ""
+msgstr "Implicit(...)"
+
+#: untres.tgimplicithelp
+msgid ""
+msgstr ""
+"[//draw(\"implicit\",f(x,y), [options]) : courbe implicite f(x,y)=0\n\n"
+"draw(\"implicit\",\n"
+"   sin(x*y),   //expression f(x,y)\n"
+"   [//options locales et valeurs par défaut\n"
+"    limits:=[jump,jump],    //intervalle pour x et y (jump=intervalle courant)\n"
+"    grid:=[50,50],  // subdivisions siovant x et y\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color,...\n"
+"    \n"
+"   ]),\n"
+"]"
+
+#: untres.tginterfacefont
+msgid ""
+msgstr "Fonte pour l'interface"
+
+#: untres.tginterval
+msgid ""
+msgstr "Intervalle"
+
+#: untres.tginvalidcharafter
+msgid ""
+msgstr "Caractère invalide après"
+
+#: untres.tginvalidname
+msgid ""
+msgstr "Nom invalide"
+
+#: untres.tgismissing
+msgid ""
+msgstr "manque"
+
+#: untres.tgisnotin
+msgid ""
+msgstr "n'est pas dans"
+
+#: untres.tgjavaviewdir
+msgid ""
+msgstr "Répertoire de javaview.jar"
+
+#: untres.tgjavaviewdirnotvalid
+msgid ""
+msgstr "Le répertoire de javaview n'est pas valide"
+
+#: untres.tglabel
+msgid ""
+msgstr "Label"
+
+#: untres.tglabelhelp
+msgid ""
+msgstr ""
+"[//draw(\"label\",label1, [options1], label2, [options2],...) : place un ou plusieurs labels\n\n"
+"draw(\"label\",\n"
+"   \"Texte1\",//premier label\n"
+"   [//options locales et valeurs par défaut\n"
+"    anchor:=0,       //point d'ancrage du label\n"
+"    labeldir:=Nil,   //direction du label par rapport au point d'anchrage (North/NE/East/SE/South/SW/West/NW)\n"
+"    labelsep:=0.25,  //distance du label au point d'ancrage si labeldir<>Nil\n"
+"    showdot:=0,      //montrer ou non le point d'ancrage\n"
+"    //options locales supplémentaires : Color, LabelSize, LabelAngle...\n"
+"    \n"
+"   ]),\n"
+"]"
+
+#: untres.tglargeur
+msgid ""
+msgstr "Largeur="
+
+#: untres.tgleft
+msgid ""
+msgstr "Gauche"
+
+#: untres.tglicence
+msgid ""
+msgstr "Ce programme est libre, vous pouvez le redistribuer sous certaines conditions (voir le fichier d'aide). Ce programme est distribué SANS AUCUNE GARANTIE."
+
+#: untres.tgline
+msgid ""
+msgstr "ligne"
+
+#: untres.tgloadmac
+msgid ""
+msgstr "Charger un fichier mac"
+
+#: untres.tgloadmod
+msgid ""
+msgstr "Charger un fichier mod"
+
+#: untres.tgloadpicture
+msgid ""
+msgstr "Charger une image de fond"
+
+#: untres.tgmacfile
+msgid ""
+msgstr "Fichiers de macros (*.mac)"
+
+#: untres.tgmacfilesloaded
+msgid ""
+msgstr "Fichiers *.mac chargés"
+
+#: untres.tgmacros
+msgid ""
+msgstr "Créer une macro"
+
+#: untres.tgmacrosbox
+msgid ""
+msgstr "Macros"
+
+#: untres.tgmargin
+msgid ""
+msgstr "Marges"
+
+#: untres.tgmargintitle
+msgid ""
+msgstr "Marges [en cm] autour du graphe"
+
+#: untres.tgmatrixhelp
+msgid ""
+msgstr ""
+"Matrix := [u, v, w]\n"
+"Si f est une application affine du plan, sa matrice est la liste [u, v, w] où:\n"
+"u = f(0)  [vecteur de translation]\n"
+"v = f(1) - u [image du premier vecteur de base par la partie linéaire]\n"
+"w = f(i) - u [image du second vecteur de base par la partie linéaire]\n"
+
+#: untres.tgmisesajourlogiciel
+msgid ""
+msgstr "Mise à jour du programme"
+
+#: untres.tgmisesajourmodeles
+msgid ""
+msgstr "Mise à jour des modèles"
+
+#: untres.tgmisesajourmodeleslogiciel
+msgid ""
+msgstr "Mises à jour"
+
+#: untres.tgmissingcommaafter
+msgid ""
+msgstr "Il manque une virgule après"
+
+#: untres.tgmissingparenthesisafter
+msgid ""
+msgstr "Parenthèse (ou virgule) manquante après"
+
+#: untres.tgmodelfile
+msgid ""
+msgstr "Fichier modèle"
+
+#: untres.tgmodified
+msgid ""
+msgstr "Modifié"
+
+#: untres.tgmontrer
+msgid ""
+msgstr "Montrer"
+
+#: untres.tgname
+msgid ""
+msgstr "Nom ="
+
+#: untres.tgnameerror
+msgid ""
+msgstr "nom invalide [Cancel pour stopper le avertissements]"
+
+#: untres.tgnew
+msgid ""
+msgstr "Nouv."
+
+#: untres.tgnewglobvarhint
+msgid ""
+msgstr "Créer une variable globale"
+
+#: untres.tgnewmacro
+msgid ""
+msgstr "Nouvelle macro"
+
+#: untres.tgnewmacrohint
+msgid ""
+msgstr "Créer une nouvelle macro"
+
+#: untres.tgnewuserobject
+msgid ""
+msgstr "Nouvel élément graphique utilisateur"
+
+#: untres.tgnotexist
+msgid ""
+msgstr "Impossible de trouver"
+
+#: untres.tgnotindir
+msgid ""
+msgstr "n'est pas dans le répertoire"
+
+#: untres.tgnumericerror
+msgid ""
+msgstr "erreur dans une conversion numérique"
+
+#: untres.tgobject
+msgid ""
+msgstr "objet"
+
+#: untres.tgodesolution
+msgid ""
+msgstr "Equation différentielle"
+
+#: untres.tgodfisansandfi
+msgid ""
+msgstr "Il y a un \"odfi\" sans \"andif\""
+
+#: untres.tgodfisansdo
+msgid ""
+msgstr "Il y a un \"odfi\" sans \"do\""
+
+#: untres.tgodsansdo
+msgid ""
+msgstr "Il y a un \"od\" sans \"do\" ou \"repeat\""
+
+#: untres.tgok
+msgid ""
+msgstr "OK"
+
+#: untres.tgopen
+msgid ""
+msgstr "Ouvrir"
+
+#: untres.tgopenafile
+msgid ""
+msgstr "Ouvrir un fichier"
+
+#: untres.tgopenbackground
+msgid ""
+msgstr "Charger une image de fond"
+
+#: untres.tgorthoproj
+msgid ""
+msgstr "[3D] projection orthographique"
+
+#: untres.tgother2d
+msgid ""
+msgstr "Autres éléments graphiques 2D"
+
+#: untres.tgother3d
+msgid ""
+msgstr "Autres éléments graphiques 3D"
+
+#: untres.tgouvrirforum
+msgid ""
+msgstr "Forum TeXgraph (fr)"
+
+#: untres.tgouvrirlaide
+msgid ""
+msgstr "Ouvrir l'aide html"
+
+#: untres.tgparameter
+msgid ""
+msgstr "Paramètres"
+
+#: untres.tgparametert
+msgid ""
+msgstr "Paramètre t"
+
+#: untres.tgparametric
+msgid ""
+msgstr "Paramétrique"
+
+#: untres.tgparametrichelp
+msgid ""
+msgstr ""
+"[//draw(\"parametric\", f(x), [options]) : dessine une courbe paramétrique\n\n"
+"draw(\"parametric\",\n"
+"   2*cos(3*t)+i*2*sin(2*t),  //expression f(t)\n"
+"   [//options locales et valeurs par défaut\n"
+"    t:=[-5,5],  //représente l'intervalle de tracé, [tMin,tMax] par défaut\n"
+"    discont:=0, //discontinuités ou non (0/1)\n"
+"    nbdiv:=5,   //niveau de subdivision du pas\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color, NbPoints...\n"
+"    \n"
+"   ])\n"
+"]"
+
+#: untres.tgparenthesesnonequilibrees
+msgid ""
+msgstr "Parenthèses non équilibrées"
+
+#: untres.tgpathhelp
+msgid ""
+msgstr ""
+"[//draw(\"path\", [chemin], [options]) : dessine un chemin\n\n"
+"draw(\"path\",\n"
+"   [-3+2*i,-3,-2,line,0,2,2,-1,arc,3,3+3*i,0.5,linearc,1,-1+5*i,-3+2*i,bezier], //chemin\n"
+"   [//options locales et valeurs par défaut\n"
+"    marker:=Nil,     //liste [pos1, marker1, pos2,marker2,...] avec pos dans [0;1]\n"
+"    scale:=1,//échelle des marqueurs\n"
+"    legend:=\"\",    //pour définir un label\n"
+"    anchor:=Nil,     //affixe pour imposer la position d'un éventuel label\n"
+"    labelpos:=Nil,   //nombre dans [0;1] position du label le long de la ligne (si anchor=Nil)\n"
+"    labelsep:=0.25,  //distance du label à la droite\n"
+"    labeldir:=Nil,   //direction du label par rapport au point d'anchrage (North/NE/East/SE/South/SW/West/NW)\n"
+"    showdot:=0,      //montrer ou non le point d'ancrage du label)\n"
+"    doubleline:=0,   //ligne double ou non (0/1)\n"
+"    doublesep:=1.25*Width, //épaisseur du trait central lorsqu’il y a double ligne\n"
+"    doublecolor:=white,    //couleur du trait central si double ligne\n"
+"    lineborder:=0, //ajoute une bordure de part et d’autre de la ligne de l’épaisseur voulue\n"
+"    bordercolor:=white,    //précise la couleur de la bordure lorsqu’il y en a une\n"
+"    //options locales supplémentaires : Width, Color, FillStyle,...\n"
+"    \n"
+"   ]),\n\n"
+"{Le chemin est une liste constituée de points et d'instructions. Ces instructions sont:\n"
+"- line: relie les points par une ligne polygonale.\n"
+"- linearc: relie les points par une ligne polygonale mais les angles sont arrondis\n"
+"    avec un arc. La valeur qui précède la commande linearc est interprétée\n"
+"    comme le rayon des arcs.\n"
+"- clinearc: comme linearc, mais la ligne polygonale est refermée.\n"
+"- arc: dessine un arc de cercle. Cela nécessite 4 arguments: 3 points et le rayon,\n"
+"    plus éventuellement un cinquième qui vaut +/-1  (1 par défaut pour le sens trigonométrique).\n"
+"- ellipticArc: dessine un arc d'ellipse. Cela nécessite au moins 5 arguments: 3 points,\n"
+"    le rayon sur x, le rayon sur y, éventuellement un sixième argument: \n"
+"    qui vaut +/-1  (1 par défaut pour le sens trigonométrique), plus éventuellement un septième argument: \n"
+"    l'angle en degrés que fait le grand axe avec l'axe horizontal.\n"
+"- curve: relie les points par une spline cubique naturelle.\n"
+"- bezier: relie le premier point au quatrième par une courbe de Bézier \n"
+"    (le deuxième et troisième point sont des points de contrôle).\n"
+"- circle: dessine un cercle. Cela nécessite deux arguments: un point et le centre, \n"
+"    ou trois arguments qui sont trois points du cercle.\n"
+"- ellipse: dessine une ellipse. Cela nécessite 4 arguments: un point, le centre,\n"
+"    le rayon rX, le rayon rys, plus éventuellement un cinquième qui est l'angle \n"
+"    en degrés que fait l'axe principal avec l'axe horizontal).\n"
+"- move: se déplace vers le point sans dessiner.\n"
+"- closepath: fermer la composante courante.}\n"
+"]"
+#: untres.tgpdffile
+msgid ""
+msgstr "Fichier pdf"
+
+#: untres.tgpicturefile
+msgid ""
+msgstr "Image"
+
+#: untres.tgpoints
+msgid ""
+msgstr "Points"
+
+#: untres.tgpolar
+msgid ""
+msgstr "Polaire"
+
+#: untres.tgpolarhelp
+msgid ""
+msgstr ""
+"[//draw(\"polar\", f(x), [options]) : dessine une courbe polaire\n\n"
+"draw(\"polar\",\n"
+"   4*cos(5*t/6),  //expression r(t)\n"
+"   [//options locales et valeurs par défaut\n"
+"    t:=[-6*pi,6*pi],  //représente l'intervalle de tracé, [tMin,tMax] par défaut\n"
+"    discont:=0, //discontinuités ou non (0/1)\n"
+"    nbdiv:=5,   //niveau de subdivision du pas\n"
+"    //options locales supplémentaires pour le tracé (line), ex: Color, NbPoints...\n"
+"    \n"
+"   ])\n"
+"]"
+
+#: untres.tgpolyline
+msgid ""
+msgstr "Ligne polygonale"
+
+#: untres.tgpolylinehelp
+msgid ""
+msgstr ""
+"[//draw(\"line\", liste de points, [options]) : trace une ligne polygonale\n\n"
+"draw(\"line\",\n"
+"   [-2,3*i,2,3-3*i], //liste de points\n"
+"   [//options locales et valeurs par défaut\n"
+"    close:=0,//ligne fermée ou non (0/1)\n"
+"    radius:=0,       //rayon pour arrondir les angles\n"
+"    showdot:=0,      //montrer ou non les points (0/1)\n"
+"    dotcolor:=Color, //couleur des points (si visibles)\n"
+"    marker:=Nil,     //liste [pos1, marker1, pos2,marker2,...] avec pos dans [0;1]\n"
+"    scale:=1,//échelle des marqueurs\n"
+"    legend:=\"\",    //pour définir un label\n"
+"    anchor:=Nil,     //affixe pour imposer la position d'un éventuel label\n"
+"    labelpos:=Nil,   //nombre dans [0;1] position du label le long de la ligne (si anchor=Nil)\n"
+"    labelsep:=0.25,  //distance du label à la droite\n"
+"    labeldir:=Nil,   //direction du label par rapport au point d'anchrage (North/NE/East/SE/South/SW/West/NW)\n"
+"    doubleline:=0,   //ligne double ou non (0/1)\n"
+"    doublesep:=1.25*Width, //épaisseur du trait central lorsqu’il y a double ligne\n"
+"    doublecolor:=white,    //couleur du trait central si double ligne\n"
+"    lineborder:=0, //ajoute une bordure de part et d’autre de la ligne de l’épaisseur voulue\n"
+"    bordercolor:=white,    //précise la couleur de la bordure lorsqu’il y en a une\n"
+"    //options locales supplémentaires : Width, Color, FillStyle,...\n"
+"    \n"
+"   ]),\n"
+"]"
+
+#: untres.tgposition
+msgid ""
+msgstr "Position de la caméra"
+
+#: untres.tgpredefinies
+msgid ""
+msgstr "Prédéfinies"
+
+#: untres.tgprogrammes
+msgid ""
+msgstr "Programmes"
+
+#: untres.tgrecent
+msgid ""
+msgstr "Récents"
+
+#: untres.tgredo
+msgid ""
+msgstr "Refaire"
+
+#: untres.tgremplacer
+msgid ""
+msgstr "Remplacer"
+
+#: untres.tgremplacerregexp
+msgid ""
+msgstr "Remplacer (RegExp)"
+
+#: untres.tgrepositorynotfound
+msgid ""
+msgstr "répertoire non trouvé"
+
+#: untres.tgresultof
+msgid ""
+msgstr "Résultat de"
+
+#: untres.tgright
+msgid ""
+msgstr "Droit"
+
+#: untres.tgsave
+msgid ""
+msgstr "Enregistrer"
+
+#: untres.tgsaveafile
+msgid ""
+msgstr "Enregistrer le fichier"
+
+#: untres.tgsaveas
+msgid ""
+msgstr "Enregistrer sous"
+
+#: untres.tgsaveclose
+msgid ""
+msgstr "Enregistrer et fermer"
+
+#: untres.tgselectall
+msgid ""
+msgstr "Sélectionner tout"
+
+#: untres.tgshowlabelanchor
+msgid ""
+msgstr "Montrer l'ancrage des labels"
+
+#: untres.tgshowleftcolumn
+msgid ""
+msgstr "Montrer la colonne de gauche"
+
+#: untres.tgshowresult
+msgid ""
+msgstr "Montrer le résultat de la commande"
+
+#: untres.tgshowrightcolumn
+msgid ""
+msgstr "Montrer la colonne de droite"
+
+#: untres.tgshowvarscreen
+msgid ""
+msgstr "Montrer les variables à l'écran"
+
+#: untres.tgsnapshottitle
+msgid ""
+msgstr "Snapshot (export + conversion png/jpgn)"
+
+#: untres.tgsnapshotwait
+msgid ""
+msgstr "Patientez..."
+
+#: untres.tgsource
+msgid ""
+msgstr "Charger le fichier source"
+
+#: untres.tgsourcefile
+msgid ""
+msgstr "Fichier source"
+
+#: untres.tgsplinehelp
+msgid ""
+msgstr ""
+"[//draw(\"spline\",[V1,A1,...An,Vn], [options]) : dessine une spline\n"
+"//passant par A1,...,An. V1 et Vn sont les vecteurs tangents aux extrêmités\n"
+"//lorsque V1 et/ou V2 sont nuls, l'extrêmité est libre.\n\n"
+"draw(\"spline\",\n"
+"   [0, -1, i, 1, 2-i, 3, 2*i],  //liste [V1,A1,...An,Vn]\n"
+"   [//options locales pour le tracé : celles de path, exemple :\n"
+"    marker:=Nil\n"
+"   ]),\n"
+"]"
+
+#: untres.tgstopreading
+msgid ""
+msgstr "Lecture interrompue"
+
+#: untres.tgstringerror
+msgid ""
+msgstr "Erreur dans la chaîne"
+
+#: untres.tgsupprimer
+msgid ""
+msgstr "Supprimer la sélection ?"
+
+#: untres.tgsupprimertout
+msgid ""
+msgstr "Supprimer tout ?"
+
+#: untres.tgsurface
+msgid ""
+msgstr "Surface"
+
+#: untres.tgsymbolequal
+msgid ""
+msgstr "symbole = attendu"
+
+#: untres.tgsymbolpv
+msgid ""
+msgstr "symbole ; attendu"
+
+#: untres.tgsyntaxerrorafter
+msgid ""
+msgstr "erreur de syntaxe après"
+
+#: untres.tgtabsheet1
+msgid ""
+msgstr "Standard"
+
+#: untres.tgtabsheet2
+msgid ""
+msgstr "Supplément 2D"
+
+#: untres.tgtabsheet3
+msgid ""
+msgstr "Supplément 3D"
+
+#: untres.tgtoolbutton1
+msgid ""
+msgstr "Ouvrir un fichier teg (Ctrl+O)"
+
+#: untres.tgtoolbutton11
+msgid ""
+msgstr "Grille (Ctrl+G)"
+
+#: untres.tgtoolbutton12
+msgid ""
+msgstr "Axes (Ctrl+G)"
+
+#: untres.tgtoolbutton13
+msgid ""
+msgstr "Courbe cartésienne (Ctrl+R)"
+
+#: untres.tgtoolbutton14
+msgid ""
+msgstr "Courbe paramétrée (Ctrl+P)"
+
+#: untres.tgtoolbutton15
+msgid ""
+msgstr "Courbe polaire (Alt+Maj+O)"
+
+#: untres.tgtoolbutton16
+msgid ""
+msgstr "Solution d'équation différentielle (CtrL+E)"
+
+#: untres.tgtoolbutton17
+msgid ""
+msgstr "Courbe implicite (CtrL+I)"
+
+#: untres.tgtoolbutton18
+msgid ""
+msgstr "Courbe de Bézier (Ctrl+B)"
+
+#: untres.tgtoolbutton19
+msgid ""
+msgstr "Spline cubique (Alt+Maj+S)"
+
+#: untres.tgtoolbutton20
+msgid ""
+msgstr "Droite (CtrL+D)"
+
+#: untres.tgtoolbutton21
+msgid ""
+msgstr "Surface (Ctrl+F)"
+
+#: untres.tgtoolbutton22
+msgid ""
+msgstr "Points(s) (Alt+Maj+P)"
+
+#: untres.tgtoolbutton25
+msgid ""
+msgstr "Ligne polygonale (CtrL+L)"
+
+#: untres.tgtoolbutton27
+msgid ""
+msgstr "Elément utilisateur (Ctrl+U)"
+
+#: untres.tgtoolbutton28
+msgid ""
+msgstr "theta et phi (angle pour la 3D)"
+
+#: untres.tgtoolbutton29
+msgid ""
+msgstr "Augmenter theta"
+
+#: untres.tgtoolbutton3
+msgid ""
+msgstr "Recharger le fichier"
+
+#: untres.tgtoolbutton30
+msgid ""
+msgstr "Diminuer phi"
+
+#: untres.tgtoolbutton31
+msgid ""
+msgstr "Augmenter phi"
+
+#: untres.tgtoolbutton32
+msgid ""
+msgstr "Diminuer tetha"
+
+#: untres.tgtoolbutton34
+msgid ""
+msgstr "Chemin (Ctrl+H)"
+
+#: untres.tgtoolbutton35
+msgid ""
+msgstr "Parallèle à une droite"
+
+#: untres.tgtoolbutton36
+msgid ""
+msgstr "Nouveau graphe (Ctrl+N)"
+
+#: untres.tgtoolbutton39
+msgid ""
+msgstr "Enregistrer (Ctrl+S)"
+
+#: untres.tgtoolbutton41
+
+msgid ""
+msgstr "Perpendiculaire à une droite"
+
+#: untres.tgtoolbutton42
+msgid ""
+msgstr "Bissectrice d'un angle"
+
+#: untres.tgtoolbutton43
+msgid ""
+msgstr "Parallélogramme"
+
+#: untres.tgtoolbutton44
+msgid ""
+msgstr "Rectangle"
+
+#: untres.tgtoolbutton45
+msgid ""
+msgstr "Carré"
+
+#: untres.tgtoolbutton46
+msgid ""
+msgstr "Polygone régulier"
+
+#: untres.tgtoolbutton47
+msgid ""
+msgstr "Point 2D+variable globale"
+
+#: untres.tgtoolbutton48
+msgid ""
+msgstr "Médiatrice d'un segment"
+
+#: untres.tgtoolbutton5
+msgid ""
+msgstr "Copier dans le presse-papier"
+
+#: untres.tgtoolbutton50
+msgid ""
+msgstr "Dessiner un angle"
+
+#: untres.tgtoolbutton51
+msgid ""
+msgstr "Marquer un segment"
+
+#: untres.tgtoolbutton52
+msgid ""
+msgstr "Marquer un arc de cercle"
+
+#: untres.tgtoolbutton53
+msgid ""
+msgstr "Demi-droite"
+
+#: untres.tgtoolbutton54
+msgid ""
+msgstr "Droite graduée"
+
+#: untres.tgtoolbutton55
+msgid ""
+msgstr "Axes 3D"
+
+#: untres.tgtoolbutton56
+msgid ""
+msgstr "Courbe paramétrée de l'espace"
+
+#: untres.tgtoolbutton57
+msgid ""
+msgstr "Cône"
+
+#: untres.tgtoolbutton58
+msgid ""
+msgstr "Cylindre"
+
+#: untres.tgtoolbutton59
+msgid ""
+msgstr "Sphère"
+
+#: untres.tgtoolbutton6
+msgid ""
+msgstr "Aperçu (Alt+Maj+V)"
+
+#: untres.tgtoolbutton60
+msgid ""
+msgstr "Parallélépipède"
+
+#: untres.tgtoolbutton61
+msgid ""
+msgstr "Tétraèdre"
+
+#: untres.tgtoolbutton62
+msgid ""
+msgstr "Point 3D+variable globale"
+
+#: untres.tgtoolbutton64
+msgid ""
+msgstr "Plan de l'espace"
+
+#: untres.tgtoolbutton65
+msgid ""
+msgstr "Ligne polygonale de l'espace"
+
+#: untres.tgtoolbutton66
+msgid ""
+msgstr "Droite de l'espace"
+
+#: untres.tgtoolbutton67
+msgid ""
+msgstr "Prisme"
+
+#: untres.tgtoolbutton68
+msgid ""
+msgstr "Pyramide"
+
+#: untres.tgtoolbutton69
+msgid ""
+msgstr "Arc de cercle dans l'espace"
+
+#: untres.tgtoolbutton70
+msgid ""
+msgstr "Cercle dans l'espace"
+
+#: untres.tgtoolbutton76
+msgid ""
+msgstr "Label (Alt+Maj+L)"
+
+#: untres.tgtoolcercle
+msgid ""
+msgstr "Cercle"
+
+#: untres.tgtoolcursdeplace
+msgid ""
+msgstr "Déplacer le graphe"
+
+#: untres.tgtoolcursnormal
+msgid ""
+msgstr "Curseur normal"
+
+#: untres.tgtoolcursselect
+msgid ""
+msgstr "Sélectionner et zoomer"
+
+#: untres.tgtoolcurstourne
+msgid ""
+msgstr "Tourner dans l'espace"
+
+#: untres.tgtoolgeomview
+msgid ""
+msgstr "Voir la scène (Build3D) dans geomview"
+
+#: untres.tgtoolwebgl
+msgid ""
+msgstr "Voir la scène (Build3D) dans WebGL"
+
+#: untres.tgtoolintersection
+msgid ""
+msgstr "Intersection de deux objets"
+
+#: untres.tgtooljavaview
+msgid ""
+msgstr "Voir la scène (Build3D) dans javaview"
+
+#: untres.tgtoolloadmouse
+msgid ""
+msgstr "Charger Mouse.mod"
+
+#: untres.tgtoolrecalc
+msgid ""
+msgstr "Tout recalculer"
+
+#: untres.tgtoolsnapshot
+msgid ""
+msgstr "Capture (png ou jpg)"
+
+#: untres.tgtoolzoomin
+msgid ""
+msgstr "Zoom avant"
+
+#: untres.tgtoolzoomout
+msgid ""
+msgstr "Zoom arrière"
+
+#: untres.tgtop
+msgid ""
+msgstr "Haut"
+
+#: untres.tgundo
+msgid ""
+msgstr "Défaire"
+
+#: untres.tgunknownchar
+msgid ""
+msgstr "Caractère inconnu"
+
+#: untres.tgurlbase
+msgid ""
+msgstr "Aide html: base URL"
+
+#: untres.tguser
+msgid ""
+msgstr "Utilisateur"
+
+#: untres.tguserobject
+msgid ""
+msgstr "Elément utilisateur"
+
+#: untres.tgvalue
+msgid ""
+msgstr "Valeur"
+
+#: untres.tgvalueoutoflimits
+msgid ""
+msgstr "valeur hors limites"
+
+#: untres.tgvarglob
+msgid ""
+msgstr "Variables globales"
+
+#: untres.tgvarglobhelp
+msgid ""
+msgstr "Valeur est une expression, le résultat doit être un complexe ou une liste de complexes."
+
+#: untres.tgvarglobs
+msgid ""
+msgstr "Définir une variable globale"
+
+#: untres.tgview
+msgid ""
+msgstr "Fenêtre"
+
+#: untres.tgviewhelp
+msgid ""
+msgstr "Définir la fenêtre graphique"
+
+#: untres.tgwanttosave
+msgid ""
+msgstr "Le texte a été modifié. Voulez-vous l'enregistrer ?"
+
+#: untres.tgwidth
+msgid ""
+msgstr "Largeur=Xscale*(Xmax-Xmin)"
+
+#: untres.tgwordslist
+msgid ""
+msgstr "Liste des mots"
+
+#: untres.tgworkdir
+msgid ""
+msgstr "Répertoire de travail"
+
+#: untres.tgworkdirnotvalid
+msgid ""
+msgstr "Le répertoire de travail n'est pas valide"

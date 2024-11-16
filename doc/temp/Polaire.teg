@@ -1,0 +1,10 @@
+TeXgraph#
+Graph image = [
+view(-3,2,-2,3),Marges(0.25,0.25,0.25,0.25), size(7.5),
+Axes(0,1+i), NbPoints:=250, tMin:=-25, tMax:=25,
+courbe:=Get(Polar((t+1)/(t-1))),
+ptDoubles:= courbe InterL courbe,
+Width:=8, Color:= blue, Line(courbe),
+DotStyle:=dotcircle, DotScale:=1.5, Dot(ptDoubles),
+Label(1+2*i,"$r(t)=\dfrac{t+1}{t-1}$")
+];

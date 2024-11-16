@@ -1,0 +1,193 @@
+\chapter{Les macros "spéciales"}
+
+\section{Macros spéciales}\label{cmdMacSpec}
+
+Il s'agit des macros \textsl{Init()}, \textsl{Exit()}, \textsl{Bsave()}, \textsl{Esave()}, \textsl{TegWrite()},
+\textsl{ClicGraph}, \textsl{ClicG()}, \textsl{ClicD()}, \textsl{LButtonUp()}, \textsl{RButtonUp()}, \textsl{MouseMove()}, \textsl{MouseWheel()}, \textsl{CtrlClicG()}, \textsl{CtrlClicD()} et \textsl{OnKey()} qui ont un
+comportement différents des autres macros.
+
+
+\subsection{La macro Init()}
+
+Si un fichier source \textit{*.teg}, ou un fichier modèle \textit{*.mod}, ou un fichier de macros \textit{*.mac}, contient une macro intitulée \textsl{Init}, alors celle-ci sera automatiquement exécutée dès la fin du chargement du fichier. Cette macro peut être utilisée pour faire certaines initialisations ou par exemple pour demander à l'utilisateur des valeurs. 
+
+\subsection{La macro Exit()}
+
+Si un fichier contient une macro intitulée \textsl{Exit}, alors celle-ci est stockée dans une pile lors du chargement du fichier, et sera exécutée lors du prochain changement de fichier, ou lors de la fermeture du programme. Cette macro est surtout destinée à être utilisée dans les fichiers de macros (\textit{*.mac}), elle permet par exemple de restituer un contexte dans son état d'origine.
+
+
+\subsection[Les macros liées à l'export]{Les macros Bsave(), Esave() et TegWrite()}\label{macBsave}\label{macEsave}
+
+La macro \textbf{Bsave} est automatiquement exécutée avant l'exportation du graphique en cours, tandis que la macro
+\textbf{Esave} est automatiquement exécutée après l'exportation du graphique en cours.
+
+L'utilisation de ces deux macros est plutôt réservée aux fichiers de macros car il faut tenir compte de leur éventuelle existence avant de les redéfinir. Elles sont d'ailleurs déjà définies dans le fichier \textit{TeXgraph.mac}, la première ne fait qu'appeler la macro \textsl{UserBsave()}, et la deuxième appelle \textsl{UserEsave()}. Ces deux dernières n'existent pas, et comme leur nom le suggère, elles peuvent être créées par l'utilisateur dans son fichier source.
+
+La constante \var{ExportMode} permet de connaître le mode d'exportation, sa valeur peut-être une des constantes suivantes: \var{tex}, \var{pgf}, \var{tkz}, \var{pst}, \var{eps}, \var{psf}, \var{epsc}, \var{pdf}, \var{pdfc},\var{svg} ou \var{teg}.
+
+La macro \textbf{TegWrite} est un peu particulière car celle-ci n'est jamais exécutée ! Plus précisément, lors de la
+sauvegarde du graphique on enregistre successivement:
+
+\begin{itemize}
+ \item La fenêtre.
+ \item Les marges
+ \item La valeur de $\theta$ et de $\varphi$ (pour la 3D).
+ \item Les variables globales.
+ \item Les fichiers de macros à charger.
+ \item Les macros.
+ \item Les éléments graphiques.
+\end{itemize}
+
+Juste avant la sauvegarde des variables globales, on regarde s'il existe une macro appelée \textsl{TegWrite}, si c'est le cas, alors la commande définissant cette macro est enregistrée dans le fichier de sauvegarde sous forme d'une commande. Ce qui fait que lors de l'ouverture de ce fichier, cette commande va être exécutée avant la lecture des variables globales et de ce qui suit.
+
+
+\subsection[Les macros liées à la souris]{Les macros ClicG(), ClicD(), LButtonUp(), RButtonUp(), MouseMove(), MouseWheel(), CtrlClicG() et CtrlClicD()}
+
+Un clic gauche de la souris provoque automatiquement l'exécution de la macro \textbf[ClicG()]{ClicG( <affixe> )} avec l'affixe du point cliqué comme paramètre si la touche \textsl{Ctrl} n'est pas enfoncée, sinon c'est la macro \textbf[CtrlClicG()]{CtrlClicG( <affixe> )}. Ces macros, qui n'existent pas par défaut, peuvent être créées par l'utilisateur.
+
+Lorsque le bouton gauche est relaché cela provoque l'exécution de la macro \textbf[LButtonUp()]{LButtonUp( <affixe> )} avec l'affixe du point cliqué comme paramètre. Cette macro, qui n'existe pas par défaut, peut être créée par l'utilisateur.
+
+Un clic droit de la souris provoque automatiquement l'exécution de la macro \textbf[ClicD()]{ClicD( <affixe> )} avec l'affixe du point cliqué comme paramètre si la touche \textsl{Ctrl} n'est pas enfoncée, sinon c'est la macro \textbf[CtrlClicD()]{CtrlClicD( <affixe> )}. Par défaut, la macro \textsl{ClicD( <affixe> )} permet de créer une variable globale.
+
+Lorsque le bouton droit est relâché cela provoque l'exécution de la macro \textbf[RButtonUp()]{RButtonUp( <affixe> )} avec l'affixe du point cliqué comme paramètre. Cette macro, qui n'existe pas par défaut, peut être créée par l'utilisateur.
+
+Un déplacement de la souris provoque l'exécution de la macro \textbf[MouseMove()]{MouseMove( <affixe> )} avec l'affixe du point cliqué comme paramètre. Cette macro, qui n'existe pas par défaut, peut être créée par l'utilisateur.
+
+Une rotation de la molette de la souris provoque l'exécution de la macro \textbf[MouseWheel()]{MouseWheel( <delta> )} avec \textit{delta} un entier qui est strictement positif si la molette a été poussée vers l'avant, strictement négatif dans le cas contraire. Par défaut, la macro \textbf[MouseWheel()]{MouseWheel( <delta> )} permet de faire des zooms avant/arrière sur le graphique.
+
+\exem construire une ligne polygonale à la souris:
+
+\begin{itemize}
+ \item On crée une variable globale $L$ initialisée par exemple à \Nil.
+ \item On crée un élément graphique \textit{Ligne polygonale} appelé \textit{ligne} et défini par la commande \co{L}.
+ \item On crée la macro \textsl{ClicG()} avec la commande: \co{[ Insert(L, \%1), ReCalc(ligne)]}.
+ \item On crée la macro \textsl{ClicD()} avec la commande: \co{[ Del(L, -1, 1), ReCalc(ligne)]} (cela efface le dernier élément de la liste).
+\end{itemize}
+
+À chaque clic gauche, le point cliqué est ajouté à la liste \textsl{L} et la commande \co{ReCalc(ligne)} force le
+recalcul de l'élément graphique \textsl{ligne}, on construit ainsi une ligne polygonale à la souris.
+
+\subsection{Les macros ClicGraph() et OnKey()}.
+ 
+Un clic gauche de la souris sur un élément de la liste des éléments graphiques (en haut à droite) provoque l'exécution de la macro \textbf[ClicGraph()]{ClicGraph( <code> )} avec le code de l'élément cliqué, ce code est défini lors de la création de l'élément avec la fonction \Helpref{NewGraph}{cmdNewGraph}. Cette macro, qui n'existe pas par défaut, peut être créée par l'utilisateur.
+
+La combinaison de touches \verb|Ctrl+Maj+<lettre>| provoque l'exécution de la macro \textbf[OnKey()]{OnKey( <lettre> )}, l'argument est une chaîne d'un seul caractère. Cette macro, qui n'existe pas par défaut, peut être créée par l'utilisateur.
+
+
+\section{Les macros spéciales de Interface.mac}
+
+Ces macros ne sont pas destinées à être utilisées dans des éléments graphiques, mais dans la ligne de commande ou en
+association avec un bouton ou une option de la liste déroulante de l'interface graphique.
+
+\subsection{Apercu}
+
+\begin{itemize}
+ \item \util \textbf[Apercu()]{Apercu()}.
+ \item \desc création et affichage d'un aperçu A4 à partir d'un export pdf. Cette macro est associée au bouton en forme d'œil dans la barre d'outils: Standard.
+\end{itemize}
+
+
+\subsection{Bouton}
+
+\begin{itemize}
+ \item \util \textbf[Bouton()]{Bouton( <position>, <nom>, <macro> )}.
+ \item \desc création d'un bouton, la \argu{position} est un complexe $x+iy$ avec $x$ et $y$ en pixels, le nom et la macro associée sont deux chaînes de caractères.
+ \item \exem création (dans la ligne de commande) d'un bouton pour faire un snapshot en png et l'afficher:
+
+\begin{verbatim}
+ Bouton( RefPoint, "Snapshot", "Snapshot(epsc, 0, ""image.png"", 1)")
+\end{verbatim}
+
+ \item Pour supprimer les boutons, voir la commande \Helpref{DelButton}{cmdDelButton}.
+
+\end{itemize}
+
+\subsection{geomview}
+
+\begin{itemize}
+ \item \util \textbf[geomview()]{geomview()}.
+ \item \desc permet de visionner dans \href{http://www.geomview.org/}{geomview} la scène 3D courante construite avec \Helpref{Build3d}{cmdBuild3D}. Cela suppose que ce programme est installé sur votre machine et que son chemin d'accès est connu de votre système.
+ \item Cette macro est associée à un bouton de la barre \textit{Suppléments 3D}.
+\end{itemize}
+
+\subsection{help}
+
+\begin{itemize}
+ \item \util \textbf[help()]{help( <fichier pdf> [, dossier] )}.
+ \item \desc permet d'ouvrir un \argu{fichier pdf} dans le \argu{dossier} indiqué. Le nom du fichier est sans extension, sans chemin et sans guillemets, par exemple: \co{help( TeXgraph )} ouvrira le fichier \textit{TeXgraph.pdf} qui est dans le dossier \textit{DocPath}, c'est la valeur par défaut de l'argument \argu{dossier}. Autre exemple: \co{help(povray, UserMacPath)}.
+\end{itemize}
+
+\subsection{javaview}
+
+\begin{itemize}
+ \item \util \textbf[javaview()]{javaview()}.
+ \item \desc permet de visionner dans \href{http://www.javaview.de/}{javaview} la scène 3D courante construite avec \Helpref{Build3d}{cmdBuild3D}. Cela suppose d'une part que ce programme \textit{java} est installé sur votre machine, et d'autre part que le chemin d'accès à l'archive \textit{javaview.jar} ait été renseigné dans le fichier de configuration (menu: \textit{Paramètres/Fichier de configuration}, un redémarrage du programme est nécessaire).
+ \item Cette macro est associée à un bouton de la barre \textit{Suppléments 3D}.
+\end{itemize}
+
+\subsection{MouseZoom}
+
+\begin{itemize}
+ \item \util \textbf[MouseZoom()]{MouseZoom( <+/-1> )}.
+ \item \desc permet de faire des zooms avant/arrière sur le graphique. Par défaut, cette macro est associée au mouvement de la molette de la souris (événement MouseWheel).
+\end{itemize}
+
+
+\subsection{NewLabel}
+
+\begin{itemize}
+ \item \util \textbf[NewLabel()]{NewLabel( <affixe> )}.
+ \item \desc création d'un label à l'\argu{affixe} indiquée, cette macro ouvre la fenête de saisie pour demander le texte du label. Cette macro est destinée initialement à être utilisée dans la macro \textsl{ClicG()}.
+\end{itemize}
+
+\subsection{NewLabelDot}
+
+\begin{itemize}
+ \item \util \textbf[NewLabelDot()]{NewLabelDot( <affixe>, <"nom">, <orientation> [, DrawDot, distance] )}.
+ \item \desc cette macro crée une variable globale appelée \argu{"nom"} et dont la valeur est \argu{affixe}. Elle crée également un élément graphique affichant le nom de cette variable à coté du point \argu{affixe}. L'orientation peut être "N" pour nord, "NE" pour nord-est ...etc, ou bien une liste de la forme [longueur, direction] où direction est un complexe, dans ce deuxième cas, la paramètre optionnel \argu{distance} est ignoré. Le point est également affiché lorsque \argu{DrawDot} vaut $1$ (valeur par défaut) et on peut redéfinir la \argu{distance} en cm entre le point et le texte (0.25cm par défaut). L'élément graphique créé fait appel à la macro \Helpref{LabelDot}{macLabelDot}.
+ \item Cette macro est associée à un bouton de la barre d'outils: Supplément 2D.
+\end{itemize}
+
+\subsection{NewLabelDot3D}
+
+\begin{itemize}
+ \item \util \textbf[NewLabelDot3D()]{NewLabelDot3D( <coordonnées>, <"nom">, <orientation> [, DrawDot, distance] )}.
+ \item \desc L'argument \argu{coordonnées} désigne un point de l'espace, il peut être de la forme $M(x,y,z)$ ou bien $[x+iy,z]$. Cette macro crée une variable globale appelée \argu{"nom"} et dont la valeur est \argu{coordonnées}. Elle crée également un élément graphique affichant le nom de cette variable à coté du point \argu{coordonnées}. L'orientation (dans le plan de l'écran) peut être "N" pour nord, "NE" pour nord-est ...etc, ou bien une liste de la forme [longueur, direction] où direction est un complexe, dans ce deuxième cas, la paramètre optionnel \argu{distance} est ignoré. Le point est également affiché lorsque \argu{DrawDot} vaut $1$ (valeur par défaut) et on peut redéfinir la \argu{distance} en cm entre le point et le texte (0.25cm par défaut). L'élément graphique créé fait appel à la macro \Helpref{LabelDot}{macLabelDot}.
+ \item Cette macro est associée à un bouton de la barre d'outils: Supplément 3D.
+\end{itemize}
+
+
+\subsection{Snapshot}
+
+\begin{itemize}
+ \item \util \textbf[Snapshot()]{Snapshot( <export>, <écran ou imprimante (0 ou 1)>, <"nom"> [, montrer(0/1)] )}.
+ \item \desc permet de faire une copie d'écran de la zone graphique, le premier argument précise le type d'\argu{export}, celui-ci peut-être: \textit{eps}, \textit{epsc}, \textit{pdf}, \textit{pdfc} ou \textit{bmp}. Le deuxième argument précise la résolution de l'image: $0$ pour l'écran (96 dpi) et $1$ pour l'imprimante (300 dpi), cet argument est ignoré lorsque l'export choisi est \textit{bmp}. Le troisième argument est une chaîne contenant le \argu{"nom"} de l'image avec une extension obligatoire: \textit{png} ou \textit{jpg}, et avec le chemin, par défaut ce chemin sera celui du dossier temporaire de TeXgraph. Le quatrième argument est optionnel, il permet d'indiquer si la capture doit être affichée ou non à l'écran (1 par défaut). Cette macro fait appel à l'utilitaire \textit{convert}. 
+ \item \exem dans la ligne de commande: \co{Snapshot( epsc, 0, "../capture1.png")}.
+ \item Cette macro est associée à un bouton de la barre d'outils: Standard.
+\end{itemize}
+
+\subsection{TrackBar}
+
+\begin{itemize}
+ \item \util \textbf[TrackBar()]{TrackBar( <position>, <min+i*max>, <nom de variable> [, <aide>] )}.
+ \item \desc création d'un slider, la \argu{position} est un complexe $x+iy$ avec $x$ et $y$ en pixels, les bornes de l'intervalle correspondant est défini par le complexe \argu{min+i*max} ou \argu{min} et \argu{max} sont des entiers. Le \argu{nom de variable} et l'\argu{aide} associés sont deux chaînes de caractères, la variable doit être globale, elle sera créée si elle n'existe pas déjà. À chaque modification de la position du slider, le contenu de la variable est mis à jour ainsi que le graphique. Cette macro crée le slider et ajoute un texte à l'extrêmité droite, qui est le nokm de la variable associée.
+ \item Pour supprimer un trackbar et le texte associé (qui est le nom de la variable), voir les commandes \Helpref{DelTrackBar}{cmdDelTrackBar}, et \Helpref{DelText}{cmdDelText}
+
+\end{itemize}
+
+
+\subsection{VarGlob}
+
+\begin{itemize}
+ \item \util \textbf[VarGlob()]{VarGlob( <affixe> )}.
+ \item \desc permet de définir une variable globale initialisée à \argu{affixe}. Par défaut, cette macro est associée au clic droit de la souris.
+\end{itemize}
+
+\subsection{WebGL}
+
+\begin{itemize}
+ \item \util \textbf[WebGL()]{WebGL()}.
+ \item \desc permet de visionner dans votre navigateur internet la scène 3D courante construite avec \Helpref{Build3d}{cmdBuild3D}. La page \textit{html} affichée charge \textit{THREE.js}, cela suppose que le navigateur autorise les scripts \textit{javascript}.
+ \item Cette macro est associée à un bouton de la barre \textit{Suppléments 3D}.
+\end{itemize}
+ 

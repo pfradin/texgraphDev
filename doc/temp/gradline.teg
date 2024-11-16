@@ -1,0 +1,13 @@
+TeXgraph#
+Graph image = [
+Arrows:=1, CurrentArrow:=Carrow, size(7.5),
+draw("gradLine", [3.25*i,1+i/2], [limits:=-4+4*i,
+ legend:="Axe", legendpos:=0.5]),
+CurrentArrow:=CParrow,
+draw("gradLine", [-3,1], [legend:="demo", labeltext:="\pi",
+ labelden:=3, unit:=2, nbsubdiv:=1]),
+CurrentArrow:=CTarrow',
+draw("gradLine", [3-4*i,-1.25+i/5], [legend:="A",
+ labelstyle:=bottom, gradlimits:=-1+5*i,nbsubdiv:=3,
+ unit:=1.411, nbdeci:=3, LabelSize:=scriptsize])
+];

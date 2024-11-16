@@ -1,0 +1,19 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Point}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegNumeric}2.75}{\color{TegSymbol},}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0.75}{\color{TegSymbol},}{\color{TegNumeric}0.5}{\color{TegSymbol},}{\color{TegNumeric}0.5}{\color{TegSymbol},}{\color{TegNumeric}0.5}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegMacPredef}Axes}{\color{TegSymbol}(}\textbf{\color{TegConstant}Xmin}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol}*}\textbf{\color{TegConstant}Ymin}{\color{TegSymbol},}{\color{TegNumeric}0.25}{\color{TegSymbol}+}{\color{TegNumeric}0.2}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}pas}{\color{TegSymbol}:=}{\color{TegNumeric}0.001}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}DotScale}{\color{TegSymbol}:=}{\color{TegNumeric}0.1}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Dot}{\color{TegSymbol}(}\par
+\ \textbf{\color{TegKeyWord}for}\ \textit{\color{TegIdentifier}r}\ \textbf{\color{TegKeyWord}from}\ \textbf{\color{TegConstant}Xmin}\ \textbf{\color{TegKeyWord}to}\ \textbf{\color{TegConstant}Xmax}\ \textbf{\color{TegKeyWord}step}\ \textit{\color{TegIdentifier}pas}\ \textbf{\color{TegKeyWord}do}\par
+\ \textbf{\color{TegVarPredef}u}{\color{TegSymbol}:=}{\color{TegNumeric}0.5}{\color{TegSymbol},}\par
+\ \textbf{\color{TegKeyWord}for}\ \textit{\color{TegIdentifier}k}\ \textbf{\color{TegKeyWord}from}\ {\color{TegNumeric}1}\ \textbf{\color{TegKeyWord}to}\ {\color{TegNumeric}25}\ \textbf{\color{TegKeyWord}do}\ \textbf{\color{TegVarPredef}u}{\color{TegSymbol}:=}\textit{\color{TegIdentifier}r}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}u}{\color{TegSymbol}*}{\color{TegSymbol}(}{\color{TegNumeric}1}{\color{TegSymbol}-}\textbf{\color{TegVarPredef}u}{\color{TegSymbol})}\ \textbf{\color{TegKeyWord}od}{\color{TegSymbol},}\par
+\ \textbf{\color{TegKeyWord}for}\ \textit{\color{TegIdentifier}k}\ \textbf{\color{TegKeyWord}from}\ {\color{TegNumeric}1}\ \textbf{\color{TegKeyWord}to}\ {\color{TegNumeric}25}\ \textbf{\color{TegKeyWord}do}\ \textbf{\color{TegVarPredef}u}{\color{TegSymbol}:=}\textit{\color{TegIdentifier}r}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}u}{\color{TegSymbol}*}{\color{TegSymbol}(}{\color{TegNumeric}1}{\color{TegSymbol}-}\textbf{\color{TegVarPredef}u}{\color{TegSymbol})}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}r}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}u}\ \textbf{\color{TegKeyWord}od}\par
+\ \textbf{\color{TegKeyWord}od}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

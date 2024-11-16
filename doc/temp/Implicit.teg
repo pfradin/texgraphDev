@@ -1,0 +1,7 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5),Marges(0,0,0,0), size(7.5),
+Arrows:=1, Axes(0,1+i), Arrows:=0,
+Width:=8, Color:=red,
+Implicit( sin(x*y) )
+];

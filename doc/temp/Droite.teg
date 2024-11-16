@@ -1,0 +1,12 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5), Marges(0,0,0,0), size(7.5),
+F:=sqrt(7), F':=-F, {foyers} Width:=1, Color:=darkgray,
+for t from -pi to pi step 0.1 do
+ M:=4*cos(t)+3*i*sin(t),
+ Vn:=(M-F)/abs(M-F)+(M-F')/abs(M-F'),
+ StraightL(M,M+Vn), {normale a l'ellipse}
+od,
+Width:=8, Color:=red, Ellipse(0,4,3),
+LabelDot(F,"$F$","S",1), LabelDot(F',"$F'$","S",1)
+];

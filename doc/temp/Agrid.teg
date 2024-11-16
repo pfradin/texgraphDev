@@ -1,0 +1,8 @@
+TeXgraph#
+Graph image = [
+view(-5,10,-2,5), Marges(0.25,0.25,0.25,0.25), size(7.5),
+draw("grid",[-5,-1+5*i],[nbsubdiv:=[3,3],gridcolor:=maroon]),
+SetMatrix([0,1,1+i]),
+draw("axes" ,[0,1+i],Arrows:=1),
+draw("grid",[0,5+5*i],[nbsubdiv:=[1,3],subgridstyle:=dashed]),
+];

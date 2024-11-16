@@ -1,0 +1,425 @@
+\chapter{Exportation des graphiques}\label{chapExport}
+
+Les graphiques créés avec TeXgraph peuvent être sauvegardés sous forme de fichiers sources (*.teg) et/ou exportés sous formes de fichiers destinés à être inclus dans un document (La)TeX. Il faut faire simplement attention à ce que (La)TeX soit en mesure de trouver ces fichiers au moment de la compilation, soit on les met dans le même répertoire que le document, soit on spécifie leur chemin d'accès dans le document. Il y a plusieurs formats d'exportations:
+
+\section{Format tex}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.tex}, ils utilisent les macros des packages: xcolor (couleurs), epic et eepic (tracés de lignes) et éventuellement rotating (rotation de labels, celle-ci ne sera visible  que dans la version postscript du document). Ces packages sont assez pauvres en capacités graphiques: pas de remplissage solides, pas de transparence, ..., ce qui fait que cet export est plutôt réservé aux graphiques ultra-basiques. Pour les graphiques plus élaborés, on préférera les formats pgf/tkz ou pstricks ou eps ou pdf.
+
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{xcolor,rotating,epic,eepic}
+           \begin{document} 
+             \input{Mongraph.tex}
+           \end{document}
+\end{verbatim}
+
+\item Compilations possibles:
+\begin{itemize}
+\item latex
+\item LaTex + dvips
+\item latex + dvips + ps2pdf
+\item latex + dvipdfmx (ou dvipdfm)
+\end{itemize}
+\end{itemize}
+
+\section{Format pst}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.pst}, ils utilisent les macros du paquet pstricks (version 1.27 minimum).
+
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{pstricks}
+           \begin{document} 
+             \input{Mongraph.pst}
+           \end{document}
+\end{verbatim}
+\item Compilations possibles:
+\begin{itemize}
+\item LaTex + dvips
+\item latex + dvips + ps2pdf
+\end{itemize}
+\end{itemize}
+
+
+\section{Formats tkz ou pgf}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.tkz} (ou \textit{.pgf}), ils utilisent les macros du paquet pgf (version 2 minimum) mais dans un environnement \textsl{tikzpicture}, permettant ainsi l'ajout de macros propres à tikz. L'extension \textit{.pgf} a été conservée pour compatibilité ascendante. 
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{tikz}
+           \usetikzlibrary{patterns}% hachures éventuelles
+           \begin{document} 
+             \input{Mongraph.tkz}
+           \end{document}
+\end{verbatim}
+\item Compilations possibles:
+\begin{itemize}
+\item pdflatex
+\item LaTex + dvips
+\item latex + dvips + ps2pdf
+\item latex + dvipdfm (ou dvipdfmx), à condition de rajouter: 
+
+\begin{verbatim}
+           \def\pgfsysdriver{pgfsys-dvipdfm.def}
+\end{verbatim}
+
+avant la déclaration du paquet tikz.
+\end{itemize}
+\end{itemize}
+
+\section{Format eps}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.eps}, ils utilisent le langage postscript. Dans ce format les labels ne seront pas compilés par TeX, donc s'ils contiennent des formules mathématiques ou des macros de TeX, celles-ci seront affichées mais non interprétées.
+
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{graphicx}
+           \begin{document} 
+             \includegraphics{MonGraph.eps}%extension non obligatoire
+           \end{document}
+\end{verbatim}
+\item Compilations possibles:
+\begin{itemize}
+\item LaTex + dvips
+\item latex + dvips + ps2pdf
+\item latex + dvipdfmx (ou dvipdfm), à condition que votre installation soit configurée pour que dvipdfmx puisse convertir à la volée (avec epstopdf) l'image eps en image pdf. 
+\end{itemize}
+
+\end{itemize}
+
+\section{Format psf (eps+psfrag)}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.psf}. Il y a en réalité deux fichiers générés, un fichier eps et un fichier psf. Le premier contient la version postscript du graphique sans les labels, et le second contient les labels que le paquet psfrag replacera dans le graphique après leur compilation par (La)TeX. Dans ce format les formules mathématiques ou les macros de TeX seront compilées. Le fichier psf contient dans sa dernière ligne, l'instruction: 
+
+\begin{verbatim}
+           \includegraphics{<nom>.eps}
+\end{verbatim}
+
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{pstricks,psfrag,graphicx}
+           \begin{document} 
+             \input{MonGraph.psf}
+           \end{document}
+\end{verbatim}
+\item Compilations possibles:
+\begin{itemize}
+\item LaTex + dvips
+\item latex + dvips + ps2pdf
+\end{itemize}
+\end{itemize}
+
+Remarque: dans ce format, certains labels utilisent des macros de pstricks.
+
+\section{Format pdf}
+
+\begin{itemize}
+
+\item Ces fichiers sont exportés avec l'extension \textit{.pdf}. Il y a en réalité deux fichiers générés: TeXgraph crée un fichier eps puis appelle un convertisseur eps vers pdf, celui-ci est (par défaut) le programme \textit{epstopdf}. Il  est possible de modifier ce dernier en éditant le fichier de macros TeXgraph.mac et en modifiant la macro appelée \textsl{pdfprog}. Dans ce format les labels ne seront pas compilés par TeX, donc s'ils contiennent des formules mathématiques ou des macros de TeX, celles-ci seront affichées mais non interprétées.
+
+\item Exemple (minimal):
+
+\begin{verbatim}
+           \documentclass{article}
+           \usepackage{graphicx}
+           \begin{document} 
+             \includegraphics{MonGraph.pdf}
+           \end{document}
+\end{verbatim}
+\item Compilations possibles:
+\begin{itemize}
+\item pdflatex
+\end{itemize}
+\end{itemize}
+
+\section{Formats compilés}
+
+\subsection{Format epsc}
+
+Lors de cet export, le programme demande un nom pour le fichier créé au format eps, appelons-le \textit{Toto.eps}. Le graphique et alors exporté au format pstricks dans un fichier appelé \textit{file.pst} qui se trouve dans le répertoire temporaire de TeXgraph, puis on lance  le script \verb|./CompileEps.sh| sous linux et \verb|CompileEps.bat| sous windows, avec comme argument le nom du fichier \verb|Toto|.
+
+Contenu du script sous linux (similaire sous windows):
+
+\begin{verbatim}
+                      #!/bin/sh
+                      latex -interaction=nonstopmode CompileEps.tex
+                      dvips -E -o $1.eps CompileEps.dvi 
+\end{verbatim}
+
+Ce script lance la compilation du fichier \textit{CompileEps.tex} suivant:
+
+\begin{verbatim}
+                      \documentclass[11pt]{article}
+                      \usepackage[utf8]{inputenc}
+                      \usepackage[T1]{fontenc}
+                      \usepackage{lmodern}
+                      \usepackage{pstricks-add,pst-eps,amssymb,amsmath}
+                      \usepackage[dvips,margin=0cm,a4paper]{geometry}
+                      \pagestyle{empty}
+
+                      \begin{document}
+                                 \TeXtoEPS%
+                                 \input{file.pst}%
+                                 \endTeXtoEPS%
+                      \end{document}
+\end{verbatim}
+
+et sa conversion en image eps grâce au programme \textit{dvips}. Bien entendu, ce fichier peut être modifié, il faut pour cela effacer la copie qui se trouve dans le dossier temporaire (\verb|$HOME/.TeXgraph| sous linux et \verb|c:\tmp| sous windows), et modifier l'original qui se trouve dans le dossier TeXgraph.
+
+\subsection{Format pdfc}
+
+Lors de cet export, le programme demande un nom pour le fichier créé au format pdf, appelons-le \textit{Toto.pdf}. Le graphique est alors exporté au format pgf dans un fichier appelé \textit{frame.pgf} qui se trouve dans le répertoire temporaire de TeXgraph, puis on lance  le script \verb|CompilePdf.sh| sous linux et \verb|CompilePdf.bat| sous windows, avec comme arguments la valeur 1 suivie du nom du fichier \verb|Toto|.
+
+Contenu du script sous linux (similaire sous windows):
+
+\begin{verbatim}
+                      #!/bin/sh
+                      cat > CompilePdf.tex <<EOF
+                                 \documentclass[11pt,frenchb]{article}
+                                 \usepackage[utf8]{inputenc}
+                                 \usepackage[upright]{fourier}
+                                 \usepackage{tikz,amssymb,amsmath,amsfonts,babel}
+                                 \usepackage[a4paper,margin=0cm,pdftex]{geometry}
+                                 \usepackage[active,tightpage]{preview}
+                                 \pagestyle{empty}
+                                 \begin{document}
+                                            \newcounter{compt}
+                                            \setcounter{compt}{1}
+                                            \loop
+                                            \begin{preview}
+                                            \input{frame\thecompt.pgf}% 
+                                            \end{preview}
+                                            \ifnum \thecompt<$1\addtocounter{compt}{1}
+                                            \repeat
+                                 \end{document}
+                      EOF
+                      pdflatex -interaction=nonstopmode CompilePdf.tex
+                      cp -f CompilePdf.pdf $2.pdf
+\end{verbatim}
+
+Ce script crée le fichier \textit{CompilePdf.tex}, que l'on peut lire dans le script et qui est créé dans le dossier temporaire, lance sa compilation par pdflatex et donne finalement l'image attendue. La valeur 1 signifie qu'il n'y a qu'une seule image à créer (c'est le même script qui est utilisé pour créer des animations).
+
+\section{Format svg}
+
+C'est un format vectoriel à destination du web, le fichier exporté est un fichier texte xml que l'on peut ensuite inclure dans une page html comme ceci par exemple:
+
+\begin{verbatim}
+                  <object type="image/svg+xml" data="source.svg" width="450" height="450">
+                  </object>
+\end{verbatim}
+
+Attention! Tous les lecteurs d'html ne sont pas forcément capables d'afficher du svg en natif. Pour être tranquille, prenez plutôt firefox!
+
+\section{Récapitulatif}
+
+\begin{center}
+\ifhtml\begin{tabular}{|m{1cm}|m{2cm}|m{4cm}|m{2cm}|m{2cm}|}%
+\else\begin{tabular}{|c|c|m{4cm}|c|c|}\fi%
+\hline
+Export&\hfil paquet(s)\hfil&\hfil Compilation(s)\hfil&code&Labels \TeX\ interprétés\\\hline
+tex& 
+epic, eepic, xcolor, rotating&
+\LaTeX \par \LaTeX+dvips \par \LaTeX+dvips+ps2pdf \par \LaTeX+dvipdfm(x)&
+\TeX&X\\\hline 
+pst&
+pstricks ou pstricks-add&
+\LaTeX+dvips \par \LaTeX+dvips+ps2pdf&
+pstricks&X\\\hline
+tkz/pgf&tikz&
+pdflatex\par \LaTeX \par \LaTeX+dvips \par \LaTeX+dvips+ps2pdf \par \LaTeX+dvipdfm(x)&
+tikz/pgf&X\\\hline
+eps&
+graphicx&
+\LaTeX+dvips \par \LaTeX+dvips+ps2pdf \par \LaTeX+dvipdfm(x)&
+postscript&\\\hline
+psf&pstricks, psfrag, graphicx&
+\LaTeX+dvips \par \LaTeX+dvips+ps2pdf&
+postscript&X\\\hline
+epsc&graphicx&\LaTeX+dvips \par \LaTeX+dvips+ps2pdf \par \LaTeX+dvipdfm(x)&
+pstricks&X\\\hline
+pdf&graphicx&pdflatex&postscript&\\\hline
+pdfc&graphicx&pdflatex&pgf&X\\\hline
+svg&aucun&format non reconnu&xml&\\\hline
+\end{tabular}
+\end{center}
+
+\section{Exporter dans le presse-papier}
+
+Il y a un bouton dans la barre d'outils permettant de copier le graphique en cours dans le presse-papier. Le graphique est copié en tant que texte comme dans un fichier, il est possible de copier le graphique aux formats:
+
+ \begin{itemize}
+ \item \textbf{tex}, \textbf{tkz/pgf}, \textbf{pst}: on peut ensuite coller directement le graphique dans un document (La)TeX sans avoir à charger de fichier avec la macro \textit{input}.
+ \item \textbf{teg}: c'est le format source pour TeXgraph.
+ \item \textbf{src4latex}: c'est le format source pour TeXgraph mais dans un environnement afin d'être inclus directement dans un document \LaTeX.  Ce format est décrit dans \Helpref{cette section}{srclatex}.
+ \item \textbf{texsrc}: c'est le source écrit en couleurs dans le langage \TeX, cela permet d'afficher des exemples colorisés dans des documents \LaTeX\ comme celui-ci.
+ \end{itemize}
+
+
+\section{L'apercu}
+
+Cliquer sur ce bouton (en forme d'œil) provoque l'exécution de la macro \textsl{Apercu} du fichier \textit{interface.mac}, la commande qui définit cette macro est:
+
+\begin{verbatim}
+                  [Export(pgf,[TmpPath,"file.pgf"]), 
+                   Exec("pdflatex", ["-interaction=nonstopmode apercu.tex"],TmpPath,1),
+                   Exec(PdfReader,"apercu.pdf",TmpPath,0,1)
+                  ]
+\end{verbatim}
+
+Le graphique en cours est donc exporté au format pgf dans le fichier \textit{file.pgf}, dans le répertoire temporaire de TeXgraph, puis on lance la compilation du fichier \textit{apercu.tex} avec pdflatex, et enfin  on ouvre le fichier créé: \textit{apercu.pdf} dans le lecteur pdf (celui-ci est défini dans le fichier de configuration, option Paramètres/Fichier de configuration). Le contenu du fichier \textit{apercu.tex} est:
+
+\begin{verbatim}
+                  \documentclass[a4paper,12pt]{article}
+                  \usepackage[utf8]{inputenc}
+                  \usepackage[T1]{fontenc}
+                  \usepackage{lmodern}
+                  \usepackage{tikz,amssymb,amsmath}
+                  \usepackage{mathrsfs}
+                  \usepackage[margin=1cm,pdftex]{geometry}
+                  \pagestyle{empty}
+
+                  \begin{document}
+                             \begin{figure}
+                             \centering
+                             \input{file.pgf}%
+                             \end{figure}
+                  \end{document}
+\end{verbatim}
+
+Bien entendu, ce fichier peut être modifié, il faut pour cela effacer la copie qui se trouve dans le dossier temporaire (\verb|$HOME/.TeXgraph| sous linux et \verb|c:\tmp| sous windows), et modifier l'original qui se trouve dans le dossier TeXgraph.
+
+\section{Export personnalisé}\label{cmdMyExport}
+
+Il est possible par le biais de la commande \textsl{MyExport} (ou la commande \textsl{draw} qui est un alias) de créer de nouveaux éléments graphiques avec un export personnalisé différent de l'export prévu par défaut dans TeXgraph.
+
+\begin{itemize}
+ \item \textbf[Myexport()]{MyExport( <"nom">, <paramètre 1>, ..., <paramètre n> )}
+ \item \desc cette commande s'utilise comme une commande graphique. L'utilisateur choisit un \argu{"nom"} et doit créer deux macros:
+    \begin{itemize}
+    \item la première dont le nom doit être la concaténation du mot \textit{Draw} et du \argu{"nom"}, cette macro fait le dessin,
+    \item la deuxième dont le nom doit être la concaténation du mot \textit{Export} et du \argu{"nom"}, cette macro fait l'export en écrivant dans le fichier d'exportation avec la commande \Helpref{WriteFile}{cmdWriteFile}. 
+    \end{itemize}
+
+Lors de l'évaluation graphique, la commande \textsl{MyExport}  appelle la macro de dessin \textit{"Draw"+"nom"} en lui passant les différents paramètres: \argu{paramètre 1}, \ldots, \argu{paramètre n}.
+
+Lors d'un export, la commande \textsl{MyExport}  appelle la macro d'exportation \textit{"Export"+"nom"} en lui passant les différents paramètres: \argu{paramètre 1}, \ldots, \argu{paramètre n}. Si cette macro renvoie la valeur $0$ alors TeXgraph procède à l'export \og classique \fg.
+
+\item \exem exportation des courbes cartésiennes en pstricks en utilisant la macro \verb|\psplot|. Choisissons le nom \verb|pstcartesian|, on écrit alors la macro de dessin \textit{Drawpstcartesian( f(x), [options] )} avec les options:
+
+    \begin{itemize}
+    \item \opt{clip}{0/1}: pour faire un clip ou non avec la fenêtre définie par l'option \textit{clipwin} (0 par défaut),
+    \item \opt{clipwin}{[xmin+i*ymin, xmax+i*ymax]}: définit la fenêtre de clipping, fenêtre graphique par défaut,
+    \item \opt{x}{[xmin, xmax]}: intervalle de tracé de la fonction, [tMin, tMax] par défaut.
+    \end{itemize}
+
+Ces options doivent être des \textit{variables globales}.
+
+\bigskip
+
+\begin{verbatim}
+        {Drawpstcartesian(f(x),[options])}
+        [SaveAttr(), clip:=0, clipwin:=[Xmin+i*Ymin, Xmax+i*Ymax], x:=[tMin,tMax],
+        $aux:=%2, {Evaluation des options}
+        tMin:=x[1], tMax:=x[2],
+        if clip then 
+                SaveWin(), $a:=clipwin[1], $b:=clipwin[2],
+                Fenetre( Re(a)+i*Im(b), Re(b)+i*Im(a))
+        fi,
+        Cartesienne(%1,0),
+        if clip then RestoreWin() fi,
+        RestoreAttr() ]
+\end{verbatim}
+
+On écrit ensuite la macro d'exportation: \textit{Exportpstcartesian( f(x), [options] )}
+
+\bigskip
+
+\begin{verbatim}
+  {Exportpstcartesian(expression,[options])}
+  if ExportMode=pst then {on teste le mode d'exportation}
+   SaveAttr(), clip:=0, clipwin:=[Xmin+i*Ymin, Xmax+i*Ymax], x:=[tMin,tMax],
+   $aux:=%2, {Evaluation des options}
+   tMin:=x[1], tMax:=x[2],
+   WriteFile([if clip then
+              $a:=clipwin[1], $b:=clipwin[2],
+              "\psclip{",
+              "\psframe[linestyle=none,fillstyle=none]",
+              @coord(a),@coord(b),"}%",LF
+              fi,
+             "\psplot[algebraic", 
+             if NbPoints<>50 then ",plotpoints=",NbPoints fi,
+             "]",
+             "{",Round(tMin,6),"}{",Round(tMax,6),"}{", @cvfunction(String(%1)),"}",
+            if clip then LF,"\endpsclip" fi
+            ]),
+   RestoreAttr()
+  else 0 { <- 0 signifie export normal}
+  fi
+\end{verbatim}
+
+\bigskip
+
+La macro \textit{cvfunction} renvoie la fonction au format pstricks sous forme d'une chaîne:
+
+\bigskip
+
+\begin{verbatim}
+        {cvfunction( chaine ): conversion vers la syntaxe de pstricks}
+        [$aux:=StrReplace(%1,"cos","COS"),
+        aux:=StrReplace(aux,"sin","SIN"),
+        aux:=StrReplace(aux,"tan","TAN"),
+        aux:=StrReplace(aux,"arccos","ACOS"),
+        aux:=StrReplace(aux,"arcsin","ASIN"),
+        aux:=StrReplace(aux,"arctan","ATAN"),
+        aux:=StrReplace(aux,"ch","COSH"),
+        aux:=StrReplace(aux,"sh","SINH"),
+        aux:=StrReplace(aux,"th","TANH"),
+        aux:=StrReplace(aux,"argch","ACOSH"),
+        aux:=StrReplace(aux,"argsh","ASINH"),
+        aux:=StrReplace(aux,"argth","ATANH"),
+        aux:=StrReplace(aux,"exp","EXP"),
+        aux]
+\end{verbatim}
+
+\bigskip
+
+Si on crée ensuite un élément graphique avec la commande: \co{MyExport("pstcartesian", x\^{}2*sin(x), [x:=[-2,2], clip=1] )}, alors l'export pstricks donnera le fichier:
+
+\bigskip
+
+\begin{verbatim}
+        \psset{xunit=1cm, yunit=1cm}
+        \begin{pspicture}(-5.5,-5.5)(5.5,5.5)%
+        %objet1  (Utilisateur)
+        \psclip{\psframe[linestyle=none,fillstyle=none](-5,-5)(5,5)}%
+        \psplot[algebraic]{-4}{4}{x^2*SIN(x)}
+        \endpsclip
+        \end{pspicture}% 
+\end{verbatim}
+
+\bigskip
+
+NB: cet exemple est incomplet car il ne traite pas le problème de l'exportation des attributs: couleurs, épaisseur, style de ligne, ...
+
+\end{itemize}

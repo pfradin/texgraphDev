@@ -1,0 +1,261 @@
+TeXgraph#
+{version 2.0}
+Cmd
+	Window(-11.5+9*i, 9.5-14.9574385468996*i, 0.5+0.5*i); 
+	Margin(0.5, 0.5, 0.5, 0.5);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=5.2926, phi:=0.9721, IdMatrix3D(), ModelView(central), DistCam(15)];
+	[GrayScale(0), ComptGraph:=11];
+
+Var
+    thecube = Parallelep( M(Xinf,Yinf,Zinf),(Xsup-Xinf)*vecI,(Ysup-Yinf)*vecJ,(Zsup-Zinf)
+	*vecK);
+    plans = [200,0,200*i,0,0,100,jump,jump,150,0,150*i,0,0,150,jump,jump,0,200,0,0,
+	200+200*i,0,200+200*i,200,jump,jump];
+    aretes = [200*i,0,200,0,jump,200,0,0,100,1E308+i,0,100,200*i,0,jump,150*i,0,150,
+	0,jump,150,0,0,150,1E308+i,0,150,150*i,0,jump,0,0,200+200*i,0,jump,200+200*i,
+	200,0,200,1E308+i,200+200*i,200,200+200*i,0,jump,0,200,0,0,jump];
+    showaxes = 1;
+    showbox = 1;
+    win3d = [0,200,0,200,0,200];
+    showplans = 1;
+    traceplans = 1;
+    planeOpacity = 0.4;
+    solOpacity = 1;
+    planeColor = Rgb(0.74,1,0.73);
+    solColor = Rgb(0.74,0.73,1);
+    traceColor = red;
+    contraintes = [1,1,2,1,200,jump,1,1,1,1,150,jump,1,-1,0,1,0,jump];
+    showaretes = 1;
+    fonctionnelle = [305+458*i,763];
+    maxColor = darkgreen;
+    minColor = brown;
+    showoptimize = 0;
+    nbplans = 3;
+
+Mac
+    Init = [$x:=0,
+	Bouton(RefPoint, "Contraintes", "AjoutContraintes()",
+	 ["Permet d'ajouter/modifier/supprimer des contraintes de la forme:",LF,"a*x+b*y+c*z<d ou a*x+b*y+c*z>d"]), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Fenetre 3D","DefFen3D()","Modifier la fenêtre graphique de l'espace"),
+	Inc(x,DeltaB*1.5),
+	
+	Bouton(RefPoint+x,"Voir les plans (o/n)","[showplans:=1-showplans, ReCalc(Contraintes)]",
+	"Montrer ou cacher les plans de contraintes"), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Trace des plans (o/n)","[traceplans:=1-traceplans, ReCalc(Contraintes)]","Montrer ou cacher la trace
+	 des plans de contraintes sur le parallélépipède de base."),
+	Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Aretes (o/n)","[showaretes:=1-showaretes, ReCalc(Contraintes)]",
+	"Montrer ou cacher les aretes du domaine de contraintes."),
+	Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Voir la boite (o/n)","[showbox:=1-showbox, ReCalc(axes)]",
+	"Montrer ou cacher le parallélépipède de base."), Inc(x,DeltaB),
+	
+	Bouton(RefPoint+x,"Voir les axes (o/n)","[showaxes:=1-showaxes, ReCalc(axes)]",
+	"Montrer ou cacher les axes"), Inc(x,DeltaB*1.5),
+	
+	Bouton(RefPoint+x,"Fonctionnelle","DefOptimiser()",
+	"Expression du type a*x+b*y+c*z, à optimiser sur le polyèdre de contraintes."), Inc(x,DeltaB),
+	 
+	Bouton(RefPoint+x,"Optimisation","[showoptimize:=1-showoptimize, ReCalc(Contraintes)]",
+	"Montrer ou cacher l'optimisation."), Inc(x,DeltaB),
+	
+	Xinf:=win3d[1], Xsup:=win3d[2],
+	Yinf:=win3d[3], Ysup:=win3d[4],
+	Zinf:=win3d[5], Zsup:=win3d[6],
+	CalcMatrix(),
+	ReCalc()
+	];
+
+    ClicG = NewLabel(%1);
+
+    xlegend = "$x$";
+
+    ylegend = "$y$";
+
+    zlegend = "$z$";
+
+    DefFen3D = if Input("
+	Entrez Xinf, Xsup, Yinf, Ysup, Zinf, Zsup", "Fenetre graphique de l'espace",
+	[Xinf, ",", Xsup, ",", Yinf, ",", Ysup, ",", Zinf, ", ", Zsup]) then
+	
+	 win3d:=Eval(["[",chaine(),"]"]),
+	 
+	 Xinf:=win3d[1], Xsup:=win3d[2], Yinf:=win3d[3], Ysup:=win3d[4],
+	 Zinf:=win3d[5], Zsup:=win3d[6],
+	 CalcMatrix(),
+	 ReCalc()
+	fi;
+
+    resoudre = [ $S:=thecube, plans:=Nil, aretes:=Nil,
+	  $compt:=0,nbplans:=0,
+	  for $z in %1 By jump do
+	   $a:=z[1], $b:=z[2], $c:=z[3], $d:=z[5], $sig:=z[4],
+	   Inc(nbplans,1),
+	   if a<>0 then $A:=M(d/a,0,0)
+	   elif b<>0 then A:=M(0,d/b,0)
+	   else A:=M(0,0,d/c)
+	   fi,
+	   $N:=M(a,b,c),$B:=A+N,
+	   if sig*(Prodscal(B,N)-d)>0 then N:=-N fi,
+	   Insert(aretes,Intersection([A,N],thecube,$face)),
+	   Insert(plans,[face,jump]),
+	           S:=Section([A,N],S)
+	 od,
+	 S
+	];
+
+    CalcMatrix = [
+	 $Dx:=(Xsup-Xinf)/10,$Dy:=(Ysup-Yinf)/10,$Dz:=(Zsup-Zinf)/10,
+	 Matrix3D:=[-[Xinf/Dx+5+i*(Yinf/Dy+5) ,Zinf/Dz+5], vecI/Dx,vecJ/Dy,vecK/Dz],
+	 SetMatrix3D(Matrix3D)
+	];
+
+    DefOptimiser = if Input("Entrer une fonction de (x,y,z) de la forme: a*x+b*y+c*z",
+	"Optimiser ax+by+cz",@StrFonctionnelle) then
+	 NewMac("f",chaine(),x,y,z), SetStr(StrFonctionnelle, chaine()),
+	 $x:=[f(1,0,0)+i*f(0,1,0),f(0,0,1)],
+	 if x=Nil then Message(["Expression ", chaine()," incorrecte."])
+	    else fonctionnelle:=x
+	 fi,
+	 DelMac("f")
+	fi;
+
+    DefContraintes = [
+	contraintes:=Nil,
+	for k from 1 to Nargs() do
+		sg:=StrArgs(k),
+	        $p:=StrPos("<",sg), if p=0 then $sig:=-1, p:=StrPos(">",sg) else $sig:=1 fi,
+		NewMac("f",StrCopy(sg,1,p-1),x,y,z),
+		sg:=StrCopy(sg,p+1,StrLength(sg)-p), $d:=Eval(sg),
+		$x:=[f(1,0,0),f(0,1,0),f(0,0,1)],
+	 	if (x<>Nil) And (d<>Nil) then Insert(contraintes,[x,sig,d,jump]),
+	                          else Message(["Expression ",StrArgs(k)," incorrecte.",LF, "On attend: a*x+b*y+c*z<d ou a*x+b*y+c*z>d"])
+	 	fi,
+	od,
+	DelMac("f"),
+	ReCalc(Contraintes)
+	];
+
+    DelContraintes = if Input("Voulez-vous vraiment effacer toutes les contraintes?",
+	"Effacer les contraintes.","Yes")
+	 then contraintes:=Nil, nbplans:=0, SetStr(StrContraintes,""), ReCalc()
+	fi;
+
+    StrContraintes = "x+y+2*z<200, x+y+z<150, x-y<0";
+
+    StrFonctionnelle = "305*x+458*y+763*z";
+
+    AjoutContraintes = if Input([LF, "Entrez les contraintes sous la forme d'une liste d'expressions de la forme:",LF,"a*x+b*y+c*z<d ou a*x+b*y+c*z>d"],
+	 "Ajouter une contrainte",@StrContraintes)
+		then
+	if StrComp(chaine(),"") then DelContraintes()
+	else
+		SetStr(StrContraintes, chaine()),
+		Eval( ["DefContraintes(",chaine(),")"])
+	fi
+	fi;
+
+Cmd	[Color:=65793,FillOpacity:=0.5,tMin:=-3.1129,tMax:=3.7125,DotScale:=1+i,LabelStyle:=1];
+Graph Contraintes = [$S:=resoudre(contraintes),
+	 if showoptimize then
+	   $dotMin:=S[1,2], $dotMax:=dotMin,
+	   $Min:=Prodscal(fonctionnelle,S[1,2]), $Max:=Min,
+	   for Z in S By 2 do
+	   	$m:=Prodscal($Z,fonctionnelle),
+	        if m<Min then Min:=m,dotMin:=Z
+	        elif m>Max then Max:=m,dotMax:=Z
+	        fi
+	   od,
+	   Intersection([dotMax,fonctionnelle],thecube,$planMax),
+	   Intersection([dotMin,fonctionnelle],thecube,$planMin),
+	 fi,
+	 if showaretes then bordS:=Aretes(S) fi,
+	
+	 Build3D( if showplans then
+	            bdFacet(plans, [color:=planeColor, opacity:=planeOpacity]) {plans de contraintes}
+	          fi,
+		  bdFacet(S,[color:=solColor, opacity:=solOpacity, contrast:=0]),
+	          if showoptimize then
+	             bdFacet(planMax,[color:=maxColor, opacity:=0.5]),
+	             sep3D,
+		     bdFacet(planMin,[color:=minColor, opacity:=0.5])
+	          fi,
+	          if showaretes then
+	             bdLine(bordS, [color:=traceColor,width:=8])
+	          fi
+	        ),
+	 Display3D(),
+	 Width:=8,HideWidth:=8,FillStyle:=none,
+	
+	 if showaretes then
+	    LineStyle:=dotted,
+	    Color:=traceColor,
+	    Ligne3D(bordS,0),             {aretes du polyèdre solution}
+	    LineStyle:=solid
+	 fi,
+	 
+	 if traceplans then
+	    Color:=traceColor,
+	    DrawAretes(aretes,0)
+	 fi,
+	 
+	 if showoptimize then
+	    LineStyle:=dotted, DotStyle:=bigdot,
+	    Color:=black,
+	    Map3D(
+	    Ligne3D([ dproj3d(Z,axeOz), Z, proj3d(Z,[axeOx[1,2],vecK]),
+	              dproj3d(Z,axeOx),jump, proj3d(Z,[axeOx[1,2],vecK]),
+	              dproj3d(Z,axeOy)
+	            ],0),
+	    Z,[dotMin,dotMax]),
+	    Point(Proj3D(dotMin),Proj3D(dotMax))
+	 fi
+	  ];
+Cmd	[FillOpacity:=1,tMin:=-10,tMax:=10,LabelStyle:=0];
+Graph axes = [
+	LabelSize:=scriptsize,
+	BoxAxes3D(
+	  drawbox:= showbox,
+	  xaxe:=showaxes, yaxe:=showaxes,  zaxe:=showaxes,
+	  zlabelstyle:=top+right, zlabelsep:=0.15,
+	  xstep:=(Xsup-Xinf)/10,
+	  ystep:=(Ysup-Yinf)/10,
+	  zstep:=(Zsup-Zinf)/10,
+	  dollar:=1,
+	  xlegendsep:=1, ylegendsep:=1, zlegendsep:=1
+	)
+	];
+Cmd	[Color:=0,tMax:=9,LabelStyle:=1];
+Graph legende = if nbplans>0 then
+	 LabelStyle:=bottom, $r:=rectangle(Proj3D(thecube)),
+	         Fenetre(Xmin+i*Ymax,Xmax+i*(Im(r[1])-0.5*(nbplans+2)/Yscale)),
+	         pos:=i*Ymin+(Xmin+Xmax)/2,
+	 Label(pos,
+	  ["$", if nbplans>1 then "\left\{\begin{array}{l} " fi,
+	   for $z in contraintes By jump do
+	       $a:=z[1], $b:=z[2], $c:=z[3], $d:=z[5], $sig:=z[4],
+	       $vide:=1,
+	       if a=1 then "x",vide:=0
+	       elif a=-1 then "-x",vide:=0
+	       elif a<>0 then a,"x",vide:=0 fi,
+	       if b=1 then if not(vide) then "+" fi,
+	                   "y",vide:=0
+	       elif b=-1 then "-y",vide:=0
+	       elif b>0 then if not(vide) then "+" fi,
+	                     b,"y",vide:=0
+	       elif b<0 then b,"y",vide:=0 fi,
+	       if c=1 then if not(vide) then "+" fi,"z"
+	       elif c=-1 then "-z"
+	       elif c>0 then "+",c,"z"
+	       elif c<0 then c,"z" fi,
+	       " \leqslant ",d,
+	       if nbplans>1 then "\\ " fi
+	   od,
+	   if nbplans>1 then " \end{array}\right."fi, "$"])
+	fi;

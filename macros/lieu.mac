@@ -1,0 +1,275 @@
+TeXgraph#
+{version 1.96}
+Var
+    lieuVerNum = 0.4;
+    lieuRefPoint = RefPoint;
+    moving = 0;
+    movDot = 0;
+    TimerOn = 0;
+    ListAnim = Nil;
+
+Cmd CompVer("lieu");
+
+Mac
+    DefLieu = if Input("
+    Entrez le nom du point:
+    et choisir les attributs du tracé.", "Tracé du lieu d'un point", chaine()) then
+     NewVar(["lieu",chaine()], "Nil"),
+     NewGraph(["Lieu",chaine()], ["[Insert(lieu", chaine(),",", chaine(),"), Ligne( lieu", chaine(), ",0)]"] ),
+     ReDraw()
+    fi;
+
+    StopLieu = if Input("
+    Entrez le nom du point:", "Arrêter le tracé du lieu d'un point", chaine()) then
+      GetAttr( ["Lieu",chaine()] ),
+      NewGraph(["Lieu",chaine()], ["Ligne( lieu", chaine(), ",0)"] ),
+     ReDraw()
+    fi;
+
+    InitLieu = if Input("
+    Entrez le nom du point:", "Réinitialiser un lieu", chaine()) then
+     NewVar(["lieu",chaine()], "Nil"),
+     ReCalc()
+    fi;
+
+    ClearLieu = if Input("
+    Entrez le nom du point:", "Supprimer un lieu", chaine()) then
+     DelGraph( ["Lieu",chaine()]),
+     DelVar(["lieu",chaine()]),
+     ReCalc()
+    fi;
+
+    DefAnim = if TimerOn then TimerOn:=0, Timer(0)
+    elif Input("
+    Entrez le nom du point assigné: ", "Déplacement automatique d'un point assigné", chaine()) then
+     $z:= Eval( ["Assign",chaine()]),
+     if z<>Nil then
+      $type:=z[1],
+      if type=1 {droite} then ListAnim:=Split(Dotperline,Get(Droite(z[2],z[3])))
+      else {type=2 cercle type=3 cercle type=4 courbe Or type=5 Ligne polyg Or type=6 polygone Or type=7 points then} 
+        ListAnim:=z[2,0]
+      fi, movDot:= Eval( ["Index(", chaine(), ")"] ),
+      SaveAnim:=%1,NumFrame:=1,
+      TimerOn:=1, Timer(DelayAnim)
+     fi
+     fi;
+
+    InitPointMobile = if Input("
+    Entrez le nom du point assigné: ", "Déplacement automatique d'un point assigné", chaine()) then
+     $z:= Eval( ["Assign",chaine()]),
+     if z<>Nil then
+      $type:=z[1],
+      if type=1 {droite} then ListAnim:=Split(Dotperline,Get(Droite(z[2],z[3])))
+      else {type=2 cercle type=3 cercle type=4 courbe Or type=5 Ligne polyg Or type=6 polygone Or type=7 points then} 
+      ListAnim:=z[2,0]
+      fi, movDot:= Eval( ["Index(", chaine(), ")"] ),
+      $pos:=ListAnim[1], Subs(DotAff,movDot,pos), 
+      ReCalc() 
+     fi
+     fi;
+
+    Split = [$dotperline:=%1, $list:=%2,  $B:=Nil,
+     for $z in list do
+       $A:=B, $B:=z, $u:=(B-A)/dotperline,
+       for $k from 0 to dotperline-1 do  A+k*u od
+     od,
+     B];
+
+    DefAssign = [$type:=%1,
+    if type=1 Or type=2 then {droite AB ou ax+by=c}
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",Get(Droite(",String(%2),",",String(%3),",",String(%4),"))]"])
+    elif  type=7 then {point}
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",", String(%2), "]"])
+    elif type=4 {paramétrage} then
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",Get(Courbe(", String(%2), "))]"])
+    elif type=3 then {cercle}
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",Get(Cercle(", String(%2),",",String(%3),",",String(%4),"))]"])
+    elif type=5 {ligne polygonale} then
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",Split(Dotperline,", String(%2), ")]"])
+    elif type=6 {polygone} then
+     NewVar( ["Assign", DotName[movDot]], ["[", %1, ",Split(Dotperline,[", String(%2),",",Copy(%2,1,1), "])]"])
+    fi
+    ];
+
+    Index = [$res:=0,
+     for $z in UseDot do
+       Inc(res,1),
+       if  z And StrComp( DotName[res], String(%1) ) then res fi
+    od
+    ];
+
+    FreeIndex = [$ok:=0, $k:=0,
+    for $j in UseDot do
+     Inc(k,1),
+     if (ok=0) And (j=0) then ok:=1, k fi
+    od,
+    if ok=0 then k+1, Insert(DotAff,jump), Insert(DotName,jump), Insert(UseDot,1) fi
+    ];
+
+    DelDot = if Input(["
+    
+    Supprimer le point ",DotName[movDot]," ?"], "Supprimer un point", "Yes") then
+    
+    DelGraph(["Lab", DotName[movDot]], ["Lieu", DotName[movDot]] ),
+    DelVar(DotName[movDot], ["lieu",DotName[movDot]], ["Assign",DotName[movDot]]),
+    Subs(DotAff, movDot, jump), Subs(DotName, movDot, jump), Subs(UseDot,movDot,0), ReCalc()
+    fi;
+
+    FreeName = Eval(%1)=Nil;
+
+{ Gestion souris}
+
+    testclic = [$num:=0, $k:=0,
+    for $z in DotAff do
+     Inc(k,1),
+     if z=jump then Nil
+     elif Abs(z-%1)<0.2 then  num:=k 
+     fi
+    od,
+    num];
+
+    nearest = [$out1:=Copy(%1,1,1), $d1:=abs(%2-out1),
+    $out2:=Copy(%1,2,1), $d2:=abs(%2-out2),
+    if d1>d2 then Echange(out1,out2), Echange(d1,d2) fi,
+    for z in %1 do
+     $x:=abs(z-%2),
+     if x<d1 then out2:=out1, out1:=z, d2:=d1, d1:=x 
+     elif x<d2 then out2:=z, d2:=x
+    fi
+    od,
+    if %3 then (d2*out1+d1*out2)/(d2+d1) else out1 fi
+    ];
+
+    lieuClicG = [movDot:=testclic(%1), 
+    if movDot=0 then
+    $ok:=1, Loop(
+    if Input("
+    Choisir un nom pour le point:", "Définir un point", chaine()) then
+     if FreeName(chaine()) then
+            $n:=FreeIndex(), Subs(DotAff,n,%1), Subs(UseDot,n,1), Subs(DotName,n,chaine()),  
+            NewVar(chaine(), ["DotAff[",n,"]" ]),
+            NewGraph( ["Lab",chaine()], ["[Color:=CtrlColorDot, DotScale:=CtrlDotScale, DotStyle:=CtrlDotStyle, Width:=8,
+                                               LabelDot(",chaine(),",""", chaine(), """,""N"",1)]"] ),
+            ReCalc()
+     else Message("Ce nom est déjà pris. Choisissez-en un autre."), ok:=0
+     fi
+     else ok:=1
+     fi, ok) {end loop}
+    else {point cliqué}
+     moving:=1
+    fi
+    ];
+
+    lieuClicD = [movDot:=testclic(%1), 
+    if movDot>0 then
+      $z:= Eval(["Assign", DotName[movDot] ]),
+       if z<>Nil then 
+                 DelVar(["Assign", DotName[movDot] ]),
+                 NewGraph( ["Lab", DotName[movDot]],["[
+Color:=CtrlColorDot, DotScale:=CtrlDotScale, DotStyle:=CtrlDotStyle, Width:=8,
+LabelDot(", DotName[movDot], ",""", DotName[movDot], """,""N"",1)
+]"] ), ReDraw()
+      else
+     if Input( ["Assigner le point ",Str( ["Name",movDot] )," à :
+    
+
+    - une droite (AB), tapez: 1, A, B
+    - une droite ax+by=c, tapez: 2, a, b, c
+    - un cercle C(A,r), tapez: 3, A, r
+    - un cercle passant par A,B,C, tapez: 3, A, B, C
+    - une courbe paramétrée par f(t), tapez: 4, f(t)
+
+    - une ligne polygonale, tapez: 5, [liste des points]
+    - un  polygone, tapez: 6, [liste des sommets]
+    - une liste de points: 7, [liste des points]
+    
+
+    Exemple: 4, t+i*t^2"], "Assigner un point", chaine()) then
+        NewGraph( ["Lab", DotName[movDot]], ["[
+Color:=CtrlColorAssign, DotScale:=CtrlDotScale, DotStyle:=CtrlDotStyle, Width:=8,
+LabelDot(", DotName[movDot], ",""", DotName[movDot], """,""N"",1)
+]"] ), 
+        Eval([ "DefAssign(", chaine(), ")"]),
+            moving:=1, MouseMove(%1), moving:=0
+     fi
+    fi
+    else VarGlob(%1) fi
+    ];
+
+    lieuCtrlClicG = [movDot:=testclic(%1),
+    if movDot>0 then DelDot() fi
+    ];
+
+    lieuCtrlClicD = [movDot:=testclic(%1),
+    if movDot>0 And (Eval( ["Assign", DotName[movDot] ])=Nil) then
+      if Input(["
+    
+    Entrez la nouvelle affixe du point ", DotName[movDot]," :"], "Déplacer un point", chaine())
+     then
+     $x:=Eval(chaine()),
+     if x<>Nil then Subs(DotAff, movDot, x), ReCalc() fi
+    fi
+    fi];
+
+    lieuMouseMove = if moving then 
+     $z:= Eval( ["Assign",DotName[movDot] ] ) , 
+     if z=Nil then
+     Subs(DotAff, movDot, %1), ReCalc()
+    else
+     $type:=z[1],
+      if type=1 Or type=2 {droite} then $pos:= proj(%1, Copy(z,2,2)) 
+     {elif type=2 cercle then pos:= Get( Ddroite(z[2],%1)) InterL Get(Cercle(z[2],z[3]) ) 
+     elif type=3 cercle then 
+     $A:=z[2], $B:=z[3], $C:=z[4],
+     pos:= Get( Ddroite((A+B+C)/3,%1)) InterL Get(Cercle(A,B,C) )} 
+     elif type=7 {points} then  x:=z[2,0], pos:=nearest(x,%1,0)
+     else {type=4 Or type=5 Or type=6 then} $x:=z[2,0], pos:=nearest(x,%1,1)
+     fi,
+      if pos<>Nil then Subs(DotAff, movDot, pos), ReCalc() fi
+    fi
+    fi;
+
+    lieuLButtonUp = moving:=0;
+
+{ marcos Init, Exit}
+
+    Init = [lieuRefPoint:=RefPoint,
+        Bouton(RefPoint, "Tracer un lieu","DefLieu()", "Tracer le lieu d'un point"), $x:=DeltaB,
+    Bouton(RefPoint+x, "Arrêter un lieu","StopLieu()", "Arrêter le tracé du lieu d'un point"), 
+    Inc(x,DeltaB),
+    Bouton(RefPoint+x, "Réinitialise lieu","InitLieu()", "Vider la liste des points d'un lieu"), 
+    Inc(x,DeltaB),
+    Bouton(RefPoint+x, "Effacer un lieu","ClearLieu()", "Supprimer les points d'un lieu."), 
+    Inc(x,DeltaB),
+    Bouton(RefPoint+x, "Init. pt. assigné", "InitPointMobile()","Initialiser un point assigné à sa première valeur."),
+    Inc(x,DeltaB),
+    Bouton(RefPoint+x, "Anim. pt. assigné", "DefAnim(0)","Déplacer automatiquement un point assigné."),
+    Inc(x,DeltaB),
+    Bouton(RefPoint+x, "Enregistrer Anim.", "DefAnim(1)","Enregistrer une animation"),Inc(x,DeltaB),
+        RefPoint:=RefPoint+x,
+    TimerMac("[Subs(DotAff, movDot,ListAnim[1]), Del(ListAnim,1,1), ReCalc(),
+               if SaveAnim then CaptureImage() fi,
+               if ListAnim=Nil then TimerOn:=0, Timer(0), 
+                 if SaveAnim then SaveAnim:=0, 
+                   if AnimationSVG=0 then MakePdf(NumFrame-1) 
+                   else MakeAnimJs(NumFrame-1) 
+                   fi
+                 fi 
+               fi]"),
+    RenMac("ClicG", "oldlieuClicG"), RenMac("lieuClicG", "ClicG"),
+    RenMac("ClicD", "oldlieuClicD"), RenMac("lieuClicD", "ClicD"),
+    RenMac("CtrlClicG", "oldlieuCtrlClicG"), RenMac("lieuCtrlClicG", "CtrlClicG"),
+    RenMac("CtrlClicD", "oldlieuCtrlClicD"), RenMac("lieuCtrlClicD", "CtrlClicD"),
+    RenMac("LButtonUp", "oldlieuLButtonUp"), RenMac("lieuLButtonUp", "LButtonUp"),
+    RenMac("MouseMove", "oldlieuMouseMove"), RenMac("lieuMouseMove", "MouseMove"),  
+    ReCalc()
+    ];
+
+    Exit = [RefPoint:=lieuRefPoint,
+    RenMac("ClicG", "lieuClicG"), RenMac("oldlieuClicG", "ClicG"),
+    RenMac("ClicD", "lieuClicD"), RenMac("oldlieuClicD", "ClicD"),
+    RenMac("CtrlClicG", "lieuCtrlClicG"), RenMac("oldlieuCtrlClicG", "CtrlClicG"),
+    RenMac("CtrlClicD", "lieuCtrlClicD"), RenMac("oldlieuCtrlClicD", "CtrlClicG"),
+    RenMac("LButtonUp", "lieuLButtonUp"), RenMac("oldlieuLButtonUp", "LButtonUp"),
+    RenMac("MouseMove", "lieuMouseMove"), RenMac("oldlieuMouseMove", "MouseMove")   
+        ];

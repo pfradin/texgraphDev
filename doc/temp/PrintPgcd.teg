@@ -1,0 +1,18 @@
+TeXgraph#
+Var name = "PrintPgcd";
+ param = ReadData(Concat(name,".prm"),1);
+Cmd outFile := Concat(name,".res");
+Cmd OpenFile(outFile);
+[
+a:=param[1], b:=param[2],
+if a<b then Echange(a,b) fi,
+Return("\begin{tabular}{|c|c|c|}\par\hline{}a&b&r\tabularnewline\hline"),
+r:=b,
+while r>0 do
+    r:=mod(a,b),
+    Return(Concat(a,"&",b,"&",r,"\tabularnewline\hline")),
+    a:=b, b:=r
+od,
+Return("\end{tabular}")
+];
+Cmd CloseFile(outFile);

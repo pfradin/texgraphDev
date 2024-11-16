@@ -1,0 +1,76 @@
+% TeXgraph version 2.0
+\bgroup%
+%\shorthandoff{;:!?}% uncomment if problem with babel
+\pgfdeclarehorizontalshading[colorA,colorB]{myshading}{100bp}{color(0bp)=(colorA);color(75bp)=(colorB)}%
+\pgfdeclareradialshading[colorA,colorB]{mysphereshading}{\pgfpoint{\GradCenterX bp}{\GradCenterY bp}}{color(0bp)=(colorA); color(35bp)=(colorB)}%
+%\shorthandon{;:!?}% uncomment if problem with babel
+\begin{tikzpicture}%
+\pgfsetxvec{\pgfxy(0.75,0)}%
+\pgfsetyvec{\pgfxy(0,0.75)}%
+\useasboundingbox (-5,-4)--(5,6);
+%image  (User)
+\pgfsetstrokecolor{rgb,1:red,0;green,0;blue,0}%
+\pgfsetlinewidth{0.4pt}%
+\pgfsetroundjoin%
+\pgfxyline(-5.0133,2)(5.0133,2)%
+\pgfxyline(-5,1.8667)(-5,2.1333)%
+\pgfxyline(-4,1.8667)(-4,2.1333)%
+\pgfxyline(-3,1.8667)(-3,2.1333)%
+\pgfxyline(-2,1.8667)(-2,2.1333)%
+\pgfxyline(-1,1.8667)(-1,2.1333)%
+\pgfxyline(0,1.8667)(0,2.1333)%
+\pgfxyline(1,1.8667)(1,2.1333)%
+\pgfxyline(2,1.8667)(2,2.1333)%
+\pgfxyline(3,1.8667)(3,2.1333)%
+\pgfxyline(4,1.8667)(4,2.1333)%
+\pgfxyline(5,1.8667)(5,2.1333)%
+\pgfputat{\pgfxy(0.3333,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(1,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $1$}}\pgfstroke%
+\pgfputat{\pgfxy(2,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $2$}}\pgfstroke%
+\pgfputat{\pgfxy(3,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $3$}}\pgfstroke%
+\pgfputat{\pgfxy(4,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $4$}}\pgfstroke%
+\pgfputat{\pgfxy(5,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $5$}}\pgfstroke%
+\pgfputat{\pgfxy(-1,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-2,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-3,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-3$}}\pgfstroke%
+\pgfputat{\pgfxy(-4,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-4$}}\pgfstroke%
+\pgfputat{\pgfxy(-5,1.6)}{\pgftext[top]{\color{rgb,1:red,0;green,0;blue,0}\small $-5$}}\pgfstroke%
+\pgfxyline(0,-4.0133)(0,6.0133)%
+\pgfxyline(0.1333,-4)(-0.1333,-4)%
+\pgfxyline(0.1333,-3)(-0.1333,-3)%
+\pgfxyline(0.1333,-2)(-0.1333,-2)%
+\pgfxyline(0.1333,-1)(-0.1333,-1)%
+\pgfxyline(0.1333,0)(-0.1333,0)%
+\pgfxyline(0.1333,1)(-0.1333,1)%
+\pgfxyline(0.1333,2)(-0.1333,2)%
+\pgfxyline(0.1333,3)(-0.1333,3)%
+\pgfxyline(0.1333,4)(-0.1333,4)%
+\pgfxyline(0.1333,5)(-0.1333,5)%
+\pgfxyline(0.1333,6)(-0.1333,6)%
+\pgfputat{\pgfxy(-0.4,2.3333)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $2$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $3$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $4$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,5)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $5$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,6)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $6$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $1$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,0)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $0$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,-1)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-1$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,-2)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-2$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,-3)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-3$}}\pgfstroke%
+\pgfputat{\pgfxy(-0.4,-4)}{\pgftext[right]{\color{rgb,1:red,0;green,0;blue,0}\small $-4$}}\pgfstroke%
+\pgfsetlinewidth{0.8pt}%
+\pgfsetfillopacity{0.85}%
+\pgfseteorule
+\pgfpathmoveto{\pgfxy(-4,-0.0000)}\pgfellipse{\pgfxy(0,1)}{\pgfxy(0.0000,4.1231)}{\pgfxy(-4.1231,0.0000)}%
+\pgfpathmoveto{\pgfxy(-3,2)}%
+\pgfpathlineto{\pgfxy(-3,0)}\pgfpathlineto{\pgfxy(-2,0)}%
+\pgfpatharc{180}{0}{1.5cm}%
+\pgfpathlineto{\pgfxy(2.5,0)}%
+\pgfpatharc{-90}{0.0000}{0.375cm}%
+\pgfpathlineto{\pgfxy(3,3)}%
+\pgfpathcurveto{\pgfxy(1,0)}{\pgfxy(-1,5)}{\pgfxy(-3,2)}%
+\pgfclosepath%
+\pgfsetfillcolor{rgb,1:red,0;green,0;blue,1}%
+\pgffillstroke%
+\end{tikzpicture}%
+\egroup%

@@ -1,0 +1,83 @@
+object PressePapier: TPressePapier
+  Left = 809
+  Height = 319
+  Top = 256
+  Width = 322
+  HorzScrollBar.Page = 321
+  HorzScrollBar.Range = 241
+  VertScrollBar.Page = 304
+  VertScrollBar.Range = 217
+  ActiveControl = Button1
+  Caption = 'Clipboard'
+  ClientHeight = 319
+  ClientWidth = 322
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '2.0.1.0'
+  object Button1: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 40
+    Height = 30
+    Top = 284
+    Width = 65
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 0
+  end
+  object Button2: TButton
+    AnchorSideTop.Control = Button1
+    Left = 218
+    Height = 30
+    Top = 284
+    Width = 66
+    Anchors = [akTop, akRight]
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Left = 5
+    Height = 274
+    Top = 5
+    Width = 312
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoFill = True
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
+    Caption = 'Format of copy'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 249
+    ClientWidth = 308
+    ItemIndex = 0
+    Items.Strings = (
+      'LaTeX (macros epic, eepic)  '
+      'psTricks  '
+      'tikz/pgf'
+      'teg (source file for TeXgraph)  '
+      'src4LaTeX (source file for LaTeX)  '
+      'texsrc (colored source for TeX)  '
+    )
+    ParentBidiMode = False
+    TabOrder = 2
+  end
+end

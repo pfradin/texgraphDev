@@ -1,0 +1,16 @@
+TeXgraph#
+Graph image = [
+view(-6.5,6,-6.5,5.5),
+Marges(0,0,0,0),size(7.5),
+view3D(-3,3,-3,3,-3,3),ModelView(central),
+S:=GetSurface([u+i*v,2*sin(u)+cos(v)],
+               -3+3*i,-3+3*i),
+stock:=for facette in S By jump do
+   z:=Zde(isobar3d(facette)),
+   facette,
+   ColorJump(Hsb(270*(Zsup-z)/(Zsup-Zinf),1,1))
+        od,
+FillStyle:=full, LabelSize:=footnotesize,
+BoxAxes3D(grid:=1, FillColor:=lightblue),
+Ligne3D(SortFacet(stock),1)
+];

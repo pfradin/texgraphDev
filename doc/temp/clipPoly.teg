@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+ ModelView(central), Marges(0,0,0,0), size(7.5),
+ view3D(-3,3,-3,3,-3,3),
+ S:=clipPoly( Sphere( M(1,0,1),3,30,15) ),
+ HideWidth:=8, drawWin3d(0),
+ DrawFacet(S, [color:=steelblue]),
+ drawWin3d(1)
+];

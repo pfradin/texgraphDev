@@ -1,0 +1,23 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-4,5), Marges(0.5,0.5,0.5,0.5), size(7.5),
+Axes(-5,1+i,2+2*i),
+A:=-4.5+(Ymin+1.75)*i, FillStyle:=full, FillOpacity:=0.5,
+LabelStyle:=left, LabelSize:=footnotesize,
+Dcarre(A+0.25*(-1+i),A+0.25*(1+i), -1,FillColor:=green),
+Label(A+0.4,"domaine2 entre $2\cos(x)$ et $x^2$ sur
+ $[-4\,;\, -1.5]$ "), Inc(A,-0.75*i),
+Dcarre(A+0.25*(-1+i),A+0.25*(1+i),-1,FillColor:=blue),
+Label(A+0.4,"domaine3 entre $2\cos(x)$ et $x^2$ "),
+Inc(A,-0.75*i),
+Dcarre(A+0.25*(-1+i),A+0.25*(1+i),-1,FillColor:=red),
+Label(A+0.4,"domaine1 pour $2\cos(x)$ sur $[1.1\,;\, 4]$"),
+domaine1(2*cos(x),[x:=[1.1, 4],FillColor:=red]),
+domaine2(2*cos(x),sin(x),[x:=[-4,-1.5],FillColor:=green]),
+domaine3(2*cos(x),x^2,FillColor:=blue),
+tangente(2*cos(x),0.5,1.5,Arrows:=2),
+FillStyle:=none,Width:=8,
+draw("cartesian",sin(x),[x:=[-5,-1],Color:=darkblue]),
+draw("cartesian",2*cos(x),[x:=[-5,5],Color:=crimson]),
+draw("cartesian",x^2,[x:=[-3,3],Color:=forestgreen])
+];

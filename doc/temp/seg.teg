@@ -1,0 +1,22 @@
+TeXgraph#
+Graph image = [
+view(-4,4,-4,4), Marges(0,0,0,0), size(7.5),
+v:=-1.5*i, seg:=shift([-3+4*i,3+5*i], v),
+draw("seg", seg, [legend:="segment", Arrows:=1] ),
+seg:=shift(seg,v),
+draw("seg", seg, [legend:="segment", labelsep:=0,
+   marker:=[0,Oarc,1,Oarc] ] ),
+seg:=shift(seg,v),
+setframestyle([FillStyle:=full, LineStyle:=noline,
+   FillColor:=white]),
+draw("seg", seg, [legend:="segment", labelsep:=0,
+ Arrows:=2 ] ),
+seg:=shift(seg,v),
+draw("seg", seg, [legend:="segment", labelpos:=0.25,
+ labelsep:=-0.25, LineStyle:=dashed, LabelStyle:=left,
+ rotation:=0, marker:=[0,dot,0.75,Cscissors,1,dot]]),
+seg:=shift(seg,v),
+draw("seg", seg, [legend:="segment", LabelStyle:=left,
+ labelsep:=-0.25, showdot:=1, rotation:=0,
+ LabelAngle:=-90, marker:=[0,Line,1,CParrow]])
+];

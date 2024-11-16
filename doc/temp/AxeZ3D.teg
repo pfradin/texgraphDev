@@ -1,0 +1,19 @@
+TeXgraph#
+Graph image = [
+view(-6.5,6.5,-3,5.5),Marges(0,0,0,0),size(7.5),
+view3D(-3,3,-3,3,-3,3),ModelView(central),
+Width:=8,Color:=blue, FillStyle:=full,
+FillColor:=lightcyan,Cercle3D(Origin,3,vecK),
+Arrows:=1,LabelSize:=scriptsize,
+Width:=4,Color:=black,
+AxeX3D(axeOrigin:=M(-3,-3,0),tickdir:=-vecJ,
+   xlabelstyle:=right,tickpos:=0,xlimits:=[-3,3.5],
+   legendpos:=1,xlabelsep:=0.15),
+AxeY3D(axeOrigin:=M(-3,-3,0), tickdir:=-vecI,
+    tickpos:=0, ylimits:=[-3,3.5]),
+AxeZ3D(axeOrigin:=M(-3,-3,0),zlimits:=[0,3.5],
+    tickdir:=M(1,-1,0),zgradlimits:=[1,3]),
+LineStyle:=dashed, Arrows:=0,
+Ligne3D([M(0,-3,0),Origin,M(-3,0,0)],0),
+LabelDot3D(Origin, "$O$","E",1)
+];

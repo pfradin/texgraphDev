@@ -1,0 +1,7 @@
+TeXgraph#
+Graph image = [
+ Marges(0,0,0,0), size(7.5),
+ S:=GetSurface([u+i*v,sin(u)+cos(v)],
+        pi*(-1+i),pi*(-1+i)),
+ DrawFacet(S,[color:=Rgb(0.74,0.73,1)])
+];

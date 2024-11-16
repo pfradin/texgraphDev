@@ -1,0 +1,23 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textit{\color{TegIdentifier}polyedre}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Cmd}\ \textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol};}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\textbf{\color{TegKeyWord}Include}\ "{\color{TegString} PolyedresII.mac"}{\color{TegSymbol};}\par
+\textbf{\color{TegKeyWord}Var}\ {\color{TegVarGlob}A}\ {\color{TegSymbol}=}\ \textbf{\color{TegKeyWord}M}{\color{TegSymbol}(}{\color{TegNumeric}3}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\textbf{\color{TegKeyWord}Mac}\ {\color{TegMacUser}f}\ {\color{TegSymbol}=}\ \textbf{\color{TegKeyWord}M}{\color{TegSymbol}(}{\color{TegParam}\%1}{\color{TegSymbol},}{\color{TegParam}\%2}{\color{TegSymbol},}\textbf{\color{TegKeyWord}sin}{\color{TegSymbol}(}{\color{TegParam}\%1}{\color{TegSymbol})}{\color{TegSymbol}+}\textbf{\color{TegKeyWord}cos}{\color{TegSymbol}(}{\color{TegParam}\%2}{\color{TegSymbol})}{\color{TegSymbol})}{\color{TegSymbol};}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}objet1}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\ \ \textbf{\color{TegMacPredef}background}{\color{TegSymbol}(}\textbf{\color{TegConstant}full}{\color{TegSymbol},}\textbf{\color{TegConstant}lightgray}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegVarPredef}ColorL}{\color{TegSymbol}:=}\textbf{\color{TegConstant}slategray}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}StyleL}{\color{TegSymbol}:=}{\color{TegNumeric}12}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegMacPredef}CubeAdc}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}Origin}{\color{TegSymbol},}\ {\color{TegVarGlob}A}{\color{TegSymbol},}\textit{\color{TegIdentifier}C}{\color{TegSymbol},}\textit{\color{TegIdentifier}T1}{\color{TegSymbol},}\textit{\color{TegIdentifier}T2}{\color{TegSymbol},}\textit{\color{TegIdentifier}Ar}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegKeyWord}Build3D}{\color{TegSymbol}(}\textit{\color{TegIdentifier}C}{\color{TegSymbol},}\textit{\color{TegIdentifier}T1}{\color{TegSymbol},}\textit{\color{TegIdentifier}T2}{\color{TegSymbol},}\textit{\color{TegIdentifier}Ar}{\color{TegSymbol},}\par
+\ \ \ \ \ \textbf{\color{TegMacPredef}bdSurf}{\color{TegSymbol}(}{\color{TegMacUser}f}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}u}{\color{TegSymbol},}\textbf{\color{TegVarPredef}v}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}steelblue}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegVarPredef}u}{\color{TegSymbol}:=}{\color{TegSymbol}[}{\color{TegSymbol}-}\textbf{\color{TegConstant}pi}{\color{TegSymbol},}\textbf{\color{TegConstant}pi}{\color{TegSymbol}]}{\color{TegSymbol},}\textbf{\color{TegVarPredef}v}{\color{TegSymbol}:=}\textbf{\color{TegVarPredef}u}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ \textbf{\color{TegVarPredef}contrast}{\color{TegSymbol}:=}{\color{TegNumeric}0.125}{\color{TegSymbol}]}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \ \ \ \textbf{\color{TegMacPredef}bdAxes}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}Origin}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}forestgreen}{\color{TegSymbol},}\textbf{\color{TegVarPredef}arrows}{\color{TegSymbol}:=}{\color{TegNumeric}1}{\color{TegSymbol}]}{\color{TegSymbol})}\par
+\ \ \ \ \ {\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \ \textbf{\color{TegKeyWord}Display3D}{\color{TegSymbol}(}{\color{TegSymbol})}{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

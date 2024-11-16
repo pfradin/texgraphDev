@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+ view(-3.5,4.5,-3,3), Marges(0,0,0,0), size(7.5),
+ P:=Parallelep(Origin, 3*vecI,3*vecJ,3*vecK),
+ P1:=Chanfrein(P,0.25,0), P2:=Chanfrein(P,0.25,1),
+ DrawFacet( shift3d(P1,-2*vecJ), [color:=steelblue],
+       shift3d(P2, 2*vecJ), [color:=steelblue]),
+ Label(-2-1.5*i, "non epointe", 1.8-2.6*i, "epointe")
+];

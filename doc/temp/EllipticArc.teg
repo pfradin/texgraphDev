@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+view(-2.25,3.75,-2,5),Marges(0,0,0,0),size(7.5),
+A:=0, B:=3+i, C:=2+4*i, DotScale:=2, Width:=8,
+Ligne([B,A,C],0), Color:=red,
+LabelDot(A,"$A$","S",1), LabelDot(B,"$B$","N",1),
+LabelDot(C,"$C$","SE",1), Arrows:=1, Color:=blue,
+EllipticArc(B,A,C,2,1,-1), EllipticArc(B,A,C,2,3,1)
+];

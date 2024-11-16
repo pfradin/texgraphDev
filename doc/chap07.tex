@@ -1,0 +1,1084 @@
+\chapter{Les macros mathématiques de TeXgraph.mac}
+
+\section{Calculs}
+
+\subsection{Abs}
+
+\begin{itemize}
+ \item \util \textbf[Abs()]{Abs( <affixe> )}.
+ \item \desc cette macro donne la norme en cm.
+\end{itemize}
+
+\subsection{Ceil}
+
+\begin{itemize}
+ \item \util \textbf[Ceil()]{Ceil( <x> )}.
+ \item \desc renvoie le plus petit entier supérieur ou égal au réel \argu{x}.
+\end{itemize}
+
+\subsection{div}
+
+\begin{itemize}
+ \item \util \textbf[div()]{div( <x>, <y> )}.
+ \item \desc renvoie l'unique entier k tel que x-ky soit dans l'intervalle $[0;|y|[$.
+\end{itemize}
+
+\subsection{det2d}
+
+\begin{itemize}
+ \item \util \textbf[det2d()]{det2d( <vecteur1>, <vecteur2> )}.
+ \item \desc renvoie le déterminant entre les deux vecteurs (affixes).
+\end{itemize}
+
+\subsection{IsIn}
+
+\begin{itemize}
+ \item \util \textbf[IsIn()]{IsIn( <affixe> [, <epsilon>] )}.
+ \item \desc renvoie 1 si l'\argu{affixe} est dans la fenêtre graphique, 0 sinon. Cette macro tient compte de la matrice courante, le test se fait à \argu{epsilon} près et \argu{epsilon} vaut 0.0001 cm par défaut.
+\end{itemize}
+
+\subsection{mod}
+
+\begin{itemize}
+ \item \util \textbf[mod()]{mod( <x>, <y> )}.
+ \item \desc renvoie l'unique réel r de l'intervalle [0;|y|[ tel que x=ky+r avec k entier.
+\end{itemize}
+
+\subsection{not}\label{macnot}
+
+\begin{itemize}
+ \item \util \textbf[not()]{not( <expression booléenne> )}.
+ \item \desc renvoie la valeur booléenne de la négation.
+\end{itemize}
+
+\subsection{pgcd ou gcd}
+
+\begin{itemize}
+ \item \util \textbf[pgcd()]{pgcd( <a>, <b> [, <u>, <v>] )}.
+ \item \desc renvoie la valeur d du pgcd de \argu{a} et \argu{b}, ainsi que deux coefficients de Bézout dans les variables \argu{u} et \argu{v} (si celles-ci sont présentes), de telle sorte que $au+bv=d$.
+\end{itemize}
+
+\subsection{ppcm ou lcm}
+
+\begin{itemize}
+ \item \util \textbf[ppcm()]{ppcm( <a>, <b> )}.
+ \item \desc renvoie la valeur du ppcm de \argu{a} et \argu{b}.
+\end{itemize}
+
+\section{Opérations sur les listes}
+
+\subsection{bary}
+\begin{itemize}
+ \item \util \textbf[bary()]{bary( <[affixe1, coef1, affixe2, coef2, ...]> )}.
+ \item \desc renvoie le barycentre du système pondéré \argu{[(affixe1, coef1), (affixe2, coef2),...]}.
+\end{itemize}
+
+\subsection{calcTeXSizes}
+\begin{itemize}
+ \item \util \textbf[calcTeXSizes()]{calcTeXSizes( <liste de chaînes>, <liste d'options> )}.
+ \item \desc calcule et renvoie la liste des \verb|largeur+i*hauteur| (en cm) de la boite TeX pour chaque chaîne dans le même ordre que la liste de chaînes initiale. Les options sont sous forme de chaînes de caractères, et l'option numéro $i$ s'applique à la chaîne $i$.
+\end{itemize}
+
+\subsection{del}
+\begin{itemize}
+ \item \util \textbf[del()]{del( <liste>, <liste des index à supprimer>, <quantité à supprimer> )}.
+ \item \desc renvoie la liste après avoir supprimer les éléments dont l'index figure dans la \argu{liste des index à supprimer}. La \argu{quantité à supprimer} (à chaque fois) est de $1$ par défaut, cet argument peut être une liste lui aussi.
+ \item \exem
+ \begin{itemize}
+ \item \co{del( [1,2,3,4,5,6,7,8], [2,6,8])} donne \res{[1,3,4,5,7]}.
+ \item \co{del( [1,2,3,4,5,6,7,8], [2,6,8], 2)} donne \res{[1,4,5]}. 
+ \item \co{del( [1,2,3,4,5,6,7,8], [2,6,8], [1,2])} donne \res{[1,3,4,5]}. 
+ \item \co{del( [1,2,jump,3,4,5,jump,6,7,8],[3,7])} donne \res{[1,2,3,4,5,6,7,8]}. 
+ \end{itemize}
+\end{itemize}
+
+\subsection{getdot}
+\begin{itemize}
+ \item \util \textbf[getdot()]{getdot( <s> , <ligne polygonale> )}.
+ \item \desc renvoie le point de la \argu{ligne polygonale} ayant \argu{s} comme abscisse curviligne. Le paramètre \argu{s} doit être dans l'intervalle $[0;1]$, $0$ pour le premier point, et $1$ pour le dernier.
+\end{itemize}
+
+\subsection{IsAlign}
+
+\begin{itemize}
+ \item \util \textbf[IsAlign()]{IsAlign( <liste points 2D> [, epsilon] )}.
+ \item \desc renvoie 1 si les points sont sur une même droite, 0 sinon. Par défaut la tolérance \argu{epsilon} vaut 1E-10. La \argu{liste} ne doit pas contenir la constante \jump.
+\end{itemize}
+
+
+\subsection{isobar}
+
+\begin{itemize}
+ \item \util \textbf[isobar()]{isobar( <[affixe1, affixe2, ...]> )}.
+ \item \desc renvoie l'isobarycentre du système \argu{[affixe1, affixe2, ...]}.
+\end{itemize}
+
+\subsection{KillDup}
+\begin{itemize}
+ \item \util \textbf[KillDup()]{KillDup( <liste> [, epsilon] )}.
+ \item \desc renvoie la liste sans doublons. Les comparaisons se font à \argu{epsilon} près (qui vaut $0$ par défaut).
+ \item \exem \co{KillDup( [1.255,1.258,jump,1.257,1.256,1.269,jump] ,1.5E-3)} renvoie \res{[1.255,1.258,1.269]}.
+\end{itemize}
+
+\subsection{length}
+\begin{itemize}
+ \item \util \textbf[length()]{length( <liste> )}.
+ \item \desc calcule la longueur de la \argu{liste} en cm.
+\end{itemize}
+
+\subsection{linspace}
+\begin{itemize}
+ \item \util \textbf[linspace()]{linspace( <départ>, <fin> [, nombre] )}.
+ \item \desc renvoie une liste de \argu{nombre} réels équirépartis entre \argu{départ} et \argu{fin}, la valeur de \argu{nombre} est de $50$ par défaut.
+\end{itemize}
+
+\subsection{list}
+\begin{itemize}
+ \item \util \textbf[list()]{list( <liste>, <nombre> )}.
+ \item \desc renvoie une liste composée de \argu{nombre} répétitions de \argu{liste}.
+ \item \exem la commande \co{list([1,2],4)} renvoie \res{[1,2,1,2,1,2,1,2]}.
+\end{itemize}
+
+\subsection{permute}
+\begin{itemize}
+ \item \util \textbf[permute()]{permute( <liste> )}.
+ \item \desc modifie la \argu{liste} en plaçant le premier élément à la fin, \argu{liste} doit être une variable.
+ \item la commande \co{[x:= [1,2,3,4], permute(x), x]} renvoie \res{[2,3,4,1]}.
+\end{itemize}
+
+\subsection{Pos}
+\begin{itemize}
+ \item \util \textbf[Pos()]{Pos( <élément>, <liste>, [, epsilon] )}.
+ \item \desc renvoie la liste des positions de l'\argu{élément} (chaîne ou complexe) dans la \argu{liste}, la comparaison se fait à \argu{epsilon} près pour les valeurs numériques, par défaut \argu{epsilon} vaut 0.
+ \item la commande \co{Pos(2, [1,2,3,2,4])} renvoie \res{[2,4]}, mais \co{Pos(5, [1,2,3,2,4])} renvoie \Nil.
+\end{itemize}
+
+\subsection{range}
+\begin{itemize}
+ \item \util \textbf[range()]{range( <départ>, <fin> [, pas] )}.
+ \item \desc renvoie une liste de réels allant de \argu{départ} à \argu{fin} (inclus) avec un \argu{pas} qui vaut $1$ par défaut.
+\end{itemize}
+
+\subsection{rectangle}
+\begin{itemize}
+ \item \util \textbf[rectangle()]{rectangle( <liste> )}.
+ \item \desc détermine le plus petit rectangle contenant la liste, cette macro renvoie une liste de deux complexes qui représentent l'affixe du coin inférieur gauche suivi de celle du coin supérieur droit.
+\end{itemize}
+
+\subsection{replace}
+\begin{itemize}
+ \item \util \textbf[replace()]{replace( <liste>, <position>, <nouveau> )}.
+ \item \desc modifie la variable \argu{liste} en remplaçant l'élément numéro \argu{position} par le \argu{nouveau}, cette macro renvoie \Nil.
+\end{itemize}
+
+\subsection{reverse}
+\begin{itemize}
+ \item \util \textbf[reverse()]{reverse( <liste> )}.
+ \item \desc renvoie la liste après avoir inverser chaque composante (deux composantes sont séparées par un \jump).
+ \item \exem \co{reverse([1,2,3,jump,4,5,6])} renvoie \res{[3,2,1,jump,6,5,4]}.
+\end{itemize}
+
+\subsection{round}
+
+\begin{itemize}
+ \item \util \textbf[round()]{round( <liste> [, décimales] )}.
+ \item \desc tronque les complexes de la \argu{liste} en arrondissant au plus proche les parties réelles et imaginaires avec le nombre de \argu{décimales} demandé (0 par défaut). Si la \argu{liste} contient la constante \jump, alors celle-ci est renvoyée dans la liste des résultats. Cette macro utilise la commande \Helpref{{Round}}{cmdRound} (qui ne s'applique qu'à un complexe et non une liste).
+\end{itemize}
+
+\subsection{StrReverse}
+
+\begin{itemize}
+ \item \util \textbf[StrReverse()]{StrReverse( <chaîne> )}.
+ \item \desc renvoie la chaîne inversée.
+\end{itemize}
+
+
+\subsection{SortWith}
+\begin{itemize}
+ \item \util \textbf[SortWith()]{SortWith( <liste clés>, <liste>, <taille des paquets> [, mode] )}.
+ \item \desc trie la \textbf{variable} \argu{liste} suivant les \argu{clés}). Les éléments de la \argu{liste} sont traités par \argu{paquets}, l'élément numéro $i$ de la liste des clés, est à la clé du paquet numéro $i$ de la variable \argu{liste}, la \argu{taille des paquets} est de 1 par défaut; celle-ci peut être égale à \jump pour un traitement par composante. Si un paquet n'est pas complet, il n'est pas traité. Si la liste contient la constante \jump, alors toutes les composantes sont triées chacune leur tour. Le dernier paramètre détermine le type de tri: \argu{mode}=0 pour ordre croissant (valeur par défaut), \argu{mode}=1 pour décroissant.
+\end{itemize}
+
+\begin{comment}
+\section{Gestion des listes par composantes}
+
+La convention adoptée est que deux composantes sont séparées par la constante \jump. Une composante peut être vide.
+
+\subsection{CpCopy}
+\begin{itemize}
+ \item \util \textbf[CpCopy()]{CpCopy( <liste>, <index départ>, <nombre> )}.
+ \item \desc cette fonction renvoie la liste constituée par les \argu{nombre} composantes de la \argu{liste} à partir de
+la composante numéro \argu{départ} [inclus]. Si \argu{nombre} est nul, alors la fonction renvoie toutes les composantes
+de la liste à partir de la composante numéro \argu{départ}. 
+
+Si le numéro \argu{départ} est négatif, alors la liste et parcourue de droite à gauche en partant du dernier, la
+dernière composante a l'index $-1$, l'avant-dernière a l'index $-2$ $\cdots$ etc. La fonction renvoie les \argu{nombre}
+composantes de la liste (ou toute la liste si \argu{nombre} est nul) en allant vers la gauche, mais la liste renvoyée
+est dans le même sens que la \argu{liste}, et cette dernière n'est pas modifiée.
+ \item \exem \begin{itemize}
+   \item \co{CpCopy([1,2,jump,3,7,8,jump,4,jump,5,6], 2, 1)} renvoie \res{[3,7,8]}.
+   \item \co{CpCopy([1,2,jump,3,7,8,jump,4,jump,5,6], -1, 2)} renvoie \res{[4,jump,5,6]}.
+   \item \co{CpCopy([1,2,jump,3,7,8,jump,4,jump,5,6], -3, 0)} renvoie \res{[1,2,jump,3,7,8]}.
+   \end{itemize}
+\end{itemize}
+
+\subsection{CpDel}
+\begin{itemize}
+ \item \util \textbf[CpDel()]{CpDel( <variable liste>, <index départ>, <nombre> )}.
+ \item \desc cette fonction détruit dans la \argu{variable liste}, les \argu{nombre} composantes à partir
+de la composante numéro \argu{départ} [inclus]. Si \argu{nombre} est nul, alors la fonction détruit toutes les
+composantes de la \argu{variable liste} à partir de la composante numéro \argu{départ}. 
+
+Si le numéro \argu{départ} est négatif, alors la liste et parcourue de droite à gauche en partant du dernier, la
+dernière composante a l'index $-1$, l'avant-dernière a l'index $-2$ $\cdots$ etc. La fonction détruit les \argu{nombre}
+composantes de la <variable liste> (ou toute la liste si \argu{nombre} est nul) en allant vers la gauche.
+
+Le paramètre \argu{variable liste} doit être \Mytextbf{un nom de variable}, celle-ci est modifiée et la macro renvoie
+\Nil.
+\end{itemize}
+
+\subsection{CpNops}
+\begin{itemize}
+ \item \util \textbf[CpNops()]{CpNops( <liste> )}.
+ \item \desc cette fonction évalue \argu{liste} et renvoie le nombre de composantes qui la composent.
+ \item \exem 
+  \begin{itemize}
+  \item \co{CpNops([1,2,jump,3] )} renvoie la valeur \res{2}.
+  \item \co{CpNops([1,2,jump,3,jump] )} renvoie la valeur \res{3}.
+  \item \co{CpNops([jump] )} renvoie la valeur \res{2}.
+  \end{itemize}
+\end{itemize}
+
+\subsection{CpReplace}
+\begin{itemize}
+ \item \util \textbf[CpReplace()]{CpReplace( <variable liste>, <position>, <nouveau> )}.
+ \item \desc modifie la \argu{variable liste} en remplaçant la composante numéro \argu{position} par \argu{nouveau},
+cette macro renvoie \Nil.
+\end{itemize}
+
+\subsection{CpReverse}
+\begin{itemize}
+ \item \util \textbf[CpReverse()]{CpReverse( <liste> )}.
+ \item \desc renvoie la \argu{liste} avec les composantes dans l'ordre inverse.
+ \item \exem \co{CpReverse([1,2,jump,3,4,5,jump])} renvoie \res{[jump,3,4,5,jump,1,2]}. 
+\end{itemize}
+
+\section{Gestion des listes de chaînes}
+
+Cette partie est laissée pour compatibilité ascendante car depuis la version 1.97 TeXgraph gère nativement les listes de chaînes de caractères. Dans les anciennes précédentes, une telle liste est en réalité une \textbf{macro}, les éléments sont indexés à partir de $1$, et la chaîne numéro $k$
+est donnée par \verb|@nomListe(k)|, alors que la longueur de la liste (nombre d'éléments) est donnée par
+\verb|nomListe(0)|.
+
+\subsection{StrListInit}\label{macStrListInit}
+\begin{itemize}
+ \item \util \textbf[StrListInit()]{StrListInit( <nomListe>, <"chaîne1">, <"chaîne2">, ... )}.
+ \item \desc crée une liste de chaînes sous forme d'une macro appelée \argu{nomListe}, les arguments suivants sont
+interprétés comme des chaînes, ils constituent les éléments de la liste et sont indexés à partir de 1.
+ \item \exem Après la commande \co{StrListInit(essai, "toto", ["toto",2/4], 24)}, une macro du nom de \Mytextbf{essai}
+est créée et son contenu est:
+\begin{verbatim}
+for $z in Args() do
+ if z<0 then Inc(z,4) fi,
+ if z=0 then 3
+ elif z=1 then "toto"
+ elif z=2 then "toto0.5"
+ elif z=3 then "24"
+ fi
+od
+\end{verbatim}
+ \item \exem Afficher des labels avec une affixe et une orientation pour chacun, en utilisant une seule fois LabelDot.
+\end{itemize}
+
+\begin{demo}{Utilisation de StrListInit}{StrListInit}
+\begin{texgraph}[name=StrListInit,export=pgf]
+ view(-2,2,-2,2), Marges(0,0,0,0), size(7.5),
+ StrListInit( nom, -1,"$A$","O", i,"$B$","N",
+       1,"$C$","E", -i,"$D$","S"),
+ for k from 1 to nom(0) step 3 do 
+   LabelDot( Eval(@nom(k)), @nom(k+1), @nom(k+2), 1)
+ od,
+ StrListKill(nom)
+\end{texgraph}
+\end{demo}
+
+Une autre solution consiste à faire trois listes: nom, position, orientation:
+\begin{verbatim}
+ view(-2,2,-2,2), Marges(0,0,0,0), size(7.5),
+ StrListInit( nom, "$A$", "$B$", "$C$", "$D$"),
+ StrListInit(orientation, "O", "N", "E", "S"),
+ position:=[-1, i, 1, -i],
+ for k from 1 to nom(0) do
+   LabelDot( position[k], @nom(k), @orientation(k), 1)
+ od,
+ StrListKill(nom, orientation) 
+\end{verbatim}
+
+\subsection{StrListAdd}
+\begin{itemize}
+ \item \util \textbf[StrListAdd()]{StrListAdd( <nomListe>, <"chaine1">, <"chaine2">, ... )}.
+ \item \desc cette macro ajoute à la fin de la liste de chaînes appelée \argu{nomListe}, les arguments suivants (qui sont
+interprétés comme des chaînes). Cela suppose que la liste \argu{nomListe} existe déjà, cette liste est en fait une
+macro qui va être entièrement réécrite pour lui ajouter les éléments supplémentaires. Il est plus rapide de définir la
+liste en une seule fois avec la macro \Helpref{StrListInit}{macStrListInit} quand c'est possible.
+\end{itemize}
+
+\subsection{StrListCopy}
+\begin{itemize}
+ \item \util \textbf[StrListCopy()]{StrListCopy( <nomListe>, <nouvelleListe> [, index départ, nombre] )}.
+ \item \desc cette macro crée une nouvelle liste de chaînes appelée \argu{nouvelleListe} en copiant \argu{nombre}
+éléments de la liste \argu{nomListe} en partant de \argu{index départ}. L'argument
+<index départ> peut être négatif ($-1$ désigne le dernier élément, $-2$ l'avant-dernier, ...), par contre les éléments
+sont toujours parcourus de gauche à droite quand <nombre> est positif, et dans le sens inverse quand <nombre> est
+négatif. Par défaut l'\argu{index départ} vaut $1$ et le \argu{nombre} vaut $0$ (ce qui signifie \og tous les
+éléments\fg).
+\end{itemize}
+
+\subsection{StrListDelKey}
+\begin{itemize}
+ \item \util \textbf[StrListDelKey()]{StrListDelKey( <nomListe>, <index départ>, <nombre> )}.
+ \item \desc cette macro supprime de \argu{nomListe} \argu{nombre} éléments à partir de l'\argu{index départ}. Comme
+dans la commande Del, l'argument \argu{index départ} peut être négatif ($-1$ designe le dernier élément,
+$-2$ l'avant-dernier, ...), par contre les éléments sont toujours parcourus de gauche à droite quand <nombre> est
+positif, et dans le sens inverse quand <nombre> est négatif. Cette macro renvoie \Nil.
+\end{itemize}
+
+\subsection{StrListDelVal}
+\begin{itemize}
+ \item \util \textbf[StrListDelVal()]{StrListDelVal( <nomListe>, <val1>, <val2>, ... )}.
+ \item \desc cette macro supprime de \argu{nomListe} les chaînes \argu{val1}, \argu{val2}..., sans avoir à connaître
+leurs index.
+\end{itemize}
+
+\subsection{StrListGetKey}
+\begin{itemize}
+ \item \util \textbf[StrListGetKey()]{StrListGetKey( <nomListe>, <chaîne> )}.
+ \item \desc cette macro renvoie l'index de la \argu{chaîne} dans la liste \argu{nomListe}, si elle n'y figure pas, la
+macro renvoie \Nil.
+\end{itemize}
+
+\subsection{StrListInsert}
+\begin{itemize}
+ \item \util \textbf[StrListInsert()]{StrListInsert( <nomListe1>, <chaîne> [, <index> ])}.
+ \item \desc cette macro modifie la liste de chaînes \argu{nomListe}, en insérant une nouvelle \argu{chaîne} à la
+position \argu{index}. Par défaut la valeur de \argu{index} est nulle ce qui représente la fin de la liste, cette valeur
+peut être négative ($-1$ est l'index du dernier élément, $-2$ l'avant-dernier, ...).
+\end{itemize}
+
+\subsection{StrListKill}
+\begin{itemize}
+ \item \util \textbf[StrListKill()]{StrListKill( <nomListe1>, <nomListe2>, ... )}.
+ \item \desc cette macro détruit les listes de chaînes \argu{nomListe1}, \argu{nomListe2}, ...
+\end{itemize}
+
+\subsection{StrListReplace}
+\begin{itemize}
+ \item \util \textbf[StrListReplace()]{StrListReplace( <nomListe>, <ancienne chaîne>, <nouvelle> )}.
+ \item \desc cette macro remplace dans la liste appelée \argu{nomListe}, l'\argu{ancienne chaîne} par la \argu{nouvelle}.
+\end{itemize}
+
+\subsection{StrListReplaceKey}
+\begin{itemize}
+ \item \util \textbf[StrListReplaceKey()]{StrListReplaceKey( <nomListe>, <index>, <nouvelle chaîne> )}.
+ \item \desc cette macro remplace dans la liste appelée \argu{nomListe}, la chaîne dont le numéro est\argu{index}, par
+la \argu{nouvelle chaîne}.
+\end{itemize}
+
+\subsection{StrListShow}
+\begin{itemize}
+ \item \util \textbf[StrListShow()]{StrListShow( <nomListe> [, <index départ>, <nombre> ])}.
+ \item \desc cette macro renvoie la chaîne obtenue en copiant \argu{nombre} éléments de la liste \argu{nomListe} en
+partant de 
+\argu{index départ}, mais sans les concaténer. La chaîne renvoyée est de la forme: \verb|"chaîne", "chaîne", ...|.
+L'argument <index départ> peut être négatif ($-1$ désigne le dernier élément, $-2$ l'avant-dernier, ...), par contre
+les éléments sont toujours parcourus de gauche à droite quand \argu{nombre} est positif, et dans le sens inverse quand
+<nombre> est négatif. Par défaut l'<index départ> vaut $1$ et le \argu{nombre} vaut $0$ (ce qui signifie \og tous les
+éléments\fg).
+\end{itemize}
+
+\end{comment}
+
+\section{Fonctions statistiques}
+
+\subsection{Anp}
+\begin{itemize}
+ \item \util \textbf[Anp()]{Anp( <n>, <p> )}.
+ \item \desc renvoie le nombre d'arrangements de \argu{p} parmi \argu{n}.
+\end{itemize}
+
+\subsection{binom}
+\begin{itemize}
+ \item \util \textbf[binom()]{binom( <n>, <p> )}.
+ \item \desc renvoie le coefficient binomial (ou combinaison) \argu{p} parmi \argu{n}.
+\end{itemize}
+
+
+\subsection{ecart}
+\begin{itemize}
+ \item \util \textbf[ecart()]{ecart( <liste de réels> )}.
+ \item \desc renvoie l'écart type d'une liste numérique, les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{fact}
+\begin{itemize}
+ \item \util \textbf[fact()]{fact( <n> )}.
+ \item \desc renvoie la valeur de $n!$ (fonction factorielle).
+\end{itemize}
+
+
+\subsection{max}
+\begin{itemize}
+ \item \util \textbf[max()]{max( <liste de complexes> )}.
+ \item \desc renvoie le plus grand élément d'une liste numérique (ordre lexicographique), les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{min}
+\begin{itemize}
+ \item \util \textbf[min()]{min( <liste de complexes> )}.
+ \item \desc renvoie le plus petit élément d'une liste numérique (ordre lexicographique), les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{minmax}
+\begin{itemize}
+ \item \util \textbf[minmax()]{minmax( <liste de complexes> )}.
+ \item \desc renvoie le plus petit élément et le plus grand élément d'une liste numérique (ordre lexicographique), les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{median}
+\begin{itemize}
+ \item \util \textbf[median()]{median( <liste de complexes> )}.
+ \item \desc renvoie l'élément médian d'une liste numérique (ordre lexicographique), les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{moy}
+\begin{itemize}
+ \item \util \textbf[moy()]{moy( <liste de complexes> )}.
+ \item \desc renvoie la moyenne d'une liste numérique, les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{prod}
+\begin{itemize}
+ \item \util \textbf[prod()]{prod( <liste de complexes> )}.
+ \item \desc renvoie le produit des éléments d'une liste numérique, les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{sum}
+\begin{itemize}
+ \item \util \textbf[sum()]{sum( <liste de complexes> )}.
+ \item \desc renvoie la somme des éléments d'une liste numérique, les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\subsection{var}
+\begin{itemize}
+ \item \util \textbf[var()]{var( <liste de réels> )}.
+ \item \desc renvoie la variance d'une liste numérique, les chaînes de caractères et la constante \jump sont ignorées.
+\end{itemize}
+
+\section{Fonctions de conversion}
+
+\subsection{Anchor}
+\begin{itemize}
+ \item \util \textbf[Anchor()]{Anchor( <position> )}.
+ \item \desc renvoie l'affixe d'un point de la fenêtre graphique courante qui dépend de la \argu{position}:
+    \begin{itemize}
+    \item \argu{position}=\emph{"center"} (ou \emph{"c"}, valeur par défaut), c'est le centre de la fenêtre,
+    \item \argu{position}=\emph{top} (ou \emph{t}), c'est le milieu du haut de la fenêtre,
+    \item \argu{position}=\emph{bottom (ou \emph{b})}, c'est le milieu du bas de la fenêtre,
+    \item \argu{position}=\emph{left} (ou \emph{l}), c'est le milieu du côté gauche de la fenêtre,
+    \item \argu{position}=\emph{right} (ou \emph{r}), c'est le milieu du côté droit de la fenêtre,
+    \item \argu{position}=\emph{top+right} (ou \emph{tr}), c'est le point en haut à droite de la fenêtre,
+    \item \argu{position}=\emph{top+left} (ou \emph{tl}), c'est le point en haut à gauche de la fenêtre,
+    \item \argu{position}=\emph{bottom+right} (ou \emph{br}), c'est le point en bas à droite de la fenêtre,
+    \item \argu{position}=\emph{bottom+left} (ou \emph{bl}), c'est le point en bas à gauche de la fenêtre.
+    \end{itemize}
+\end{itemize}
+
+\subsection{RealArg}
+\begin{itemize}
+ \item \util \textbf[RealArg()]{RealArg( <affixe> )}.
+ \item \desc renvoie l'argument (en radians) de l'affixe réelle d'un vecteur en tenant compte de la matrice courante.
+\end{itemize}
+
+
+\subsection{RealCoord}
+\begin{itemize}
+ \item \util \textbf[RealCoord()]{RealCoord( <affixe écran> )}.
+ \item \desc renvoie l'affixe réelle d'un point compte tenu des échelles et de la matrice courante.
+\end{itemize}
+
+\subsection{RealCoordV}
+\begin{itemize}
+ \item \util \textbf[RealCoordV()]{RealCoordV( <affixe écran> )}.
+ \item \desc renvoie l'affixe réelle d'un vecteur compte tenu des échelles de la matrice courante.
+\end{itemize}
+
+\subsection{ScrCoord}
+\begin{itemize}
+ \item \util \textbf[ScrCoord()]{ScrCoord( <affixe réelle> )}.
+ \item \desc renvoie l'affixe écran d'un point en tenant compte des échelles et de la matrice courante.
+\end{itemize}
+
+\subsection{ScrCoordV}
+\begin{itemize}
+ \item \util \textbf[ScrCoordV()]{ScrCoordV( <affixe réelle> )}.
+ \item \desc renvoie l'affixe écran d'un vecteur en tenant compte des échelles et de la matrice courante.
+\end{itemize}
+
+\subsection{SvgCoord}\label{macSvgCoord}
+\begin{itemize}
+ \item \util \textbf[SvgCoord()]{SvgCoord( <screen affixe> )}.
+ \item \desc renvoie l'affixe exportée en svg en tenant compte des échelles et de la matrice courante.
+\end{itemize}
+
+\subsection{TeXCoord}\label{macTeXCoord}
+\begin{itemize}
+ \item \util \textbf[TeXCoord()]{TeXCoord( <screen affixe> )}.
+ \item \desc renvoie l'affixe exportée en tex, pst et pgf en tenant compte des échelles et de la matrice courante. Pour l'eps il y a la commande \Helpref{EpsCoord}{cmdEpsCoord}.
+\end{itemize}
+
+
+\section{Transformations géométriques planes}
+
+\subsection{affin}
+\begin{itemize}
+ \item \util \textbf[affin()]{affin( <liste> , <[A, B]>, <V>, <lambda> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par l'affinité de base la droite \argu{(AB)}, de rapport \argu{lambda} et de direction le vecteur \argu{V}.
+\end{itemize}
+
+\subsection{defAff}
+\begin{itemize}
+ \item \util \textbf[defAff()]{defAff( <nom>, <A>, <A'>, <partie linéaire> )}.
+ \item \desc cette fonction permet de créer une macro appelée \argu{nom} qui représentera l'application affine qui transforme \argu{A} en \argu{A'}, et dont la partie linéaire est le dernier argument. Cette partie linéaire se présente sous la forme d'une liste de deux complexes: [Lf(1), Lf(i)] où Lf désigne la partie linéaire de la transformation.
+\end{itemize}
+
+
+\subsection{ftransform}
+\begin{itemize}
+ \item \util \textbf[ftransform()]{ftransform( <liste>, <f(z)> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par la fonction \argu{f(z)}, celle-ci peut-être une expression fonction de z ou une macro d'argument z.
+\end{itemize}
+
+\subsection{hom}
+\begin{itemize}
+ \item \util \textbf[hom()]{hom( <liste>, <A>, <lambda> )}.
+ \item \desc renvoie la liste des images de la \argu{liste} par l'homothétie de centre \argu{A} et de rapport
+\argu{lambda}.
+\end{itemize}
+
+\subsection{inv}
+\begin{itemize}
+ \item \util \textbf[inv()]{inv( <liste>, <A>, <R> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par l'inversion de cercle de centre \argu{A} et de rayon \argu{R}.
+\end{itemize}
+
+\subsection{Mtransform}
+\begin{itemize}
+ \item \util \textbf[mtransform()]{Mtransform( <liste>, <matrice> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par l'application affine $f$ définie par la \argu{matrice}. Cette \Helpref{matrice}{macmatrix} est de la forme [f(0), Lf(1), Lf(i)] où Lf désigne la partie linéaire.
+\end{itemize}
+
+\subsection{proj}
+\begin{itemize}
+ \item \util \textbf[proj()]{proj( <liste>, <A>, <B> )} ou \Mytextbf{proj( <liste>, <[A,B]> )}.
+ \item \desc renvoie la liste des projetés orthogonaux des points de \argu{liste} sur la droite $(AB)$.
+\end{itemize}
+
+
+\subsection{projO}
+\begin{itemize}
+ \item \util \textbf[projO()]{projO( <liste>, <[A,B]>, <vecteur> )}.
+ \item \desc renvoie la liste des projetés des points de \argu{liste} sur la droite \argu{(AB)} dans la direction du \argu{vecteur}.
+\end{itemize}
+
+\subsection{rot}
+\begin{itemize}
+ \item \util \textbf[rot()]{rot( <liste>, <A>, <alpha> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste} par la rotation de centre \argu{A} et d'angle\argu{alpha}.
+\end{itemize}
+
+
+\subsection{shift}
+\begin{itemize}
+ \item \util \textbf[shift()]{shift( <liste>, <vecteur> )}.
+ \item \desc renvoie la liste des translatés des points de \argu{liste} avec le \argu{vecteur}.
+\end{itemize}
+
+
+\subsection{simil}
+\begin{itemize}
+ \item \util \textbf[simil()]{simil( <liste> , <A>, <lambda>, <alpha> )}.
+ \item \desc renvoie la liste des images des points de \argu{liste}, par la similitude de centre \argu{A}, de rapport \argu{lambda} et d'angle \argu{alpha}.
+\end{itemize}
+
+\subsection{sym}
+\begin{itemize}
+ \item \util \textbf[sym()]{sym( <liste>, <A>, <B> )} ou \Mytextbf{sym( <liste>, <[A,B]> )}.
+ \item \desc renvoie la liste des symétriques des points de \argu{liste}, par rapport à la droite $(AB)$.
+\end{itemize}
+
+\subsection{symG}
+\begin{itemize}
+ \item \util \textbf[symG()]{symG( <liste>, <A>, <vecteur> )}.
+ \item \desc symétrie glissée: renvoie la liste des images des points de \argu{liste}, par la symétrie orthogonale d'axe la droite passant par \argu{A} et dirigée par \argu{vecteur}, composée avec la translation de \argu{vecteur}.
+\end{itemize}
+
+\subsection{symO}
+\begin{itemize}
+ \item \util \textbf[symO()]{symO( <liste>, <[A, B]>, <vecteur> )}.
+ \item \desc renvoie la liste des symétriques des points de \argu{liste} par rapport à la droite \argu{(AB)} et dans la direction du \argu{vecteur}.
+\end{itemize}
+
+
+\section{Matrices de transformations 2D}\label{macmatrix}
+
+Une transformation affine $f$ du plan complexe peut être représentée par son expression analytique dans la base canonique $(1,i)$, la forme générale de cette expression est:
+
+{\Large
+\[\left\{\begin{array}{rcl}
+     x'&=&t_1+ax+by\\
+y'&=&t_2+cx+dy
+     \end{array}\right.\]
+}
+
+cette expression analytique sera représentée par la liste \co{[t1+i*t2, a+i*c, b+i*d]} c'est à dire: \co{[ f(0), f(1)-f(0), f(i)-f(0)]}, cette liste sera appelée plus brièvement (et de manière abusive) \textit{matrice} de la transformation $f$. Les deux derniers éléments de cette liste: \co{[ a+i*c, b+i*d]}, représentent la matrice de la partie linéaire de $f$: Lf$=f-f(0)$.
+
+\subsection{ChangeWinTo}
+\begin{itemize}
+ \item \util \textbf[ChangeWinTo()]{ChangeWinTo( <[xinf+i*yinf, xsup+i*ysup]> [, ortho] )}.
+ \item \desc modifie la matrice courante de manière à transformer la fenêtre courante en la fenêtre de grande diagonale \argu{[xinf+i*yinf, xsup+i*ysup]}, la fenêtre sera orthonormée ou non en fonction de la valeur du paramètre optionnel \argu{ortho} ($0$ par défaut).
+\end{itemize}
+
+
+\begin{demo}{Utilisation de ChangeWinTo}{ChangeWinTo}
+\begin{texgraph}[name=ChangeWinTo]
+view(-10,10,-5,5),size(7.5),NbPoints:=100,
+LabelSize:=footnotesize, SaveWin(),view(-10,-1,-5,5),
+ChangeWinTo([-2-2*i,2+2*i]),
+Arrows:=1, axes(0,1+i),Arrows:=0,
+tMin:=-2, tMax:=2, Color:=red, Width:=8,
+Cartesienne(x*Ent(1/x)-1,5,1),
+Color:=blue,A:=(1+i)/4, Dparallelo(A,bar(A),-A),
+dep:=RealCoord(i*Im(A)), RestoreWin(), SaveWin(),
+//zoom
+view(1,10,-5,5), background(full,white),
+ChangeWinTo([-A,A]), Color:=black,
+arr:=RealCoord(-Re(A)+i*Im(A)*0.75),
+Arrows:=1, axes(0,A), Arrows:=0,
+tMin:=-0.25, tMax:=0.25, Color:=red, Width:=8,
+Cartesienne(x*Ent(1/x)-1,5,1),
+Color:=blue, Dparallelo(A,bar(A),-A),
+RestoreWin(),
+//trait
+Color:=blue, Arrows:=1,
+A:=ScrCoord(dep), B:=ScrCoord(arr),
+Bezier(A,A+3*exp(i*pi/2),B-3,B) 
+\end{texgraph}
+\end{demo}
+
+
+\subsection{invmatrix}
+\begin{itemize}
+ \item \util \textbf[invmatrix()]{invmatrix( <[f(0), Lf(1), Lf(i)]> )}.
+ \item \desc renvoie l'inverse de la matrice \argu{[f(0), Lf(1), Lf(i)]}, c'est à dire la matrice $[f^{-1}(0), Lf^{-1}(1), Lf^{-1}(i)]$ si elle existe.
+\end{itemize}
+
+\subsection{matrix}
+\begin{itemize}
+ \item \util \textbf[matrix()]{matrix( <fonction affine>, [variable] )}.
+ \item \desc renvoie la matrice de la \argu{fonction affine}, par défaut la \argu{variable} est $z$. Cette matrice se présente sous la forme [f(0), Lf(1), Lf(i)], où f désigne l'application affine et Lf sa partie linéaire, plus précisément: Lf(1)=f(1)-f(0) et Lf(i)=f(i)-f(0). 
+ \item \exem \co{matrix(i*bar(z))} renvoie \res{[0,i,1]}.
+\end{itemize}
+
+
+\subsection{mulmatrix}
+\begin{itemize}
+ \item \util \textbf[mulmatrix()]{mulmatrix( <[f(0), Lf(1), Lf(i)]>, <[g(0), Lg(1), Lg(i)]> )}.
+ \item \desc renvoie la matrice de la composée: $fog$, où $f$ et $g$ sont les deux applications affines définies par les matrices passées en argument.
+\end{itemize}
+
+\subsection{rotate}
+\begin{itemize}
+ \item \util \textbf[rotate()]{rotate( <angle en degrés> [, centre] )}.
+ \item \desc compose la matrice courante avec celle de la rotation d’\argu{angle} donné et de \argu{centre} donné (affixe). Si \argu{centre} n'est pas précisé, celui-ci est considéré égal à $0$.
+\end{itemize}
+
+\subsection{scale}
+\begin{itemize}
+ \item \util \textbf[scale()]{scale( <facteurX> [, facteurY] )}.
+ \item \desc multiplie les coordonnées suivant les axes $Ox$ et $Oy$, si \argu{facteurY} est absent il est considéré comme égal à \argu{facteurX}. Cette macro modifie la matrice courante.
+\end{itemize}
+
+\subsection{translate}
+\begin{itemize}
+ \item \util \textbf[translate()]{translate( <vecteur2d> )}.
+ \item \desc compose la matrice courante avec celle de la translation de vecteur \argu{vecteur2d} (affixe).
+\end{itemize}
+
+
+\section{Constructions géométriques planes}
+
+Ces macros définissent des objets graphiques mais ne les dessinent pas, elles renvoient une liste de points représentant ces objets.
+
+\subsection{bissec}
+\begin{itemize}
+ \item \util \textbf[bissec()]{bissec( <B>, <A>, <C>, <1 ou 2> )}.
+ \item \desc renvoie une liste de deux points de la bissectrice, 1=intérieure.
+\end{itemize}
+
+\subsection{cap}
+\begin{itemize}
+ \item \util \textbf[cap()]{cap( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de l'intersection de \argu{ensemble1} avec \argu{ensemble2} sous forme d'une liste de points. Ces deux ensembles sont des lignes polygonales représentant des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{set}{macset} permet de définir et dessiner des ensembles.
+ \item \exem intersection de deux ensembles:
+\end{itemize}
+
+
+\begin{demo}{macro cap}{cap}
+\begin{texgraph}[name=cap]
+Marges(0,0,0,0),size(7.5),
+A:=set("A", 0, [rotation:=30]), 
+B:=set("B", 0, [rotation:=-30]),
+C:= cap(A,B),Color:=red,FillStyle:=full, 
+FillOpacity:=0.5, FillColor:=pink,
+Ligne(C,0)
+\end{texgraph}
+\end{demo}
+
+\subsection{capB}\label{maccapB}
+\begin{itemize}
+ \item \util \textbf[capB()]{capB( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de l'intersection de \argu{ensemble1} avec \argu{ensemble2} sous forme d'une liste de points de contrôles qui doit être dessinée avec la macro \Helpref{drawSet}{macdrawSet}. Ces deux ensembles sont doivent également être deux listes de points de contrôle représentant des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{setB}{macsetB} permet de définir et dessiner des ensembles.
+ \item \exem intersection de deux ensembles:
+\end{itemize}
+
+
+\begin{demo}{macro capB}{capB}
+\begin{texgraph}[name=capB]
+Marges(0,0,0,0),size(7.5),
+A:=setB("A", 0, [rotation:=30]), 
+B:=setB("B", 0, [rotation:=-30]),
+C:= capB(A,B),Color:=red,FillStyle:=full, 
+drawSet(C, [FillOpacity:=0.5, FillColor:=pink])
+\end{texgraph}
+\end{demo}
+
+\subsection{carre}
+\begin{itemize}
+ \item \util \textbf[carre()]{carre( <A>, <B>, <1 ou -1> )}.
+ \item \desc renvoie la liste des sommets du carré de sommets consécutifs A et B, 1=sens direct.
+\end{itemize}
+
+\subsection{cup}
+\begin{itemize}
+ \item \util \textbf[cup()]{cup( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de la réunion de \argu{ensemble1} avec \argu{ensemble2} sous forme d'une liste de points. Ces deux ensembles doivent être des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{set}{macset} permet de définir et dessiner des ensembles.
+ \item \exem réunion de deux ensembles:
+\end{itemize}
+
+\begin{demo}{macro cup}{cup}
+\begin{texgraph}[name=cup]
+Marges(0,0,0,0),size(7.5),
+A:=set("A", 0, [rotation:=30]), 
+B:=set("B", 0, [rotation:=-30]),
+C:= cup(A,B),Color:=red,FillStyle:=full, 
+FillOpacity:=0.5, FillColor:=pink,
+Ligne(C,0)
+\end{texgraph}
+\end{demo}
+
+\subsection{cupB}\label{maccupB}
+\begin{itemize}
+ \item \util \textbf[cupB()]{cupB( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de la réunion de \argu{ensemble1} avec \argu{ensemble2} sous forme d'une liste de points de contrôles qui doit être dessinée avec la macro \Helpref{drawSet}{macdrawSet}. Ces deux ensembles sont doivent également être deux listes de points de contrôle représentant des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{setB}{macsetB} permet de définir et dessiner des ensembles.
+ \item \exem intersection de deux ensembles:
+\end{itemize}
+
+\begin{demo}{macro cupB}{cupB}
+\begin{texgraph}[name=cupB]
+Marges(0,0,0,0),size(7.5),
+A:=setB("A", 0, [rotation:=30]), 
+B:=setB("B", 0, [rotation:=-30]),
+C:= cupB(A,B),Color:=red,FillStyle:=full, 
+drawSet(C, [FillOpacity:=0.5, FillColor:=pink])
+\end{texgraph}
+\end{demo}
+
+\subsection{cutBezier}
+\begin{itemize}
+ \item \util \textbf[cutBezier()]{cutBezier( <courbe de Bézier>, <point>, <avant(0/1)> )}.
+ \item \desc renvoie un arc de bézier correspondant à la \argu{courbe de Bézier} coupée avant ou après le \argu{point}, en fonction du paramètre \argu{avant}. La \argu{courbe de Bézier} est une liste de points [A1,C1,C2,A2,C3,C4,A3,...] qui représente une succession de courbes de Bézier avec deux points de contrôle: $[A_i,C_k,C_{k+1},A_{i+1}]$. Le résultat doit être dessiné par la commande \Helpref{Bezier}{cmdBezier}.
+\end{itemize}
+
+
+\subsection{Cvx2d}
+\begin{itemize}
+ \item \util \textbf[Cvx2d()]{Cvx2d( <liste> )}.
+ \item \desc renvoie l'enveloppe convexe de la \argu{liste} selon l'algorithme de \textsc{Ronald Graham}. La \argu{liste} ne doit pas contenir la constante \jump.
+ \item \exem on choisit aléatoirement $10$ points dans le pavé $[-4,4]\times[-4,4]$ que l'on place dans une variable $P$ tout en dessinant chacun d'eux avec son numéro, puis on dessine l'enveloppe convexe.
+\end{itemize}
+
+\begin{demo}{macro Cvx2d}{Cvx2d}
+\begin{texgraph}[name=Cvx2d]
+Marges(0,0,0,0),size(7.5),
+P:= for k from 1 to 10 do
+  z:=8*Rand()-4+i*(8*Rand()-4),
+  LabelDot(z, k,"N",1), z
+  od,
+Ligne(Cvx2d(P),1)
+\end{texgraph}
+\end{demo}
+
+
+\subsection{Intersec}
+\begin{itemize}
+ \item \util \textbf[Intersec()]{Intersec( <objet1>, <objet2> )}.
+ \item \desc renvoie la liste des points d'intersection des deux objets graphiques. Ces deux objets peuvent être soit des commandes graphiques (Cercle(), Droite(), ...) ou bien le nom d'un élément graphique déjà créé.
+ \item \exem la commande \co{Intersec( Cercle(0, 1), Droite(-1,i/2) )} renvoie:
+
+\centerline{\res{[0.59851109463416+0.79925554731708*i, -0.99794539275033+0.00102730362483*i]}.}
+\end{itemize}
+
+\subsection{line2strip}
+\begin{itemize}
+ \item \util \textbf[line2strip()]{line2strip( <ligne polygonale>, <largeur> )}.
+ \item \desc renvoie le contour d'une bande axée sur la ligne polygonale (liste de complexes) et de la largeur demandée en tenant compte de la fermeture ou non de la ligne.
+ \item \exem on récupère les points d'une courbe de Bézier, que l'on redessine sous forme d'une bande hachurée.
+\end{itemize}
+
+\begin{demo}{macro line2strip}{line2strip}
+\begin{texgraph}[name=line2strip]
+view(-3,3,-3,3), Margin(0,0,0,0), size(7.5),
+background(full,beige),
+rotate(-45),
+draw("path",[-3,-1+5*i,1-5*i,3,bezier],lineS(dashed,black,24)),
+L := Get([Bezier(-3,-1+5*i,1-5*i,3)]), //pts d'une courbe de Bézier
+B := line2strip(L, 1), // construction d'une bande de largeur 1
+draw("line",B, [close:=1,fillS(bdiag,navy),lineS(solid,crimson,24)]),
+\end{texgraph}
+\end{demo}
+
+
+\subsection{med}
+\begin{itemize}
+ \item \util \textbf[med()]{med( <A>, <B> )}.
+ \item \desc renvoie une liste de deux points de la médiatrice de $[A,B]$.
+\end{itemize}
+
+\subsection{parallel}
+\begin{itemize}
+ \item \util \textbf[parallel()]{parallel( <[A,B]>, <C> )}.
+ \item \desc renvoie une liste de deux points de la parallèle à $(AB)$ passant par $C$.
+\end{itemize}
+
+
+\subsection{parallelo}
+\begin{itemize}
+ \item \util \textbf[parallelo()]{parallelo( <A>, <B>, <C> )}.
+ \item \desc renvoie la liste des sommets du parallèlogramme de sommets consécutifs $A$, $B$, $C$.
+\end{itemize}
+
+\subsection{perp}
+\begin{itemize}
+ \item \util \textbf[perp()]{perp( <[A, B]>, <C> )}.
+ \item \desc renvoie une liste de deux points de la perpendiculaire à $(AB)$ passant par $C$.
+\end{itemize}
+
+
+\subsection{polyreg}
+\begin{itemize}
+ \item \util \textbf[polyreg()]{polyreg( <A>, <B>, <nombre de cotés> )}.
+ \item \desc renvoie la liste des sommets du polygône régulier de centre $A$, passant par $B$ et avec le nombre de côtés indiqué.
+\end{itemize}
+
+ou
+
+\begin{itemize}
+ \item \util \Mytextbf{polyreg( <A>, <B>, <nombre de cotés + i*sens> )} avec sens = +/-1
+ \item \desc renvoie la liste des sommets du polygone régulier de sommets consécutifs $A$ et $B$, avec le nombre de côtés indiqué et dans le sens indiqué (1 pour le sens trigonométrique).
+\end{itemize}
+
+\subsection{pqGoneReg}
+\begin{itemize}
+ \item \util \textbf[pqGoneReg()]{pqGoneReg( <centre>, <sommet>, <[p,q]> )}.
+ \item \desc renvoie la liste des sommets du \argu{p/q}-gone régulier défini par le \argu{centre} et un \argu{sommet}.
+ \item \exem voir \Helpref{ici}{macDpqGoneReg}.
+\end{itemize}
+
+
+\subsection{rect} 
+\begin{itemize}
+ \item \util \textbf[rect()]{rect( <A>, <B>, <C> )}.
+ \item \desc renvoie la liste des sommets du rectangle de sommets consécutifs $A$, $B$, le côté opposé passant par $C$.
+\end{itemize}
+
+\subsection{setminus}
+\begin{itemize}
+ \item \util \textbf[setminus()]{setminus( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de la différence \argu{ensemble1} - \argu{ensemble2} sous forme d'une liste de points. Ces deux ensembles doivent être des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{set}{macset} permet de définir et dessiner des ensembles.
+ \item \exem différence de deux ensembles:
+\end{itemize}
+
+\begin{demo}{macro setminus}{setminus}
+\begin{texgraph}[name=setminus]
+Marges(0,0,0,0),size(7.5),
+A:=set("A", 0, [rotation:=30]), 
+B:=set("B", 0, [rotation:=-30]),
+C:= setminus(A,B),Color:=red,FillStyle:=full, 
+FillOpacity:=0.5, FillColor:=pink,
+Ligne(C,0)
+\end{texgraph}
+\end{demo}
+
+\subsection{setminusB}\label{macsetminusB}
+\begin{itemize}
+ \item \util \textbf[setminusB()]{setminusB( <ensemble1>, <ensemble2> )}.
+ \item \desc renvoie le contour de la différence \argu{ensemble1} - \argu{ensemble2} sous forme d'une liste de points de contrôles qui doit être dessinée avec la macro \Helpref{drawSet}{macdrawSet}. Ces deux ensembles sont doivent également être deux listes de points de contrôle représentant des courbes fermées, orientées dans le même sens, ayant une forme relativement simple. La macro \Helpref{setB}{macsetB} permet de définir et dessiner des ensembles.
+ \item \exem différence de deux ensembles:
+\end{itemize}
+
+\begin{demo}{macro setminusB}{setminusB}
+\begin{texgraph}[name=setminusB]
+Marges(0,0,0,0),size(7.5),
+A:=setB("A", 0, [rotation:=30]), 
+B:=setB("B", 0, [rotation:=-30]),
+C:= setminusB(A,B),Color:=red,FillStyle:=full, 
+drawSet(C, [FillOpacity:=0.5, FillColor:=pink])
+\end{texgraph}
+\end{demo}
+
+\section{Équation différentielle $Y'=f(t,Y)$ avec $Y$ vecteur de $\mathbb R^n$}
+
+\subsection{OdeSolve}\label{macOdeSolve} 
+\begin{itemize}
+ \item \util \textbf[OdeSolve()]{OdeSolve( <f>, <t0>, <Y0> [, options] )}.
+ \item \desc résolution numérique de $Y’=f(t,Y)$ où \argu{f} est le nom d’une macro définissant la fonction $f(t,Y)$, \argu{t0} et \argu{Y0} définissent la condition initiale. La macro renvoie la liste des points de la solution. Options :
+\begin{itemize}
+ \item \opt{t}{[tMin, tMax]} (intervalle de résolution),\par
+ \item \opt{odeMethod}{"rk4" ou "rkf45"} ("rk4" par défaut),\par
+ \item \opt{odeReturn}{"[t+i*Y]"} (chaîne définissant le retour, dépend de t et Y),\par
+ \item la variable \var{NbPoints} peut également être modifiée dans les options, elle est utilisée par la macro.
+\end{itemize}
+\end{itemize}
+
+\section{Gestion du flattened postscript}
+
+Il est possible de transformer un fichier pdf ou un fichier postscript en \textit{flattened postscript} grâce à l'utilitaire \textit{pstoedit} (\url{http://www.pstoedit.net/}). Dans le fichier obtenu, tout est chemin, y compris le texte. TeXgraph peut récupérer tous les chemins d'un fichier écrit en \textit{flattened postscript}. C'est que proposent les macros de cette section.
+
+\subsection{conv2FlatPs}\label{macconv2FlatPs}
+
+\begin{itemize}
+ \item \util \textbf[conv2FlatPs()]{conv2FlatPs( <fichier entrée>, <fichier sortie> [, dossier de travail] )}.
+ \item \desc cette macro invoque l'utilitaire \textit{pstoedit} pour transformer le \argu{fichier entrée} en \textit{flattened postscript} dans le \argu{fichier sortie}. Le fichier \argu{fichier entrée} doit être un fichier pdf ou ps. 
+\end{itemize}
+
+\subsection{drawFlatPs}\label{macdrawFlatPs}
+\begin{itemize}
+ \item \util \textbf[drawFlatPs()]{drawFlatPs( <affixe>, <chemins lus par loadFlatPs> [, options] )}.
+ \item \desc cette macro dessine à l'écran l'ensemble des chemins lus dans un fichier en \textit{flattened postscript} par la macro \Helpref{loadFlatPs}{macloadFlatPs}. L'affichage se fait à l'\argu{affixe} demandé. Le paramètre \argu{options} est une liste (facultative) de la forme \textsl{[ option1:= valeur1, ..., optionN:=valeurN ]}, les options sont:
+  \begin{itemize}
+  \item \opt{scale}{nombre positif}: échelle, 1 par défaut.
+  \item \opt{position}{center/left/right/...}: position de l'affixe par rapport à l'image, center par défaut (fonctionne comme la variable LabelStyle).
+  \item \opt{color}{couleur}: pour imposer une couleur, \Nil par défaut ce qui signifie qu'on prend la couleur d'origine.
+  \item \opt{rotation}{angle en degrés}: 0 par défaut.
+  \item \opt{hollow}{0/1}: avec la valeur 0 (par défaut) les remplissages pleins sont effectués, sinon ce sont les valeurs courantes de \var{FillStyle} et \var{FillColor} qui sont prise en compte.
+  \item \opt{select}{liste des numéros de chemin à montrer}: \Nil par défaut, ce qui signifie tous les chemins.
+    \item \opt{drawbox}{0/1}: dessine la boite englobante ou non ($0$ par défaut).
+  \item \opt{flip}{0/1}: applique ou non une symétrie horizontale ($0$ par défaut).
+  \item \opt{mirror}{0/1}: applique ou non une symétrie verticale ($0$ par défaut).
+  \end{itemize}
+
+\end{itemize}
+
+\subsection{drawTeXlabel}\label{macdrawTeXlabel}
+\begin{itemize}
+ \item \util \textbf[drawTeXlabel()]{drawTeXlabel( <affixe>, <variable contenant la formule TeX lue par loadFlatPs>, [, options] )}.
+ \item \desc cette macro invoque la macro \Helpref{drawFlatPs}{macdrawFlatPs} pour dessiner une expression qui a été au préalable compilée par \TeX. Le paramètre \argu{options} est une liste (facultative) de la forme \textsl{[ option1:= valeur1, ..., optionN:=valeurN ]}, les options sont:
+  \begin{itemize}
+  \item \opt{scale}{nombre>0}: échelle, 1 par défaut.
+  \item \opt{hollow}{0/1}: avec la valeur 0 (par défaut) les remplissages sont effectués.
+  \end{itemize}
+ Cette macro est utilisée en interne par la macro \Helpref{NewTeXlabel}{macNewTeXlabel}.
+\end{itemize}
+
+\subsection{extractFlatPs}\label{macextractFlatPs}
+\begin{itemize}
+ \item \util \textbf[extractFlatPs()]{extractFlatPs( <variable contenant un flattened postscript>, <liste de numéros de chemins>, [options])}.
+ \item \desc sélectionne des chemins dans une variable contenant un fichier "flattened postcript" lu par \Helpref{loadFlatPs}{macloadFlatPs}, le résultat est une liste: le premier complexe de la liste est largeur+i*hauteur en cm, puis le premier complexe de chaque chemin est Color+i*Width. Le résultat peut-être dessiné par \Helpref{drawFlatPs}{macdrawFlatPs}. Le paramètre \argu{options} est une liste (facultative) de la forme \textsl{[ option1:= valeur1, ..., optionN:=valeurN ]}, les options sont:
+  \begin{itemize}
+  \item \opt{width}{nombre>0}: largeur en cm, \Nil par défaut pour la largeur naturelle.
+  \item \opt{height}{nombre>0}: hauteur en cm, \Nil par défaut pour la hauteur naturelle.
+  \end{itemize}
+\end{itemize}
+
+
+\subsection{loadFlatPs}\label{macloadFlatPs}
+\begin{itemize}
+ \item \util \textbf[loadFlatPs()]{loadFlatPs( <"nom fichier en flattened postscript">, [, options] )}.
+ \item \desc cette macro charge un \argu{fichier en flattened postscript}, adapte les coordonnées des points et renvoie  a liste des chemins (que l'on peut alors dessiner avec la macro \Helpref{{drawFlatPs}}{macdrawFlatPs}). Le paramètre \argu{options} est une liste (facultative) de la forme \textsl{[ option1:= valeur1, ..., optionN:=valeurN ]}, les options sont:
+  \begin{itemize}
+  \item \opt{width}{nombre>0}: largeur en cm, \Nil par défaut pour la largeur naturelle.
+  \item \opt{height}{nombre>0}: hauteur en cm, \Nil par défaut pour la hauteur naturelle.
+  \end{itemize}
+ \item supposons que vous ayez le fichier \textit{circuit.pdf} dans le dossier temporaire de TeXgraph, la commande suivante dans un élément graphique Utilisateur:
+\end{itemize}
+
+\begin{verbatim}
+   [conv2FlatPs( "circuit.pdf", "circuit.fps", TmpPath),
+   stock:= loadFlatPs( [TmpPath,"circuit.fps"] ),
+   drawFlatPs( 0, stock, [scale:=1, hollow:=1] )
+   ]
+\end{verbatim}
+
+va permettre de charger et dessiner le contenu de ce fichier dans TeXgraph, sans faire les remplissages.
+
+
+\subsection{NewTeXlabel}\label{macNewTeXlabel}
+\begin{itemize}
+ \item \util \textbf[NewTeXlabel()]{NewTeXlabel( <"nom">, <affixe>, <"texte">, [, options] )}.
+ \item \desc cette macro va demander à \TeX{} de compiler le \argu{"texte"} dans un fichier pdf, ce fichier sera ensuite converti en un fichier eps par pstoedit, puis celui-ci sera chargé par loadFlatPs et stocké dans une variable globale appelée TeX\_+nom. Un élément graphique appelé \argu{nom} est créée pour dessiner la formule avec drawTeXLabel. Le paramètre \argu{options} est une liste (facultative) de la forme \textsl{[ option1:= valeur1, ..., optionN:=valeurN ]}, les options sont:
+  \begin{itemize}
+  \item \opt{dollar}{0/1}: indique à TeXgraph s'il doit ajouter les délimiteurs \verb|\[| et \verb|\]| autour de la formule, $0$ par défaut.
+  \item \opt{scale}{nombre>0}: échelle, 1 par défaut.
+  \item \opt{hollow}{0/1}: avec la valeur 0 (par défaut) les remplissages sont effectués.
+  \end{itemize}
+Dans les options, les attributs suivants peuvent également être utilisés: \var{LabelSize}, \var{LabelStyle}, \var{LabelAngle} et \var{Color}.
+
+Voici la définition de cette macro:
+
+\begin{small}
+\begin{verbatim}
+  [dollar:=0, scale:=1, hollow:=0, $options:=%4,
+     $L:=TeX2FlatPs( %3, dollar), $aux:=NewVar(["TeX_",%1],L),
+   NewGraph(%1, ["drawTeXlabel(",%2,", TeX_",%1,", [scale:=",scale,", hollow:=",hollow,"])"]),
+   ReDraw()
+  ]
+\end{verbatim}
+\end{small}
+
+La formule est écrite dans le fichier \textit{formula.tex}, puis on compile le fichier \textit{tex2FlatPs.tex} suivant:
+
+\begin{verbatim}
+    \documentclass[12pt]{article}
+    \usepackage{amsmath,amssymb}
+    \usepackage{fourier}
+    \pagestyle{empty}
+    \begin{document}
+    \input{formula.tex}%
+    \end{document}
+\end{verbatim}
+
+et on convertit le résultat en \textit{flattened postscript} avant de le charger.
+
+Cette macro s'utilise dans la ligne de commande ou bien dans des macros qui créent des éléments graphiques, mais pas directement dans un élément graphique Utilisateur, exemple:
+
+\centerline{\co{NewTeXlabel( "label1", 0, "\bks frac\{\bks pi\}\{\bks sqrt\{2\}\}", [scale:=1.5, Color:=blue, LabelAngle:=45])}}
+\end{itemize}
+
+
+\section{Autres}
+
+\subsection{pdfprog}
+\begin{itemize}
+ \item \util \textbf[pdfprog()]{pdfprog()}.
+ \item \desc cette macro est utilisée en interne pour mémoriser le programme utilisé pour faire la conversion
+ du format eps vers le format pdf. Par défaut, cette macro contient la chaîne: \textsl{"epstopdf"}. En éditant le fichier TeXgraph.mac, vous pouvez modifier le programme utilisé.
+\end{itemize}

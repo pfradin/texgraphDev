@@ -1,0 +1,18 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0),view(-3,3,-3,3),
+view3D(-3,3,-3,3,-3,3), size(7.5),
+B:=M(0,2,0), A:=M(0,0,0), C:=M(0,0,1.5),
+Build3D(
+ bdSurf(M(u,-v,sqrt(u^4+v^4)-2),
+     [color:=steelblue, u:=[-2,2],
+     v:=u, smooth:=1,clip:=1,
+     clipwin:=[M(-3,-3,-3),M(3,3,2)]]),
+ bdPlan([0,0,1+i,2], [color:=darkseagreen,
+            scale:=0.75]),
+ bdAxes([0,0], [color:=gold,arrows:=1]),
+ bdLabel([0.25*(1+i),2.25],"z=\sqrt{x^4+y^4}-2",
+     [TeXify:=1, scale:=0.75])
+),
+Display3D()
+];

@@ -1,0 +1,16 @@
+TeXgraph#
+Graph image = [
+ view(-5,5,-5,5),view3D(-4,4,-4,4,-4,4),
+ size(7.5),plan:=[Origin,vecJ],
+ C:=for t from -2*pi to 2*pi step 0.1 do
+  [2*exp(i*t),t/3] od,
+ L:=Clip3DLine(C,plan,0,L'),
+ Ligne3D([M(0,-4,0), Origin],0),
+ Color:=blue, Ligne3D(L',0),
+ FillStyle:=full, FillColor:=gray,
+ FillOpacity:=0.8, Color:=black,
+ DrawPlan( [Origin, vecJ], vecI,5,5),
+ FillStyle:=none,
+ Yinf:=0, Axes3D(0,0,0),
+ Color:=red, Ligne3D(L,0)
+];

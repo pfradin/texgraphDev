@@ -1,0 +1,559 @@
+\chapter[Scène 3D]{Commande Build3D: représentation d'une scène 3D}\label{chapBuild3D}
+
+Il est possible de mélanger plusieurs objets 3D pour constituer une scène en gérant les intersections. Cette scène est construite à partir de l'algorithme des BSP-trees sous forme d'un arbre par la commande \Mytextbf{Build3D}, et la commande \Mytextbf{Display3D} permet d'afficher cette scène à l'écran. 
+
+
+\textcolor{red}{Mise en garde}: cette technique donne en vectoriel des images qui peuvent rapidement devenir très lourdes pour des scènes un peu complexes (c'est à dire avec un grand nombre de facettes).
+
+\section{Les deux commandes de base}
+
+\subsection{Build3D}\label{cmdBuild3D}
+
+Cette commande sert à définir la liste des éléments 3D qui composent la scène. Cette commande ne fait pas de dessin; comme on peut le voir dans le fichier d'exemple \textit{display3d.teg}, les différentes scènes sont construites dans des macros, et un seul élément graphique suffit, il contient simplement l'instruction \Helpref{Display3D()}{cmdDisplay3D}. C'est cette commande qui calcule la scène (plus précisément qui construit un arbre d'affichage), et qui affiche la scène. Lorsque par exemple l'angle de vue change, seule la commande Display3D() doit être réévaluée mais pas la commande Build3D().
+
+La syntaxe générale de Build3D est la suivante:
+
+\begin{itemize}
+ \item \util \textbf[Build3D()]{Build3D( <objet1>, <objet2>,...)}.
+ \item \desc cette fonction détruit la scène existante et en crée une nouvelle avec les objets cités en argument, elle renvoie \Nil. Chaque objet peut à son tour être une liste d'objets 3D différents, ils sont alors séparés par la constante: \var{sep3D}. On trouvera plus loin les \Helpref{macros de construction pour Build3D}{mac4Build3D}, mais nous présentons ici les objets \og atomiques\fg, ils sont de quatre types, et codés en interne de la façon suivante: 
+
+  \begin{itemize}
+  \item \Mytextbf{les facettes}: dans ce cas l'objet doit être de la forme: 
+
+\centerline{[<$\pm$1+i*nuance>, <couleur$\pm$i*opacité>, <liste facettes> ]}
+
+ La valeur \argu{-1} signifie que le lissage de \textsc{Gouraud} doit être utilisé dans les exports qui le prennent en compte. Avec la valeur \argu{1} il n'y a pas de lissage. La \argu{nuance} est facultative et vaut 0 par défaut. L'\argu{opacité} est facultative et vaut 1 par défaut, sinon ce doit être un nombre entre 0 et 1, lorsque l'opacité est multipliée par -i, cela signifie par convention, qu'on ne distingue pas le devant du derrière de la face, alors qu'avec +i les deux côtés n'ont pas exactement la même couleur. La couleur des facettes est nuancée en fonction de leur exposition, le paramètre \argu{nuance} permet de modifier ceci, sa valeur doit supérieure ou égale à -1:
+    \begin{itemize}
+    \item nuance=-1: pas de nuance, toutes les facettes de l'objet auront la même couleur,
+    \item nuance=0: c'est la valeur par défaut,
+    \item plus on augmente la valeur de nuance, plus le contraste augmente.
+    \end{itemize}
+  \item \Mytextbf{les lignes}: dans ce cas l'objet doit être de la forme:
+
+\centerline{[<2>, <couleur+i*opacité>, <épaisseur+i*style ligne>, <liste point3D> ]}
+
+  \item \Mytextbf{les points}: dans ce cas l'objet doit être de la forme: 
+
+\centerline{[<3>, <couleur+i*opacité>, <width+i*linestyle, <liste point3D> ]}
+
+  \item \Mytextbf{les labels (texte)}: dans ce cas l'objet doit être de la forme: 
+
+\centerline{[<3+i>, <couleur+i*numéro>, <labelsize+i*labelstyle>, <[pos,dir]> ]}
+
+  \item \Mytextbf{les labels \og texifiés\fg}: 
+
+\centerline{[<3-i>, <couleur+i*numéro>, <labelsize+i*labelstyle>, <[pos,dir]> ]}
+  \end{itemize}
+
+ \item \textcolor{red}{Un certain nombre de macros du fichier \textit{scene3d.mac} (chargé au démarrage) simplifient la définition des éléments d'une scène 3D et peuvent donc être utilisées comme arguments de la commande \textsl{Build3D}. Toutes ces macros comportent une liste d'options dans leur dernier argument et une option se déclare ainsi: \textit{<nom> := <valeur>}.}
+ \item \exem on dessine une sphère coupée, un plan, un cylindre, puis les axes avec les traits cachés.
+\end{itemize}
+
+
+\pngtrue
+\begin{demo}{Build3D}{Build3D}
+\begin{texgraph}[name=Build3D, export=eps]
+ view(-5.5,5.5,-5.5,5.5),Marges(0,0,0,0), 
+ size(7.5),background(full,beige),
+ z:=-2,
+ Build3D(
+  bdPlan([M(0,0,z), vecK],
+   [color:=gold,border:=0,bordercolor:=black]),
+  bdCylinder(M(-2,3,2), 7*M(2/3,-1,-2/3), 1,
+   [color:=slategray,smooth:=1]),
+  bdSphere(Origin, 3,
+   [color:=darkseagreen, clip:=-1,
+   clipwin:=[M(2,1,1),M(-1,-1,-1)],
+   smooth:=1, backculling:=0]),
+  bdCercle(M(0,0,z),sqrt(5),vecK,
+   [color:=blue, width:=12]),
+  bdAxes([0,0],
+   [hidden:=1, arrows:=1,color:=firebrick])
+  ),
+ Display3D() 
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+\subsection{Display3D}\label{cmdDisplay3D}
+
+\begin{itemize}
+ \item \util \textbf[Display3D()]{Display3D()}.
+ \item \desc cette fonction dessine à l'écran la scène créée avec \Helpref{Build3D}{cmdBuild3D}. Cette fonction s'utilise sans argument.
+\end{itemize}
+
+
+\section{Les macros pour Build3D()}\label{mac4Build3D}
+
+\subsection{Les options globales}
+
+\begin{itemize}
+ \item \opt{hiddenLines}{0/1}: cette option est prise en compte par la macro \Helpref{bdLine}{macbdLine}. C'est la valeur par défaut de l'option \textcolor{\coloropt}{hidden}. Lorsque la valeur ce celle-ci est $1$, la ligne est dessinée une deuxième fois mais par dessus la scène, dans la même couleur, avec le style \var{HideStyle} et l'épaisseur \var{HideWidth} (ou $0.8$pt si cette variable est à \Nil). Cette superposition ne se voit donc pas sur les parties visibles du trait mais seulement sur les parties cachées.
+ \item \opt{TeXifyLabels}{0/1}:\label{optTeXifyLabels} cette option est prise en compte par la macro \Helpref{bdLabel}{macbdLabel}. C'est la valeur par défaut de l'option \textcolor{\coloropt}{TeXify}, celle-ci indique si le label est une formule mathématique qui doit être compilée par \TeX, TeXgraph lance une compilation pdflaTeX en arrière-plan puis appelle l'utilitaire \textit{pstoedit} (\url{http://www.pstoedit.net/}) qui traduit le fichier pdf en flattened postscript que TeXgraph peut ensuite parser pour récupérer la formule sous forme de chemins. Cela suppose donc qu'une distribution \TeX\ est installée ainsi que le programme pstoedit. Le fichier compilé s'appelle \textit{tex2FlatPs.tex}, et se trouve dans le dossier \verb|$HOME/.TeXgraph| de l'utilisateur sous linux, et dans \verb|c:\tmp| sous windows. On en trouve également une copie dans le dossier d'installation de TeXgraph, par défaut ce fichier utilise la police \textit{fourier} en 12pt, lorsque la variable \var{dollar} vaut $1$, la formule est insérée entre les deux délimiteurs: \verb|\[..\]|, sinon elle est laissée telle quelle, puis elle est composée avec la taille \verb|\large|. Par défaut cette option vaut $0$.
+ \item \opt{cleanLabel}{0/1}:\label{optcleanLabel} cette permet de \og re-TeXifier\fg{} les labels (définis avec l'option \textcolor{\coloropt}{TeXify} à $1$) lors de chaque re-calcul de la scène (valeur $0$ par défaut).
+\end{itemize}
+
+
+\subsection{bdArc}
+
+\begin{itemize}
+ \item \util \textbf[bdArc()]{bdArc( <B>, <A>, <C>, <R>, <sens>, [options] )}.
+ \item \desc définit un arc de cercle dans l'espace de rayon \argu{R}, allant de $(AB)$ vers $(AC)$. Le plan $(BAC)$ est orienté par la base $(\vec{AB},\vec{AC})$ et le \argu{sens} doit valoir 1 s'il est direct ou -1 sinon. Options de bdArc:
+
+  \begin{itemize}
+  \item \textcolor{\coloropt}{labelarc(<"texte">)}. C'est une macro qui permet de placer un label sur l'arc.  \item \opt{normal}{vecteur3D non nul}. Vecteur qui sera considéré comme le vecteur normal au plan si l'angle est plat (\Nil par défaut).
+  \item \opt{radscale}{nombre}. Nombre qui, multiplié par le rayon de l'arc, donnera la distance du label au centre de l'arc (1.25 par défaut).
+  \end{itemize}
+ \item C'est la macro bdCurve qui est appelée pour dessiner l'arc, on peut donc utiliser les options de \Helpref{bdCurve}{macbdCurve}.
+\end{itemize}
+
+\subsection{bdAngleD}
+
+\begin{itemize}
+ \item \util \textbf[bdAngleD()]{bdAngleD( <B>, <A>, <C>, <longueur>, [options] )}.
+ \item \desc crée \og l'angle droit\fg\ de l'espace défini par les deux droites $(AB)$ et $(AC)$, où $A$, $B$ et $C$ sont des points 3D.
+ \item Cette macro appelle bdLine, on peut donc utiliser les options de \Helpref{bdLine}{macbdLine}.
+ \item \exem
+\end{itemize}
+
+\begin{demo}{bdAngleD}{bdAngleD}
+\begin{texgraph}[name=bdAngleD]
+Marges(0,0,0,0), view(-3,3,-3,3),
+view3D(-3,3,-3,3,-3,3), size(7.5),
+background(full, gray),
+B:=M(0,2,0), A:=M(0,0,0),C:=M(0,0,1.5),
+Build3D(
+ bdAngleD(B,A,C,1, [color:=firebrick,tube:=1]),
+ bdDot([A,B,C], [dotstyle:=cube,
+         dotscale:=0.85,
+         color:=forestgreen]),
+ bdArc(B,A,C,2,1,[color:=blue, width:=12,
+         arrows:=1,labelarc("$\pi/2$")]),
+ bdAxes([0,0], [color:=gold,arrows:=1]),
+ bdLabel(B,"$B$",[labelpos:=[0.5,-i]]),
+ bdLabel(C,"$C$",[labelpos:=[0.5,-1]]),
+    ),
+Display3D()
+\end{texgraph}
+\end{demo}
+
+
+\subsection{bdAxes}
+
+\begin{itemize}
+ \item \util \textbf[bdAxes()]{bdAxes( <point3D>, [options] )}.
+ \item \desc définit les axes, \argu{point3D} est le point de concours des trois axes. Options de bdAxes: 
+
+  \begin{itemize}
+  \item \opt{labels}{0/1}. Indique la présence ou non des lettres $x$, $y$ et $z$ au bout des trois axes (1 par défaut).
+  \item \textcolor{\coloropt}{newxlegend(<"texte">)}, \textcolor{\coloropt}{newylegend(<"texte">)}, \textcolor{\coloropt}{newzlegend(<"texte">)}: macros qui permettent de définir la légende sur les axes, par défaut il s'agit de: \verb|$x$|, \verb|$y$| et \verb|$z$|.
+  \end{itemize}
+ \item Cette macro appelle bdLine, on peut donc utiliser les options de \Helpref{bdLine}{macbdLine}.
+\end{itemize}
+
+\subsection{bdCercle}
+
+\begin{itemize}
+ \item \util \textbf[bdCercle()]{bdCercle( <point3D>, <rayon R>, <vecteur3D normal>, [options] )}.
+ \item \desc définit un cercle dans l'espace de centre \argu{point3D} et de \argu{rayon R}, le plan du cercle est orthogonal au \argu{vecteur3D normal}. 
+ \item Cette macro appelle bdCurve, on peut donc utiliser les options de \Helpref{bdCurve}{macbdCurve}.
+ \item \exem les cercles de \Helpref{Villarceau}{villarceau}.
+\end{itemize}
+
+
+\subsection{bdCone}
+
+\begin{itemize}
+ \item \util \textbf[bdCone()]{bdCone( <point3D>, <vecteur3D>, <rayon>, [options] )}.
+ \item \desc définit le cône construit à partir d'un \argu{point3D} qui est le sommet, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cône, et du \argu{rayon} de la face circulaire. Les options de bdCone sont celles de \Helpref{bdFacet}{macbdFacet}, plus:
+
+  \begin{itemize}
+   \item \opt{hollow}{0/1}. Indique si le cône est creux ou non (1 par défaut).
+   \item \opt{nbfacet}{nombre de facettes}. Définit le nombre de facettes (35 par défaut).
+   \item \opt{border}{0/1}. Indique si le contour doit être dessiné ou non (0 par défaut).
+   \item \opt{bordercolor}{couleur}. Indique la couleur du contour ( identique à \textit{color} par défaut).
+   \item \opt{width}{épaisseur}. Indique l'épaisseur du bord en dixième de point ($8$ par défaut).
+  \end{itemize}
+\end{itemize}
+
+\subsection{bdCurve}\label{macbdCurve}
+
+\begin{itemize}
+ \item \util \textbf[bdCurve()]{bdCurve( <f(t)>, [options] )}.
+ \item \desc définit une courbe dans l'espace, celle-ci est paramétrée par $f(t)=[x(t)+i*y(t), z(t)]$ ou
+$f(t)=M(x(t),y(t),z(t))$, où $x(t)$, $y(t)$ et $z(t)$ sont des fonctions d'une variable $t$. Options de bdCurve: 
+
+  \begin{itemize}
+  \item \opt{t}{[tmin, tmax]}. Intervalle pour le paramètre $t$, [-5,5] par défaut.
+  \item \opt{nbdot}{entier positif}. Définit le nombre de points, celui-ci est de $25$ par défaut.
+  \end{itemize}
+ \item Cette macro appelle bdLine, on peut donc utiliser les options de \Helpref{bdLine}{macbdLine}.
+\end{itemize}
+
+
+\subsection{bdCylinder}
+\begin{itemize}
+ \item \util \textbf[bdCylinder(]{bdCylinder( <point3D>, <vecteur3D>, <rayon>, [options] )}.
+ \item \desc définit le cylindre construit à partir d'un \argu{point3D} qui est le centre d'une des deux faces circulaires, d'un \argu{vecteur3D} de l'axe qui indique la direction et la hauteur du cylindre, et du \argu{rayon}. Les options de bdCylinder sont celles de \Helpref{bdFacet}{macbdFacet}, plus:
+
+  \begin{itemize}
+   \item \opt{hollow}{0/1}. Indique si le cylindre est creux ou non (1 par défaut).
+   \item \opt{nbfacet}{nombre de facettes}. Définit le nombre de facettes (35 par défaut).
+   \item \opt{border}{0/1}. Indique si le contour doit être dessiné ou non (0 par défaut).
+   \item \opt{bordercolor}{couleur}. Indique la couleur du contour ( identique à \textit{color} par défaut).
+   \item \opt{width}{épaisseur}. Indique l'épaisseur du bord en dixième de point ($8$ par défaut).   
+  \end{itemize}
+\end{itemize}
+
+\subsection{bdDot}\label{macbdDot}
+
+\begin{itemize}
+ \item \util \textbf[bdDot()]{bdDot( <liste point3D>, [options] )}.
+ \item \desc définit une liste de points de l'espace. Options de bdDot: 
+
+  \begin{itemize}
+  \item \opt{color}{couleur}. Définit la couleur des points (black par défaut).
+  \item \opt{dir}{vecteur3D1 ou [vecteur3D1,vecteur3D2]}. Lorsque dotstyle=line (un trait), l'option dir doit contenir un vecteur directeur du trait à tracer (dans l'espace). Lorsque dotstyle=cross (croix), l'option dir doit contenir une liste de deux vecteurs directeurs pour les traits à tracer (dans l'espace). Par défaut dir vaut \Nil.
+  \item \opt{dotscale}{nombre positif}. Définit un facteur d'échelle (1 par défaut).
+  \item \opt{dotstyle}{disc/cube/line/cross}. Définit le style de points (disc par défaut).
+  \end{itemize}
+ \item Lorsque dostsyle=cube la macro bdFacet est appelée, on peut dans ce cas utiliser les options de \Helpref{bdFacet}{macbdFacet}, lorsque dotstyle=line ou cross la macro bdLine est appelée, on peut alors utiliser les options de \Helpref{bdLine}{macbdLine}.
+\end{itemize}
+
+
+\subsection{bdDroite}
+
+\begin{itemize}
+ \item \util \textbf[bdDroite()]{bdDroite( <[point3D, vecteur3D]>, [options] )}.
+ \item \desc définit une droite, celle-ci est représentée par la liste \argu{[point 3D, vecteur3D directeur]}. Options de bdDroite: 
+
+  \begin{itemize}
+  \item \opt{scale}{nombre strictement positif}. La droite est intersectée par la fenêtre 3D courante ce qui donne un segment, celui-ci peut être agrandi ou diminué.
+  \end{itemize}
+ \item Cette macro appelle bdLine, on peut donc utiliser les options de \Helpref{bdLine}{macbdLine}.
+\end{itemize}
+
+
+\subsection{bdFacet}\label{macbdFacet}
+
+\begin{itemize}
+ \item \util \textbf[bdFacet()]{bdFacet( <liste facettes>, [options] )}.
+ \item \desc définit une liste de facettes. Options de bdFacet:
+
+\begin{itemize}
+   \item \opt{backculling}{0/1}. Indique si les facettes non visibles doivent être éliminées ou non (0 par défaut). Une facette est non visible lorsque son vecteur normal n'est pas dans la direction de l'observateur.
+
+   \item \opt{clip}{0/1}. Indique si les facettes doivent être clippées par la fenêtre définie par l'option \textcolor{\coloropt}{clipwin} lorsque \textcolor{\coloropt}{clip} vaut 1, ou bien par le plan défini par l'option \textcolor{\coloropt}{clipwin} lorsque \textcolor{\coloropt}{clip} vaut -1 (clip=0 par défaut).
+
+   \item \opt{clipwin}{[M(xinf,yinf,zinf), M(xsup,yup,zsup)]}. Définit la fenêtre 3D pour un éventuel clipping lorsque \textcolor{\coloropt}{clip}=1, la fenêtre est alors donnée par sa grande diagonale: [M(xinf,yinf,zinf), M(xsup,yup,zsup)] (c'est la fenêtre courante par défaut). Mais lorsque \textcolor{\coloropt}{clip}=-1 l'option \textcolor{\coloropt}{clipwin} est interprétée comme un plan: [point3D, vecteur3D normal].
+
+   \item \opt{triangular}{0/1}. Permet de trianguler ou non les facettes ($0$ par défaut).
+
+   \item \opt{addsep}{"x" ou "y" ou "z"}. Cette option, lorsqu'elle n'a pas la valeur \Nil (valeur par défaut), détermine la boîte englobante de chaque facette et ajoute dans la liste une des faces de cette boîte (face perpendiculaire à l'axe $Ox$ avec $x$ minimal quand l'option a la valeur "x"), cette facette supplémentaire sera invisible et servira de cloison séparatrice, ainsi la \og vraie\fg{} facette ne sera pas découpée par une facette qui se trouve entièrement derrière la cloison. Cette option est inutile pour les objets convexes.
+
+   \item \opt{color}{couleur}. Choix de la couleur (white par défaut).
+
+   \item \opt{contrast}{nombre positif}. Le contraste normal a la valeur $1$ (valeur par défaut), un contraste nul signifie que la couleur est unie.
+
+  \item \opt{smooth}{0/1}. Indique si l'algorithme de \Gouraud (lissage des facettes) doit être utilisé ou non lors de l'exportation pstricks ou eps (0 par défaut). Attention, les afficheurs de pdf sont lents pour afficher ce type d'images!
+
+   \item \opt{opacity}{nombre entre 0 et 1}. Valeur de l'opacité (1 par défaut), permet d'introduire la transparence lorsque l'opacité est strictement inférieure à $1$.
+
+   \item \opt{matrix}{matrice 3d}. Permet de définir une matrice de transformation qui sera appliquée aux facettes (l'identité par défaut). La transformation s'effectue avant l'éventuel clipping.
+
+   \item \opt{twoside}{0/1}. Indique si on doit distinguer ou non le devant-derrière des facettes. Dans l'affirmative, les deux côtés n'ont pas la même couleur (1 par défaut).
+
+   \item \opt{above}{nombre positif ou nul}. Permet de placer les facettes par dessus la scène, elles sont translatées avec le vecteur \verb|above*500*\n| ($0$ par défaut).
+
+   \item \opt{border}{0/1}. Indique si on doit dessiner ou non les arêtes des facettes ($0$ par défaut).
+   
+   \item \opt{bordercolor}{couleur}. Couleur des arêtes lorsque \textcolor{\coloropt}{border}=1 (black par défaut).
+
+   \item \opt{hidden}{0/1}. Indique si les arêtes cachées doivent être dessinées lorsque \textcolor{\coloropt}{border}=1, si c'est le cas alors les variables \var{HideStyle} et \var{HideWidth} sont utilisées. Par défaut, cette option a la valeur de l'option générale \var{hiddenLines}.
+  \end{itemize}
+\end{itemize}
+
+\subsection{bdLabel}\label{macbdLabel}
+
+\begin{itemize}
+ \item \util \textbf[bdLabel()]{bdLabel( <point3D>, <"texte">, [options] )}.
+ \item \desc définit un label dans l'espace, le \argu{point3D} est le point d'ancrage. Le label est dessiné sur le plan de projection et non pas réellement dessiné dans l'espace, mais son point d'ancrage est géré dans la scène pour déterminer l'ordre d'affichage. Options de bdLabel: 
+
+  \begin{itemize}
+  \item \opt{TeXify}{0/1}: indique si le label doit être compilé par \TeX, cette option est initialisée avec la valeur de l'option générale \Helpref{TeXifyLabels}{optTeXifyLabels}.
+
+  \item \opt{scale}{nombre>0}. Lorsque l'option \textit{TeXify} vaut $1$, la taille du label peut être modifiée avec cette option.
+
+  \item \opt{dollar}{0 ou 1}. Lorsque l'option \textit{TeXify} vaut $1$, cette option indique si le label doit mis ou non entre \verb|\[| et \verb|\]| avant d'être compilé ($0$ par défaut).
+  
+  \item \opt{label3d}{0 ou 1}. Lorsque cette option a la valeur $1$, les labels sont compilés transformés en en prismes devant ainsi des objets 3D, l'option \textit{Texify} prend alors automatiquement la valeur $1$.
+  
+  \item \opt{labeldir}{[vecteur1, vecteur2, épaisseur]}. Uniquement si l'option \textit{Texify} vaut 1, cette option indique le sens de l'écriture et l'épaisseur des caractères dans l'espace la hauteur est centrée par rapport au plan d'écriture défini par les deux vecteurs (cette option vaut \Nil par défaut, dans cas c'est sur le plan de projection que se fait l'affichage).  
+
+  \item \opt{color}{couleur}. Définit la couleur du label (black par défaut).
+
+  \item \opt{dotcolor}{couleur}. Définit la couleur du point d'ancrage si celui-ci doit être affiché (égale à color par défaut).
+
+  \item \opt{labelpos}{[distance cm, affixe direction]}. Indique la position du label par rapport au point d'ancrage \Mytextbf{sur le plan de projection} (\Nil par défaut, dans ce cas la distance est considérée comme nulle).
+
+  \item \opt{labelsize}{small/...}. Définit la taille du label comme LabelSize (égal à \var{LabelSize} par défaut) lorsque l'option \textit{TeXify} vaut $0$.
+
+  \item \opt{labelstyle}{type de label}. Définit le style de label comme LabelStyle (égal à \var{LabelStyle} par défaut).
+
+  \item \opt{showdot}{0/1}. Indique si le point d'ancrage doit être affiché (0 par défaut).
+  \end{itemize}
+ \item Lorsque \textit{showdot} vaut $1$, on peut utiliser les options de \Helpref{bdDot}{macbdDot} car celle-ci sera appelée.
+ \item \exem
+\end{itemize}
+
+
+\pngtrue
+\begin{demo}{Utilisation de l'option TeXify}{texify}
+\begin{texgraph}[name=texify,export=eps]
+Marges(0,0,0,0),view(-3,3,-3,3),
+view3D(-3,3,-3,3,-3,3), size(7.5),
+B:=M(0,2,0), A:=M(0,0,0), C:=M(0,0,1.5),
+Build3D(
+ bdSurf(M(u,-v,sqrt(u^4+v^4)-2),
+     [color:=steelblue, u:=[-2,2],
+     v:=u, smooth:=1,clip:=1,
+     clipwin:=[M(-3,-3,-3),M(3,3,2)]]),
+ bdPlan([0,0,1+i,2], [color:=darkseagreen,
+            scale:=0.75]),
+ bdAxes([0,0], [color:=gold,arrows:=1]),
+ bdLabel([0.25*(1+i),2.25],"z=\sqrt{x^4+y^4}-2",
+     [TeXify:=1, scale:=0.75])
+),
+Display3D()
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+
+\subsection{bdLine}\label{macbdLine}
+
+\begin{itemize}
+ \item \util \textbf[bdLine()]{bdLine( <liste point3D>, [options] )}.
+ \item \desc définit une ligne polygonale dans l'espace. Options de bdLine:
+
+  \begin{itemize}
+   \item \opt{arrows}{0/1/2}. Indique la présence ou non de flèche (aucune, une ou deux, aucune par défaut). Cette option suppose que la ligne ne contient pas la constante \textit{jump}.
+
+   \item \opt{arrowscale}{nombre positif}. Facteur d'échelle pour les flèches (1 par défaut).
+
+   \item \opt{clip}{-1/0/1}. Indique si la ligne doit être clippée par la fenêtre définie par l'option \textit{clipwin} lorsque \textit{clip} vaut 1, ou bien par le plan défini par l'option \textit{clipwin} lorsque \textit{clip} vaut -1 (clip=0 par défaut).
+
+   \item \opt{clipwin}{[M(xinf,yinf,zinf), M(xsup,yup,zsup)]}. Définit la fenêtre 3D pour un éventuel clipping lorsque \textit{clip} vaut 1, la fenêtre est alors donnée par sa grande diagonale: [M(xinf,yinf,zinf), M(xsup,yup,zsup)] (c'est la fenêtre courante par défaut). Mais lorsque \textit{clip} vaut -1 l'option \textit{clipwin} est interprétée comme un plan: [point3D, vecteur normal].
+
+   \item \opt{close}{0/1}. Indique s'il faut refermer la ligne ou non, (0 par défaut). 
+
+   \item \opt{color}{couleur}. Choix de la couleur (black par défaut).
+
+   \item \opt{hollow}{0/1}. Lorsque l'option \textit{tube} vaut 1, la ligne est remplacée par un tube à facettes. Celui-ci peut être creux (hollow:=1) ou non (hollow:=0) (0 par défaut).
+
+   \item \opt{linestyle}{style de ligne}. Définit le style de tracé de ligne (solid par défaut).
+
+   \item \opt{nbfacet}{nombre de facettes}. Définit le nombre de facettes lorsque \textit{tube} vaut 1 (4 facettes par défaut).
+
+   \item \opt{opacity}{nombre entre 0 et 1}. Valeur de l'opacité (1 par défaut), permet d'introduire la transparence lorsque l'opacité est strictement inférieure à $1$.
+
+   \item \opt{radius}{rayon du tube}. Rayon du tube lorsque \textit{tube} vaut 1 (0.01 par défaut).
+
+   \item \opt{radiusscale}{nombre>0}. Facteur d'échelle pour le rayon du tube lorsque \textit{tube} vaut 1 (1 par défaut).
+
+   \item \opt{tube}{0/1}. Indique s'il faut construire un tube (à facettes) à partir de la ligne (0 par défaut).
+
+   \item \opt{width}{épaisseur du trait} (8 par défaut).
+
+   \item \opt{matrix}{matrice 3d}. Permet de définir une matrice de transformation qui sera appliquée aux points de la ligne (l'identité par défaut). La transformation s'effectue avant l'éventuel clipping.
+
+   \item \opt{above}{nombre positif ou nul}. Permet de placer la ligne par dessus la scène, elle est translatée avec le vecteur \verb|above*500*\n| ($0$ par défaut).
+
+   \item \opt{hidden}{0/1}. Indique si les traits cachés doivent être dessinés lorsque \textcolor{\coloropt}{border}=1, si c'est le cas alors les variables \var{HideStyle} et \var{HideWidth} sont utilisées. Par défaut, cette option a la valeur de l'option générale \var{hiddenLines}.
+
+  \end{itemize}
+ \item Lorsque l'option \textit{tube} vaut 1, la macro bdFacet est appelée, on peut donc utiliser dans ce cas les options de \Helpref{bdFacet}{macbdFacet}.
+\end{itemize}
+
+\subsection{bdPlan}
+
+\begin{itemize}
+ \item \util \textbf[bdPlan()]{bdPlan( <plan>, [options] )}.
+ \item \desc définit un plan, ce \argu{plan} est représenté par une liste du type: [point 3D, vecteur3D normal]. Options de bdPlan: 
+
+  \begin{itemize}
+  \item \opt{scale}{nombre strictement positif}. Le plan est intersecté par la fenêtre 3D courante ce qui donne une facette, celle-ci peut être agrandie ou diminuée.
+  \end{itemize}
+ \item Cette macro appelle bdFacet, on peut donc utiliser les options de \Helpref{bdFacet}{macbdFacet}. Par défaut l'option \textit{twoside} vaut 0 (on ne distingue pas le devant-derrière de la facette).
+\end{itemize}
+
+\begin{demo}{Intersection de 2 plans}{intersection}
+\begin{texgraph}[name=intersection]
+Marges(0,0,0,0), ModelView(central), DistCam(20),
+view(-6,6,-6,6), size(7.5),
+theta:=-10*deg, phi:=60*deg,
+P1:=planEqn([1,1,1,2]),P2:=[Origin, vecK-vecJ],
+D:= interPP(P1,P2),
+a:=Copy(getdroite(D),1,2),
+b:=Copy(getplan(P1,0.75),11,2),
+c:=Copy(getplan(P2,0.75),3,2),
+Build3D( 
+ bdPlan(P1, [color:=red, opacity:=0.7,
+        scale:=0.75 ]),
+ bdPlan(P2, [color:=blue,opacity:=0.7,
+       scale:=0.75]),
+ bdDroite(D, [color:=darkgreen, 
+        width:=12]),
+ bdAxes([0,0],[color:=gold, 
+        width:=8, arrows:=1]),
+ bdLabel(a,"$D$",[labelpos:=[0.5,-i]]),
+ bdLabel(b,"$P_1$",[labelpos:=[0.5,i]]),
+ bdLabel(c,"$P_2$",[labelpos:=[0.5,i]])
+     ),
+Display3D() 
+\end{texgraph}
+\end{demo}
+
+\subsection{bdPlanEqn}
+
+\begin{itemize}
+ \item \util \textbf[bdPlanEqn()]{bdPlanEqn( <[a,b,c,d]>, [options] )}.
+ \item \desc définit le plan d'équation $ax+by+cz=d$, celui-ci est représenté par la liste: \argu{[a,b,c,d]}. Options de bdPlanEqn: 
+
+  \begin{itemize}
+  \item \opt{scale}{nombre strictement positif}. Le plan est intersecté par la fenêtre 3D courante ce qui donne une facette, celle-ci peut être agrandie ou diminuée.
+  \end{itemize}
+ \item Cette macro appelle bdFacet, on peut donc utiliser les options de \Helpref{bdFacet}{macbdFacet}. Par défaut l'option \textit{twoside} vaut 0 (on ne distingue pas le devant-derrière de la facette).
+\end{itemize}
+
+\subsection{bdPrism}
+\begin{itemize}
+ \item \util \textbf[bdPrism(]{bdPrism( <liste de point3D>, <vecteur3D>, [options] )}.
+ \item \desc définit le prisme construit à partir d'une \argu{liste de point3D} qui forme la base (supposée plane), et un \argu{vecteur3D} de translation pour calculer l'autre base. Les options de bdPrism sont celles de \Helpref{bdFacet}{macbdFacet}, plus:
+
+  \begin{itemize}
+   \item \opt{hollow}{0/1}. Indique si le prisme est creux ou non (1 par défaut).
+  \end{itemize}
+
+Lorsque l'option \textcolor{\coloropt}{border} vaut $1$, la macro \Helpref{bdLine}{macbdLine} est appelée, on peut donc utiliser les options de celles-ci.
+\end{itemize}
+
+
+\subsection{bdPyramid}
+\begin{itemize}
+ \item \util \textbf[bdPyramid(]{bdPyramid( <liste de point3D>, <point3D>, [options] )}.
+ \item \desc définit la pyramide construite à partir d'une \argu{liste de point3D} qui forme la base (supposée plane), et un \argu{point3D} qui est le sommet. Les options de bdPyramid sont celles de \Helpref{bdFacet}{macbdFacet}, plus:
+
+  \begin{itemize}
+   \item \opt{hollow}{0/1}. Indique si la pyramide est creuse ou non (1 par défaut).
+  \end{itemize}
+
+Lorsque l'option \textcolor{\coloropt}{border} vaut $1$, la macro \Helpref{bdLine}{macbdLine} est appellée, on peut donc utiliser les options de celles-ci.
+\end{itemize}
+
+\subsection{bdSphere}
+
+\begin{itemize}
+ \item \util \textbf[bdSphere()]{bdSphere( <point3D>, <rayon R>, [options] )}.
+ \item \desc définit une sphère de centre \argu{point3D}, et de \argu{rayon R}. Les options sont celles de \Helpref{bdFacet}{macbdFacet} plus:
+
+  \begin{itemize}
+  \item \opt{grid}{[nb méridiens, nb parallèles]}. Nombre de méridiens et de parallèles pour définir les facettes, [40,25] par défaut.
+  \item \opt{border}{0/1}. Indique si le contour doit être dessiné ou non (0 par défaut).
+  \item \opt{bordercolor}{couleur}. Indique la couleur du contour (identique à \textit{color} par défaut).
+  \end{itemize}
+\end{itemize}
+
+\subsection{bdSurf}
+
+\begin{itemize}
+ \item \util \textbf[bdSurf()]{bdSurf( <f(u,v)>, [options] )}.
+ \item \desc d finit une surface paramétrée, par $f(u,v)=[x(u,v)+i*y(u,v), z(u,v)]=M(x(u,v),y(u,v),z(u,v))$, où $x$, $y$ et $z$ sont des fonctions des deux variables $u$ et $v$. Options de bdSurf: 
+
+  \begin{itemize}
+  \item \opt{u}{[umin, umax]}. Intervalle pour la variable $u$, [-5,5] par défaut.
+  \item \opt{v}{[vmin, vmax]}. Intervalle pour la variable $v$, [-5,5] par défaut.
+  \item \opt{grid}{[unbdot, vnbdot]}. Définit la grille, c'est à dire le nombre de points pour $u$ et pour $v$, celle-ci est de [$25$,$25$] par défaut.
+  \end{itemize}
+ \item Cette macro appelle bdFacet, on peut donc utiliser les options de \Helpref{bdFacet}{macbdFacet}.
+\end{itemize}
+
+
+\subsection{bdTorus}
+
+\begin{itemize}
+ \item \util \textbf[bdTorus()]{bdTorus( <point3D>, <rayon R>, <rayon r>, <vecteur3D normal>, [options] )}.
+ \item \desc définit un tore de centre \argu{point3D}, de grand \argu{rayon R}, de petit \argu{rayon r}, le \argu{vecteur3D normal} permet de définir le \og plan du tore\fg. Les options de bdTorus sont celles de \Helpref{bdFacet}{macbdFacet}, plus:
+
+  \begin{itemize}
+  \item \opt{grid}{[nb méridiens, nb parallèles]}. Nombre de méridiens et de parallèles pour définir les facettes,[40,25] par défaut.
+  \end{itemize}
+\end{itemize}
+
+\pngtrue%\label{villarceau}
+\begin{demo}{Cercles de Villarceau}{villarceau}
+\begin{texgraph}[name=villarceau,export=eps]
+view(-6,6,-5,5),Marges(0,0,0,0),size(7.5),
+$R:=3, $r:=1, 
+N:=rot3d(vecK,[Origin,vecI],arcsin(r/R)),
+view3D(-5,5,-5,5,-5,5), 
+background(full,lightgray),
+Build3D(
+ bdPlan([Origin, -N], 
+  [color:=seagreen, opacity:=0.8]),
+ bdTorus( Origin, R, r, vecK, 
+  [color:=steelblue, smooth:=1]),
+ view3D(-5.5,5.5,-5.5,5.5,-5,5),
+ bdAxes( Origin, 
+  [arrows:=1, newxlegend("x"),newylegend("y"),
+   newzlegend("z")]),
+ bdCercle(M(r,0,0),R,N,[color:=red, tube:=1]),
+ bdCercle(M(-r,0,0),R,N,[color:=red, tube:=1])
+    ),
+Display3D()
+\end{texgraph}
+\end{demo}
+\pngfalse
+
+\section{Exportations en obj, geom, jvx et js}
+
+\subsection{Scène construite avec Build3D}
+
+Quatre exportations apparaissent en bas du menu \textit{Fichier}, celles-ci ne s'appliquent qu'à la scène
+construite avec la commande \textsl{Build3D()}. Ces exports sont:
+
+\begin{enumerate}
+ \item format \Mytextbf{obj}: les fichiers \var{obj} peuvent être lus par la plupart des grands logiciels de 3D, comme \textit{Blender} (\url{http://www.blender.org/}) par exemple.
+ \item format \Mytextbf{geom}: les fichiers geom sont destinés uniquement au logiciel \textit{geomview} (\url{http://www.geomview.org/}) qui permet en particulier une manipulation à la souris de la figure dans l'espace.
+ \item format \Mytextbf{jvx}: les fichiers \var{jvx} sont destinés uniquement à l'applet \textit{javaview} (\url{http://www.javaview.de/}) qui permet une manipulation à la souris de la figure dans l'espace, plus de nombreuses autres options permettant de contrôler la scène (comme cacher certains éléments, ou exporter la scène...) grâce à un panneau de contrôle. L'affichage peut se faire dans une page web, ou bien en local dans une fenêtre java.
+ \item format \Mytextbf{js}: le fichier \var{js} exporté peut être inclus dans une page html et traité par un script javascript permettant l'affichage des données dans un navigateur grâce à la technologie WebGL. C'est ce que fait le script \textit{modelViewer.js} (qui est dans le dossier \verb|.TEXgraph| sous linux ou \verb|c:\tmp| sous windows) en utilisant la bibliothèque \textit{THREE.js} (\url{https://threejs.org/}). Lorsque l'utilisateur clique le bouton WebGL de l'onglet Supplément 3D, la scène est exportée dans le fichier \textit{temp.js} et la page \textit{modelView.html} est ouverte dans le navigateur, cette page charge le fichier \textit{temp.js} puis le script \textit{modelViewer.js} est chargé à son tour et affiche la scène.
+\end{enumerate}
+
+Ces exportations peuvent aussi être activées par les commandes:
+
+\co{Export( obj ou geom ou jvx ou js, <nom de fichier> )} où <nom de fichier> désigne le nom complet du fichier avec extension.
+
+
+\subsection{Scène construite sans Build3D}
+
+Il est également possible d'exporter une scène aux formats \textit{obj}, \textit{geom}, \textit{jvx} et \textit{js} sans passer par la commande Build3D:
+
+\begin{itemize}
+ \item \util \textbf[SceneToObj()]{SceneToObj( <nom de fichier>, <élément1>, <élément2>, ... )}.
+ \item \util \textbf[SceneToGeom()]{SceneToGeom( <nom de fichier>, <élément1>, <élément2>, ... )}.
+ \item \util \textbf[SceneToJvx()]{SceneToJvx( <nom de fichier>, <élément1>, <élément2>, ... )}.
+ \item \util \textbf[SceneToJs()]{SceneToJs( <nom de fichier>, <élément1>, <élément2>, ... )}.
+ \item \desc l'argument \argu{nom de fichier} désigne le nom complet du fichier sans l'extension, celle-ci étant automatiquement ajoutée. Les arguments suivants sont les éléments qui composent la scène, \Mytextbf{ce sont les mêmes arguments que l'on passerait à la commande Build3D}, on peut en particulier utiliser les macros prévues initialement pour \Helpref{Build3D}{mac4Build3D} (bdAxes, bdArc, ...).
+\end{itemize}
+
+\subsection{Export d'un élément isolé}
+
+Il y a deux autres macros d'export qui sont:
+
+\begin{itemize}
+ \item \util \textbf[WriteObj()]{WriteObj(<nom de fichier>, <liste des sommets>, <liste des facettes> [, liste des lignes] )},
+ \item \util \textbf[WriteOff()]{WriteOff(<nom de fichier>, <liste des sommets>, <liste des facettes> [, liste des lignes] )},
+ \item \desc l'argument \argu{nom de fichier} désigne le nom complet du fichier sans l'extension, celle-ci étant automatiquement ajoutée. L'argument suivant est la liste des points 3D qui sont les sommets des facettes et/ou des lignes qui suivent. Le troisième argument est la liste des facettes où \Mytextbf{chaque sommet est remplacé par son numéro de position dans la liste des sommets} (de même pour le dernier argument). C'est le format naturel pour les fichiers \var{obj}. La commande \Helpref{ConvertToObj}{cmdConvertToObj} peut être utilisée pour faire cette conversion.
+\end{itemize}
+
+Le format \textit{off} est un format du logiciel \textit{geomview}.

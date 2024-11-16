@@ -1,0 +1,8 @@
+TeXgraph#
+Graph image = [
+ view(-2,3,-2,4.5),Marges(0,0,0,0),size(7.5),
+ plan:=[M(1.5,0,0), -vecI],
+ S:= Section(plan,
+    Tetra(Origin,3*vecI,3*vecJ,4*vecK)),
+ A:=Aretes(S), Width:=12, DrawAretes(A)
+];

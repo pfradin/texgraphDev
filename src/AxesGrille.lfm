@@ -1,0 +1,481 @@
+object AxesGrilleForm: TAxesGrilleForm
+  Left = 960
+  Height = 415
+  Top = 318
+  Width = 404
+  HorzScrollBar.Page = 403
+  VertScrollBar.Page = 414
+  ActiveControl = Button1
+  BorderIcons = []
+  BorderStyle = bsDialog
+  Caption = 'Axes'
+  ClientHeight = 415
+  ClientWidth = 404
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.3'
+  object Label7: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Edit7
+    AnchorSideTop.Side = asrCenter
+    Left = 2
+    Height = 17
+    Top = 7
+    Width = 43
+    Alignment = taRightJustify
+    BorderSpacing.Left = 2
+    Caption = 'Name='
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideLeft.Control = Edit7
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 117
+    Height = 17
+    Top = 6
+    Width = 287
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 6
+    Caption = '(10 char. max, begins with a letter)'
+    ParentColor = False
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Edit7
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox2
+    Left = 2
+    Height = 89
+    Top = 34
+    Width = 185
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 5
+    Caption = 'Origin'
+    ClientHeight = 70
+    ClientWidth = 181
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideTop.Control = Edit1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Edit1
+      Left = 12
+      Height = 17
+      Top = 13
+      Width = 19
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Right = 2
+      Caption = 'X='
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = Edit2
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label1
+      AnchorSideRight.Side = asrBottom
+      Left = 17
+      Height = 17
+      Top = 45
+      Width = 14
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'Y='
+      ParentColor = False
+    end
+    object Edit1: TEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrCenter
+      Cursor = crIBeam
+      Left = 33
+      Height = 27
+      Top = 8
+      Width = 129
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+      Text = 'Edit1'
+    end
+    object Edit2: TEdit
+      AnchorSideLeft.Control = Edit1
+      AnchorSideTop.Control = Edit1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Edit1
+      AnchorSideRight.Side = asrBottom
+      Cursor = crIBeam
+      Left = 33
+      Height = 27
+      Top = 40
+      Width = 129
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 5
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Edit7
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 192
+    Height = 89
+    Top = 34
+    Width = 207
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    Caption = 'Graduations (0=no grad.)'
+    ClientHeight = 70
+    ClientWidth = 203
+    TabOrder = 2
+    object Label3: TLabel
+      AnchorSideTop.Control = Edit3
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Edit3
+      Left = 11
+      Height = 17
+      Top = 13
+      Width = 24
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 2
+      Caption = 'Ox='
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideTop.Control = Edit4
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label3
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 17
+      Top = 45
+      Width = 29
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'Oy='
+      ParentColor = False
+    end
+    object Edit3: TEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrCenter
+      Cursor = crIBeam
+      Left = 37
+      Height = 27
+      Top = 8
+      Width = 145
+      TabOrder = 0
+      Text = 'Edit1'
+    end
+    object Edit4: TEdit
+      AnchorSideLeft.Control = Edit3
+      AnchorSideTop.Control = Edit3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Edit3
+      AnchorSideRight.Side = asrBottom
+      Cursor = crIBeam
+      Left = 37
+      Height = 27
+      Top = 40
+      Width = 145
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 5
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+  end
+  object Button1: TButton
+    AnchorSideTop.Control = GroupBox5
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 36
+    Height = 30
+    Top = 380
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 5
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Ok'
+    Default = True
+    OnClick = Button1Click
+    TabOrder = 5
+  end
+  object Button2: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 164
+    Height = 30
+    Top = 380
+    Width = 75
+    Anchors = [akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 6
+  end
+  object Button3: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 297
+    Height = 30
+    Top = 380
+    Width = 73
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Bottom = 5
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Attributes'
+    OnClick = Button3Click
+    TabOrder = 7
+  end
+  object GroupBox3: TGroupBox
+    AnchorSideLeft.Control = GroupBox4
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 190
+    Height = 105
+    Top = 128
+    Width = 209
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    Caption = 'Parameters (length in cm)'
+    ClientHeight = 86
+    ClientWidth = 205
+    TabOrder = 4
+    object Label5: TLabel
+      AnchorSideTop.Control = Edit5
+      AnchorSideTop.Side = asrCenter
+      Left = 24
+      Height = 17
+      Top = 19
+      Width = 48
+      Alignment = taRightJustify
+      Caption = 'xyticks='
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideTop.Control = Edit6
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label5
+      AnchorSideRight.Side = asrBottom
+      Left = 2
+      Height = 17
+      Top = 56
+      Width = 70
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'xylabelsep='
+      ParentColor = False
+    end
+    object Edit5: TEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrCenter
+      Cursor = crIBeam
+      Left = 81
+      Height = 27
+      Top = 14
+      Width = 105
+      BorderSpacing.Left = 2
+      TabOrder = 0
+      Text = 'Edit1'
+    end
+    object Edit6: TEdit
+      AnchorSideLeft.Control = Edit5
+      AnchorSideTop.Control = Edit5
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Edit5
+      AnchorSideRight.Side = asrBottom
+      Cursor = crIBeam
+      Left = 81
+      Height = 27
+      Top = 51
+      Width = 105
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 10
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+  end
+  object GroupBox4: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox3
+    Left = 5
+    Height = 105
+    Top = 128
+    Width = 180
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    Caption = 'xylabelpos'
+    ClientHeight = 86
+    ClientWidth = 176
+    TabOrder = 3
+    object RadioGroup1: TRadioGroup
+      Left = 8
+      Height = 81
+      Top = 1
+      Width = 81
+      AutoFill = True
+      Caption = 'On Ox axe'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 62
+      ClientWidth = 77
+      Items.Strings = (
+        'none'
+        'top'
+        'bottom'
+      )
+      TabOrder = 0
+    end
+    object RadioGroup2: TRadioGroup
+      Left = 94
+      Height = 81
+      Top = 1
+      Width = 73
+      AutoFill = True
+      Caption = 'On Oy axe'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 62
+      ClientWidth = 69
+      Items.Strings = (
+        'none'
+        'left'
+        'right'
+      )
+      TabOrder = 1
+    end
+  end
+  object Edit7: TEdit
+    AnchorSideLeft.Control = Label7
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Cursor = crIBeam
+    Left = 47
+    Height = 27
+    Top = 2
+    Width = 65
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 2
+    TabOrder = 0
+    Text = 'Edit7'
+  end
+  object GroupBox5: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GroupBox4
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 5
+    Height = 134
+    Top = 238
+    Width = 394
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    Caption = 'Labels of origin'
+    ClientHeight = 115
+    ClientWidth = 390
+    TabOrder = 8
+    object RadioGroup3: TRadioGroup
+      AnchorSideLeft.Control = GroupBox5
+      AnchorSideTop.Control = GroupBox5
+      AnchorSideRight.Control = RadioGroup4
+      AnchorSideBottom.Control = GroupBox5
+      AnchorSideBottom.Side = asrBottom
+      Left = 5
+      Height = 105
+      Top = 5
+      Width = 175
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      AutoFill = True
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 5
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      Caption = 'On Ox axe'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 86
+      ClientWidth = 171
+      Items.Strings = (
+        'none'
+        'normal'
+        'shifted'
+      )
+      TabOrder = 0
+    end
+    object RadioGroup4: TRadioGroup
+      AnchorSideLeft.Control = RadioGroup3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = GroupBox5
+      AnchorSideRight.Control = GroupBox5
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = GroupBox5
+      AnchorSideBottom.Side = asrBottom
+      Left = 185
+      Height = 105
+      Top = 5
+      Width = 200
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      AutoFill = True
+      BorderSpacing.Top = 5
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      Caption = 'On Oy axe'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 86
+      ClientWidth = 196
+      Items.Strings = (
+        'none'
+        'normal'
+        'shifted'
+      )
+      TabOrder = 1
+    end
+  end
+end

@@ -1,0 +1,74 @@
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/color.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/color.mac end of reading
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/TeXgraph.mac...
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/errors.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/errors.mac end of reading
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/draw2d.mac...
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/markers.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/markers.mac end of reading
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/gradients.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/gradients.mac end of reading
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/draw2d.mac end of reading
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/draw3d.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/draw3d.mac end of reading
+Reading /home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/axes.mac...
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraph/macros/axes.mac end of reading
+/home/pfradin/pcbureau/DevTeXgraphLazarus/TeXgraThis is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./tex2FlatPs.tex
+LaTeX2e <2021-06-01> patch level 1
+L3 programming layer <2021-07-12>
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/size12.clo))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amstext.sty
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fourier.sty
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/t1futs.fd))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/textcomp.sty)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fourier-orns.sty))
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+)
+No file tex2FlatPs.aux.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fmlfutm.fd)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fmsfutm.fd)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fmxfutm.fd)
+(./formula.tex
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1 z=\sqrt{
+            x^4+y^4}-2
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/fourier/fmlfutmi.fd)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd))
+! Missing $ inserted.
+<inserted text> 
+                $
+l.9 \end{document}
+                  
+[1{/home/pfradin/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(./tex2FlatPs.aux) )
+(see the transcript file for additional information){/home/pfradin/texlive/2021
+/texmf-dist/fonts/enc/dvips/base/8r.enc}</home/pfradin/texlive/2021/texmf-dist/
+fonts/type1/public/fourier/fourier-mex.pfb></home/pfradin/texlive/2021/texmf-di
+st/fonts/type1/public/fourier/fourier-ms.pfb></home/pfradin/texlive/2021/texmf-
+dist/fonts/type1/adobe/utopia/putr8a.pfb></home/pfradin/texlive/2021/texmf-dist
+/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on tex2FlatPs.pdf (1 page, 25635 bytes).
+Transcript written on tex2FlatPs.log.
+ph/macros/TeXgraph.mac end of reading
+Reading texify.teg...
+texify.teg end of reading
+Remove texify.src
+Export to texify.eps
+End of export

@@ -1,0 +1,14 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textit{\color{TegIdentifier}triceratops}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\ \textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}9}{\color{TegSymbol},}{\color{TegNumeric}10}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}7}{\color{TegSymbol},}{\color{TegNumeric}7}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}viewDir}{\color{TegSymbol}(}{\color{TegNumeric}37}{\color{TegSymbol},}{\color{TegNumeric}85}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegKeyWord}SetMatrix3D}{\color{TegSymbol}(}{\color{TegSymbol}[}\textbf{\color{TegVarPredef}Origin}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}vecJ}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}vecK}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}vecI}{\color{TegSymbol}]}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegMacPredef}background}{\color{TegSymbol}(}\textbf{\color{TegConstant}full}{\color{TegSymbol},}\ \textbf{\color{TegConstant}lightblue}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegKeyWord}ReadObj}{\color{TegSymbol}(}"{\color{TegString} obj/triceratops.obj"}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}stock1}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}stock2}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textbf{\color{TegKeyWord}draw}{\color{TegSymbol}(}"{\color{TegString} SmoothFacet"}{\color{TegSymbol},}\ \textbf{\color{TegVarPredef}stock1}{\color{TegSymbol},}\ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}gray}{\color{TegSymbol}]}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

@@ -1,0 +1,10 @@
+TeXgraph#
+Graph image = [
+Marges(0,0,0,0),size(7.5),
+background(full,beige),
+draw("SmoothFacet", Sphere(M(-3,0,0),3,25,15),
+         [color:=steelblue,
+          backculling:=1],
+         Sphere(M(3,0,0),3,25,15),
+         [color:=orange])
+];

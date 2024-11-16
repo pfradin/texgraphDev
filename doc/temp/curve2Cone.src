@@ -1,0 +1,13 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegMacPredef}curve2Cone}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}NbPoints}{\color{TegSymbol}:=}{\color{TegNumeric}100}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}C}{\color{TegSymbol}:=}\textbf{\color{TegMacPredef}curve2Cone}{\color{TegSymbol}(}\ {\color{TegSymbol}[}\textbf{\color{TegKeyWord}cos}{\color{TegSymbol}(}{\color{TegNumeric}2}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}t}{\color{TegSymbol})}{\color{TegSymbol}*}\textbf{\color{TegKeyWord}exp}{\color{TegSymbol}(}\textbf{\color{TegConstant}i}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}t}{\color{TegSymbol})}{\color{TegSymbol}*}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}3}{\color{TegSymbol}]}{\color{TegSymbol},}\par
+\ \ \ \ \ \ \ \ {\color{TegSymbol}-}\textbf{\color{TegConstant}pi}{\color{TegSymbol},}\textbf{\color{TegConstant}pi}{\color{TegSymbol},}{\color{TegSymbol}[}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol}]}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}1}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}FillOpacity}{\color{TegSymbol}:=}{\color{TegNumeric}0.7}{\color{TegSymbol},}\par
+\textbf{\color{TegMacPredef}DrawFlatFacet}{\color{TegSymbol}(}\textit{\color{TegIdentifier}C}{\color{TegSymbol},}{\color{TegSymbol}[}\textbf{\color{TegVarPredef}color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}darkseagreen}{\color{TegSymbol}]}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

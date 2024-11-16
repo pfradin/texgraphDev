@@ -1,0 +1,17 @@
+TeXgraph#
+Cmd view(0,6.25,-1.5,2);
+  size(7.5);
+  [tMin:=0, tMax:=6.25];
+Graph axe = Axes(0,1+i);
+   C1 = [Color:=blue,Width:=8,
+      Cartesienne(1/x) ];
+   C2 = [Color:=red,Width:=8,
+      Cartesienne(sin(2*x)*1.5)];
+   inter = [DotScale:=2,DotStyle:=dotcircle,
+        Color:=forestgreen,
+        Point(Get(C1) InterL Get(C2)),
+        Color:=blue,
+        LabelDot(5.5+0.1*i,"$C_1$","N"),
+        Color:=red,
+        LabelDot(3-i,"$C_2$","E"),
+       ];

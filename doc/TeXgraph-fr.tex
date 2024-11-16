@@ -1,0 +1,190 @@
+\documentclass[10pt,frenchb,oneside,a4paper,pdftex]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[charter]{mathdesign}
+%\renewcommand{\ttdefault}{lmtt}
+\usepackage{makeidx}
+\usepackage[left=1.5cm,right=1.5cm,bottom=0.75cm,top=0.5cm,includehead,includefoot,headheight=15pt]{geometry}
+%\usepackage{frcursive}
+%\newcommand*{\normal}[1]{\hyperpage{#1}}
+%\newcommand*{\important}[1]{\textbf{\hyperpage{#1}}} 
+\usepackage{array}
+\usepackage{caption}
+\usepackage{xspace}
+\usepackage{amsmath,textcomp}
+\usepackage[svgnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[export=pgf,server,nocall]{texgraph}
+%\def\pgfsysdriver{pgfsys-dvipdfm.def}
+
+\graphicspath{{temp/}}% dossier des images
+\def\TgImgDir{temp/}%
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage{babel,multicol}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{microtype}
+
+\def\version{2.0\xspace}%
+\hypersetup{ % Information sur le document
+pdfauthor = {P.Fradin},% Auteurs
+pdftitle = {TeXgraph version \version},% Titre du document
+pdfsubject = {Aide, version pdf},% Sujet
+%pdfkeywords = {},% Mots-clefs
+%pdfproducer = {}
+} % Société avec produit le logiciel 
+
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\lhead[\fancyplain{}{\slshape\thepage}]{\fancyplain{}{\slshape\rightmark}}
+\rhead[\fancyplain{}{\slshape\leftmark}]{\fancyplain{}{\slshape\thepage}}
+\cfoot{[\textsc{TeXgraph \version}]}
+%\FrenchFootnotes
+
+\newif\ifpng% inclusion png ou non?
+\pngfalse
+\newif\ifhtml
+\htmlfalse
+
+\makeatletter
+\newenvironment{demo}[2]{% code texgraph inline
+\gdef\capt{\textit{#1}}%
+\gdef\nomImage{#2}%png pour les images avec lissage
+}{}%
+
+\renewenvironment{texgraph}[1][]{%
+\addtocounter{imgcount}{1}%
+\setkeys{Tg}{#1,src}%
+\setbox\fig@box\hbox%
+\bgroup
+\@dep%
+}{%
+\@enddep%
+\egroup%
+\gdef\@bcode{}%
+\gdef\@ecode{}%
+\gdef\@preload{}%
+\begin{center}
+\begin{tabular}{|m{9cm}|m{8cm}|}
+\hline
+\begin{minipage}{9cm}
+\par\medskip
+\begin{footnotesize}
+\renewcommand*{\textbf}[1]{\Mytextbf{##1}}%
+\input{\@nom.src}%
+\end{footnotesize}
+\end{minipage}
+&
+\begin{minipage}{8cm}
+\begin{center}
+\ifpng\includegraphics[width=7.5cm]{\nomImage bis.png}%
+\else\input{\@nom.pgf}%
+\fi%
+\end{center}
+\end{minipage}
+\\
+\hline
+\end{tabular}
+\captionof{figure}{\capt}\label{\nomImage}
+\end{center}
+}%
+\makeatother
+
+\makeindex
+\renewcommand*{\centerline}[1]{{\centering #1\par}}%
+
+\newcommand*{\Helpref}[2]{\textsl{#1} (p.~\pageref{#2})}%\hyperref[#2]{#1}}%
+\newcommand*{\argu}[1]{<\textsl{#1}>}
+\newcommand*{\util}{}%\underline{Utilisation}:\ }
+\newcommand*{\desc}{Description:\xspace}
+\newcommand*{\exem}{Exemple(s):\xspace}
+\newcommand*{\co}[1]{\textcolor{red}{\small{#1}}}
+\newcommand*{\res}[1]{\textcolor{magenta}{\small{#1}}}
+\newcommand*{\var}[1]{\textcolor{red}{\textit{#1}}}
+\newcommand*{\jump}{\textit{jump}\xspace}
+\newcommand*{\Nil}{\textit{Nil}\xspace}
+\newcommand*{\bks}{$\backslash$}
+\newcommand*{\coloropt}{magenta}
+\newcommand*{\opt}[2]{\textcolor{\coloropt}{#1 \string:= $\langle$ #2 $\rangle$}\ifhtml\else\index{#1~(option)}\fi}
+\newcommand*{\Gouraud}{\textsc{Gouraud}\xspace}%
+
+\frontmatter
+
+\title{\vspace{-3cm}
+\textbf{\Huge Aide de \\\vspace{0.5cm} TeXgraph \version}\\
+\rule{\linewidth}{2pt}\\
+\vspace{2cm}
+\hfil\begin{tabular}{lcc}
+\input{temp/intersection.pgf}&$\quad$&\input{temp/Riemann.pgf}\\
+\\
+\input{temp/champ.pgf}&$\quad$&\raisebox{+2cm}{\input{temp/CourbeNiv.pgf}}%
+\end{tabular}\hfil 
+}
+
+\author{Patrick \textsc{Fradin}}
+%\date{}
+
+%\includeonly{chap07}
+
+\begin{document} 
+
+\maketitle
+\mainmatter
+\begin{multicols}{2}
+\tableofcontents
+\end{multicols}
+
+\listoffigures
+
+\let\origItem=\item%
+\renewcommand{\item}{\smallskip\origItem\ }%
+\let\origtextbf=\textbf%
+\renewcommand{\textbf}[2][]{%
+\origtextbf{#2}%
+\def\temp{#1}%
+\ifx\temp\empty\index{#2}%
+\else\index{#1}\fi%
+}%
+
+\newcommand{\Mytextbf}[1]{\origtextbf{#1}}
+
+\newcommand{\trait}[2][]{%
+\par\medskip%
+\def\temp{#1}%
+\ifx \temp \empty {\centering \rule{#2mm}{0.1mm}\par}%
+\else {\centering \rule{#2mm}{#1mm}\par}\fi%
+\bigskip}
+
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{--}
+\renewcommand{\labelitemiii}{$*$}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{section})}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thefigure}{\arabic{figure}}
+%\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\include{chap01}%introduction à TeXgraph+composition+paramètres+couleurs
+\include{chap02}%éléments graphiques
+\include{chap03}%exportations
+\include{chap04}%langage
+\include{chap05}%commandes
+\include{chap06}%Les opérations, les fonctions  mathématiques
+\include{chap07}%les macros mathématiques
+\include{chap08}%les fonctions et macros graphiques
+\include{chap09}%les fonctions et macros "spéciales"
+\include{chap10}%représentation en 3D
+\include{chap11}%utilisation de Build3D
+\include{chap12}%du code TeXgraph dans LateX
+
+%\begin{small}
+\addcontentsline{toc}{chapter}{Index}
+\color{Maroon}
+\printindex
+%\end{small}
+
+\end{document}

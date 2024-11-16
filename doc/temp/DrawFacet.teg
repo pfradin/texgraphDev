@@ -1,0 +1,14 @@
+TeXgraph#
+Graph image = [
+Load("PolyedresII.mac"),
+Marges(0,0,0,0),size(7.5),
+background(full,beige),
+DrawFacet(Sphere(M(0,0,3.5),1.5,30,15),
+        [color:=steelblue,
+        backculling:=1,smooth:=1],
+     Cube([0,0,vecK],M(1,1,0)),
+        [color:=orange,smooth:=0],
+     Cube([0,0,vecK],M(2,2,-4)),
+        [color:=gold]
+        )
+];

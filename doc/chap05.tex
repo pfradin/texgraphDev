@@ -1,0 +1,1139 @@
+\chapter{Liste des commandes}
+
+Notations:
+
+<argument>: signifie que l'argument est \Mytextbf{obligatoire}.
+
+[argument]: signifie que l'argument est \Mytextbf{facultatif}.
+
+
+\section{Args}\label{cmdArgs}
+
+\begin{itemize}
+ \item \util \textbf[Args()]{Args( <entier> )}. 
+ \item \desc cette fonction n'a d'effet que dans une macro, elle évalue et renvoie l'argument numéro \argu{entier} avec lequel la macro a été appelée. Hors de ce contexte, elle renvoie la valeur \Nil. Voir également la commande \Helpref{StrArgs}{cmdStrArgs}. 
+ \item\exem Voir la fonction \Helpref{Nargs}{cmdNargs}.
+\end{itemize}
+
+\section{Assign}\label{cmdAssign}
+
+\begin{itemize}
+ \item \util \textbf[Assign()]{Assign( <expression>, <variable>, <valeur> )}.
+ \item \desc cette fonction évalue \argu{valeur} et l'affecte à la variable nommée \argu{variable} dans \argu{expression}\footnote{C'est la première occurrence de \argu{variable} dans \argu{expression} qui est assignée, car toutes les occurrences pointent sur la même <case mémoire>, sauf éventuellement pour les macros après l'affectation des paramètres.}. La fonction \textit{Assign} renvoie la valeur \Nil. Cette fonction est utile dans l'écriture de macros prenant une expression comme paramètre et qui doivent l'évaluer.
+ \item \exem voici une macro \co{Bof} qui prend une fonction f(t) en paramètre et qui calcule la liste $[f(0), f(1), ..., f(5)]$:
+\end{itemize} 
+
+\centerline{\co{for \$k from 0 to 5 do Assign(\%1,t,k), \%1 od}}
+
+\%1 représente le premier paramètre de la macro (c'est à dire f(t)), la boucle: pour k allant de 0 à 5 elle exécute la commande [Assign(\%1, t, k), \%1], celle-ci assigne la valeur de k à la variable $t$ dans l'expression \%1, puis évalue \%1. L'exécution de \co{Bof(t\^{}2)} donne: \res{[0,1,4,9,16,25]}. L'exécution de \co{Bof(x\^{}2)} donne \Nil. 
+
+
+\section{Attributes}\label{cmdAttributs}
+
+\begin{itemize}
+ \item \util \textbf[Attributes()]{Attributes()} ou \textbf[Attributs()]{Attributs()}.
+ \item \desc cette fonction ouvre la fenêtre permettant de modifier les attributs d'un élément graphique. Cette fonction renvoie la valeur 1 si l'utilisateur a choisi \textit{OK}, elle renvoie la valeur 0 s'il a choisi \textit{Cancel}. Si l'utilisateur a choisi \textit{OK}, alors les variables globales correspondant aux attributs sont modifiées en conséquence.
+\end{itemize}
+
+\section{Border}\label{cmdBorder}
+
+\begin{itemize}
+ \item \util \textbf[Border()]{Border( <0/1> )}.
+ \item \desc cette fonction détermine si un cadre doit être dessiné ou non autour des marges du graphique dans les exportations. Lorsque la valeur de l'argument est nulle (valeur par défaut), le cadre n'est pas dessiné. Lorsque l'argument est vide, cette fonction renvoie l'état de la bordure à l'exportation (0 ou 1). Sinon, elle renvoie la valeur \Nil.
+\end{itemize}
+
+\section{break}\label{cmdbreak}
+
+\begin{itemize}
+ \item \util \textbf[break()]{break()}.
+ \item \desc cette fonction permet de casser la boucle (\co{for} ou \co{while} ou \co{repeat}) en cours.
+\end{itemize}
+
+
+\section{ChangeAttr}\label{cmdChangeAttr}
+
+\begin{itemize}
+ \item \util \textbf[ChangeAttr()]{ChangeAttr( <element1>, ..., <elementN> )}.
+ \item \desc cette fonction permet de modifier les attributs des éléments graphiques \argu{element1}, ..., \argu{elementN}, en leur affectant la valeur des attributs en cours. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{Clip2D}\label{cmdClip2D}
+
+\begin{itemize}
+ \item \util \textbf[Clip2D()]{Clip2D( <ligne polygonale>, <contour convexe> [, close(0/1) ] )}. 
+ \item \desc cette fonction clippe la \argu{ligne polygonale} qui doit être une variable contenant une liste de complexes, avec le \argu{contour convexe}, qui est lui aussi une liste de complexes. La fonction calcule la ligne polygonale qui en résulte modifie la variable \argu{ligne polygonale} en conséquence, le dernier agument \argu{close} ($0$ par défaut) permet de préciser si la \argu{ligne polygonale} doit être refermée ou non. La fonction renvoie \Nil.
+\end{itemize}
+
+\section{CloseFile}\label{cmdCloseFile}
+
+\begin{itemize}
+ \item \util \textbf[CloseFile()]{CloseFile()} ou \Mytextbf{CloseFile( <"fichier 1">, <"fichier 2">,...,<"fichier N">)}. 
+ \item \desc cette fonction permet de fermer les fichiers dont les noms (chaînes de caractères) sont cités en argument. Dans le cas où il n'y a pas d'arguments, c'est le dernier fichier ouvert qui sera refermé. C'est à ce moment que l'écriture physique dans le fichier se produit. Les fichiers doivent avoir été ouverts par la commande \Helpref{OpenFile}{cmdOpenFile}. 
+ \end{itemize}
+
+
+\section{ComposeMatrix}\label{cmdComposeMatrix}
+
+\begin{itemize}
+ \item \util \textbf[ComposeMatrix()]{ComposeMatrix( <[z1, z2, z3]> )}.
+ \item \desc cette fonction permet de composer la matrice courante (celle-ci affecte tous les éléments graphiques sauf les axes et les grilles dans la version actuelle) avec la matrice \argu{[z1, z2, z3]}. Cette matrice représente l'expression analytique d'une application affine du plan, c'est une liste de trois complexes: $z1$ qui est l'affixe du vecteur de translation, $z2$ qui est l'affixe du premier vecteur colonne de la matrice de la partie linéaire dans la base (1,i), et $z3$ qui est l'affixe du deuxième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [0,1,i] (c'est la matrice par défaut). (Voir aussi les commandes \Helpref{GetMatrix}{cmdGetMatrix}, \Helpref{SetMatrix}{cmdSetMatrix}, et \Helpref{IdMatrix}{cmdIdMatrix}).
+\end{itemize}
+
+\section{Concat}\label{cmdConcat}
+\begin{itemize}
+ \item \util \textbf[Concat()]{Concat( <argument 1>, <argument 2>, ..., <argument n> )}.
+ \item \desc cette commande interprète chaque argument sous forme de chaîne, concatène les différents résultats, et renvoie la chaîne qui en résulte.
+\end{itemize}
+
+\section{Copy}\label{cmdCopy}
+
+\begin{itemize}
+ \item \util \textbf[Copy()]{Copy( <liste>, <index depart>, <nombre> )}.
+ \item \desc cette fonction renvoie la liste constituée par les \argu{nombre} éléments de la \argu{liste} à partir de l'élément numéro \argu{depart} [inclus]. Si \argu{nombre} est nul, alors la fonction renvoie tous les éléments de la liste à partir de l'élément numéro \argu{départ}. 
+
+ Si le numéro \argu{depart} est négatif, alors la liste et parcourue de droite à gauche en partant du dernier, le dernier élément a l'index $-1$, l'avant-dernier a l'index $-2$ $\cdots$ etc. La fonction renvoie les \argu{nombre} éléments de la liste (ou toute la liste si \argu{nombre} est nul) en allant vers la gauche, mais la liste renvoyée est dans le même sens que la \argu{liste}, et cette dernière n'est pas modifiée. 
+ \item \exem 
+  \begin{itemize}
+    \item \co{Copy([1,2,3,4],2,2)} renvoie \res{[2,3]}.
+    \item \co{Copy([1,2,3,4],2,5)} renvoie \res{[2,3,4]}.
+    \item \co{Copy([1,2,3,4],2,0)} renvoie \res{[2,3,4]}.
+    \item \co{Copy([1,2,3,4],-1,2)} renvoie \res{[3,4]}.
+    \item \co{Copy([1,2,3,4],-2,2)} renvoie \res{[2,3]}.
+    \item \co{Copy([1,2,3,4],-2,0)} renvoie \res{[1,2,3]}.
+  \end{itemize}
+\end{itemize} 
+
+\Mytextbf{NB}: pour des raisons de compatibilité avec l'ancienne version, l'index $0$ correspond aussi au dernier élément de la liste.
+
+\section{DefaultAttr}\label{cmdDefaultAttr}
+
+\begin{itemize}
+ \item \util \textbf[DefaultAttr()]{DefaultAttr()}.
+ \item \desc cette fonction met toutes les variables correspondant aux attributs (\var{Color}, \var{Width}, ...) à leur valeur par défaut. Cette fonction renvoie la valeur \Nil.
+\end{itemize} 
+
+
+\section{Del}\label{cmdDel}
+
+\begin{itemize}
+ \item \util \textbf[Del()]{Del( <liste>, <depart>, <nombre> )}.
+ \item \desc supprime de la \argu{liste} \argu{nombre} éléments à partir du numéro \argu{départ} [inclus]. Si \argu{nombre} est nul, alors la fonction supprime tous les éléments de la liste à partir de l'élément numéro \argu{départ}. 
+
+ Si le numéro \argu{depart} est négatif, alors la liste et parcourue de droite à gauche en partant du dernier. Le dernier élément a l'index $-1$, l'avant-dernier a l'index $-2$ $\cdots$ etc. La fonction supprime les \argu{nombre} éléments de la liste (ou toute la liste si \argu{nombre} est nul) en allant vers la gauche.
+
+ Le paramètre \argu{liste} doit être \Mytextbf{un nom de variable}, celle-ci est modifiée et la fonction renvoie \Nil.
+ \item \exem la commande \co{[x:=[1,2,3,4], Del(x,2,2), x]} renvoie \res{[1,4]}.
+
+ La commande \co{[x:=[1,2,3,4], Del(x,-2,2), x]} renvoie \res{[1,4]}.
+\end{itemize}
+
+\Mytextbf{NB}: pour des raisons de compatibilité avec l'ancienne version, l'index $0$ correspond aussi au dernier élément de la liste.
+
+\section{Delay}\label{cmdDelay}
+
+\begin{itemize}
+ \item \util \textbf[Delay()]{Delay( <nb millisecondes> )}.
+ \item \desc permet de suspendre l'exécution du programme pendant le laps de temps indiqué (en milli-secondes).
+\end{itemize} 
+
+\section{DelButton}\label{cmdDelButton}
+
+\begin{itemize}
+ \item \util \textbf[DelButton()]{DelButton( <texte1>, ..., <texteN> )}.
+ \item \desc Cette fonction permet de supprimer dans la colonne à gauche de la zone de dessin, les boutons portant les inscriptions \argu{texte1}, ..., \argu{texteN}. Si la liste est vide (\textsl{ DelButton()}), alors tous les boutons sont supprimés. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{DelGraph}\label{cmdDelGraph}
+
+\begin{itemize}
+ \item \util \textbf[DelGraph()]{DelGraph( <element1>, ..., <elementN> )}.
+ \item \desc Cette fonction permet de supprimer les éléments graphiques appelés \argu{element1}, ..., \argu{elementN}. Si la liste est vide (\textsl{ DelGraph()}), alors tous les éléments sont supprimés. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{DelItem}\label{cmdDelItem}
+
+\begin{itemize}
+ \item \util \textbf[DelItem()]{DelItem( <nom1>, ..., <nomN> )}.
+ \item \desc Cette fonction permet de supprimer de la liste déroulante à gauche de la zone de dessin, les options appelées \argu{nom1}, ..., \argu{nomN}. Si la liste est vide (\textsl{ DelItem()}), alors toute la liste est supprimée. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. 
+\end{itemize}
+
+\section{DelMac}\label{cmdDelMac}
+
+\begin{itemize}
+ \item \util \textbf[DelMac()]{DelMac( <mac1>, ..., <macN> )}.
+ \item \desc Cette fonction permet de supprimer les macros (non prédéfinies) appelées \argu{mac1}, ..., \argu{macN}. Si la liste est vide (\textsl{DelMac()}), la commande est sans effet. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{DelText}\label{cmdDelText}
+
+\begin{itemize}
+ \item \util \textbf[DelText()]{DelText( <texte1>, ..., <texteN> )}.
+ \item \desc Cette fonction permet de supprimer dans la colonne à gauche de la zone de dessin, les labels \argu{texte1}, ..., \argu{texteN}. Si la liste est vide (\textsl{ DelText()}), alors tous les labels sont supprimés. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{DelTrackBar}\label{cmdDelTrackBar}
+
+\begin{itemize}
+ \item \util \textbf[DelTrackBar()]{DelTrackBar( <nom variable 1>, ..., <nom variable N> )}.
+ \item \desc Cette fonction permet de supprimer dans la colonne à gauche de la zone de dessin, les sliders associés aux variables \argu{variable 1}, ..., \argu{variable N} (ces noms sont des chaînes de caractères). Si la liste est vide (\textsl{ DelTrackBar()}), alors tous les sliders sont supprimés. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+
+\section{DelVar}\label{cmdDelVar}
+
+\begin{itemize}
+ \item \util \textbf[DelVar()]{DelVar( <var1>, ..., <varN> )}.
+ \item \desc Cette fonction permet de supprimer les variables globales (non prédéfinies) appelés \argu{var1}, ..., \argu{varN}. Si la liste est vide (\textsl{DelVar()}), la commande est sans effet. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+
+\section{Der}\label{cmdDer}
+
+\begin{itemize}
+ \item \util \textbf[Der()]{Der( <expression>, <variable>, <liste> )}.
+ \item \desc cette fonction calcule la dérivée de \argu{expression} par rapport à \argu{variable} et l'évalue en donnant à \argu{variable} les valeurs successives de la \argu{liste}. La fonction \textsl{Der} renvoie la liste des résultats. Mais si on a besoin de \textsl{l'expression de la dérivée}, alors on préférera la fonction \Helpref{Diff}{cmdDiff}.
+ \item \exem 
+  \begin{itemize}
+    \item la commande \co{Der(1/x,x,[-1,0,2] )} renvoie \res{[-1,-0.25]}.
+    \item Voici le texte d'une macro appelée \co{tangente} qui prend une expression $f(x)$ en premier paramètre, une valeur réelle $x0$ en second paramètre et qui trace la tangente à la courbe au point d'abscisse x0:
+
+\centerline{\co{[Assign(\%1,x,\%2), \$A:=\%2+i*\%1, \$Df:=Der(\%1,x,\%2), Droite(A, A+1+i*Df)]}}
+
+On assigne la valeur $x0$ à la variable $x$ dans l'expression $f(x)$, on stocke dans une variable $A$ le point de coordonnées $(x0,f(x0))$ (sous forme d'affixe), on stocke dans une variable $Df$ la dérivée en $x0$ ($f'(x0)$), puis on trace la droite passant par $A$ et dirigée par le vecteur d'affixe $1+if'(x0)$.
+  \end{itemize}
+\end{itemize}
+
+\section{Diff}\label{cmdDiff}
+
+\begin{itemize}
+ \item \util \textbf[Diff()]{Diff( <nom>, <expression>, <variable> [, param1,..., paramN] )}.
+ \item \desc cette fonction permet de créer une macro appelée \argu{nom}, s'il existait déjà une macro portant ce nom, elle sera écrasée, sauf si c'est une macro prédéfinie auquel cas la commande est sans effet. Le corps de la macro créée correspond à la dérivée de \argu{expression} par rapport à \argu{variable}. Les paramètres optionnels sont des noms de variables, le nom de la variable \argu{param1} est remplacé dans l'expression de la dérivée par le paramètre \%1, le nom \argu{param2} est remplacé par \%2 ... etc. Cette fonction renvoie \Nil.
+ \item \exem après l'exécution de la commande (dans la ligne de commande en bas de la fenêtre): \co{Diff(df, sin(3*t), t)}, une macro appelée \res{df} est créée et son contenu est: \res{3*cos(3*t)}, c'est une macro sans paramètre qui contient une variable locale $t$, elle devra donc être utilisée en développement immédiat (c'est à dire précédée du symbole $\backslash$)\footnote{Si par exemple on veut tracer la courbe représentative de cette fonction, dans l'option \textit{Courbe/Paramétrée}, il faudra saisir la commande \textit{t+i*$\backslash$df} et non pas \textit{t+i*df(t)}.}. Par contre après la commande \co{Diff(df,sin(3*t),t,t)}, le contenu de la macro \res{df} est: \res{3*cos(3*\%1)} qui est une macro à un paramètre.
+\end{itemize}
+
+\section{EpsCoord}\label{cmdEpsCoord}
+
+\begin{itemize}
+ \item \util \textbf[EpsCoord()]{EpsCoord( <affixe> )}.
+ \item \desc renvoie l'affixe exportée en eps. Pour les autres, il y a les macros \Helpref{TeXCoord}{macTeXCoord} et \Helpref{SvgCoord}{macSvgCoord}.
+\end{itemize}
+
+\section{Eval}\label{cmdEval}
+
+\begin{itemize}
+ \item \util \textbf[Eval()]{Eval( <expression> )}.
+ \item \desc cette fonction évalue l'\argu{expression} et renvoie le résultat. L'\argu{expression} est interprétée comme une \Helpref{chaîne de caractères}{chaine}.
+ \item La fonction \Helpref{{Input}}{cmdInput} renvoie la saisie sous forme d'une chaîne dans la macro appelée \textit{chaine()}. La fonction \textsl{Eval} évalue cette chaîne (comme n'importe quelle commande TeXgraph) et renvoie le résultat.
+ \item \exem voici une commande demandant une valeur à l'utilisateur pour une variable \textit{x}:
+\end{itemize}
+
+\begin{verbatim}
+   if Input("x=", "Entrez une valeur pour x", x )
+   then x:= Eval( chaine() )
+   fi 
+\end{verbatim}
+
+\section{Exchange}\label{cmdEchange}
+
+\begin{itemize}
+ \item \util \textbf[Exchange()]{Exchange( <variable1>, <variable2> )} ou \textbf[Echange()]{Echange( <variable1>, <variable2> )}.
+ \item \desc cette fonction échange les deux variables, ce sont en fait les adresses qui sont échangées. Les contenus ne sont pas dupliqués alors qu'ils le seraient si on utilisait la commande:
+
+{\centering \co{[aux:=variable1, variable1:=variable2, variable2:=aux]}\par}
+
+ La fonction \textsl{Echange} renvoie la valeur \Nil. 
+\end{itemize}
+
+
+\section{Exec}\label{cmdExec}
+
+\begin{itemize}
+ \item \util \textbf[Exec()]{Exec( <programme> [, <argument(s)>, <répertoire de travail>, <attendre>, <voir fenêtre>] )}.
+ \item \desc cette fonction permet d'exécuter un \argu{programme} (ou un script) en précisant éventuellement des \argu{arguments} et un \argu{répertoire de travail}, ces trois arguments suivants sont interprétés comme des chaînes de caractères. L'argument \argu{attendre} doit valoir $0$ (par défaut) ou $1$, il indique si le programme attend ou non la fin du processus fils. Le dernier argument \argu{voir fenêtre} doit valoir $0$ (par défaut) ou $1$, il indique si la fenêtre d'exécution doit être visible ou non, cet argument n'est valable que sous windows. La fonction renvoie la valeur \Nil. Un message d'erreur s'affiche lorsque: les ressources sont insuffisantes, ou bien le programme est invalide, ou bien le chemin est invalide.
+ \item La chaîne prédéfinie \var{TmpPath} contient le chemin vers un répertoire temporaire. La macro \textit{Apercu} exporte le graphique courant dans ce dossier au format pgf dans le fichier \textit{file.pgf}, puis elle exécute \textit{pdflatex} sur le fichier \textit{apercu.tex}, puis attend la fin de l'exécution avant de lancer le lecteur de pdf.
+ \item \exem la macro \textsl{Apercu} contenue dans interface.mac est:
+\end{itemize}
+
+\begin{verbatim}
+  [Export(pgf,[TmpPath,"file.pgf"]), 
+  Exec("pdflatex", ["-interaction=nonstopmode apercu.tex"],TmpPath,1),
+  Exec(PdfReader,"apercu.pdf",TmpPath,0,1)
+  ]
+\end{verbatim}
+
+\section{exit}\label{cmdexit}
+
+\begin{itemize}
+ \item \util \textbf[exit()]{exit()}.
+ \item \desc cette fonction permet de sortir la commande (ou macro) en cours.
+\end{itemize}
+
+\section{Export}\label{cmdExport}
+
+\begin{itemize}
+ \item \util \textbf[Export()]{Export( <mode>, <fichier> )}.
+ \item \desc cette fonction permet d'exporter le graphique en cours, \argu{mode} est une valeur numérique qui peut être l'une des constantes suivantes: tex, pst, pgf, tkz, eps, psf, pdf, epsc, pdfc, svg, bmp, obj, geom, jvx, js ou teg. L'exportation se fait dans \argu{fichier} qui contient donc le nom du fichier, avec éventuellement le chemin. 
+ 
+ La chaîne prédéfinie \var{TmpPath} contient le chemin vers un répertoire temporaire. La macro \textit{Apercu} exporte le graphique courant dans ce dossier au format pgf dans le fichier \textit{file.pgf}, puis elle exécute \textit{pdflatex} sur le fichier \textit{apercu.tex}, puis attend la fin de l'exécution avant de lancer le lecteur de pdf.
+ item \exem la macro \textsl{Apercu} contenue dans interface.mac est:
+\end{itemize}
+
+\begin{verbatim}
+  [Export(pgf,[TmpPath,"file.pgf"]), 
+  Exec("pdflatex", ["-interaction=nonstopmode apercu.tex"],TmpPath,1),
+  Exec(PdfReader,"apercu.pdf",TmpPath,0,1)
+  ]
+\end{verbatim}
+
+\section{ExportObject}\label{cmdExportObject}
+
+\begin{itemize}
+ \item \textbf[ExportObject()]{ExportObject( <argument> )}.
+ \item \desc cette commande n'a d'effet que pendant un export. Elle permet d'exporter l'\argu{argument} dans le fichier de sortie, cet \argu{argumet} est soit le nom d'un élément graphique, soit une commande graphique (comme pour la fonction \Helpref{Get}{cmdGet}). Elle peut-être utile pour écrire des exports personnalisés, ceci est décrit dans \Helpref{cette section}{cmdMyExport}.
+\end{itemize}
+
+\section{Window}\label{cmdFenetre}
+
+\begin{itemize}
+ \item \util \textbf[Window()]{Window( <A>, <B> [, C] )} ou \textbf[Fenetre()]{Fenetre( <A>, <B> [, C] )}.
+ \item \desc cette fonction modifie la fenêtre graphique, c'est l'équivalent de l'option \textit{Paramètres/Fenêtre}, \Mytextbf{sauf que les éléments graphiques ne sont pas automatiquement recalculés}. Le paramètre \argu{A} et le paramètre \argu{B} sont les affixes de deux coins de la fenêtre diamétralement opposés, et le paramètre facultatif \argu{C} représente les deux échelles, plus précisément, la partie réelle de \argu{C} est l'échelle [en cm] sur l'axe des abscisses et la partie imaginaire de \argu{C} est l'échelle [en cm] sur l'axe des ordonnées, ces deux valeurs doivent être strictement positives. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{FileExists}\label{cmdFileExists}
+
+\begin{itemize}
+ \item \textbf[FileExists()]{FileExists( <nom fichier> )}.
+ \item \desc cette commande renvoie $1$ si le fichier dont le nom est spécifié existe, $0$ sinon.
+\end{itemize}
+
+
+\section{Free}\label{cmdFree}
+
+\begin{itemize}
+ \item \util \textbf[Free()]{Free( <expression>, <variable> )}.
+ \item \desc cette fonction renvoie $1$ si l'\argu{expression} contient la \argu{variable}, $0$ sinon. Lorsque le deuxième argument n'est pas un nom de variable, la fonction renvoie \Nil.
+\end{itemize}
+
+\section{Get}\label{cmdGet}
+
+\begin{itemize}
+ \item \util \textbf[Get()]{Get( <argument> [, clip(0/1), matrice courante (0/1)] )}.
+ \item \desc  lorsque le paramètre \argu{argument} est un \textit{identificateur}, la fonction cherche s'il y a un élément graphique dont le nom est \argu{argument}, si c'est le cas, alors la fonction renvoie la liste des points de cet élément graphique, sinon elle renvoie la valeur \Nil. Dans ce cas l'argument optionnel est ignoré.
+
+ Lorsque \argu{argument} n'est pas un identificateur, celui-ci est considéré comme une \textit{fonction graphique}, la fonction \textsl{Get} renvoie la liste des points de l'élément graphique construit par cette fonction graphique mais sans créer l'élément en question. Le premier argument optionnel \argu{clip} (qui vaut $1$ par défaut) indique si l'élément doit être clippé par la fenêtre courante (valeur 1) ou non (valeur 0). Le deuxième argument optionnel \argu{matrice courante} (qui vaut $0$ par défaut) indique si l'élément doit être modifié par la matrice courante ou non.
+ 
+ Lorsque l'argument est vide: \textsl{Get()}, la fonction renvoie la liste des points de tous les éléments graphiques déjà construits, ceux qui sont cachés sont ignorés.
+ \item \exem \co{Get(Cercle(0,1))} renvoie la liste des points du cercle de centre 0 et de rayon 1 mais sans créer ce cercle, la liste des points est clippée par la fenêtre graphique.
+ \item \exem utilisation des points d'un objet graphique:
+\end{itemize}
+
+\begin{demo}{Get}{Get}
+\begin{texgraph}[name=Get,file]
+Cmd view(0,6.25,-1.5,2);
+  size(7.5);
+  [tMin:=0, tMax:=6.25];
+Graph axe = Axes(0,1+i);
+   C1 = [Color:=blue,Width:=8,
+      Cartesienne(1/x) ];
+   C2 = [Color:=red,Width:=8,
+      Cartesienne(sin(2*x)*1.5)];
+   inter = [DotScale:=2,DotStyle:=dotcircle,
+        Color:=forestgreen,
+        Point(Get(C1) InterL Get(C2)),
+        Color:=blue,
+        LabelDot(5.5+0.1*i,"$C_1$","N"),
+        Color:=red,
+        LabelDot(3-i,"$C_2$","E"),
+       ];
+\end{texgraph}
+\end{demo}
+
+
+\section{GetAttr}\label{cmdGetAttr}
+
+\begin{itemize}
+ \item \util \textbf[GetAttr()]{GetAttr( <argument> )}.
+ \item \desc lorsque le paramètre \argu{argument} est un \textit{identificateur}, la fonction cherche s'il y a un élément graphique dont le nom est \argu{argument}, si c'est le cas, alors les attributs de cet élément graphique deviennent les attributs courants, et la fonction renvoie la valeur \Nil. Sinon, l'argument est interprété comme une chaîne de caractères puis la fonction effectue la même recherche.
+\end{itemize}
+
+\section{GetMatrix}\label{cmdGetMatrix}
+
+\begin{itemize}
+ \item \util \textbf[GetMatrix()]{GetMatrix()}.
+ \item \desc cette fonction renvoie la matrice courante. (Voir aussi les commandes \Helpref{ComposeMatrix}{cmdComposeMatrix}, \Helpref{SetMatrix}{cmdSetMatrix}, et \Helpref{IdMatrix}{cmdIdMatrix}).
+\end{itemize} 
+
+\section{GetSpline}\label{cmdGetSpline}
+
+\begin{itemize}
+ \item \util \textbf[GetSpline()]{GetSpline(<V0>, <A0>,..., <An>, <Vn> )}.
+ \item \desc renvoie la liste des points de contrôle correspondant à la spline cubique passant par les points \argu{A0} jusqu'à \argu{An}. \argu{V0} et \argu{Vn} désignent les vecteurs vitesses aux extrémités [contraintes], si l'un d'eux est nul alors l'extrémité correspondante est considérée comme libre (sans contrainte). Le résultat doit être dessiné avec la commande graphique \Helpref{Bezier}{cmdBezier}.
+\end{itemize}
+
+\section{GetStr}\label{cmdGetStr}
+
+\begin{itemize}
+ \item \util \textbf[GetStr()]{GetStr( <nom> )} ou \textbf[GetStr()]{GetStr( <nom(arguments)> )}.
+ \item \desc évalue alphanumériquemment la macro appelée \argu{nom} et renvoie la chaîne qui en résulte. Il existe un raccourci à cette commande, en accolant l'opérateur @ devant le \argu{nom}.
+ \item \exem \co{Message( @nom )} aura le même effet que \co{Message( GetStr( nom ) )}.
+\end{itemize}
+
+
+\section{GrayScale}\label{cmdGrayScale}
+
+\begin{itemize}
+ \item \util \textbf[GrayScale()]{GrayScale(0/1)} ou \textbf[GrayScale()]{GrayScale()}.
+ \item \desc cette fonction permet d'activer ou désactiver la conversion des couleurs en niveaux de gris. Elle équivaut à l'option \textsl{Paramètres/Gérer les couleurs} du menu de l'interface graphique. 
+
+ Lorsque l'argument est vide, la fonction renvoie l'état actuel de la conversion en niveaux de gris (0 ou 1). Sinon, elle renvoie \Nil.
+\end{itemize}
+
+\section{HexaColor}\label{cmdHexaColor}
+
+\begin{itemize}
+ \item \util \textbf[HexaColor()]{HexaColor( <valeur héxadécimale> )}.
+ \item \desc cette fonction renvoie la couleur correspondant à la \argu{valeur héxadécimale}, cette valeur doit être passée sous forme d'une chaîne de caractères. Voir aussi la commande \Helpref{Rgb}{cmdRgb}.
+ \item \exem \co{Color:=HexaColor("F5F5DC")}.
+\end{itemize}
+
+\section{Hide}\label{cmdHide}
+
+\begin{itemize}
+ \item \util \textbf[Hide()]{Hide( <element1>, ..., <elementN> )}.
+ \item \desc Cette fonction permet de cacher les éléments graphiques appelés \argu{element1}, ..., \argu{elementN} en
+mettant leur attribut \textsl{IsVisible} à false. Les arguments sont interprétés comme des chaînes de caractères. Cette
+fonction renvoie la valeur \Nil.
+
+Pour tout cacher on invoque la commande sans arguments: \textsl{Hide()}. 
+
+Pour tout cacher sauf un ou plusieurs éléments, on invoque la commande: \textsl{Hide(except, element1, ..., elementN)}.
+Voir aussi la commande \Helpref{Show}{cmdShow}.
+\end{itemize}
+
+\section{IdMatrix}\label{cmdIdMatrix}
+
+\begin{itemize}
+ \item \util \textbf[IdMatrix()]{IdMatrix()}.
+ \item \desc change la matrice courante en la matrice identité. (Voir aussi les commandes \Helpref{ComposeMatrix}{cmdComposeMatrix}, \Helpref{SetMatrix}{cmdSetMatrix}, et \Helpref{GetMatrix}{cmdGetMatrix})
+\end{itemize}
+
+\section{Input}\label{cmdInput}
+
+\begin{itemize}
+ \item \util \textbf[Input()]{Input( <message> [, titre, chaîne] )}.
+ \item \desc cette fonction ouvre une boite de dialogue avec \argu{titre} dans la barre de titre (par défaut le titre est vide), et dans laquelle le paramètre \argu{message} est affiché, le paramètre \argu{chaîne} est affiché dans la zone de saisie. Ces paramètres sont donc interprétés comme des \Helpref{chaînes de caractères}{chaine}, l'utilisateur est invité à faire une saisie. S'il valide alors la fonction \textsl{Input} renvoie la valeur $1$ et la chaîne saisie est \Mytextbf{mémorisée dans la macro} \textsl{chaine()}. Si l'utilisateur ne valide pas ou si la chaîne saisie est vide, alors la fonction \textsl{Input} renvoie la valeur $0$. 
+ \item \exem voir la fonction \Helpref{Eval}{cmdEval}.
+\end{itemize}
+
+\section{InputMac}\label{cmdInputMac}
+
+\begin{itemize}
+ \item \util \textbf[InputMac()]{InputMac( <nom de fichier> )} ou \textbf[Load()]{Load( <nom de fichier> )}.
+ \item \desc cette fonction permet de charger en mémoire un fichier de macros (\textit{*.mac}), ou un fichier modèle (\textit{*.mod}), ou tout fichier source texgraph (\textit{*.teg}).
+
+ Dans le premier cas (fichier \textit{*.mac}), les variables globales et les macros seront considérées comme \Mytextbf{prédéfinies} (elles n'apparaissent pas à l'écran, elles ne seront pas enregistrées avec le graphique, mais elles sont effacées de la mémoire dès qu'on commence un nouveau graphique). Le paramètre \argu{nom de fichier} est une chaîne de caractères représentant le fichier à charger avec éventuellement son chemin. Cette fonction renvoie \Nil, et si ce fichier était déjà chargé, alors elle est sans effet. Si le fichier à charger est dans le répertoire \textit{macros} de \textit{TeXgraph}, ou dans le dossier \textit{TeXgraphMac}, alors il est inutile de préciser le chemin. 
+ \item \exem \co{InputMac("MesMacros.mac")}.
+\end{itemize}
+
+\section{Inc}\label{cmdInc}
+
+\begin{itemize}
+ \item \util \textbf[Inc()]{Inc( <variable>, <expression> )}. 
+ \item \desc cette fonction évalue \argu{expression} et ajoute le résultat à \argu{variable}. Cette fonction est plus avantageuse que la commande \co{variable := variable + expression}, car dans cette commande la \argu{variable} est évaluée [c'est à dire dupliquée] pour calculer la somme. La fonction \textsl{Inc} renvoie la valeur \Nil. 
+\end{itemize}
+
+
+\section{Insert}\label{cmdInsert}
+
+\begin{itemize}
+ \item \util \textbf[Insert()]{Insert( <liste1>, <liste2> [, position] )}.
+ \item \desc cette fonction insère la \argu{liste2} dans la \argu{liste1} à la position numéro \argu{position}. Lorsque la position vaut 0 [valeur par défaut], la \argu{liste2} est ajoutée à la fin. La \argu{liste1} doit être une variable et celle-ci est modifiée. La fonction \textsl{Insert} renvoie la valeur \Nil.
+ 
+  Si le numéro \argu{position} est négatif, alors la liste est parcourue de droite à gauche en partant du dernier. Le dernier élément a l'index $-1$, l'avant-dernier a l'index $-2$ $\cdots$ etc.
+  
+ \item \exem si une variable $L$ contient la liste \co{[1,4,5]}, alors après la commande \co{Insert(L,[2,3],2)}, la variable $L$ contiendra la liste \res{[1,2,3,4,5]}. Après la commande \co{Insert(L,[2,3],-1)}, la variable $L$ contiendra la liste \res{[1,4,2,3,5]}.
+\end{itemize}
+
+\section{Int}\label{cmdInt}
+
+\begin{itemize}
+ \item \util \textbf[Int()]{Int( <expression>, <variable>, <borne inf.>, <borne sup.> )}.
+ \item \desc cette fonction calcule l'intégrale de \argu{expression} par rapport à \argu{variable} sur l'intervalle \Mytextbf{réel} défini par \argu{borne inf.} et \argu{borne sup}. Le calcul est fait à partir de la méthode de \textsc{Simpson} accélérée deux fois avec la méthode de \textsc{Romberg}, \argu{expression} est supposée définie et suffisamment régulière sur l'intervalle d'intégration.
+ \item \exem \co{Int(exp(sin(u)),u,0,1)} donne \res{1.63187} (Maple donne 1.631869608).
+\end{itemize}
+
+\section{IsMac}\label{cmdIsMac}
+
+\begin{itemize}
+ \item \util \textbf[IsMac()]{IsMac( <nom> )}.
+ \item \desc cette fonction permet de savoir s'il y a une macro appelée \argu{nom}. Elle renvoie $1$ si c'est le cas, $0$ sinon.
+\end{itemize}
+
+\section{IsString}\label{cmdIsString}
+
+\begin{itemize}
+ \item \util \textbf[IsString()]{IsString( <arg> )}.
+ \item \desc cette fonction renvoie $1$ si \argu{arg} est une une chaîne de caractères, $0$ sinon. Lorsque \argu{arg} est une liste, seul le premier argument est testé.
+\end{itemize}
+
+\section{IsVar}\label{cmdIsVar}
+
+\begin{itemize}
+ \item \util \textbf[IsVar()]{IsVar( <nom> )}.
+ \item \desc cette fonction permet de savoir s'il y a une variable globale appelée \argu{nom}. Elle renvoie $1$ si c'est le cas, $0$ sinon.
+\end{itemize}
+
+\section{List}\label{cmdListe}
+
+\begin{itemize}
+ \item \util \textbf[List()]{List( <argument1>, ..., <argumentn> )} ou \textbf[Liste()]{Liste( <argument1>, ..., <argumentn> )} ou \Mytextbf{[<argument1>, ..., <argumentn>]}.
+ \item \desc cette fonction évalue chaque argument et renvoie la liste des résultats \Mytextbf{différents de \Nil}.
+ \item \exem \co{Liste(1, Arg(1+2*i), sqrt(-1), Solve(cos(x)-x,x,0,1))} renvoie le résultat \res{[1,1.107149,0.739085]}. 
+\end{itemize}
+
+\section{ListFiles}\label{cmdListFiles}
+
+\begin{itemize}
+ \item \util \textbf[ListFiles()]{ListFiles()}.
+ \item \desc cette fonction est disponible seulement dans la version GUI de TeXgraph, elle s'utilise dans la barre de commande en bas de la fenêtre, elle affiche alors la liste des fichiers de macros (\textit{*.mac}) chargés en mémoire.
+\end{itemize}
+
+\section{ListWords}\label{cmdListWords}
+
+\begin{itemize}
+ \item \util \textbf[ListWords()]{ListWords()}.
+ \item \desc cette fonction est disponible seulement dans la version GUI de TeXgraph, elle s'utilise dans la barre de commande en bas de la fenêtre, elle affiche alors la liste des mots en mémoire (noms des constantes, macros, commandes, variables,...).
+\end{itemize}
+
+\section{LoadImage}\label{cmdLoadImage}
+
+\begin{itemize}
+ \item \util \textbf[LoadImage()]{LoadImage( <image> )}.
+ \item \desc cette fonction charge le fichier \argu{image}, qui doit être une image png, jpeg ou bmp. Celle-ci est affichée en image de fond et fait partie du graphique, en particulier elle est exportée dans les formats tex (visible seulement dans la version postscript), pgf, pst et teg. Pour le format pgf c'est la version png ou jpg qui sera dans le document, mais pour les versions pst et tex il faut une version eps de l'image. L'argument est interprété comme une chaîne de caractères, et la fonction renvoie la valeur \Nil.
+
+ Lors du chargement, la taille de l'image est adaptée à la fenêtre, mais celle-ci peut être modifiée de manière à conserver les proportions de l'image. Dès lors la position de l'image et sa taille sont fixées. On peut ensuite élargir la fenêtre si on ne veut pas que l'image occupe tout l'espace. Pour modifier la position ou la taille de l'image, il faut recharger celle-ci.
+\end{itemize}
+
+
+\section{Loop}\label{cmdLoop}
+
+\begin{itemize}
+ \item \util \textbf[Loop()]{Loop( <expression>, <condition> )}.
+ \item \desc cette fonction est une \Mytextbf{boucle} qui construit une liste en évaluant \argu{expression} et \argu{condition} jusqu'à ce que le résultat de \argu{condition} soit égal à 1 (pour \textit{True}) ou \Nil, la fonction \textsl{Loop} renvoie alors la liste des résultats de \argu{expression}. Cette commande est la représentation interne de la boucle \Helpref{{repeat}}{cmdrepeat} dont l'utilisation est préférable pour des raisons de lisibilité.
+ \item \exem les commandes (équivalentes):
+
+\centerline{\co{[n:=1, m:=1, n, Loop([ aux:=n, n:=m, m:=aux+n, n], m>100)]}}
+
+ou encore
+
+\centerline{\co{[n:=1, m:=1, n, while m<=100 do aux:=n, n:=m, m:=aux+n, n od]}}
+
+ou encore
+
+\centerline{\co{[n:=1, m:=1, n, repeat aux:=n, n:=m, m:=aux+n, n until m>100 od]}}
+
+renvoient la liste: \res{[1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]} (termes d'une suite de \textsc{Fibonacci} inférieurs à 100).
+\end{itemize}
+
+\section{LowerCase}\label{cmdLowerCase}
+
+\begin{itemize}
+ \item \util \textbf[LowerCase()]{LowerCase( <chaîne> )}.
+ \item \desc renvoie la \argu{chaîne} en minuscules.
+\end{itemize}
+
+\section{Map}\label{cmdMap}
+
+\begin{itemize}
+ \item \util \textbf[Map()]{Map( <expression>, <variable>, <liste> [, mode] )}.
+ \item \desc cette fonction est une \Mytextbf{boucle} qui construit une liste de la manière suivante: \argu{variable} parcourt les éléments de \argu{liste} et pour chacun d'eux \argu{expression} est évaluée, la fonction \textsl{Map} renvoie la liste des résultats. Cette commande est la représentation interne de la boucle \Helpref{{for}}{cmdfor} dont l'utilisation est préférable pour des raisons de lisibilité.
+
+ Le paramètre optionnel \argu{mode} est un complexe qui vaut \Nil par défaut, lorsque \argu{mode}$=a+ib$, alors:
+  \begin{itemize}
+  \item si $a$ est un entier et $b=0$: les éléments de la \argu{liste} sont traités de $a$ en $a$,
+  \item si $a$ est un entier et $b=1$: la \argu{liste} est traitée par composante (deux composantes sont séparées par la constante \jump) et les éléments de chaque composante sont traités par paquets complets de $a$ éléments, lorsque la constante \jump est rencontrée dans la liste, celle-ci est renvoyée dans le résultat. Un paquet non complet n'est pas traité.
+  \item si $a$ est un entier et $b=-1$: la \argu{liste} est traitée par composante (deux composantes sont séparées par la constante \jump) et les éléments de chaque composante sont traités par paquets complets de $a$ éléments, lorsque la constante \jump est rencontrée dans la liste, celle-ci n'est pas renvoyée dans le résultat. Un paquet non complet n'est pas traité.
+  \item si $a=$Re(jump): la \argu{liste} est traitée par composante (deux composantes sont séparées par la constante \jump), lorsque la constante \jump est rencontrée dans la liste, celle-ci est renvoyée dans le résultat si $b=1$ et n'est pas renvoyée si $b=-1$.
+  \item \exem voir la boucle \Helpref{for}{cmdfor} pour des exemples.
+  \end{itemize}
+
+ \item \exem si $L$ est une variable contenant une liste de points, alors la commande:
+  \begin{itemize}
+  \item \co{[sum:=0, Map( Inc(sum,z), z, L), sum]} renvoie la somme des éléments de $L$.
+  \item la commande \co{Map(z*exp(i*$\pi$/3), z, L)} renvoie la liste des images des points de $L$ par la rotation de centre O d'angle $\pi$/3.
+  \end{itemize}
+\end{itemize}
+
+\section{Margin}\label{cmdMarges}
+
+\begin{itemize}
+ \item \util \textbf[Margin()]{Margin( <gauche>, <droite>, <haut>, <bas> )} ou \textbf[Marges()]{Marges( <gauche>, <droite>, <haut>, <bas> )}.
+ \item \desc cette fonction permet de fixer les marges autour du dessin (en cm). Les nouvelles valeurs sont copiées dans les constantes \var{margeG}, \var{margeD}, \var{margeH} et \var{margeB}.
+\end{itemize}
+
+
+\section{Merge}\label{cmdMerge}
+
+\begin{itemize}
+ \item \util \textbf[Merge()]{Merge( <liste> )}.
+ \item \desc cette fonction permet de recoller des morceaux de listes pour avoir des composantes de longeur maximale, elle renvoie la liste qui en résulte.
+ \item \exem \co{Merge([1, 2, jump, 3, 5, jump, 3, 4, 2] )} renvoie \res{[1, 2, 3, 4, 5]}. Et \co{Merge( [1, 2, jump, 3, 5, jump, 3, 4] )} renvoie \res{[1, 2, jump, 4, 3, 5]}.
+
+Attention: pour que deux extrémités soient recollées elles doivent être égales pour la machine.
+\end{itemize}
+
+
+\section{Message ou Print}\label{cmdMessage}
+
+\begin{itemize}
+ \item \util \textbf[Print()]{Message( <arg1>, <arg2>, ... ) ou Print( <arg1>, <arg2>, ... )}.
+ \item \desc cette fonction évalue chaque argument sous forme de chaînes, celles-ci sont alors concaténées pour former un message affiché dans une fenêtre. Un argument égal à la constante \textbf{LF} représente un passage à la ligne.
+ Quand l'utilisateur a cliqué sur \textit{OK}, la fenêtre se referme et la fonction renvoie la valeur \Nil. 
+\end{itemize}
+
+\section{Mix}\label{cmdMix}
+
+\begin{itemize}
+ \item \util \textbf[Mix()]{Mix( <liste 1>, <liste 2> [, [<paquet 1>, <paquet 2>] ] )}.
+ \item \desc cette fonction permet de mixer les deux \argu{listes} en intercalant un élément de la deuxième après chaque élément de la première, et renvoie la liste qui en résulte. Par défaut les éléments sont comptabilisés par paquets de $1$, mais on peut prendre des paquets de $2$ ou plus, en modifiant le dernier argument (optionnel) \argu{[paquet 1, paquet 2]}, si l'un de ces nombres est égal à \jump, les paquets considérés seront les composantes connexes de la liste.
+ \item \exem \co{Mix( [1,2,3], ["a","b",jump,"c","d","e",jump,"f"], [1,jump])} donne \res{[1,"a","b",jump,2,"c","d","e",jump,3,"f"]}.
+\end{itemize} 
+ 
+\section{Mtransform}\label{cmdMtransform}
+
+\begin{itemize}
+ \item \util \textbf[Mtransform()]{Mtransform( <liste>, <matrice> )}. 
+ \item \desc cette fonction applique la \argu{matrice} à la \argu{liste} et renvoie le résultat. Si la \argu{liste} contient la constante \jump, celle-ci est renvoyée dans le résultat sans être modifiée. La \argu{matrice} représente l'expression analytique d'une application affine du plan, c'est une liste de trois complexes $[z1,z2,z3]$: $z1$ est l'affixe du vecteur de translation, $z2$ est l'affixe du premier vecteur colonne de la matrice de la partie linéaire dans la base (1,i), et $z3$ est l'affixe du deuxième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [0,1,i] (c'est la matrice par défaut).
+\end{itemize}
+
+\section{MyExport}
+
+\begin{itemize}
+ \item \textbf[MyExport()]{MyExport( <"nom">, <paramètre 1>, ..., <paramètre n> )} ou \textbf[draw()]{draw( <"nom">, <paramètre 1>, ..., <paramètre n> )}. \item \desc cette commande permet d'ajouter de nouveaux éléments graphiques avec un export personnalisé. Elle est décrite dans \Helpref{cette section}{cmdMyExport}.
+\end{itemize}
+
+\section{Nargs}\label{cmdNargs}
+
+\begin{itemize}
+ \item \util \textbf[Nargs()]{Nargs()}. 
+ \item \desc cette fonction n'a d'effet que dans une macro, elle renvoie le nombre d'arguments avec lesquels la macro a été appelée. Hors de ce contexte, elle renvoie la valeur \Nil. Voir aussi la fonction \Helpref{Args}{cmdArgs}. \item\exem voici le corps d'une macro \textit{MyLabel(affixe1, texte1, affixe2, texte2, ...)} prenant un nombre indéterminé d'arguments:
+\end{itemize}
+
+\begin{verbatim}
+  for $k from 1 to Nargs()/2 do
+     Label(Args(2*k-1), Args(2*k))
+  od
+\end{verbatim}
+
+\section{NewButton}\label{cmdNewButton}
+
+\begin{itemize}
+ \item \util \textbf[NewButton()]{NewButton( <Id>, <nom>, <affixe>, <taille>, <commande> [, aide] )}. 
+ \item \desc cette fonction crée dans la zone grisée à gauche dans la fenêtre un bouton dont le numéro d'identification est \Mytextbf{l'entier} \argu{Id}, le texte figurant sur le bouton est le paramètre \argu{nom} qui est donc interprété comme une \Helpref{chaîne de caractères}{chaine}, la position du coin supérieur gauche est donnée par le paramètre \argu{affixe} qui doit être de la forme X+i*Y avec X et Y \Mytextbf{entiers} car ce sont des coordonnées en \Mytextbf{pixels}, la taille du bouton est donnée par le paramètre \argu{taille} qui doit être de la forme \textit{long+i*haut} où \textit{long} désigne la longueur du bouton en pixels et \textit{haut} la hauteur (ce sont donc des entiers), le paramètre \argu{commande} est interprété comme une chaîne de caractères, c'est la commande associée au bouton, chaque clic provoquera l'exécution de cette commande. Le dernier paramètre \argu{aide} est facultatif, il contient le message de la bulle d'aide s'affichant lorsque la souris passe au-dessus du bouton.
+
+ Si on crée un bouton dont le numéro d'identification est déjà pris, alors l'ancien bouton est détruit \Mytextbf{sauf si c'est un bouton prédéfini} (c'est à dire créé au démarrage). \`A chaque changement de fichier, les boutons non prédéfinis sont détruits. La fonction \Mytextbf{NewButton} renvoie la valeur \Nil.
+\end{itemize}
+
+\section{NewGraph}\label{cmdNewGraph}
+
+\begin{itemize}
+ \item \util \textbf[NewGraph()]{NewGraph( <chaîne1>, <chaîne2> [, code] )}.
+ \item \desc cette fonction crée un élément graphique \textsl{Utilisateur} ayant pour nom: \argu{chaîne1} et défini par la commande: \argu{chaîne2}. Les deux arguments sont donc interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. S'il existait déjà un élément graphique portant le même nom, alors celui-ci est écrasé. L'élément graphique est créé mais non dessiné, c'est la fonction \textsl{ReDraw()} qui permet de mettre l'affichage à jour.
+
+ Le troisième paramètre \argu{code} est un entier positif (optionnel), un clic gauche avec la souris sur l'élément graphique créé dans la liste des éléments graphiques, provoquera l'exécution de la macro spéciale \textsl{ClicGraph( <code> )}, cette macro n'existe pas par défaut et peut-être créée par l'utilisateur, elle est utilisée en particulier dans le fichier modèle \textit{Mouse.mod} (dessin à la souris). 
+ \item Supposons que l'utilisateur clique sur le point d'affixe 1+i, alors une fenêtre de dialogue s'ouvre avec le message \textsl{Label=} et une ligne de saisie à remplir. Supposons que l'utilisateur entre la chaîne \textsl{Test} et valide, alors la macro va créer un élément graphique \textsl{utilisateur} portant le nom \textsl{Label1} et défini par la commande \co{Label(1+i,"Test")}.
+  \item On peut aussi utiliser la macro prédéfinie \textsl{NewLabel} et définir la macro \textsl{ClicG()}. en écrivant simplement: \co{NewLabel(\%1) }.
+ \item \exem voici une macro \textsl{ClicG()} permettant la création "à la volée" de labels, on a créé auparavant une variable globale \textsl{num} initialisée à 1:
+\end{itemize}
+
+\begin{verbatim}
+ if Input("Label=")
+ then NewGraph( ["Label",num], ["Label(", %1,",", """",chaine(),""")"] ), 
+   ReDraw(), Inc(num,1)
+ fi
+\end{verbatim}
+
+\section{NewItem}\label{cmdNewItem}
+
+\begin{itemize}
+ \item \util \textbf[NewItem()]{NewItem( <nom>, <commande> )}. 
+ \item \desc cette fonction ajoute dans la liste déroulante de la zone grisée à gauche dans la fenêtre, un item appelé \argu{nom}, le deuxième paramètre \argu{commande} est la commande associée à l'item, chaque sélection de l'item provoquera l'exécution de cette commande. Les deux arguments sont interprétés comme des chaînes de caractères. S'il existe déjà un item portant le même nom, alors l'ancien est détruit \Mytextbf{sauf si c'est un item prédéfini} (c'est à dire créé au démarrage). À chaque changement de fichier, les items non prédéfinis sont détruits. La fonction \textsl{NewItem} renvoie la valeur \Nil.
+\end{itemize}
+
+\section{NewMac}\label{cmdNewMac}
+
+\begin{itemize}
+ \item \util \textbf[NewMac()]{NewMac( <nom>, <corps> [, param1, $\ldots$, paramN])}.
+ \item \desc cette fonction crée une macro appelée \argu{nom} et dont le contenu est \argu{corps}. Les deux arguments sont donc interprétés comme des chaînes de caractères. Les paramètres optionnels sont des noms de variables, le nom de la variable \argu{param1} est remplacé dans l'expression de la macro par le paramètre \%1, le nom \argu{param2} est remplacé par \%2 $\ldots$ etc. Cette fonction renvoie la valeur \Nil. S'il existait déjà une macro portant le même nom, alors celui-ci est écrasée \Mytextbf{si elle n'est pas prédéfinie}. Si le nom n'est pas valide, ou s'il y a déjà une macro prédéfinie portant ce nom, ou si l'expression \argu{corps} n'est pas correcte, alors la fonction est sans effet. 
+\end{itemize}
+
+\section{NewTrackBar}\label{cmdNewTrackBar}
+
+\begin{itemize}
+ \item \util \textbf[NewTrackBar()]{NewTrackBar( <Id>, <position>, <taille>, <min+i*max>, <variable> [, aide] )}. 
+ \item \desc cette fonction crée dans la zone grisée à gauche dans la fenêtre un slider dont le numéro d'identification est \Mytextbf{l'entier} \argu{Id}, la position du coin supérieur gauche est donnée par le paramètre \argu{position} qui doit être de la forme X+i*Y avec X et Y \Mytextbf{entiers} car ce sont des coordonnées en \Mytextbf{pixels}, la taille du slider est donnée par le paramètre \argu{taille} qui doit être de la forme \textit{long+i*haut} où \textit{long} désigne la longueur du bouton en pixels et \textit{haut} la hauteur (ce sont donc des entiers), le paramètre \argu{min+i*max} représente l'intervalle balayé par le slider, les valeurs \argu{min} et \argu{max}sont des entiers. L'argument \argu{variable} est le nkom de la variabla associé au slider (chaîne de caractères)interprété comme une chaîne de caractères, chaque modification du slider provoquera la mise à jour du contenu de cette varaible ainsi que celel du graphique. Le dernier paramètre \argu{aide} est facultatif, il contient le message de la bulle d'aide s'affichant lorsque la souris passe au-dessus du slider. 
+ 
+ Si on crée un slider dont le numéro d'identification est déjà pris, alors l'ancien bouton est détruit \Mytextbf{sauf si c'est un slider prédéfini} (c'est à dire créé au démarrage). \`A chaque changement de fichier, les slider non prédéfinis sont détruits. La fonction \Mytextbf{NewTrackBar} renvoie la valeur \Nil.
+\end{itemize}
+
+\section{NewVar}\label{cmdNewVar}
+\begin{itemize}
+ \item \util \textbf[NewVar()]{NewVar( <nom>, <expression> )}.
+ \item \desc cette fonction crée une variable globale appelée \argu{nom} et dont la valeur est \argu{expression}. Les deux arguments sont donc interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. S'il existait déjà une variable portant le même nom, alors celle-ci est écrasée. Si le nom n'est pas valide, ou s'il y a déjà une constante portant ce nom, alors la fonction est sans effet. Si \argu{expression} n'est pas correcte, alors la valeur affectée à la variable sera \Nil.
+\end{itemize}
+
+
+\section{Nops ou Len}\label{cmdNops}
+\begin{itemize}
+ \item \util \textbf[Nops()]{Nops( <liste> ) ou Len( <liste> )}.
+ \item \desc cette fonction évalue \argu{liste} et renvoie le nombre de complexes qui la composent.
+ \item \exem \co{Nops([1,2,3] )} renvoie la valeur \res{3}.
+\end{itemize}
+
+\section{OpenFile}\label{cmdOpenFile}
+
+\begin{itemize}
+ \item \util \textbf[OpenFile()]{OpenFile( <"nom fichier"> )}. 
+ \item \desc cette fonction permet d'ouvrir un fichier texte en écriture. ATTENTION: s'il existe un fichier du même nom, alors celui-ci sera écrasé.
+
+ En combinaison avec les commandes \Helpref{WriteFile}{cmdWriteFile} et \Helpref{CloseFile}{cmdCloseFile}, cela permet à l'utilisateur de créer ses propres fichiers textes.
+\end{itemize}
+
+
+\section{OriginalCoord}\label{cmdOriginalCoord}
+
+\begin{itemize}
+ \item \util \Mytextbf{OriginalCoord( <0/1> )} ou \textbf[OriginalCoord()]{OriginalCoord()}.
+ \item \desc cette fonction détermine si le repère à l'exportation en \textit{pstricks} et \textit{tikz/pgf} est identique à celui de l'écran (ce qui correspond à la valeur 1 de l'argument, valeur par défaut), ou non. Lorsque la valeur de l'argument est nulle, le repère à l'exportation (\textit{pstricks} et \textit{tikz/pgf}) aura son origine en bas à gauche et l'unité sera le cm sur les deux axes. Cela est utile lorsqu'on travaille dans des répères où certaines valeurs numériques ne sont plus acceptées par \TeX. 
+ 
+ Lorsque l'argument vaut 1, les coordonnées des points dans le fichier exporté sont les mêmes qu'à l'écran.
+
+ Lorsque l'argument vaut 0, les coordonnées dans le fichier exporté (tex, pst, tikz/pgf) du point d'affixe z à l'écran, sont x=Re(TexCoord(z)) et y=Im(TeXCoord(z)) (et EpsCoord à la place de TeXCoord pour l'export eps).
+
+ Lorsque l'argument est vide, la fonction renvoie l'état actuel du repère à l'exportation (0 ou 1). Sinon, elle renvoie la valeur \Nil.
+\end{itemize}
+
+\section{PermuteWith}\label{cmdPermuteWith}
+
+\begin{itemize}
+ \item \util \textbf[PermuteWith()]{PermuteWith( <liste d'index>, <liste à permuter>, [, taille des paquets ou jump] )}.
+ \item \desc la \argu{liste à permuter} doit être une variable, celle-ci sera permutée selon le \argu{liste d'index} qui est une liste d'entiers strictement positifs. La \argu{liste à permuter} est traitée par composante si elle contient la constante \jump, et les éléments de chaque composante sont traités par paquets (de $1$ par défaut) ou par composante entière (une composante se termine par \jump), la liste est donc modifiée.
+ \item \exem:
+\begin{itemize}
+ \item \co{[L:=[-1,0,3,5], PermuteWith([4,3,2,1], L), L]} renvoie \res{[5,3,0,-1]}.
+ \item \co{[L:=[-1,0,3,5], PermuteWith([4,3,4,1], L), L]} renvoie \res{[5,3,5,-1]}.
+ \item \co{[L:=[-1,0,3,5,6,7,8], PermuteWith([4,3,2,1], L, 2), L]} renvoie \res{[6,7,3,5,-1,0]}.
+ \item \co{[L:=[-1,jump,0,3,jump,5,6,7,jump,8,jump], PermuteWith( [4,3,3,1,2], L, jump), L]} renvoie \res{[8,jump,5,6,7,jump,5,6,7,jump,-1,jump,0,3,jump]}.
+ \item \co{[L:=[-1,jump,0,3,jump,5,6,7,jump,8], PermuteWith([4,3,3,1,2], L, jump), L]} renvoie \res{[5,6,7,jump,5,6,7,jump,-1,jump,0,3,jump]}.
+ \item \co{[L:=[-1,1,5,jump,0,3,jump,5,6,7,jump,8,9], PermuteWith( [2,1], L), L]} renvoie \res{[1,-1,jump,3,0,jump,6,5,jump,9,8]}.
+\end{itemize}
+\end{itemize}
+
+\section{Range}\label{cmdRange}
+
+\begin{itemize}
+    \item \util \textbf{Range( <début>, <fin> [, pas]) }.
+    \item \desc cette fonction génère une liste de valeurs allant de <début> à <fin> (inclus) avec le <pas> souhaité, par défaut le <pas> vaut 1 et il peut être négatif. Si l'argument <début> est omis (syntaxe \Mytextbf{Range( <fin> )}), c'est la liste des entiers de 1 à <fin> qui est générée (si <fin> est supérieure ou égale à 1).
+    \item \exem la commande \co{Range(9)} renvoie la liste \res{[1,2,3,4,5,6,7,8,9]}. La commande \co{Range(2,10,2)} revoie \res{[2,4,6,8,10]}, et \co{Range(9,0,-2)} renvoie \res{[9,7,5,3,1]}.
+\end{itemize}
+
+\section{ReadData}\label{cmdReadData}
+
+\begin{itemize}
+ \item \util \textbf[ReadData()]{ReadData( <fichier> [, type de lecture, séparateur] )}.
+ \item \desc cette fonction ouvre un \argu{fichier} texte en lecture, celui-ci est supposé contenir une ou plusieurs listes de valeurs numériques et/ou de chaînes de caractères. Le premier argument est interprété comme une \Helpref{chaîne de caractères}{chaine} qui contient le nom du fichier (plus éventuellement son chemin). L'argument (optionnel) suivant \argu{type de lecture} est une valeur numérique qui peut valoir:
+\begin{itemize}
+ \item \argu{type de lecture}=0: la fonction lit le fichier comme un fichier texte, c'est à dire une seule et même chaîne si aucun \argu{séparateur} n'est spécifié, sinon, la commande renvoie une liste de chaînes,
+ \item \argu{type de lecture}=1: la fonction lit le fichier réel par réel et renvoie la liste ou les listes lues: \verb|[x1, x2, ...]|,
+ \item \argu{type de lecture}=2: la fonction lit le fichier complexe par complexe, c'est à dire \Mytextbf{par paquets de deux réels} et renvoie la ou les listes lues sous forme d'affixes: \verb|[x1+i*x2, x3+i*x4, ...]|. C'est la valeur par défaut,
+ \item \argu{type de lecture}=3: la fonction lit le fichier par paquet de 3 réels (points de l'espace ou point3D) et renvoie la ou les listes lues sous la forme: \verb|[x1+i*x2, x3, x4+i*x5, x6, ...]|.
+ \item \argu{type de lecture}=4: s'applique aux fichiers \emph{csv} (valeurs séparées par une virgule), ces valeurs peuvent être numériques (réelles) ou alphanumériques (chaînes de caractères délimitées par le symbole "). Par défaut le \argu{séparateur} est le caractère \verb|","|. \`A la fin d'une ligne la constante \jump est insérée dans la liste. Les éléments vides seront représentés dans la liste par la constante \textit{ND} (chaîne de caractères signifiant \og non défini\fg).
+\end{itemize}
+
+ Dans les modes 1, 2, 3 et 4 la commande peut lire une chaîne à condition qu'elle soit délimitée par le caractère ", elle sera alors insérée dans la liste. Dans les modes 1, 2 et 3, une ligne qui contient le caractère \# sera considérée comme un commentaire à partir de celui-ci et jusqu'en fin de ligne, cette partie sera donc ignorée.
+
+ Dans les modes 1, 2, 3: le troisième argument \argu{séparateur}, est interprété comme une chaîne, il est supposé contenir le caractère servant à indiquer la fin de liste, entre deux listes la constante \jump sera insérée (sauf lors de la lecture en mode texte), cet argument est facultatif et par défaut il n'y a pas de séparateur (ce qui fait donc une seule liste). Lorsque le séparateur est la fin de ligne dans le fichier, on utilisera la chaîne \co{"LF"} (\textit{line feed}) en troisième paramètre. Lorsqu'il y a un séparateur et lorsque la lecture se fait par paquet de 2 ou 3 réels, un paquet non \og complet\fg\ est ignoré.
+ \item \exem supposons qu'un fichier texte \textit{test.dat} contienne exactement ceci:
+
+\begin{verbatim}
+1 2 3 4 5/ 6
+7 8 9 10 11/ 12
+13 14 15 16 17/ 18
+\end{verbatim}
+
+alors l'exécution de:
+  \begin{itemize}
+  \item \co{ReadData("test.dat")} donne: \res{[1+2*i,3+4*i,5+6*i,7+8*i,9+10*i,11+12*i,13+14*i,15+16*i,17+18*i]},
+  \item \co{ReadData("test.dat",1,"/")} donne: \res{[1,2,3,4,5,jump,6,7,8,9,10,11,jump,12,13,14,15,16,17,jump,18]},
+  \item \co{ReadData("test.dat",2,"/")} donne: \res{[1+2*i,3+4*i,jump,6+7*i,8+9*i,10+11*i,jump,12+13*i,14+15*i,16+17*i,jump]},
+  \item \co{ReadData("test.dat",3,"/")} donne: \res{[1+2*i,3,jump,6+7*i,8,9+10*i,11,jump,12+13*i,14,15+16*i,17,jump]},
+  \item \co{ReadData("test.dat",3,"LF")} donne: \res{[1+2*i,3,4+5*i,6,jump,7+8*i,9,10+11*i,12,jump,13+14*i,15,16+17*i,18,jump]}.
+  \end{itemize}
+\end{itemize}
+
+
+\section{ReadFlatPs}\label{cmdReadFlatPs}
+
+\begin{itemize}
+ \item \util \textbf[ReadFlatPs()]{ReadFlatPs( <fichier> )}.
+ \item \desc cette fonction ouvre un \argu{fichier} en lecture, celui-ci est censé être un fichier écrit en \textit{flattened postscript}. La fonction renvoie la liste des chemins contenus dans le fichier, le premier complexe de la liste est \textit{largeur+i*hauteur} en cm, puis le premier complexe de chaque chemin est \textit{Color+i*Width}. Chaque chemin se termine par un \jump dont la partie imaginaire est un enter négatif: $-1$ pour eofill, $-2$ pour fill, $-3$ pour stroke et $-4$ pour clip.
+
+ Il est possible de transformer un fichier pdf ou un fichier postscript en \textit{flattened postscript} grâce à l'utilitaire \textit{pstoedit} (\url{http://www.pstoedit.net/}). La macro \Helpref{{conv2FlatPs}}{macconv2FlatPs} permet cette conversion en supposant que l'utilitaire est installé sur votre système.
+
+ La fonction \textsl{ReadFlatPs} est surtout utilisée en interne par la macro \Helpref{{loadFlatPs}}{macloadFlatPs} qui en plus du chargement, adpate les coordonnées des points avant de renvoyer à son tour la liste des chemins que l'on peut alors dessiner avec la macro \Helpref{{drawFlatPs}}{macdrawFlatPs}.
+
+ Ce système est utilisé par la macro \Helpref{{NewTeXLabel}}{macNewTeXlabel} pour récupérer les formules TeX compilées.
+\end{itemize}
+
+
+\section{ReCalc}\label{cmdReCalc}
+
+\begin{itemize}
+ \item \util \Mytextbf{ReCalc( <nom1>, ..., <nomN> )} ou \textbf[ReCalc()]{ReCalc()}.
+ \item \desc cette fonction force le recalcul des éléments graphiques dont les noms sont dans la liste même si ceux-ci ne sont pas en mode \textsl{Recalcul Automatique}. Si la liste est vide (\textsl{ReCalc()}) alors tout le graphique est recalculé. Après le recalcul l'affichage est mis à jour et la fonction renvoie \Nil.
+\end{itemize}
+
+\Mytextbf{Attention}: l'utilisation de \textsl{ReCalc()} dans un élément graphique entraîne une récursion infinie et donc un plantage du programme!
+
+\section{ReDraw}\label{cmdReDraw}
+
+\begin{itemize}
+ \item \util \Mytextbf{ReDraw( <nom1>, ..., <nomN> )} ou \textbf[ReDraw()]{ReDraw()}.
+ \item \desc cette fonction (re)dessine les éléments graphiques dont les noms sont dans la liste. Si la liste est vide (\textsl{ReDraw()}) alors tous les élments sont redessinés. Cette fonction renvoie la valeur \Nil.
+\end{itemize}
+
+\section{RenCommand}\label{cmdRenCommand}
+
+\begin{itemize}
+ \item \util \textbf[RenCommand()]{RenCommand( <nom>, <nouveau> )}.
+ \item \desc cette fonction renomme la commande appelée \argu{nom}. Les deux arguments sont donc interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. Si le \argu{nom} n'est pas valide, ou s'il n'y a pas de commande portant ce \argu{nom}, ou s'il a déjà une commande portant le nom \argu{nouveau}, alors la fonction est sans effet. 
+\end{itemize}
+
+\section{RenMac}\label{cmdRenMac}
+
+\begin{itemize}
+ \item \util \textbf[RenMac()]{RenMac( <nom>, <nouveau> )}.
+ \item \desc cette fonction renomme la macro appelée \argu{nom}. Les deux arguments sont donc interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. Si le \argu{nom} n'est pas valide, ou s'il n'y a pas de macro portant ce \argu{nom}, ou s'il a déjà une macro portant le nom \argu{nouveau}, alors la fonction est sans effet.
+\end{itemize}
+
+
+\section{RestoreAttr}\label{cmdRestoreAttr}
+
+\begin{itemize}
+ \item \util \textbf[RestoreAttr()]{RestoreAttr()}.
+ \item \desc restaure l'ensemble des attributs sauvegardés dans une pile par la commande \Helpref{SaveAttr}{cmdSaveAttr}. 
+\end{itemize}
+
+
+\section{Reverse}\label{cmdReverse}
+\begin{itemize}
+ \item \util \textbf[Reverse()]{Reverse( <liste> )}.
+ \item \desc renvoie la \argu{liste} inversée.
+\end{itemize}
+
+\section{Rgb}\label{cmdRgb}
+
+\begin{itemize}
+ \item \util \textbf[Rgb()]{Rgb( <rouge>, <vert>, <bleu> )}.
+ \item \desc cette fonction renvoie un entier représentant la couleur dont les trois composantes sont \argu{rouge}, \argu{vert} et \argu{bleu}, ces trois valeurs doivent être des nombres \Mytextbf{compris entre 0 et 1}. Voir aussi la commande \Helpref{HexaColor}{cmdHexaColor}.
+ \item \exem \co{Color:= Rgb(0.5,0.5,0.5))} sélectionne le gris.
+\end{itemize}
+
+\section{SaveAttr}\label{cmdSaveAttr}
+
+\begin{itemize}
+ \item \util \textbf[SaveAttr()]{SaveAttr()}.
+ \item \desc sauvegarde sur une pile l'ensemble des attributs courants. Voir aussi \Helpref{RestoreAttr}{cmdRestoreAttr}.
+\end{itemize}
+
+\section{ScientificF}\label{cmdScientificF}
+
+\begin{itemize}
+ \item \util \textbf[ScientificF()]{ScientificF( <réel> [, <nb décimales>] )}.
+ \item \desc transforme le \argu{nombre} au format scientifique et renvoie le résultat sous forme d'une chaîne de caractères.
+\end{itemize}
+
+
+\section{Seq}\label{cmdSeq}
+
+\begin{itemize}
+ \item \util \textbf[Seq()]{Seq( <expression>, <variable>, <départ>, <fin> [, pas] )}.
+ \item \desc cette fonction est une \Mytextbf{boucle} qui construit une liste de la manière suivante: \argu{variable} est initialisée à \argu{départ} puis, tant que \argu{variable} est dans l'intervalle (fermé) défini par \argu{départ} et \argu{fin}, on évalue \argu{expression} et on incrémente \argu{variable} de la valeur de \argu{pas}. Le pas peut être négatif mais il doit être non nul. Lorsqu'il n'est pas spécifié, sa valeur par défaut est 1. Lorsque \argu{variable} sort de l'intervalle, la boucle s'arrête et la fonction \textsl{Seq} renvoie la liste des résultats. Cette commande est la représentation interne de la boucle \Helpref{{for}}{cmdfor} dont l'utilisation est préférable pour des raisons de lisibilité.
+ \item \exem \co{Seq(exp(i*k*pi/5,k,1,5)} renvoie la liste des racines cinquièmes de l'unité. La commande:
+
+\centerline{\co{Ligne( Seq( exp(2*i*k*pi/5, k, 1, 5), 1)}} 
+
+ renverra la valeur \Nil mais dessinera un pentagone (voir \Helpref{Ligne}{cmdLigne}) si elle est utilisée dans un élément graphique \textit{utilisateur}.
+\end{itemize}
+
+\section{Set}\label{cmdSet}
+
+\begin{itemize}
+ \item \util \textbf[Set()]{Set( <variable>, <valeur> )}.
+ \item \desc cette fonction permet d'affecter à \argu{variable}\footnote{Il n'est pas nécessaire de déclarer les variables, elles sont implicitement locales et initialisées à \Nil sauf si c'est le nom d'une variable globale ou d'une constante prédéfinie (comme i, $\pi$, e, ...).} la \argu{valeur} spécifiée. La fonction \textsl{Set} renvoie la valeur \Nil. 
+
+ Cette commande est la représentation interne de l'affectation \textsl{:=}, dont l'utilisation est préférable pour des raisons de lisibilité.
+\end{itemize} 
+
+\section{SetAttr}\label{cmdSetAttr}
+
+\begin{itemize}
+ \item \util \textbf[SetAttr()]{SetAttr()}.
+ \item \desc cette fonction n'a d'effet que dans un élément graphique Utilisateur. Elle permet d'affecter aux attributs de l'élément la valeur des attributs actuellement en cours. La fonction \textsl{SetAttr} renvoie la valeur \Nil.
+\end{itemize} 
+
+\section{SetMatrix}\label{cmdSetMatrix}
+
+\begin{itemize}
+ \item \util \textbf[SetMatrix()]{SetMatrix( <[z1, z2, z3]> )}.
+ \item \desc cette fonction permet de modifier la matrice courante (celle-ci affecte tous les éléments graphiques sauf les axes et les grilles dans la version actuelle). Cette matrice représente l'expression analytique d'une application affine du plan, c'est une liste de trois complexes: $z1$ qui est l'affixe du vecteur de translation, $z2$ qui est l'affixe du premier vecteur colonne de la matrice de la partie linéaire dans la base (1,i), et $z3$ qui est l'affixe du deuxième vecteur colonne de la matrice de la partie linéaire. Par exemple, la matrice de l'identité s'écrit ainsi: [0,1,i] (c'est la matrice par défaut). (Voir aussi les commandes \Helpref{GetMatrix}{cmdGetMatrix}, \Helpref{ComposeMatrix}{cmdComposeMatrix}, et \Helpref{IdMatrix}{cmdIdMatrix})
+ \item \exem si $f:z \mapsto f(z)$ est une application affine, alors sa matrice est $[f(0), f(1)-f(0), f(i)-f(0)]$, ce calcul peut-être fait par la macro \textit{matrix()} de TeXgraph.mac: \co{SetMatrix(matrix(i*bar(z)))} affecte la matrice de la symétrie orthogonale par rapport à la première bissectrice.
+\end{itemize}
+
+
+\begin{demo}{Repère non orthogonal}{SetMatrix}
+\begin{texgraph}[name=SetMatrix]
+view(-5,5,-3,3), size(7.5),
+SetMatrix([0,1,1+i]), axes(0,1+i),
+tMin:=-5, tMax:=5,
+Color:=red, Width:=8, Cartesienne(2*sin(x)),
+Color:=black, Arrows:=2,
+tangente(2*sin(x), pi/2, 1.5),
+Arrows:=0, LineStyle:=dotted,
+Ligne( [2*i,pi/2+2*i, pi/2], 0),
+Point(pi/2+2*i),
+LabelDot( pi/2, "$\frac{\pi}2$","S",1),
+IdMatrix()
+\end{texgraph}
+\end{demo}
+
+
+\section{Show}\label{cmdShow}
+
+\begin{itemize}
+ \item \util \textbf[Show()]{Show( <element1>, ..., <elementN> )}.
+ \item \desc Cette fonction permet de montrer les éléments graphiques appelés \argu{element1}, ..., \argu{elementN} en mettant leur attribut \textsl{IsVisible} à true. Les arguments sont interprétés comme des chaînes de caractères. Cette fonction renvoie la valeur \Nil. Pour tout montrer on invoque la commande sans arguments: \textsl{Show()}. Pour tout montrer sauf un ou plusieurs éléments, on invoque la commande: \co{Show(except, element1, ..., elementN)}. Voir aussi la commande \Helpref{Hide}{cmdHide}.
+\end{itemize}
+
+
+\section{Si ou If}\label{cmdSi}
+
+\begin{itemize}
+ \item \util \textbf[If()]{Si( <condition1>, <expression1>, ..., <conditionN>, <expressionN> [, sinon] )} ou \textbf[Si()]{Si( <condition1>, <expression1>, ..., <conditionN>, <expressionN> [, sinon] )}.
+ \item \desc  cette fonction évalue \argu{condition1}. Une condition est une expression dont le résultat de l'évaluation doit être 0 [pour \textit{False}] ou 1 [pour \textit{True}], sinon il y a un échec et la fonction renvoie la valeur \Nil. Si la condition donne la valeur 1 alors la fonction évalue \argu{expression1} et renvoie le résultat, si elle vaut 0, elle évalue \argu{condition2}, si celle-ci donne la valeur 1 alors la fonction évalue \argu{expression2}, sinon etc... 
+ 
+  Lorsque aucune condition n'est remplie, la fonction évalue l'argument \argu{sinon}, s'il est présent, et renvoie le résultat, sinon la fonction renvoie \Nil. Cette commande est la représentation interne de l'alternative \Helpref{{if}}{cmdif} dont la syntaxe est préférable pour des raisons de lisibilité.
+ \item \exem définition d'une macro \co{f(x)} représentant une fonction f d'une variable x définie en plusieurs morceaux:
+ 
+\centerline{\co{Si(\%1<-1,1-exp(pi*(\%1+1)),\%1<0,sin($\pi$*\%1),sh(pi*\%1))},}
+
+c'est à dire $f(x)=1-\exp(\pi(x+1))$ si $x<-1$, $f(x)=\sin(\pi x)$ si $-1\leqslant x<0$, $f(x)=\mathrm{sh}(\pi x)$ sinon.
+
+\end{itemize}
+
+
+\section{Solve}\label{cmdSolve}
+
+\begin{itemize}
+ \item \util \textbf[Solve()]{Solve( <expression>, <variable>, <borne inf.>, <borne sup.> [, n] )}.
+ \item \desc cette fonction "résout" l'équation \argu{expression}=0 par rapport à la variable \Mytextbf{réelle} \argu{variable} dans l'intervalle défini par \argu{borne inf.} et \argu{borne sup.}. Cet intervalle est subdivisé en \argu{n} parties [par défaut n=25] et on utilise la méthode de {\sc Newton} sur chaque partie. La fonction renvoie la liste des résultats.
+ 
+ \Mytextbf{Attention} : la \argu{variable} doit être un identificateur qui ne doit pas correspondre à une variable globale, en particulier qui ne doit pas être une des lettres minuscules $t$, $x$, $u$ ou $v$ (qui sont utilisées par ailleurs).
+ \item \exem 
+\begin{itemize}
+  \item \co{Solve(sin(X), X, -5, 5)} donne \res{[-3.141593, 0, 3.141593]}.
+  \item Équation: $\displaystyle \int_0^X \exp(t^2)dt=1$: \co{Solve(Int( exp(u\^{}2),u,0,X)-1, X, 0, 1)} donne \res{0.795172} et l'exécution de \co{Int(exp(u\^{}2), u, 0, 0.795172)} donne \res{1}.
+  \item \co{Solve( X\^{}2+X+1, X, -1, 1)} renvoie \Nil.
+  \end{itemize}
+\end{itemize}
+
+\section{Sort}\label{cmdSort}
+
+\begin{itemize}
+ \item \util \textbf[Sort()]{Sort( <liste de complexes> [, option] )}.
+ \item \desc cette fonction trie la liste passée en argument dans l'ordre lexicographique, si l'argument \argu{option} vaut 0 (valeur par défaut), ou dans l'ordre lexicographique inverse si l'argument \argu{option} vaut 1. Cette liste doit être une variable, et celle-ci sera modifiée. Si la liste contient la constante \jump alors celle-ci est recopiée telle quelle dans le résultat, et les \og composantes connexes\fg\ de la liste sont triées indépendamment les unes des autres. La fonction renvoie la valeur \Nil.
+ \item \exem si la variable \textsl{L} contient la liste \res{[-2,-3+i,1,1-2*i, jump, 3,5,-6]} alors après l'exécution de \co{Sort(L)}, la variable contiendra la liste \res{[-3+i,-2,1-2*i,1,jump,-6,3,5]}, et après l'exécution de \co{Sort(L,1)}, la variable contiendra la liste \res{[1,1-2*i,-2,-3+i,jump,5,3,-6]}. La méthode utilisée est le Quick Sort.
+\end{itemize}
+
+\section{Special}\label{cmdSpecial}
+
+\begin{itemize}
+ \item \util \textbf[Special()]{Special( <chaîne> )}.
+ \item \desc cette fonction n'aura d'effet que dans un élément graphique Utilisateur (comme les fonctions graphiques). L'argument doit être une chaîne de caractères (délimitée par " et "), si cette chaîne contient les balises \verb|\[|, et \verb|\]|, alors tout le texte contenu entre ces deux balises est interprété par TeXgraph et le résultat est replacé dans la chaîne. Puis cette chaîne sera écrite telle quelle dans le fichier d'exportation (c'est en fait un Label créé avec LabelStyle= special).
+ \item \exem \co{Special("\bks psdot(\bks[1+\bks],\bks[2\^{}3\bks] )")}, écrira dans le fichier exporté: \res{\bks psdot(2,8)}.
+\end{itemize}
+
+\section{Str}\label{cmdStr}
+
+\begin{itemize}
+ \item \util \textbf[Str()]{Str( <arg1>, <arg2>,... )}.
+ \item \desc cette fonction évalue chaque argument, transforme chaque résultat en chaîne de caractères (un résultat égal à \Nil donne une chaîne vide), et renvoie la liste des chaînes obtenues. Si un des arguments est un nom de macro sans parenthèses, alors c'est le corps de la macro qui est renvoyé.
+ \item \exem la commande \co{Str(pi, Nil, "A", [1,2,3])} renvoie la liste \res{["3.14159265358979","","A","[1,2,3]"]}.
+\end{itemize}
+
+\section{Str2List}\label{Str2List}
+
+\begin{itemize}
+ \item \util \textbf[Str2List()]{Str2List( <chaîne> )}.
+ \item \desc cette fonction renvoie la \argu{chaîne} sous forme d'une liste de caractères. Cela peut permettre par exemple de parcourir une chaîne par caractère : \co{for car in Str2List("chaine") do ... od}.
+ \item \exem la commande \co{Str2List("toto")} renvoie \res{["t","o","t","o"]}.
+
+\end{itemize}
+
+\section{StrArgs}\label{cmdStrArgs}
+
+\begin{itemize}
+ \item \util \textbf[StrArgs()]{StrArgs( <entier> )}. 
+ \item \desc cette fonction n'a d'effet que dans une macro, elle renvoie l'argument numéro \argu{entier} avec lequel la macro a été appelée, sous forme d'une chaîne. Hors de ce contexte, elle renvoie la valeur \Nil. Voir également la commande \Helpref{Args}{cmdArgs}.
+ \item\exem Voir la fonction \Helpref{Nargs}{cmdNargs}.
+\end{itemize}
+
+\section{StrComp}\label{cmdStrComp}
+
+\begin{itemize}
+ \item \util \textbf[StrComp()]{StrComp( <chaîne1>, <chaîne2> )}.
+ \item \desc les deux arguments sont interprétés comme une chaîne de caractères, et les deux chaînes sont comparées, si elles sont égales alors la fonction renvoie la valeur 1, sinon la valeur 0. Depuis la version 1.97 on peut comparer deux chaînes avec le symbole =. 
+ \item \exem la combinaison de touches: Ctrl+Maj+<lettre> lance automatiquement l'exécution de la macro spéciale: \textsl{ OnKey( <lettre> )}. L'utilisateur peut définir cette macro avec par exemple la commande:
+
+\centerline{\co{if StrComp(\%1, "A") then Message("Lettre A") fi}}
+
+\end{itemize}
+
+\section{StrCopy}\label{cmdStrCopy}
+
+\begin{itemize}
+ \item \util \textbf[StrCopy()]{StrCopy( <chaîne>, <indice départ>, <quantité> )}.
+ \item \desc renvoie la chaîne résultant de l'extraction (fonctionne comme la commande \Helpref{Copy}{cmdCopy}).
+\end{itemize}
+
+\section{StrDel}\label{cmdStrDel}
+
+\begin{itemize}
+ \item \util \textbf[StrDel()]{StrDel( <variable>, <indice départ>, <quantité> )}.
+ \item \desc modifie la \argu{variable} en supprimant \argu{quantité} caractères à partir de \argu{indice départ} (fonctionne comme la commande \Helpref{Del}{cmdDel}). Si la \argu{variable}  contient une liste de chaînes, seule la première est modifiée. Si la \argu{variable} ne contient pas de chaîne, la commande est sans effet.
+\end{itemize}
+
+\section{StrEval}\label{cmdStrEval}
+
+\begin{itemize}
+ \item \util \textbf[StrEval()]{StrEval( <expression> )}.
+ \item \desc cette commande évalue l'\argu{expression} (qui doit être une chaîne de caractères), et renvoie le résultat sous forme d'une chaîne de caractères.
+\end{itemize}
+
+\section{String}\label{cmdString}
+
+\begin{itemize}
+ \item \util \textbf[String()]{String( <expression> )}.
+ \item \desc convertit l'expression en chaîne et renvoie le résultat.
+\end{itemize}
+
+\section{String2Teg}\label{cmdString2Teg}
+
+\begin{itemize}
+ \item \util \textbf[String2Teg()]{String2Teg( <expression> )}.
+ \item \desc cette fonction fait une évaluation alphanumérique de l'\argu{expression} et renvoie le résultat sous forme de chaîne de caractères en doublant tous les caractères " rencontrés. La chaîne résultante est ainsi lisible par TeXgraph. 
+\end{itemize}
+
+\section{StrInsert}\label{cmdStrInsert}
+
+\begin{itemize}
+ \item \util \textbf[StrInsert()]{StrInsert( <chaîne 1>, <chaîne2> [, position] )}.
+ \item \desc cette fonction insère la \argu{chaîne 2} dans la \argu{chaîne 1} à la position numéro \argu{position}. Lorsque la position vaut 0 [valeur par défaut], la \argu{chaîne 2} est ajoutée à la fin. La \argu{chaîne 1} doit être une variable et celle-ci est modifiée. La fonction \textsl{StrInsert} renvoie la valeur \Nil.
+ 
+  Si le numéro \argu{position} est négatif, alors la chaîne est parcourue de droite à gauche en partant du dernier. Le dernier élément a l'index $-1$, l'avant-dernier a l'index $-2$ $\cdots$ etc.
+  
+ \item \exem si une variable $L$ contient la chaîne \co{"toto"}, alors après la commande \co{StrInsert(L,"titi",2)}, la variable $L$ contiendra la chaîne \res{"ttitioto"}. Après la commande \co{StrInsert(L,"titi",-1)}, la variable $L$ contiendra la chaîne \res{"tottitio"}.
+\end{itemize}
+
+
+\section{StrLength ou StrLen}\label{cmdStrLength}
+
+\begin{itemize}
+ \item \util \textbf[StrLength()]{StrLength( <chaîne> ) ou StrLen( <chaîne> )}.
+ \item \desc renvoie le nombre de caractères de la chaîne.
+\end{itemize}
+
+
+\section{StrPos}\label{cmdStrPos}
+
+\begin{itemize}
+ \item \util \textbf[StrPos()]{StrPos( <motif>, <chaîne> )}.
+ \item \desc renvoie la position (entier) du premier motif dans la chaîne.
+\end{itemize}
+
+\section{StrReplace}\label{cmdStrReplace}
+
+\begin{itemize}
+ \item \util \textbf[StrReplace()]{StrReplace( <chaîne>, <motif à remplacer>, <motif de remplacement )}.
+ \item \desc renvoie la chaîne résultant du remplacement.
+\end{itemize}
+
+\section{Subs}\label{cmdSubs}
+
+\begin{itemize}
+    \item \util \textbf[Subs()]{Subs( <variable>, <indice départ>, <nombre>, <remplacement> )}.
+    \item \desc cette fonction remplace dans \argu{variable} \argu{nombre} éléments à partir de la position \argu{indice départ} par \argu{remplacement}, la \argu{variable} peut être une liste ou une chaîne de caractères, celle-ci est modifiée et la fonction renvoie \Nil. L'argument \argu{nombre} est facultatif et vaut 1 par défaut.
+    
+    L'indice de départ peut être négatif (-1 représentant l'indice du dernier élément), dans ce cas le parcours se fera de la droite vers la gauche.
+    
+    Si l'argument \argu{remplacement} est la constante \Nil alors cela revient à supprimer \argu{nombre} éléments à partir de l'indice de départ.
+    
+    \item \exem si la variable \textsl{L} contient la liste \res{[1,0,-1,2,4,5]} alors après l'exécution de \co{Subs(L,2,3,[2,3]}, la variable contiendra la liste \res{[1,2,3,4,5]}, après l'exécution de \co{Subs(L,-3,3,[2,3]}, la variable contiendrait également la liste \res{[1,2,3,4,5]}. C'est le même principe avec les chaînes de caractères.
+\end{itemize}
+
+
+\section{TeX2FlatPs}\label{cmdTeX2FlatPs}
+
+\begin{itemize}
+ \item \util \textbf[TeX2FlatPs()]{TeX2FlatPs( <"formule"> [, dollar(0/1)] )}.
+ \item \desc cette commande renvoie une \argu{formule} \TeX{} sous forme d'une liste de chemins, le résultat doit être dessiné avec la macro \Helpref{{drawFlatPs}}{macdrawFlatPs}. La \argu{formule} est écrite dans un fichier appelé \textit{formula.tex}. Ce fichier est appelé par le fichier \textit{TeX2FlatPs.tex} qui se trouve dans le dossier de travail de TeXgraph, pour être compilé par \TeX{}. Si l'option \argu{dollar} vaut $1$ alors la formule sera délimitée par \verb|\]| et \verb|\]|, sinon elle est écrite telle quelle. Pour plus de renseignements sur la façon dont sont récupérés ces chemins, voir la commande \Helpref{{ReadFlatPs}}{cmdReadFlatPs}.
+\end{itemize}
+
+
+\section{Timer}\label{cmdTimer}
+
+\begin{itemize}
+ \item \util \textbf[Timer()]{Timer( <milli-secondes> )}.
+ \item \desc règle l'intervalle de temps pour le timer, celui exécute régulièrement une certaine macro (que l'on peut définir avec la commande TimerMac). Pour stopper le timer il suffit de régler l'intervalle de temps à 0.
+\end{itemize}
+
+\section{TimerMac}\label{cmdTimerMac}
+
+\begin{itemize}
+ \item \util \textbf[TimerMac()]{TimerMac( <corps de la macro à exécuter> )}.
+ \item \desc cette commande permet de créer une macro qui sera attachée au timer. L'argument est interprété comme une chaîne de caractères et doit correspondre au corps de la macro (celle-ci sera appélée TimerMac). Pour des raisons de performances, il est préférable d'éviter trop d'appels à d'autres macros dans celle-ci. Cette fonction renvoie la valeur 1 si la macro est correctement définie, 0 en cas d'erreur. Attention, l'exécution de TimerMac ne déclenche pas le timer! Il faut utiliser la commande Timer pour cela. 
+ \item \exem soit $A$ une variable globale (un point), soit \textit{dotA} un élément graphique qui dessine le point, voilà une commande qui déplace $A$: 
+
+\centerline{
+\co{[TimerMac("[Inc(A,0.1), if Re(A)>5 then Timer(0) else ReCalc(dotA) fi]"), A:=-5, Timer(10)]}}
+\end{itemize}
+
+\section{UpperCase}\label{cmdUpperCase}
+
+\begin{itemize}
+ \item \util \textbf[UpperCase()]{UpperCase( <chaîne> )}.
+ \item \desc renvoie la \argu{chaîne} en majuscules.
+\end{itemize}
+
+
+\section{VisibleGraph}\label{cmdVisibleGraph}
+
+\begin{itemize}
+ \item \util \Mytextbf{VisibleGraph( <0/1> )} ou \textbf[VisibleGraph()]{VisibleGraph()}.
+ \item \desc cette fonction permet d'activer ou désactiver la zone de dessin dans l'interface graphique. Lorsque celle-ci est désactivée, son contenu ne change plus car il n'y a plus de mise à jour de la zone. Désactiver l'affichage graphique peut permettre dans certains cas un gain de temps pour enregistrer une animation par exemple.
+
+ Lorsque l'argument est vide, la fonction renvoie simplement l'état actuel de l'affichage graphique (0 ou 1). Sinon, elle renvoie \Nil.
+\end{itemize}
+
+
+\section{WriteFile}\label{cmdWriteFile}
+
+\begin{itemize}
+ \item \util \textbf[WriteFile()]{WriteFile( <argument> )} ou \Mytextbf{WriteFile( <nom fichier>, <argument>)}. 
+ \item \desc dans la première version, cette fonction permet d'écrire soit dans le dernier fichier texte ouvert par la commande \Helpref{OpenFile}{cmdOpenFile}, soit dans le fichier d'exportation si l'exécution de cette commande a lieu pendant une exportation par l'intermédiaire des macros \Helpref{Bsave}{macBsave} et/ou \Helpref{Esave}{macEsave}. Dans la deuxième version, l'écriture se fait dans le fichier dont le nom est spécifié, à condition que celui-ci soit effectivement ouvert. Les deux arguments sont évalués alphanumériquement. 
+  \item \exem voici ce que pourrait être la macro \textsl{Bsave} pour modifier la taille des flèches en pstricks:
+\end{itemize}
+
+\begin{verbatim}
+ if ExportMode=pst then WriteFile("\psset{arrowscale=3}") fi
+\end{verbatim}

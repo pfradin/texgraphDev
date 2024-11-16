@@ -1,0 +1,19 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Path}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegNumeric}5}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol},}{\color{TegNumeric}6}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegMacPredef}Axes}{\color{TegSymbol}(}{\color{TegNumeric}2}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegNumeric}1}{\color{TegSymbol}+}\textbf{\color{TegConstant}i}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Eofill}{\color{TegSymbol}:=}{\color{TegNumeric}1}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}FillStyle}{\color{TegSymbol}:=}\textbf{\color{TegConstant}full}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}FillOpacity}{\color{TegSymbol}:=}{\color{TegNumeric}0.85}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}FillColor}{\color{TegSymbol}:=}\ \textbf{\color{TegConstant}blue}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}8}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Path}{\color{TegSymbol}(}{\color{TegSymbol}[}{\color{TegSymbol}-}{\color{TegNumeric}4}{\color{TegSymbol},}\textbf{\color{TegConstant}i}{\color{TegSymbol},}\textbf{\color{TegConstant}circle}{\color{TegSymbol},}\par
+\ \ \ {\color{TegSymbol}-}{\color{TegNumeric}3}{\color{TegSymbol}+}{\color{TegNumeric}2}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}\textbf{\color{TegConstant}move}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}3}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}2}{\color{TegSymbol},}\textbf{\color{TegConstant}line}{\color{TegSymbol},}\par
+\ \ \ {\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}2}{\color{TegSymbol},}{\color{TegNumeric}2}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}1}{\color{TegSymbol},}\textbf{\color{TegConstant}arc}{\color{TegSymbol},}\par
+\ \ \ {\color{TegNumeric}3}{\color{TegSymbol},}{\color{TegNumeric}3}{\color{TegSymbol}+}{\color{TegNumeric}3}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegNumeric}0.5}{\color{TegSymbol},}\textbf{\color{TegConstant}linearc}{\color{TegSymbol},}\par
+\ \ \ {\color{TegNumeric}1}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}1}{\color{TegSymbol}+}{\color{TegNumeric}5}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}3}{\color{TegSymbol}+}{\color{TegNumeric}2}{\color{TegSymbol}*}\textbf{\color{TegConstant}i}{\color{TegSymbol},}\textbf{\color{TegConstant}bezier}{\color{TegSymbol},}\par
+\ \ \ \textbf{\color{TegConstant}closepath}{\color{TegSymbol},}\par
+\ \ \ {\color{TegSymbol}]}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

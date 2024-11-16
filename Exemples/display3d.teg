@@ -1,0 +1,108 @@
+TeXgraph#
+{version 1.995}
+Cmd
+	Window(-8+8*i, 8-8*i, 0.8+0.8*i); 
+	Margin(0, 0, 0, 0);
+	Border(0);
+	[OriginalCoord(1), IdMatrix()];
+	[theta:=1.3177, phi:=1.2065, IdMatrix3D(), ModelView(central), DistCam(20)];
+	[GrayScale(0), ComptGraph:=4];
+
+Mac
+    scene3 = [view3D(-5,5,-5,5,-6,6),
+	 T:=Cone(M(0,0,-5),10*vecK,3.05*10/7,40),
+	 T':=ClipFacet(T,[M(0,0,-5),M(0,-5,1)]),
+	 R:=21/sqrt(58), $r:=0.35, a:=2, b:=(a+5)*r-5,
+	 c:=(b+r*a)/(1+r), z:=a+sqr(R)/(c-a), M:=M(-sqrt(sqr(R)-sqr(z-a)),0,z),
+	 N:=M-M(0,0,a), {vecteur normal au plan tangent}
+	 plan:=[M(0,0,c),N],
+	 Z:=Merge3d(Intersection( plan, T, Sect)),
+	
+	 Build3D( bdPlan(plan, [color:=chocolate, opacity:=0.5]),
+	          bdLine(Z,[color:=red, width:=12]),
+	          bdFacet(T', [color:=darkseagreen, smooth:=1]),
+	          bdSphere( M(0,0,a), R, [color:=steelblue, backculling:=1, smooth:=1]),
+	          bdSphere( M(0,0,b), r*R, [color:=orange, backculling:=1, smooth:=1]),
+	          bdAxes([0,0],[color:=firebrick, width:=8, arrows:=1])
+	         ),
+	ReCalc(Scene),
+	{N'oubliez de cliquer le bouton "scene 3" pour prendre les modifications en compte}
+	];
+    scene1 = [
+	view3D(-5,5,-5,5,-5,5),
+	{Définition des deux plans et de la droite d'intersection}
+	P1:=planEqn([1,1,1,2]), P2:=[Origin, vecK-vecJ], D:= interPP(P1,P2),
+	{construction de la scène}
+	 Build3D( bdPlan(P1, [color:=red, scale:=0.75,opacity:=0.7 ]),
+	          bdPlan(P2, [color:=blue, scale:=0.75,opacity:=0.7]),
+	          bdDroite(D, [color:=darkgreen, width:=12]),
+	          bdAxes([0,0],[color:=brown, arrows:=1])
+	         ),
+	ReCalc(Scene),
+	{N'oubliez de cliquer le bouton "scene 1" pour prendre les modifications en compte}
+	];
+    scene2 = [
+	view3D(-5,5,-5,5,-5,5),
+	C1:= Cylindre(M(0,-4,0),8*vecJ,3,25),
+	C2:= Cylindre(M(-5,0,0),10*vecI,2,25),
+	S:=Clip3D(C1,C2,1), S':=Clip3D(C2,C1,1),
+	
+	Build3D(
+	        bdFacet(S', [color:=Rgb(0.74,0.73,1),contrast:=0.5]),
+	        bdFacet(S, [color:=darkseagreen,contrast:=0.5]),
+	        bdLine(grille3d(z,Zinf,1),[color:=CplColor(powderblue),width:=8]),
+	        bdAxes([0,0],[color:=red, width:=8,arrows:=1]),
+	       ),
+	ReCalc(Scene),
+	{N'oubliez de cliquer le bouton "scene 2" pour prendre les modifications en compte}
+	];
+    Init = [ $x:=RefPoint,
+	Bouton(x, "scene 1", "scene1()"), Inc(x,DeltaB),
+	Bouton(x, "scene 2", "scene2()"), Inc(x,DeltaB),
+	Bouton(x, "scene 3", "scene3()"), Inc(x,DeltaB),
+	Bouton(x, "scene 4", "scene4()"), Inc(x,DeltaB),
+	scene1()
+	];
+    scene4 = [
+	view3D(-5,5,-5,5,-5,5),
+	A:=M(1,1,1), {point de la surface}
+	N:=normalize(M(2,2,-1)),{vecteur normal à la surface au point A}
+	U:=M(1,1,4), {vecteur du plan tangent}
+	P:=[A,N],    {plan tangent}
+	
+	Build3D(
+	        bdPlan(P, [scale:=0.5, color:=Rgb(0.74,1,0.73), opacity:=0.6]),
+	        bdAngleD(A+N, A, A+U, 0.25, [color:=blue]),{tube a 4 faces de rayon 0.01}
+	        bdSurf([-u+i*v,u^2+v^2-1],[color:=steelblue, grid:=[35,35], smooth:=1, clip:=1,
+	                                   clipwin:= [M(-5,-5,-5),M(5,5,3)]]),
+	
+	        bdLabel(A+0.01*N,"A",[color:=red, showdot:=1,labelpos:=[0.35,i-1],
+	                              dotstyle:=cross, dir:=[U,Prodvec(U,N)]]),
+	         for k from 1 to 4 do
+	            bdLabel([i*k,0], k, [color:=black,dotcolor:=red,dotstyle:=line,
+	                                 dir:=vecK, showdot:=1,
+	                                 labelpos:=[0.5,-i]]),sep3D
+	        od,
+	        bdAxes([0,0],[color:=red, width:=8, arrows:=1]),
+	        bdLine([A,A+N], [color:=blue, arrows:=1]),
+	        bdLine(grille3d(z,Zinf,1), [color:=darkgray])
+	      ),
+	ReCalc(Scene),
+	{N'oubliez de cliquer le bouton "scene 4" pour prendre les modifications en compte}
+	];
+    text3d1 = "A";
+    text3d2 = "1";
+    text3d3 = "2";
+    text3d4 = "3";
+    text3d5 = "4";
+    text3d6 = "$x$";
+    text3d7 = "$y$";
+    text3d8 = "$z$";
+    xlegend = "$x$";
+    ylegend = "$y$";
+    zlegend = "$z$";
+
+Cmd	[LineStyle:=-1,FillStyle:=1,FillColor:=16774107,tMin:=-6.6,tMax:=6.6,DotScale:=1+i];
+Graph fond = background(full,beige);
+Cmd	[LineStyle:=0,FillStyle:=0,FillColor:=16777215];
+Graph Scene = Display3D();

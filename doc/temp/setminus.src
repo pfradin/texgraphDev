@@ -1,0 +1,14 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegMacPredef}setminus}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}A}{\color{TegSymbol}:=}\textbf{\color{TegMacPredef}set}{\color{TegSymbol}(}"{\color{TegString} A"}{\color{TegSymbol},}\ {\color{TegNumeric}0}{\color{TegSymbol},}\ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}rotation}{\color{TegSymbol}:=}{\color{TegNumeric}30}{\color{TegSymbol}]}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}B}{\color{TegSymbol}:=}\textbf{\color{TegMacPredef}set}{\color{TegSymbol}(}"{\color{TegString} B"}{\color{TegSymbol},}\ {\color{TegNumeric}0}{\color{TegSymbol},}\ {\color{TegSymbol}[}\textbf{\color{TegVarPredef}rotation}{\color{TegSymbol}:=}{\color{TegSymbol}-}{\color{TegNumeric}30}{\color{TegSymbol}]}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\textit{\color{TegIdentifier}C}{\color{TegSymbol}:=}\ \textbf{\color{TegMacPredef}setminus}{\color{TegSymbol}(}\textit{\color{TegIdentifier}A}{\color{TegSymbol},}\textit{\color{TegIdentifier}B}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegKeyWord}Color}{\color{TegSymbol}:=}\textbf{\color{TegConstant}red}{\color{TegSymbol},}\textbf{\color{TegKeyWord}FillStyle}{\color{TegSymbol}:=}\textbf{\color{TegConstant}full}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}FillOpacity}{\color{TegSymbol}:=}{\color{TegNumeric}0.5}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}FillColor}{\color{TegSymbol}:=}\textbf{\color{TegConstant}pink}{\color{TegSymbol},}\par
+\textbf{\color{TegKeyWord}Ligne}{\color{TegSymbol}(}\textit{\color{TegIdentifier}C}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

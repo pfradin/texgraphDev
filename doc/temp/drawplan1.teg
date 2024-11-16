@@ -1,0 +1,20 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5),Marges(0,0,0,0), size(8), DotStyle:=cross,
+A:=0, M4:=-4+3*i, M1:=-2-3*i, M2:=4-3*i, M3:=2+3*i,
+LabelDot(A,"$A$","NE",1), Arrows:=1, Ligne([A,A+2*i],0),
+Width:=4, Arrows:=0, angleD(A+i,A,A-1, 0.25),
+LabelStyle:=scriptsize, LabelDot(A+i,"$\vec{u}$","O"),
+Width:=8, Color:=red, Arrows:=1, Ligne([M1,M2],0),
+Width:=4,Color:=black, LabelStyle:=left,
+LabelDot((M1+M2)/2,"$\dfrac{L_1\cdot\vec{v}}{\|\vec{v}\|}$","S"),
+Width:=8,Color:=red, Ligne([M2,M3],0),
+Width:=4,Color:=black,LabelStyle:=top,
+LabelDot((M2+M3)/2,"$\dfrac{L2\cdot\vec{w}}{\|\vec{w}\|}$","E"),
+Arrows:=0,
+LabelDot(M4,"$M4$","NO",1),
+LabelDot(M1,"$M1$","SO",1),
+LabelDot(M2,"$M2$","SE",1),
+LabelDot(M3,"$M3$","NE",1),
+Ligne([M3,M4,M1],0)
+];

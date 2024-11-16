@@ -1,0 +1,13 @@
+\begin{\TegSrcFontSize}%
+\setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}begin}{\color{TegComment}\{texgraph\}}{\color{TegSymbol}[}\textit{\color{TegIdentifier}name}{\color{TegSymbol}=}\textbf{\color{TegKeyWord}Aretes}{\color{TegSymbol},}\ \textit{\color{TegIdentifier}file}{\color{TegSymbol}]}\par
+\textbf{\color{TegKeyWord}Graph}\ \textbf{\color{TegGraphElem}image}\ {\color{TegSymbol}=}\ {\color{TegSymbol}[}\par
+\ \textbf{\color{TegMacPredef}view}{\color{TegSymbol}(}{\color{TegSymbol}-}{\color{TegNumeric}2}{\color{TegSymbol},}{\color{TegNumeric}3}{\color{TegSymbol},}{\color{TegSymbol}-}{\color{TegNumeric}2}{\color{TegSymbol},}{\color{TegNumeric}4.5}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegKeyWord}Marges}{\color{TegSymbol}(}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\textbf{\color{TegMacPredef}size}{\color{TegSymbol}(}{\color{TegNumeric}7.5}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textit{\color{TegIdentifier}plan}{\color{TegSymbol}:=}{\color{TegSymbol}[}\textbf{\color{TegKeyWord}M}{\color{TegSymbol}(}{\color{TegNumeric}1.5}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol},}{\color{TegNumeric}0}{\color{TegSymbol})}{\color{TegSymbol},}\ {\color{TegSymbol}-}\textbf{\color{TegVarPredef}vecI}{\color{TegSymbol}]}{\color{TegSymbol},}\par
+\ \textit{\color{TegIdentifier}S}{\color{TegSymbol}:=}\ \textbf{\color{TegMacPredef}Section}{\color{TegSymbol}(}\textit{\color{TegIdentifier}plan}{\color{TegSymbol},}\par
+\ \ \ \ \textbf{\color{TegMacPredef}Tetra}{\color{TegSymbol}(}\textbf{\color{TegVarPredef}Origin}{\color{TegSymbol},}{\color{TegNumeric}3}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}vecI}{\color{TegSymbol},}{\color{TegNumeric}3}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}vecJ}{\color{TegSymbol},}{\color{TegNumeric}4}{\color{TegSymbol}*}\textbf{\color{TegVarPredef}vecK}{\color{TegSymbol})}{\color{TegSymbol})}{\color{TegSymbol},}\par
+\ \textit{\color{TegIdentifier}A}{\color{TegSymbol}:=}\textbf{\color{TegKeyWord}Aretes}{\color{TegSymbol}(}\textit{\color{TegIdentifier}S}{\color{TegSymbol})}{\color{TegSymbol},}\ \textbf{\color{TegKeyWord}Width}{\color{TegSymbol}:=}{\color{TegNumeric}12}{\color{TegSymbol},}\ \textbf{\color{TegMacPredef}DrawAretes}{\color{TegSymbol}(}\textit{\color{TegIdentifier}A}{\color{TegSymbol})}\par
+{\color{TegSymbol}]}{\color{TegSymbol};}\par
+{\color{TegSymbol}$\backslash$}\textit{\color{TegIdentifier}end}{\color{TegComment}\{texgraph\}}\par
+\end{\TegSrcFontSize}%

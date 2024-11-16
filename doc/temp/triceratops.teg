@@ -1,0 +1,9 @@
+TeXgraph#
+Graph image = [
+ view(-9,10,-7,7), Marges(0,0,0,0),
+ size(7.5), viewDir(37,85),
+ SetMatrix3D([Origin, vecJ, vecK, vecI]),
+ background(full, lightblue),
+ ReadObj("obj/triceratops.obj", stock1, stock2),
+ draw("SmoothFacet", stock1, [color:=gray])
+];

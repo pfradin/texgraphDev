@@ -1,0 +1,145 @@
+TeXgraph#
+{version 2.0}
+{update.mac: fichier pour la mise à jour automatique des modèles}
+Cmd Fenetre(-5+5*i,5-5*i,1+i);
+    Marges(0.5, 0.5, 0.5, 0.5);
+    Border(0);
+    [OriginalCoord(1), IdMatrix()];
+    [GrayScale(0), ComptGraph:=0];  
+    
+Var
+    serverAddress = "https://pfradin.github.io/texgraph/modeles/";
+    nbModels = 0;
+    selection = 0;
+    l1 = 7; //largeur des 3 colonnes en cm
+    l2 = 2;
+    l3 = 2;
+
+Mac
+    LoadDatabase = {LoadDatabase(): charge la base de données}
+    [Exec(WebLoad,serverAddress+"database.txt", TmpPath,1),
+    $nom:=Concat(TmpPath,"database.txt"),
+    if FileExists(nom) then ReadData(nom)
+    else Message("LoadDatabase: échec") fi
+    ];
+
+    Update = {UpDate()}
+    [Print("ATTENTION: si vous avez des fichiers *.mac ou *.mod en vrac dans votre dossier TeXgraphMac, ",
+              "il y a des risques de conflits avec les modèles qui vont être chargés, en cas de noms identiques. ",
+          "Le dossier TeXgraphMac ne devrait contenir que des sous-dossiers, un par modèle.",LF,
+          "Cliquer le bouton <<Fermer>> et patienter..."),
+    $message:="",
+    for $k from 1 to nbModels do
+     if selection[k]=1 then $Z:=stock1[4*k-3], 
+     $nom:=Concat(Z,".zip"),
+     if Windows then
+        Exec("cmd /C del ",nom, UserMacPath,1), //ancien zip?
+        Exec("cmd /C del ",[Z,".mac"], UserMacPath,1),
+        Exec("cmd /C del ",[Z,".mod"], UserMacPath,1),
+        Exec("cmd /C del ",[Z,".txt"], UserMacPath,1),
+        Exec("cmd /C del ",[Z,".pdf"], UserMacPath,1),
+        Exec(WebLoad,serverAddress+nom, UserMacPath, 1),
+        if FileExists([UserMacPath,nom]) then
+           Exec("unzip -o ",nom, UserMacPath,1),
+           Exec("cmd /C del ",nom, UserMacPath,1),
+           message:=Concat(message,LF,Z,": Ok"), Subs(selection,k,0)
+        else message:=Concat(message,LF,Z,": échec") fi
+     else
+        Exec("bash -c ""rm -f ",[nom,""""], UserMacPath,1), //ancien zip?
+        Exec("bash -c ""rm -f ",[Z,".mac"""], UserMacPath,1),
+        Exec("bash -c ""rm -f ",[Z,".mod"""], UserMacPath,1),
+        Exec("bash -c ""rm -f ",[Z,".txt"""], UserMacPath,1),
+        Exec("bash -c ""rm -f ",[Z,".pdf"""], UserMacPath,1),
+        Exec(WebLoad,serverAddress+nom, UserMacPath, 1),
+        if FileExists([UserMacPath,nom]) then
+           Exec("unzip -o ",nom, UserMacPath,1),
+           Exec("bash -c ""rm -f ",[nom,""""], UserMacPath,1),
+           message:=Concat(message,LF,Z,": Ok"), Subs(selection,k,0)
+        else message:=Concat(message,LF,Z,": échec") fi
+     fi
+     fi
+    od,
+    stock2:=LoadLocalDatabase(),
+    Print("->      Mises à jour:",LF,message), ReCalc(chargement)
+    ];
+
+    drawGrille = [
+    view(0,l1+l2+l3+0.01,0.01,-nbModels-1),
+    for x in [0,l1,l1+l2,l1+l2+l3] do Droite(x,x-i) od,
+    for k from 0 to -nbModels-1 step -1 do Droite(i*k,i*k+1) od,
+    depy:=-0.5*i, pasy:=-i,
+    LabelSize:=large,
+    Label(depy+l1/2,"Modèles (serveur)",
+          depy+l1+l2/2,"Local",
+          depy+l1+l2+l3/2,"Selec."),
+    LabelSize:=normalsize, $k:=0,
+    for L in stock1 by 4 do
+        Inc(depy,pasy), nom:=L[1], ver:=L[2], Inc(k,1),
+        Label(depy+l1/2,[nom," (ver: ",ver,", TeXgraph ",L[3], ")"]),
+        p:=Pos(nom,stock2),
+        if p<>Nil then
+           verloc:=stock2[p+1],
+           if Eval(verloc)<Eval(ver) then Color:=red fi,
+           Label(depy+l1+l2/2,["ver: ",verloc])
+        else  Color:=red, Label(depy+l1+l2/2,"No")
+        fi,
+        Color:=black
+    od,
+    depy:=-0.5*i,
+    for z  in selection do
+        Inc(depy,pasy),
+        if z=1 then Label(depy+l1+l2+l3/2,"X") fi
+    od
+    ];
+
+    Init = 
+    if UserMacPath<>"" then
+        NewGraph("chargement", "[LabelSize:=normalsize,Label((Xmax+Xmin+i*Ymax+i*Ymin)/2,""Bouton <<Connexion>> pour commencer, et patienter..."")]"),
+        ReDraw(),
+        Bouton(RefPoint,"Connexion","Initialisation()","Charge la base de données du serveur.")
+    else Print("La variable d'environnement TeXgraphMac ne semble pas existé.",LF,
+              "Il vous faut créer celle-ci pour utiliser le modèle <<update>>.")
+    fi;
+
+
+    Initialisation = 
+    [
+    DelButton("Initialiser"),
+    stock1:=LoadDatabase(),
+    stock2:=LoadLocalDatabase(),
+    Bouton(RefPoint,"Mettre à jour","if sum(selection)=0 then Message(""Aucune sélection n'a été faite!"") else Update() fi",
+         "Charge les modèles sélectionnés."),
+    nbModels:=Nops(stock1)/4,
+    selection:= for k from 1 to nbModels do 0 od,
+    NewGraph("chargement", "drawGrille()"), ReDraw(),
+    Print("Cliquer dans la colonne Modèles pour avoir les descriptions.",LF,LF,
+             "Cliquer dans la colonne Selec. pour sélectionner/désélectionner.",LF,LF,
+         "Puis cliquer le bouton <<Mise à jour>> et patienter...")
+    ];
+
+    LoadLocalDatabase = {LoadLocalDatabase(): charge la liste des modèles actuellement installés dans stock2}
+    [UpdateLocalDatabase(),
+    $nom:=Concat(UserMacPath,"LocalDatabase.txt"),
+    if FileExists(nom) then ReadData(nom)
+    else Message("LoadLocalDatabase: échec") fi
+    ];
+
+    ClicG = [
+    $x:=Re(%1), $y:=-Ent(Im(%1))-1,
+    if x<l1 then x:=1
+    elif x<l1+l2 then x:=2
+    else x:=3
+    fi,
+    if y=0 then
+        if sum(selection)=nbModels then selection:=for $k from 1 to nbModels do 0 od
+        else selection:=for $k from 1 to nbModels do 1 od
+        fi, ReCalc(chargement)
+    elif (0<y) And (y<=nbModels) then
+      if x=1 then
+         Print("->         Description du modèle ",stock1[4*(y-1)+1],":",LF,LF,stock1[4*y])
+      elif x=3 then
+         $s:=selection[y],
+         Subs(selection,y,1-s), ReCalc(chargement)
+      fi
+    fi
+    ];

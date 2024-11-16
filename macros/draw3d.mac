@@ -1,0 +1,2596 @@
+TeXgraph#
+{ TeXgraph 2.0 }
+Var
+    HideStyle = dotted;
+    HideWidth = Nil;
+    HideColor = Nil;
+    above = 0; {pour ajouter les éléments par dessus la scène}
+    hiddenLines = 0; {valeur par défaut de l'option hidden pour les lignes}
+    //TeXifyLabels = 0; {valeur par défaut de l'option TeXify pour les labels}
+    defaultMatrix = Nil; {valeur par defaut de l'option matrix}
+{bdFacet}
+    contrast = 1;
+    smooth = 0;
+    backculling = 0;
+    opacity = 1;
+    twoside = 1;
+    clip = 0;
+    //clipwin = [M(Xinf,Yinf,Zinf), M(Xsup,Ysup,Zsup)];
+    matrix = Nil;
+    addsep = Nil; //ajouter une facette séparatrice
+    triangular = 0; //trianguler ou non les facettes
+{bdLine}
+    arrows = 0;
+    arrowscale = 1;
+    linestyle = 0;
+    tube = 0;
+    //radius = 0.01;
+    radiusscale = 1;
+    nbfacet = 4;
+    hidden = 0; {pour ajouter automatiquement par dessus la scène, la ligne en pointillés}
+    //close = 0;
+{bdCurve}
+    {t = [-5,5];}
+    nbdot = 25;
+{bdSurf}
+    u = [-5,5];
+    v = [-5,5];
+    //grid = [25,25];
+{bdDot}
+    disc = 0;
+    cube = 3;
+    dotstyle = 0;
+    dotscale = 1;
+    dir = Nil;
+{bdLabel}
+    cleanLabel = 0; {pour effacer les labels à chaque recalcul}
+    //dotcolor = 0;
+    labelsize = small;
+    labelstyle = 0;
+    //labeldir = Nil;
+    label3d = 0;
+    //showdot = 0;
+    TeXify = 0;
+{bdArc}
+    radscale = 1.25;
+    normal = Nil;
+{bdPlan bdPlanEqn bdCone bdCylinder bdSphere}
+    border = 0;
+    //bordercolor = black;
+
+{options de BoxAxes3D}
+    xaxe = 1;
+    yaxe = 1;
+    zaxe = 1;
+    {drawbox = 0;}
+    xyticks = 0.2;         //longueur des graduations
+    xylabelsep = 0.1;     //distance labels-graduations
+    xylabelpos = bottom+left; //position des labels
+    xlabelsep = 0.5;
+    xlabelstyle = 0;
+    xlegendsep = 1;
+    xstep = 1;
+    xlimits = [Xinf,Xsup];
+    xgradlimits = [Xinf,Xsup];
+    ylabelsep = 0.5;
+    ylabelstyle = 0;
+    ylegendsep = 1;
+    ystep = 1;
+    ylimits = [Yinf,Ysup];
+    ygradlimits = [Yinf,Ysup];
+    zlabelsep = 0.5;
+    zlabelstyle = 0;
+    zlegendsep = 1;
+    zstep = 1;
+    zlimits = [Zinf,Zsup];
+    zgradlimits = [Zinf,Zsup];
+    {nbdeci = 2;}
+    {grid = 0;}
+    gridwidth = 1;
+    gridcolor = black;
+    {labels = 1}
+{pour les axes individuels Axex3D, Axey3D, Axez3D}
+    tickdir = vecK;
+    tickpos = 0.5;
+    axeOrigin = Origin;
+    legendpos = 0.5;
+    originlabel = 1;
+
+Mac
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{construction d'objets 3D       }
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    AretesNum = { AretesNum( polyedre, [liste de numéros] ): renvoie les aretes du polyèdre dont les numéros sont dans la liste}
+    FacesNum(Aretes(%1), %2);
+
+
+    Chanfrein = {Chanfrein( poyledre convexe, épaisseur, epointer(0/1): renvoie le polyèdre chanfreiné, pour chaque arête, le solide est
+sectionné par un plan parallèle au plan bissecteur extérieur aux deux faces adjacentes situé à une distance égale à épaisseur vers l'intérieur
+du solide}
+    [ $P:=%1, $epointer:=if %3=Nil then 1 else %3 fi,
+      $mil:=Nil, $pos:=0, $sortie:=Nil,
+      for $face in %1 By jump do
+       $A:=face[1,2], $B:=face[3,2], $C:=face[5,2], $N1:=normalize(Prodvec(C-A,B-A)),
+       B:=A,
+       for $Z in [face[3,0],A] By 2 do
+           A:=B, B:=Z, C:=(A+B)/2, $d:=Inserer3D(mil,C), $p:=4*d-1,
+           if d>pos then Insert(sortie, [C,N1]), Inc(pos,1)
+           else N2:=sortie[p,2], Del(sortie,p,2), Inc(N2,N1),
+                Insert(sortie,normalize(N2),p)
+           fi
+       od
+     od, {sortie contient la liste des plans de section: point3D+vecteur normal}
+     if epointer then
+        $S:= {liste des sommets}
+       for $face in %1 By jump do  {on tronque chaque facette suivant chaque arête}
+           $B:=face[1,2], $Q:=face,
+           for $Z in [face[3,0],B] By 2 do
+               A:=B, B:=Z, C:=(A+B)/2, $d:=Inserer3D(mil,C), $p:=4*d-1,
+               N2:=sortie[p,2], Q:=ClipFacet(Q,[C+%2*N2,N2]),
+           od,
+           Q
+       od,
+      Cvx3d(S) {enveloppe convexe des sommets obtenus}
+      else {sommets non épointés}
+        for $plan in sortie By 4 do
+            $A:=plan[1,2], $N:=plan[3,2],
+            P:=Section([A+%2*N,N], P) {section du polyèdre par les plans de section}
+        od,
+        P
+     fi
+    ];
+
+    Cone = {Cone(sommet, vecteur de l'axe, rayon [, nombre faces, creux:0/1] )}
+    [ $R:=%3, $vect:=normalize(%2), $centre:= %1+%2,
+    $nb:=if %4=Nil then 36 else %4+1 fi, $pas:= 2*pi/(nb-1), $creux:=if %5=Nil then 1 else %5 fi,
+     S:= {liste des sommmets}
+     [%1, $u:=0,
+     $v1:=Prodvec(vecK,vect),
+     if Norm(v1)=0 then $v1:=R*vecI else v1:=R*v1/Norm(v1)fi,
+     $v2:=Prodvec(vect,v1),
+     for $k1 from 1 to nb-1 do
+      centre+cos(u)*v1+sin(u)*v2, Inc(u,pas)
+      od],
+     $F:= {liste des faces}
+    [if creux=0 then
+        for k2 from  2 to nb do k2 od, jump
+     fi,
+     for k2 from 2 to nb-1 do k2+1,k2,1,jump od,
+     2,nb,1,jump],
+    MakePoly(S,F)
+    ];
+
+
+   curve2Cone = { curve2Cone( f(t), tMin, tMax, origine <, rapport, sortie base>): cone de base la courbe gauche parametree par f(t), le parametre rapport(=0 par defaut) permet de construire l'autre partie du cône par homothétie, le dernier parametre est une variable qui contiendra la liste des points du ou des bords}
+    [$tpas:=(%3-%2)/(NbPoints-1), $u:=%2,
+    {S=liste des sommets}
+    $S:=for k from 1 to NbPoints do Assign(%1,t,u), $M:=%1, M, Insert($bord,M), Inc(u,tpas) od,
+    if %5<>Nil then
+       $r:=%5,
+       Insert(S, [%4,hom3d(S,%4,r)]), Insert(bord, [jump,hom3d(bord,%4,r)]),
+    else r:=0, Insert(S,%4)
+    fi,
+    {F=liste des faces}
+    F:= [for k from 1 to NbPoints-1 do k, k+1, NbPoints+1,jump od,
+         if r<>0 then
+            for k from NbPoints+2 to 2*NbPoints do k+1, k, NbPoints+1,jump od
+         fi],
+    MakePoly(S,F), %6:=bord
+    ];
+
+    curve2Cylinder = { curve2Cylinder( f(t), tMin, tMax, vecteur axe <,sortie base>): cylindre de base la courbe gauche parametree par f(t). Le dernier parametre est une variable qui contiendra la liste des points des bords }
+    [$tpas:=(%3-%2)/(NbPoints-1), $u:=%2,
+    {S=liste des sommets}
+    $S:=for k from 1 to NbPoints do Assign(%1,t,u), $M:=%1, M, Insert($bord,M), Inc(u,tpas) od,
+    Insert(S, shift3d(S,%4)), Insert(bord, [jump,shift3d(bord,%4)]),
+    {F=liste des faces}
+    F:= for k from 1 to NbPoints-1 do k, k+1, k+NbPoints+1, k+NbPoints, jump od,
+    MakePoly(S,F), %5:=bord
+    ];
+
+   curveTube = {CurveTube( f(t), rayon, tMin, tMax [, NbPoints, NbFaces, creux] ): crée un tube autour de la courbe gauche parametree par f(t), renvoie une liste de facettes }
+    [if %5=Nil then $nblignes:=NbPoints else nblignes:=%5 fi,
+     $tmin:=%3, $tmax:=%4, $du:=(%4-%3)/(nblignes-1), $u:=tmin,
+     $L:=for $k from 1 to nblignes do        {points de la courbe}
+                  Assign(%1,t,u), $A:=%1,
+                  if Nops(A)<2 then jump else A fi,
+                  Inc(u,du)
+              od,
+     $A:=L[1,2], $B:=L[-1,2], $ferme:=Norm(A-B)<1E-6, if ferme then Del(L,-1,2) fi,
+     lineTube(L, %2,                              {rayon}
+              if %6=Nil then 4 else %6 fi,        {nombre de facettes}
+          ferme,                              {fermé?}
+                  if %7=Nil then 1 else %7 fi         {creux?} 
+             )
+    ];
+
+{ début convexité}
+    Cvx3dAux = { envConv2d( liste de points 3D coplanaires, vecteur normal): renvoie l'enveloppe convexe
+    plane de la liste de points}
+
+    [$L:=%1, $O:=L[1,2], $O1:=L[3,2], $I:=normalize(O1-O), $J:=normalize(Prodvec(%2,I)),
+     L:=for $A in shift3d(L,-O) by 2 do
+            Prodscal(A,I)+i*Prodscal(A,J)
+        od,
+     for z in Cvx2d(L) do O+Re(z)*I+Im(z)*J od
+    ];
+
+    bordsAjour = { bordAjour( liste des bords, A1,A2, vecteur normal): met à jour le bord [A1,A2] dans la liste,
+    un bord déjà rencontré est éliminé}
+    [$ok:=0,
+    %1:= [for $Z in %1 By jump do
+                $A:=Z[1,2], $B:=Z[3,2],
+                if (Norm(A-%2)<1E-10 And Norm(B-%3)<1E-10)
+                Or (Norm(B-%2)<1E-10 And Norm(A-%3)<1E-10)
+                then ok:=1 {bord déjà vu on ne le reprend pas}
+                else Z,jump
+                fi
+            od, if ok=0 then %2,%3,%4,jump fi]
+    ];
+
+    Cvx3d = { Cvx3d( liste de points 3D )}
+    [$epsilon:=1E-10,
+     $G:=isobar3d(%1), {centre de gravité}
+     $P1:=Copy(%1,1,2), $zmin:=P1[2], {P1 point numéro num1, le plus bas}
+     for $A in %1 by 2 do
+         $z:=A[2], if z<zmin then zmin:=z, P1:=A fi
+     od,
+    {recherche du point P2 le plus proche du plan z=Z(P1), l'arête [P1,P2] est dans l'enveloppe}
+     $cosmin:=1, $P2:=Nil,
+     for A in %1 by 2 do
+         if Norm(A-P1)>epsilon then
+            $x:= Zde(A-P1)/Norm(A-P1),
+            if x<cosmin then cosmin:=x, P2:=A fi
+         fi
+     od,
+    {recherche d'une première facette triangulaire de l'enveloppe}
+     $cosmin:=1, $P3:=Nil,
+     $n1:=normalize(Prodvec(P2-G,P1-G)), $k1:=normalize(Prodvec(n1,P1-P2)),
+     if Prodscal(k1,G-P1)<0 then k1:=-k1 fi,
+     for A in %1 by 2 do
+          $B:=A-P2,
+          if  Norm(Prodvec(B,A-P1))>epsilon then {A ne doit pas être sur (P1P2)}
+              $s:=Prodscal(B,k1),
+              $x:= s/sqrt( sqr(Prodscal(B,n1))+sqr(s)),
+              if  (x<cosmin) then cosmin:=x, P3:=A fi
+          fi
+     od,
+    {recherche de l'enveloppe convexe de tous les points dans le plan de cette première facette}
+     $n1:=normalize(Prodvec(P2-P3,P1-P3)), if Prodscal(n1,G-P1)>0 then n1:=-n1 fi,
+     $facette:= Cvx3dAux( for A in %1 by 2 do
+                               $B:=P2-A,
+                               if abs(Prodscal(B,n1))<epsilon then A fi
+                            od, n1),
+     [facette,jump], {on renvoie la première facette}
+     {on initialise la liste des <bords> avec la première facette:
+      [A1,A2, vecteur normal,jump,...]}
+     $B:=facette[1,2],
+     $bords:= for $Z in [facette[3,0],B] by 2 do $A:=B, B:=Z, A,B,n1,jump od,
+     $Z:=bords[1,6], {premier bord}
+     while Z<>Nil do
+       $P1:=Z[1,2], $P2:=Z[3,2], $n1:=Z[5,2],
+       {recherche d'une facette triangulaire [P1,P2,P3] de l'enveloppe}
+       $cosmin:=1, $P3:=Nil, $k1:=normalize(Prodvec(P1-P2,n1)),
+       for A in %1 by 2 do
+         $B:=A-P2,
+         if (abs(Prodscal(B,n1))>epsilon) then  {A ne doit pas être dans le plan de la facette}
+            $s:=Prodscal(B,k1),
+            $x:= s/sqrt( sqr(Prodscal(B,n1))+sqr(s)),
+            if (x<cosmin) then cosmin:=x, P3:=A fi
+         fi
+       od,
+       {recherche de l'enveloppe convexe de tous les points dans le plan de cette facette}
+       $n2:=normalize(Prodvec(P2-P3,P1-P3)),
+       $facette:= Cvx3dAux( for A in %1 by 2 do
+                               $B:=P2-A,
+                               if abs(Prodscal(B,n2))<epsilon then A fi
+                              od, n2),
+
+       facette,jump, {on renvoie cette facette}
+       {mise à jour de la liste des bords}
+       $B:=facette[1,2],
+       for $P in [facette[3,0],B] by 2 do $A:=B, B:=P, bordsAjour(bords,A,B,n2) od,
+       Z:=bords[1,6],
+     od
+    ];
+{ fin convexité}
+
+    Cylindre = {Cylindre( centre1, vecteur de l'axe, rayon, [ nombre faces, creux 0/1 (1 par defaut)] )}
+    [ $R:=%3, $vect:=normalize(%2), $centre2:=%1+%2,
+    $nb:=if %4=Nil then 35 else %4 fi, $pas:= 2*pi/nb, $creux:=if %5=Nil then 1 else %5 fi,
+     S:= {liste des sommmets}
+     [ $u:=0,
+     $v1:=Prodvec(vecK,vect),
+     if Norm(v1)=0 then $v1:=R*vecI else v1:=R*v1/Norm(v1)fi,
+     $v2:=Prodvec(vect,v1),
+     for $k1 from 1 to nb do
+      %1+cos(u)*v1+sin(u)*v2, Inc(u,pas)
+      od, u:=0,
+     for $k1 from 1 to nb do
+      centre2+cos(u)*v1+sin(u)*v2, Inc(u,pas)
+      od],
+     $F:= {liste des faces }
+    [ if creux=0 then
+        for k2 from  nb to 1 step -1 do k2 od, jump,
+        for k2 from nb+1 to 2*nb do k2 od, jump
+     fi,
+     for k2 from 1 to nb-1 do k2,k2+1,k2+1+nb,k2+nb,jump od,
+     nb,1,1+nb,2*nb,jump],
+    MakePoly(S,F)
+    ];
+
+   FacesNum = { FacesNum( polyedre, [liste de numéros] ): renvoie les faces du polyèdre dont les numéros sont dans la liste}
+    [$L:=%2, Sort(L),
+     $compt:=0, $k:=1, $num:=L[1],
+     for $F in %1 By jump do
+               Inc(compt,1),
+               if compt=num then F,sep, Inc(k,1), num:=L[k] fi,
+    od];
+
+    getdroite = {getdroite([A,u] <,scale>): renvoie un segment  correspondant à la droite [A,u] intersectée avec le cube de base}
+    [$A:=interDP(%1,[0,Zinf,vecK]),
+     if A<>Nil then
+        $B:=interDP(%1,[0,Zsup,vecK]),
+        $L:=Clip3DLine([A,B], [Xinf,0,vecI]),
+        $L:=Clip3DLine(L, [Xsup,0,-vecI]),
+        $L:=Clip3DLine(L, [i*Yinf,0,vecJ]),
+        $L:=Clip3DLine(L, [i*Ysup,0,-vecJ]),
+     else
+         A:= interDP(%1,[Xinf,0,vecI]),
+         if A<>Nil then
+            B:=interDP(%1,[Xsup,0,vecI]),
+            $L:=Clip3DLine([A,B], [0,Zinf,vecK]),
+            $L:=Clip3DLine(L, [0,Zsup,-vecK]),
+            $L:=Clip3DLine(L, [i*Yinf,0,vecJ]),
+            $L:=Clip3DLine(L, [i*Ysup,0,-vecJ]),
+         else
+             A:=interDP(%1,[i*Yinf,0,vecJ]),
+             B:=interDP(%1,[i*Ysup,0,vecJ]),
+             $L:=Clip3DLine([A,B], [0,Zinf,vecK]),
+             $L:=Clip3DLine(L, [0,Zsup,-vecK]),
+             $L:=Clip3DLine(L, [Xinf,0,vecI]),
+             $L:=Clip3DLine(L, [Xsup,0,-vecI]),
+         fi
+     fi,
+     $scale:=if %2=Nil then 1 else %2 fi,
+     if scale<>1 then
+         hom3d(L,(L[1,2]+L[3,2])/2,scale),jump
+     else L,jump
+     fi];
+
+    getplan = {getplan([A,u] <,scale>): renvoie une facette correspondant au plan intersecté avec le cube de base}
+    [$cube:=Parallelep([Xinf+i*Yinf,Zinf], (Xsup-Xinf)*vecI,(Ysup-Yinf)*vecJ,
+            (Zsup-Zinf)*vecK),
+     $scale:=if %2=Nil then 1 else %2 fi,
+     $aux:=Intersection(%1,cube,$face),
+     if aux<>Nil then 
+       if scale<>1 then
+          $C:=isobar3d(face),
+          face:=hom3d(face,C,scale),
+       fi,face
+     fi,
+     ];
+
+    getplanEqn = { getplanEqn([a,b,c,d] <,scale>): renvoie le plan d'équation ax+by+cz=d sous la forme d'une facette correspondant au plan intersecté avec le cube de base}
+    getplan(planEqn(%1),%2);
+
+    grille3d = {grille3d(x/y/z, valeur, pas1+i*pas2), renvoie le plan x/y/z=valeur sous forme d'une grille (liste de segments)}
+    [if %3=Nil then $unite1:=1, $unite2:=1 else
+           unite1:=Re(%3), unite2:=Im(%3),
+           if unite2=0 then unite2:=unite1 fi
+         fi, $val:=%2, $epsilon:=1E-17,
+     if StrComp(String(%1),"x") then
+        for $y from Yinf to Ysup+epsilon step unite1 do
+               [val+i*y,Zinf],[val+i*y,Zsup], jump,
+            od,
+        for $z from Zinf to Zsup+epsilon step unite2 do
+           [val+i*Yinf,z], [val+i*Ysup,z], jump
+            od
+     elif StrComp(String(%1),"y") then
+        for $z from Zinf to Zsup+epsilon step unite2 do
+           [i*val+Xinf,z], [val*i+Xsup,z], jump
+        od,
+        for $x from Xinf to Xsup+epsilon step unite1 do
+           [x+i*val,Zinf], [x+i*val,Zsup], jump
+            od
+     elif StrComp(String(%1),"z") then
+        for $x from Xinf to Xsup+epsilon step unite1 do
+           [x+i*Yinf,val], [x+i*Ysup,val], jump
+        od,
+        for $y from Yinf to Ysup+epsilon step unite2 do
+               [Xinf+i*y,val],[Xsup+i*y,val], jump
+            od
+     fi];
+
+    HollowFacet = {HollowFacet(polyedre, epaisseur+i*mode(0/1) <, interieur>): en mode=0 chaque facette est creusee en laissant une epaisseur au bord, lorsque mode<>0 le decoupage n'est plus parallèle au bord, les facettes enlevées sont dans la variable interieur}
+    [if %2=Nil then $ep:=0.25, $mode:=0 else ep:=Re(%2)/2, $mode:=Im(%2) fi,
+    if mode=0 then
+    for $S in %1 by jump do   {par composante connexe}
+        $A1:=Nil, $A2:=S[0,2],$A3:=S[1,2], $F:=Nil,
+        for $Z in  [S[3,0],S[1,2]] By 2 do  {par point3D}
+            A1:=A2, A2:=A3, A3:=Z,
+            if A1<>Nil then
+               $u:=normalize(A1-A2), $v:=normalize(A3-A2),
+               $ecart:=angle(u,v)/2,
+               $L:=ep/sin(ecart),
+               Insert(F,A2+L*normalize(u+v))
+            fi
+        od,
+        $compt:=0, $B:=Nil, Insert($interieur,[F,jump]),
+        for Z in S by 2 do
+            Inc(compt,1), $A:=B, B:=$Z,
+            if A<>Nil then
+                A,B,F[2*compt-1,2], F[2*compt-3,2],jump
+            fi,
+        od,
+        B,Copy(S,1,2),F[1,2],F[2*compt-1,2]
+     od
+    else
+     ep:=2*ep,
+     for S in %1 by jump do {par composante connexe}
+         $A1:=Nil, $A2:=S[1,2], $F:=Nil,
+         for Z in [S[3,0],S[1,2]] By 2 do  {par point3D}
+             A1:=A2, A2:=Z,
+             if A1<>Nil then
+                $u:=normalize(A2-A1),
+                Insert(F,A1+ep*u)
+             fi
+         od,
+         $compt:=0, $B:=Nil, Insert($interieur,[F,jump]),
+         for Z in S by 2 do {par point3D}
+             Inc(compt,1), $A:=B, B:=$Z,
+             if A<>Nil then
+                B,F[2*compt-1,2], F[2*compt-3,2],jump
+             fi,
+         od,
+         Copy(S,1,2),F[1,2],F[2*compt-1,2]
+     od
+    fi,
+     %3:=interieur];
+
+    Intersection = {Intersection( plan, polyedre, sortie): détermine l'intersection entre le polyedre et le plan. Celui-ci est de la forme [S, n], c'est le plan  passant par le point S et normal à n, la macro renvoie une liste d'aretes, sortie est un paramètre sortant qui contiendra la face correspondante}
+    [$S:=Copy(%1,1,2), $n:=Copy(%1,3,2), $liste:=1/0,
+        for $facette in %2 By jump do
+                Insert(facette,facette[1,2]),
+        $rep:=0, $p1:=Nil, $A1:=Nil, $pos1:=Nil,
+        for $B1 in facette by 2 do
+               $p2:=Prodscal(B1-S,n), $pos2:= (p2>0),
+               if (pos1+pos2)=1 then $P:=A1-p1/Prodscal(B1-A1,n)*(B1-A1),P,
+                           $aux:=Inserer3D(liste,P,1E-10) , Inc(rep,1)
+                       fi,
+               A1:=B1, p1:=p2, pos1:=pos2
+        od,
+                if rep>0 then Re(jump)+i*Fvisible(facette)  fi
+    od,
+    %3:=[Ordonner(liste,-n), jump]
+    ];
+
+    line2Cone = { line2Cone( ligne 3D, origine <, close, rapport, sortie base>): cone de base la ligne 3D, le parametre rapport(=0 par defaut) permet de construire l'autre partie du cône par homothétie, le dernier parametre est une variable qui contiendra la liste des points du ou des bords}
+    [S:=%1, if %3=Nil then $close:=0 else close:=%3 fi,
+         if close then Insert(S,S[1,2]) fi, $N:=Nops3d(S), $bord:=S,
+     if %2<>Nil then
+       $r:=%4,
+       Insert(S, [%2,hom3d(S,%2,r)]), Insert(bord, [jump,hom3d(bord,%2,r)]),
+    else r:=0, Insert(S,%2)
+    fi,
+    {F=liste des faces}
+    F:= [for k from 1 to N-1 do k, k+1, N+1,jump od,
+         if r<>0 then
+            for k from N+2 to 2*N do k+1, k, N+1,jump od
+         fi],
+    MakePoly(S,F), %5:=bord
+    ];
+
+    line2Cylinder = {line2Cylinder( ligne 3D, vecteur axe <, close, sortie base>): cylindre de base la ligne 3D. Le dernier parametre est une variable qui contiendra la liste des points des bords }
+    [S:=%1,  if %3=Nil then $close:=0 else close:=%3 fi,
+         if close then Insert(S,S[1,2]) fi, $N:=Nops3d(S), $bord:=S,
+     Insert(S, shift3d(S,%2)), Insert(bord, [jump,shift3d(bord,%2)]),
+     {F=liste des faces}
+     F:= for k from 1 to N-1 do k, k+1, k+N+1, k+N, jump od,
+     MakePoly(S,F), %4:=bord
+    ];
+
+    lineTube = {LineTube(L, rayon, nb faces [, close,hollow]): crée un tube centré sur la ligne L, renvoie une liste de facettes}
+    [$closed:=if %4=Nil then 0 else %4 fi,
+     $creux:= if %5=Nil Or closed then 1 else %5 fi,
+     Map( {mappage par composante connexe}
+     [$b:=1/0, $c:=1/0, $liste:=1/0, $firstListe:=1/0,
+     if closed then $last:=$L[0,2], Insert(L,L[1,2]) fi,
+     Map( {mappage par point 3D}
+      [$a:=b, b:=c, c:=$m,
+      if a=Nil
+         then if b<>Nil
+                 then
+                      $u:=Prodvec(b-c,vecI),
+                      if Norm(u)=0 then $u:=Prodvec(b-c,vecJ) fi,
+                      u:=%2*normalize(u), $b':=b+u,
+                      liste:=[b',for $k from 1 to %3-1 do rot3d(b',[b,c-b],2*k*pi/%3) od],
+                      if closed then
+                         $P:=[b,(last-b)/abs(last-b)-(c-b)/abs(c-b)],
+                         $liste':=proj3dO(liste,P,b-c),
+                         if liste'<>Nil then liste:=liste' fi
+                      fi,
+                      firstListe:=liste,
+                      if not(creux) then [b',for $k from 1 to %3-1 do rot3d(b',[b,-c+b],2*k*pi/%3) od],jump fi
+              fi
+         else
+             $P:=[b,(a-b)/Norm(a-b)-(c-b)/Norm(c-b)], {plan bissecteur} 
+             $liste':=proj3dO(liste,P,b-a),
+             if liste'=Nil then liste':=shift3d(liste,b-a) fi,
+             for k from 1 to %3-1 do
+                 liste[2*k-1,2],liste[2*k+1,2],liste'[2*k+1,2],liste'[2*k-1,2],jump
+             od,
+             liste[2*%3-1,2],liste[1,2],liste'[1,2],liste'[2*%3-1,2],jump,
+             liste:=liste'
+        fi
+      ],m, L, 2+i), { fin du mappage par point 3D}
+     if closed then
+           for k from 1 to %3-1 do
+               liste'[2*k-1,2],liste'[2*k+1,2],firstListe[2*k+1,2],firstListe[2*k-1,2],jump
+           od,
+           liste'[2*%3-1,2],liste'[1,2],firstListe[1,2],firstListe[2*%3-1,2],jump
+     else
+         P:=[c,b-c],
+         liste':=proj3dO(liste,P,b-c),
+         if liste'=Nil then liste':=shift3d(liste,c-b) fi,
+         for k from 1 to %3-1 do
+             liste[2*k-1,2],liste[2*k+1,2],liste'[2*k+1,2],liste'[2*k-1,2],jump
+         od,
+         liste[2*%3-1,2],liste[1,2],liste'[1,2],liste'[2*%3-1,2],jump,
+         if not(creux) then liste',jump fi
+     fi
+    ],L, purge3d(%1), M(Re(jump),1)) {fin du mappage par composante connexe}
+    ];
+
+    putAbove = {putAbove( liste points3D ): translate les points de above*500*\n}
+    if ModelView()=ortho then for $Z in %1 by 2 do  Z+above*500*Normal() od
+    else for $Z in %1 by 2 do 0.1*(Z-PosCam())+PosCam() od fi;
+
+
+    Ordonner = { Ordonner( liste, n): ordonne les sommets de liste pour avoir une facette orientée par n (vecteur normal), cette facette est supposée convexe. }
+    [$centre:= isobar3d(%1), $u1:=Copy(%1,1,2)-centre, u1:=normalize(u1), $v:=normalize(%2), $u2:=Prodvec(v,u1),
+     $k:=1, $liste:=%1,
+     $ordre:= Map([$pos:=$Z-centre,Arg(Prodscal(pos,u1)+i*Prodscal(pos,u2))+i*k, Inc(k,1)], Z, %1,2+i),
+     Sort(ordre), PermuteWith(for $z in ordre do Im(z) od, liste, 2), liste
+    ];
+
+
+    Parallelep = {Parallelep(sommet, vecteur1, vecteur2, vecteur3) : cette macro construit la liste des facettes d'un parallelepipede à partir d'un sommet et de 3 vecteurs, supposés dans le sens direct}
+    [$A:=%1, $v1:=%2, $v2:=%3, $v3:=%4, $B:=A+v1, $C:=B+v2, $D:=A+v2, $E:=A+v3, $F:=E+v1,
+    $G:=F+v2, $H:=E+v2,
+    MakePoly([A,B,C,D,E,F,G,H],[1,4,3,2,jump, 5,6,7,8,jump, 1,2,6,5, jump, 8,7,3,4,jump, 1,5,8,4,jump, 6,2,3,7,jump])
+    ];
+
+    pqGoneReg3D = {pqGoneReg3D(<Axe>, <Sommet>, <[p, q]>) : p/q-gone régulier}
+        [$Axe:=%1, $S:=%2,
+         $p:=%3[1], $q:=(if %3[2]=Nil then 1 else %3[2] fi),
+         if 2*q<p then
+           $m:=pgcd(p, q),
+           $p':=p/m, $q':=q/m,
+           for $S' in  Seq(rot3d(S, Axe, $j*2*pi/p), j, 0, m-1) by 2 do
+               Seq(rot3d(S', Axe, $k*q'*2*pi/p'), k, 0, p'-1),  jump
+           od
+         fi];
+
+    Prisme = {prisme( base, vecteur, open(0/1)}
+    [$n:=0, $open:=if %3=Nil then 0 else %3=1 fi,
+     $S:=[%1, $k:=0, $P:=1/0,
+            for $z in %1 do Inc(k,1), Insert(P,z),
+               if k=2 then Inc(n,1), k:=0, P+%2, P:=1/0 fi
+            od],
+      $F:=[ if open=0 then 
+            for k from n to 1 step -1 do k od, jump,
+            for k from 1 to n do n+k od, jump
+        fi,
+            for k from 1 to n-1 do k,k+1,k+n+1, k+n, jump od,
+            n,1,n+1,2*n, jump],
+     MakePoly(S,F)
+    ];
+
+    Pyramide = {pyramide( base, sommet, open(0/1)): la base est une liste de point3D qui sont dans un même plan, l'ensemble doit être dans le sens direct. }
+    [$n:=Nops(%1)/2, $open:=if %3=Nil then 0 else %3=1 fi,
+     $S:=[%1, %2],
+      $F:=[ if open=0 then for k from n to 1 step -1 do k od, jump fi,
+            for k from 1 to n-1 do k,k+1,n+1, jump od,
+            n,1,n+1,jump],
+    MakePoly(S,F)
+    ];
+
+    rotCurve = {rotCurve( f(t) ,Axe, tMin, tMax [, angleMin, angleMax [, uNbLignes, vNbLignes]]) où Axe=[point3D, vecteur3D], renvoie une liste de facettes}
+    [$angleMin:=if %5=Nil then -pi else %5 fi,
+     $angleMax:=if %6=Nil then pi else %6 fi,
+     GetSurface(
+        [if $v=angleMin then Assign(%1,$t,$u) fi, rot3d(%1,%2,v)],
+        %3+i*%4, {intervalle pour u}
+        angleMin+i*angleMax, {pour v}
+        if %7=Nil then 25 else %7 fi+i*(if %8=Nil then 25 else %8 fi) {nb lignes}
+        )
+    ];
+
+    rotLine = {rotLine( ligne3D ,Axe, [close, angleMin, angleMax, vNbLignes]) où Axe=[point3D, vecteur3D], renvoie une liste de facettes}
+    [$angleMin:=if %4=Nil then -pi else %4 fi,
+     $angleMax:=if %5=Nil then pi else %5 fi,
+         $S:=%1, if %3=Nil then $close:=0 else close:=%3 fi,
+         if close then Insert(S, S[1,2]), fi, $N:=Nops3d(S),
+         $vlignes:= if %6=Nil then 25 else %6 fi, $pas:=(angleMax-angleMin)/(vlignes-1),
+         $v:=angleMin,
+         $L:= for $k from 1 to vlignes do
+                  rot3d(S,%2,v), Inc(v,pas)
+              od,
+         F:= for $I from 1 to vlignes-1 do
+                 $first:=(I-1)*N,
+                 for $J from 1 to N-1 do
+                     first+J, first+J+1, first+J+1+N,  first+J+N, jump
+                 od
+             od,
+     MakePoly(L,F)
+    ];
+
+    Section2 = {Section( plan, liste faces): détermine la section d'un polyedre représenté par une liste de faces, avec le plan.
+    Celui-ci est de la forme [S, n], c'est le plan  passant par le point S et normal à n, la partie contenant n est conservée, la macro renvoie un polyèdre}
+    [$S:=Copy(%1,1,2), $n:=Copy(%1,3,2),
+    $visible:=0, $compt:=0, $liste:=1/0,
+    for $facette in %2 By jump do
+        Insert($facette, Copy(facette,1,2)),
+                $rep:=0, $p1:=1/0, $A1:=1/0, $pos1:=1/0, $res:=1/0,
+        for $B1 in facette by 2do
+               $p2:=Prodscal(B1-S,n),
+               if (p1*p2<0) Or (p2=0) then
+            Inc(rep,1),
+            if p2=0 then Q:=B1 else
+            $Q:= A1-p1/Prodscal(B1-A1,n)*(B1-A1) fi,
+            Insert(res,Q), $aux:=Inserer3D($liste,Q,1E-10)
+               fi,
+            if (p2>0) And (p1<>Nil)  then Insert(res,B1), Inc(rep,1) fi,
+            A1:=B1, p1:=p2
+        od,  if rep>2 then res,jump fi
+    od,
+    Ordonner(liste,-n), jump
+    ];
+
+    Section = {Section( plan, liste faces): détermine la section d'un polyedre représenté par une liste de faces, avec le plan.
+    Celui-ci est de la forme [S, n], c'est le plan  passant par le point S et normal à n, la partie contenant n est conservée, la macro renvoie un polyèdre}
+    [ClipFacet(%2,%1,Nil,$inter),
+     Ordonner(Sommets(inter), -Copy(%1,3,2)), jump
+    ];
+
+    Sphere = {Sphere( centre, rayon [, nb fuseaux, nb tranches])}
+     [$A:=%1, $R:=%2, $nbu:=if %3=Nil then 41 else %3+1 fi, 
+      $nbv:=if %4=Nil then 26 else %4+1 fi, $pasU:= 2*pi/(nbu-1), $pasV:=pi/(nbv-1),
+     $S:= {liste des sommmets}
+     [ A+R*vecK, $v:=pasV,
+       for $k1 from 1 to nbv-2 do
+        $u:=0, $a:=R*cos(v), $b:=R*sin(v),
+         for $k2 from 1 to nbu do
+          A+[b*exp(i*u),a], Inc(u,pasU)
+          od,
+       Inc(v,pasV)
+      od, A-R*vecK],
+     $F:= {liste des faces }
+    [for k2 from  2 to nbu do k2,k2+1,1, jump od,
+     for k2 from 2 to nbv-2 do
+        $dep:= 2+nbu*(k2-1),
+        for $k1 from dep to dep+nbu-2 do
+            k1,k1+1,k1+1-nbu,k1-nbu, jump
+        od
+     od,
+    dep:= 2+nbu*(nbv-3), $last:=nbu*(nbv-2)+2,
+     for k2 from dep to dep+nbu-2 do k2,last,k2+1, jump od],
+    MakePoly(S,F)
+    ];
+
+   Tetra = {Tetra( sommet, vecteur1, vecteur2, vecteur3) : cette macro construit la liste des facettes d'un tétraèdre à partir d'un point et 3 vecteurs, supposés dans le sens direct, puis la liste des arêtes}
+    [$a:=%1, MakePoly([a, a+%2, a+%3, a+%4],[1,3,2, jump,1,2,4, jump,2,3,4, jump, 1,4,3,jump])];
+
+
+    trianguler = {trianguler( liste facettes convexes): renvoie la liste des facettes triangulées}
+    [$num:=0, $k:=0, $Z:=Nil,
+     for $z in %1  do
+            Inc(k,1),
+            if Re(z)=Re(jump) then num:=0, k:=0, Z:=Nil
+            else Insert(Z,z)
+            fi,
+            if k=2 then {on a un point3D dans Z}
+                Inc(num,1),
+                if num=1 then $A:=Z
+                elif num=2 then $C:=Z
+                else $B:=C, $C:=Z, A,B,C,jump
+                fi,
+                Z:=Nil, k:=0
+            fi
+    od];
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{macros de dessin de lignes 3d  }
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Arc3D = {Arc3D( B,A,C,rayon, sens [, vecteur normal] )}
+    [$B:=%1,$A:=%2, $C:=%3, $R:=%4, $n1:=B-A, $n2:=C-A,
+    if %6=Nil then $u:=normalize(Prodvec(n1,n2)) else u:=normalize(%6) fi,
+    if Norm(u)<1E-12 then u:=normalize(%6) fi,
+    if ModelView()=ortho then
+        $b:=Prodvec(u,Normal()),
+        $sens:= if %5*Prodscal(u,Normal())>=0 then 1 else -1 fi,
+        if Norm(b)<1E-12 then Arc(Proj3D(B), Proj3D(A), Proj3D(C),R,sens)
+            else
+                b:=normalize(b), $R':= abs(R*cos(angle(u,Normal()))),
+                $inclinaison:=Arg(Proj3D(b))*180/pi,
+                ellipticArc( Proj3D(B),Proj3D(A),Proj3D(C),R,R',sens,inclinaison)
+        fi
+    else //prespective centrale, inspiré de Cercle3D
+         sens:=%5,
+         $V:=u, B:=A+R*normalize(n1), C:=A+R*normalize(n2), $U:=Prodvec(V,Normal()),
+         if Norm(U)<1E-17 then //plans parallèles
+            $C1:=PosCam(),
+            $A':=interDP([C1,A-C1],[Origin,Normal()]),
+            $alpha:=Norm(A'-C1)/Norm(A-C1),
+            Arc(Proj3D(B), Proj3D(A), Proj3D(C),R*alpha,sens)
+         else
+             N2:=normalize(Prodvec(U,V)), N1:=normalize(U),
+             a1:=Proj3D(A-R*N2), a2:=Proj3D(A+R*N2), a3:=Proj3D(A-R*N1), a4:=Proj3D(A+R*N1),
+             $b:=Proj3D(B), $c:=Proj3D(C), $O:=(a1+a2)/2, $u:=(a4-a3)/abs(a4-a3), $v:=a1-O,
+             $m:=[O,abs(v)*u,v],
+             SaveAttr(),
+                        ComposeMatrix(m),
+                        L:=Mtransform([a4,b,c],invmatrix(m)),
+                        $a4:=L[1], b:=L[2], c:=L[3],
+                        $y:=Im(a4),$x:=Re(a4), $alpha:=x/sqrt(1-sqr(y)),
+                        EllipticArc(b,0,c,alpha,1,sens),
+             RestoreAttr()
+         fi
+    fi
+    ];
+
+    newxlegend  = {newxlegend("texte") } 
+    SetStr( "xlegend", %1);
+    newylegend  = {newylegend("texte") } 
+    SetStr( "ylegend", %1);
+    newzlegend  = {newzlegend("texte") } 
+    SetStr( "zlegend", %1);
+
+    Axes3D = {Axes3D(Ox, Oy, Oz, gradx, grady, gradz,taquets): trace les axes de repère spatial, on donne les coordonnées de l'origine le pas des graduations sur les axes (0= aucune graduation) et la hauteur des taquets.} 
+    [$origin:=M(%1,%2,%3), if origin=Nil Or Nops(origin)=1 then origin:=Origin fi, 
+     $gradx:=%4, $grady:=%5, $gradz:=%6, if gradx=Nil then gradx:=0 fi, if grady=Nil then grady:=0 fi, if gradz=Nil then gradz:=0 fi,
+     AxeX3D(axeOrigin:=origin, xstep:=gradx, legendpos:=1, originlabel:=0),
+     AxeY3D(axeOrigin:=origin, ystep:=grady, legendpos:=1, originlabel:=0),
+     AxeZ3D(axeOrigin:=origin, zstep:=gradz, legendpos:=1, originlabel:=0)
+    ];
+
+    AxeX3D = { AxeX3D(option1, ...) }
+    [$epsilon:=1E-10, xstep:=1, xlabelsep:=0.25, xlegendsep:=0.5, xlimits:=[Xinf,Xsup], SetStr(xlegend,"$x$"), xlabelstyle:=LabelStyle, 
+     tickdir:=-vecK, tickpos:=0.5, axeOrigin:=Origin, legendpos:=0.5, labels:=1, xgradlimits:=Nil, originlabel:=0,
+     SaveAttr(), $aux:= for $k from 1 to Nargs() do Args(k) od, {évaluation des options}
+     $oldArrows:=Arrows, Arrows:=0, $xinf:=xlimits[1], $xsup:=xlimits[2], $axeOx:=pyz(axeOrigin), $originx:=Xde(axeOrigin),
+     if xgradlimits=Nil then xgradlimits:=xlimits fi,
+     Ligne( [Arrows:=oldArrows, Ligne(Proj3D([[xinf,0]+axeOx, [xsup,0]+axeOx]),0), Arrows:=0,
+        if legendpos=0 then 
+         $A:=axeOx+xinf*vecI, $a:=Proj3D(A), $b:=Proj3D(A-vecI),
+         $xdir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+xdir, @xlegend,[xlegendsep,xdir])
+        elif legendpos=1 then
+         $A:=axeOx+xsup*vecI, $a:=Proj3D(A), $b:=Proj3D(A+vecI),
+         $xdir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+xdir, @xlegend,[xlegendsep,xdir])
+        else
+         $A:=axeOx+(legendpos*xsup+(1-legendpos)*xinf)*vecI, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+         $xdir:= xyticks*(b-a)/Abs(b-a),
+         LabelDot( a+(1-tickpos)*xdir, @xlegend,[xlabelsep+xlegendsep,xdir])
+        fi,
+        if ystep>0 then
+           LabelStyle:=xlabelstyle,
+           for $x from xgradlimits[1] to xgradlimits[2]+epsilon step xstep do
+            $A:=axeOx+x*vecI, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+            xdir:= xyticks*(b-a)/Abs(b-a), a-tickpos*xdir, a+(1-tickpos)*xdir, jump,
+            if labels And ( (originlabel=1) Or (abs(x-originx)>epsilon))
+                then LabelDot( a+(1-tickpos)*xdir, @label(@StrNum(x)),[xlabelsep,xdir]) fi
+          od
+        fi],0),
+    RestoreAttr()];
+
+    AxeY3D = { Axey3D(option1, ...) }
+    [$epsilon:=1E-10, ystep:=1, ylabelsep:=0.25, ylegendsep:=0.5, ylimits:=[Yinf,Ysup], SetStr(ylegend,"$y$"), ylabelstyle:=LabelStyle, 
+     tickdir:=-vecK, tickpos:=0.5, axeOrigin:=Origin, legendpos:=0.5, labels:=1, ygradlimits:=Nil, originlabel:=0,
+     SaveAttr(), $aux:= for $k from 1 to Nargs() do Args(k) od, {évaluation des options}
+     $oldArrows:=Arrows, Arrows:=0, $yinf:=ylimits[1], $ysup:=ylimits[2], $axeOy:=pxz(axeOrigin), $originy:=Yde(axeOrigin),
+     if ygradlimits=Nil then ygradlimits:=ylimits fi,
+     Ligne( [Arrows:=oldArrows, Ligne(Proj3D([[i*yinf,0]+axeOy, [i*ysup,0]+axeOy]),0), Arrows:=0,
+        if legendpos=0 then 
+         $A:=axeOy+yinf*vecJ, $a:=Proj3D(A), $b:=Proj3D(A-vecJ),
+         $ydir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+ydir, @ylegend,[ylegendsep,ydir])
+        elif legendpos=1 then
+         $A:=axeOy+ysup*vecJ, $a:=Proj3D(A), $b:=Proj3D(A+vecJ),
+         $ydir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+ydir, @ylegend,[ylegendsep,ydir])
+        else
+         $A:=axeOy+(legendpos*ysup+(1-legendpos)*yinf)*vecJ, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+         $ydir:= xyticks*(b-a)/Abs(b-a),
+         LabelDot( a+(1-tickpos)*ydir, @ylegend,[ylabelsep+ylegendsep,ydir]),
+        fi,
+        if ystep>0 then
+           LabelStyle:=ylabelstyle,
+           for $y from ygradlimits[1] to ygradlimits[2]+epsilon step ystep do
+            $A:=axeOy+y*vecJ, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+            ydir:= xyticks*(b-a)/Abs(b-a),  a-tickpos*ydir, a+(1-tickpos)*ydir, jump,
+            if labels And ( (originlabel=1) Or (abs(y-originy)>epsilon))
+                then LabelDot( a+(1-tickpos)*ydir, @label(@StrNum(y)),[ylabelsep,ydir]) fi
+           od
+        fi],0),
+    RestoreAttr()];
+
+    AxeZ3D = { Axez3D(option1, ...) }
+    [$epsilon:=1E-10, zstep:=1, zlabelsep:=0.25, zlegendsep:=0.5, zlimits:=[Zinf,Zsup], SetStr(zlegend,"$z$"), zlabelstyle:=LabelStyle, 
+     tickdir:=-vecJ, tickpos:=0.5, axeOrigin:=Origin, legendpos:=0.5,labels:=1, zgradlimits:=Nil, originlabel:=0,
+     SaveAttr(), $aux:= for $k from 1 to Nargs() do Args(k) od, {évaluation des options}
+     $oldArrows:=Arrows, Arrows:=0, $zinf:=zlimits[1], $zsup:=zlimits[2], $axeOz:=pxy(axeOrigin), $originz:=Zde(axeOrigin),
+     if zgradlimits=Nil then zgradlimits:=zlimits fi,
+
+     Ligne( [Arrows:=oldArrows, Ligne(Proj3D([[0,zinf]+axeOz, [0,zsup]+axeOz]),0), Arrows:=0,
+        if legendPos=0 then 
+         $A:=axeOz+zinf*vecK, $a:=Proj3D(A), $b:=Proj3D(A-vecK),
+         $zdir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+zdir, @zlegend,[zlegendsep,zdir])
+        elif legendpos=1 then
+         $A:=axeOz+zsup*vecK, $a:=Proj3D(A), $b:=Proj3D(A+vecK),
+         $zdir:= 0.2*(b-a)/Abs(b-a),
+         LabelDot( a+zdir, @zlegend,[zlegendsep,zdir])
+        else
+         $A:=axeOz+(legendpos*zsup+(1-legendpos)*zinf)*vecK, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+         $zdir:= xyticks*(b-a)/Abs(b-a),
+         LabelDot(a+(1-tickpos)*zdir, @zlegend,[zlabelsep+zlegendsep,zdir]),
+        fi,
+        if zstep>0 then
+           LabelStyle:=zlabelstyle,
+           for $z from zgradlimits[1] to zgradlimits[2]+epsilon step zstep do
+            $A:=axeOz+z*vecK, $a:=Proj3D(A), $b:=Proj3D(A+tickdir),
+            zdir:= xyticks*(b-a)/Abs(b-a),  a-tickpos*zdir, a+(1-tickpos)*zdir, jump,
+            if labels And ( (originlabel=1) Or (abs(z-originz)>epsilon))
+                then LabelDot( a+(1-tickpos)*zdir, @label(@StrNum(z)),[zlabelsep,zdir]) fi
+           od
+        fi],0),
+    RestoreAttr()];
+
+    BoxAxes3D = {BoxAxes3D( option1, option2, ...)}
+    [$epsilon:=1E-10, xaxe:=1, yaxe:=1, zaxe:=1, drawbox:=0, grid:=0, xstep:=1, ystep:=1, zstep:=1, xgradlimits:=Nil, labels:=1,
+     xlabelsep:=0.25, xlegendsep:=0.5, xlimits:=[Xinf,Xsup], ylabelsep:=0.25, ylegendsep:=0.5, ylimits:=[Yinf,Ysup], ygradlimits:=Nil, gridwidth:=1, gridcolor:=black,
+     zlabelsep:=0.25, zlegendsep:=0.5, zlimits:=[Zinf,Zsup], zgradlimits:=Nil, SetStr(xlegend,"$x$"), SetStr(ylegend,"$y$"), SetStr(zlegend,"$z$"),
+     xlabelstyle:=LabelStyle, ylabelstyle:=LabelStyle, zlabelstyle:=LabelStyle, 
+     SaveAttr(), 
+     $aux:= for $k from 1 to Nargs() do Args(k) od, {évaluation des options}
+     $xinf:=xlimits[1], $xsup:=xlimits[2], $yinf:=ylimits[1], $ysup:=ylimits[2], $zinf:=zlimits[1], $zsup:=zlimits[2],
+     view3D(xinf,xsup,yinf,ysup,zinf,zsup), if xgradlimits=Nil then xgradlimits:=xlimits fi,
+     if ygradlimits=Nil then ygradlimits:=ylimits fi, if zgradlimits=Nil then zgradlimits:=zlimits fi,
+     xaxe:= xaxe And (Norm(Prodvec(Normal(),vecI))>epsilon), yaxe:= yaxe And (Norm(Prodvec(Normal(),vecJ))>epsilon), 
+     zaxe:= zaxe And (Norm(Prodvec(Normal(),vecK))>epsilon),
+     if drawbox then Dparallelep([Xinf+i*Yinf,Zinf],[Xsup-Xinf,0],[i*(Ysup-Yinf),0],[0,Zsup-Zinf],0) fi,
+     phi:=mod(phi,2*pi), theta:=mod(theta,2*pi),
+     if angle(Normal(),vecK)<=pi/2 then zinf:=Zinf, zsup:=Zsup else zinf:=Zsup, zsup:=Zinf fi,
+     if phi<=pi then $psi:= theta else $psi:= mod(theta+pi,2*pi) fi,
+     if psi>=pi then Inc(psi,-2*pi) fi,
+     if (0<psi) And (psi<=pi/2) then
+            $Left:=M(xsup,yinf,zinf), $Bottom:=M(xsup,ysup,zinf),
+            $Right:=M(xinf,ysup,zinf),$Top:=M(xinf,yinf,zsup)
+     elif (pi/2<psi) And (psi<=pi) then
+            $Left:=M(xsup,ysup,zinf), $Bottom:=M(xinf,ysup,zinf),
+            $Right:=M(xinf,yinf,zinf),$Top:=M(xsup,yinf,zsup)
+     elif (-pi/2<psi) And (psi<=0) then
+            $Left:=M(xinf,yinf,zinf), $Bottom:=M(xsup,yinf,zinf),
+            $Right:=M(xsup,ysup,zinf),$Top:=M(xinf,ysup,zsup)
+     else
+            $Left:=M(xinf,ysup,zinf), $Bottom:=M(xinf,yinf,zinf),
+            $Right:=M(xsup,yinf,zinf),$Top:=M(xsup,ysup,zsup)
+     fi,
+     if (Xde(Left)<>Xde(Bottom)) then {axe Ox}
+            if (Xde(Left)<Xde(Bottom))
+            then axeOx:=Left
+            else axeOx:=Bottom fi,
+            xdir:=(Bottom-Right), if Norm(Prodvec(xdir,Normal()))<epsilon then xdir:=(pz(Bottom-Top)) fi,
+        $pris:=1
+     elif (Yde(Left)<>Yde(Bottom)) then {axe Oy}
+            if (Yde(Left)<Yde(Bottom))
+            then axeOy:=Left
+            else axeOy:=Bottom fi,
+            ydir:=(Bottom-Right), if Norm(Prodvec(ydir,Normal()))<epsilon then ydir:=(pz(Bottom-Top)) fi,
+        $pris:=2
+     elif (Zde(Left)<>Zde(Bottom)) then {axe Oz}
+            if (Zde(Left)<Zde(Bottom))
+            then axeOz:=Left,
+            else axeOz:=Bottom fi,
+            zdir:=(Bottom-Left), if Norm(Prodvec(zdir,Normal()))<epsilon then zdir:=(Bottom-Right) fi,
+        $pris:=3,
+     fi,
+     if (Xde(Right)<>Xde(Bottom)) then {axe Ox}
+            if (Xde(Right)<Xde(Bottom))
+            then axeOx:=Right
+            else axeOx:=Bottom fi,
+            xdir:=(Bottom-Left), if Norm(Prodvec(xdir,Normal()))<epsilon then xdir:=(pz(Bottom-Top)) fi,
+        Inc(pris,1)
+    elif (Yde(Right)<>Yde(Bottom)) then {axe Oy}
+            if (Yde(Right)<Yde(Bottom))
+            then axeOy:=Right
+            else axeOy:=Bottom fi,
+            ydir:=(Bottom-Left), if Norm(Prodvec(ydir,Normal()))<epsilon then ydir:=(pz(Bottom-Top)) fi,
+        Inc(pris,2)
+    elif (Zde(Right)<>Zde(Bottom)) then {axe Oz}
+            if (Zde(Right)<Zde(Bottom))
+            then axeOz:=Right,
+            else axeOz:=Bottom fi,
+            zdir:=(Bottom-Left), if Norm(Prodvec(zdir,Normal()))<epsilon then zdir:=(Bottom-Right) fi,
+        Inc(pris,3)
+    fi,
+    if 6-pris=1 then {axe Ox}
+            if Xde(Left)=xsup
+            then axeOx:=[xinf,0]+pyz(Left)
+            else axeOx:=Left fi,
+            xdir:=-normalize(Bottom-Left), if Norm(Prodvec(xdir,Normal()))<epsilon then xdir:=(pz(Bottom-Top)) fi,
+    elif 6-pris=2 then {axe Oy}
+            if Yde(Left)=ysup
+            then axeOy:=[i*yinf,0]+pxz(Left)
+            else axeOy:=Left fi,
+            ydir:=-(Bottom-Left), if Norm(Prodvec(ydir,Normal()))<epsilon then ydir:=(pz(Bottom-Top)) fi,
+    elif 6-pris=3 then {axe Oz}
+            if Zde(Left)=zsup
+            then axeOz:=[0,zinf]+pxy(Left),
+            else axeOz:=Left fi,
+            zdir:=-(Bottom-Left), if Norm(Prodvec(zdir,Normal()))<epsilon then zdir:=(Bottom-Right) fi,
+    fi,
+    if Xde(axeOy)=xinf then $x1:=xsup else x1:=xinf fi, if Yde(axeOx)=yinf then $y1:=ysup else y1:=yinf fi,
+    $z1:=Zde(axeOx),
+    if grid then
+        SaveAttr(),
+        Width:=gridwidth, Arrows:=0, Color:=gridcolor,
+        if FillStyle=full then 
+            $oldstyle:=LineStyle, LineStyle:=noline,
+            Ligne3D( [xsup+i*ysup,z1,xsup+i*yinf,z1,xinf+i*yinf,z1,xinf+i*ysup,z1,jump,
+                  x1+i*ysup,zsup,x1+i*yinf,zsup,x1+i*yinf,zinf,x1+i*ysup,zinf,jump,
+                  xsup+i*y1,zsup,xsup+i*y1,zinf,xinf+i*y1,zinf,xinf+i*y1,zsup,jump],1),
+            LineStyle:=oldstyle,
+        fi,
+        Ligne3D( [grille3d(x,x1,ystep+i*zstep),grille3d(y,y1,xstep+i*zstep), grille3d(z,z1,xstep+i*ystep)], 0),
+        RestoreAttr()
+    fi,
+    $oldArrows:=Arrows, Arrows:=0, //xdir:=1E-6*xdir, ydir:=1E-6*ydir, zdir:=1E-6*zdir,  
+    if xaxe then
+        Ligne( [Arrows:=oldArrows, Ligne(Proj3D([axeOx, [xsup,0]+pyz(axeOx)]),0), Arrows:=0,
+            $A:=pyz(axeOx)+(xsup+xinf)*vecI/2, $a:=Proj3D(A), $b:=Proj3D(A+xdir),
+            $dirgrad:= xyticks*(b-a)/Abs(b-a)/2,
+            LabelDot(a+dirgrad, @xlegend,[xlabelsep+xlegendsep,dirgrad]),
+            if xstep>0 then
+              LabelStyle:=xlabelstyle,
+              for $x from xgradlimits[1] to xgradlimits[2]+epsilon step xstep do
+                $A:=axeOx+(x-xinf)*vecI, $a:=Proj3D(A), $b:=Proj3D(A+xdir),
+                $dirgrad:= xyticks*(b-a)/Abs(b-a)/2, a, a+dirgrad, jump,
+                if labels then LabelDot( a+dirgrad, @label(@StrNum(x)),[xlabelsep,dirgrad]) fi
+              od
+            fi],0)
+    fi,
+
+    if yaxe then
+        Ligne( [Arrows:=oldArrows, Ligne(Proj3D([axeOy, [i*ysup,0]+pxz(axeOy)]),0),Arrows:=0,
+            $A:=pxz(axeOy)+(ysup+yinf)*vecJ/2, $a:=Proj3D(A), $b:=Proj3D(A+ydir),
+            $dirgrad:= xyticks*(b-a)/Abs(b-a)/2,
+            LabelDot(a+dirgrad, @ylegend,[ylabelsep+ylegendsep,dirgrad]),
+            if ystep>0 then
+              LabelStyle:=ylabelstyle,
+              for $x from ygradlimits[1] to ygradlimits[2]+epsilon step ystep do
+                $A:=axeOy+(x-yinf)*vecJ, $a:=Proj3D(A), $b:=Proj3D(A+ydir),
+                $dirgrad:= xyticks*(b-a)/Abs(b-a)/2, a, a+dirgrad, jump,
+                if labels then LabelDot( a+dirgrad, @label(@StrNum(x)),[ylabelsep,dirgrad]) fi
+              od
+            fi],0)
+    fi,
+
+    if zaxe then
+        Ligne( [Arrows:=oldArrows, Ligne(Proj3D([[0,Zinf]+pxy(axeOz), [0,Zsup]+pxy(axeOz)]),0), Arrows:=0,
+            $A:=pxy(axeOz)+(zsup+zinf)*vecK/2, $a:=Proj3D(A), $b:=Proj3D(A+zdir),
+            $dirgrad:= xyticks*(b-a)/Abs(b-a)/2,
+            LabelDot(a+dirgrad, @zlegend,[zlabelsep+zlegendsep,dirgrad]),
+            if zstep>0 then
+              LabelStyle:=zlabelstyle,
+              for $x from zgradlimits[1] to zgradlimits[2]+epsilon step zstep do
+                $A:=pxy(axeOz)+x*vecK, $a:=Proj3D(A), $b:=Proj3D(A+zdir),
+                $dirgrad:= xyticks*(b-a)/Abs(b-a)/2, a, a+dirgrad, jump,
+                if labels then LabelDot( a+dirgrad, @label(@StrNum(x)),[zlabelsep,dirgrad]) fi
+              od
+            fi],0)
+    fi,
+    RestoreAttr()
+    ];
+
+
+    Courbe3D = {Courbe3D( <f(t)>, [ divisions, discontinuité] )}
+    Courbe(Proj3D(%1),%2,%3);
+
+    Cercle3D = [
+    if ModelView()=ortho then
+            $C:=%1, $R:=%2, $u:=normalize(%3), $b:=Prodvec(u,Normal()),
+            if Norm(b)<1E-17 then Cercle(Proj3D(C),R)
+            else
+                b:=normalize(b),
+                $inclinaison:=Arg(Proj3D(b))*180/pi,
+                Ellipse(Proj3D(C), R,  abs(R*cos(angle(u,Normal()))), inclinaison),
+            fi
+    else //perspective centrale
+         $A:=%1, $R:=%2, $V:=%3,
+         $U:=Prodvec(V,Normal()), //vecteur directeur ligne de fuite
+         if Norm(U)<1E-17 then //plans parallèles
+            $C:=PosCam(),
+            $A':=interDP([C,A-C],[Origin,Normal()]),
+            $alpha:=Norm(A'-C)/Norm(A-C), Cercle(Proj3D(A),R*alpha),//cercles homothétiques
+         else
+             N2:=normalize(Prodvec(U,V)), N1:=normalize(U),
+             a1:=Proj3D(A-R*N2), a2:=Proj3D(A+R*N2), //points où les tangentes sont des lignes de fuites
+             a3:=Proj3D(A-R*N1), a4:=Proj3D(A+R*N1), // diamètre "orthogonal" au précédent
+         //il s'agit de tracer une ellipse passant par ces quatres points, sachant que a1 et a2 sont symétriques par rapport
+        //au centre de l'ellipse (tangentes parallèles), on se ramène au cas où les axes (a1a2) et (a3a4) sont orthogonaux
+             $O:=(a1+a2)/2, $u:=(a4-a3)/abs(a4-a3), $v:=a1-O, $m:=[O,abs(v)*u,v],
+             SaveAttr(),
+                        ComposeMatrix(m),
+               // maintenant, le centre de l'ellipse est 0, ses deux axes sont Ox et Oy, elle passe par i
+                        L:=Mtransform([a1,a2,a3,a4],invmatrix(m)),
+                        $a1:=L[1], $a2:=L[2], $a3:=L[3], $a4:=L[4],
+                        $y:=Im(a4),$x:=Re(a4), $alpha:=x/sqrt(1-sqr(y)),
+                // l'ellipse est l'image du cercle C(0,1) par une affinité orthogonale d'axe Oy et de rapport alpha
+                Ellipse(0,alpha,1), 
+             RestoreAttr()
+         fi
+    fi
+    ];
+
+
+    Dcone = {dcone(A, vect, r, mode)}
+    [SaveAttr(),
+         $A:=%1, $V:=%2, $r:=%3, $mode:=%4,
+     if ModelView()=ortho then
+     $I:=normalize(V), $J:=Prodvec(I,Normal()), J:=normalize(J), $K:=Prodvec(I,J),
+     $xn:=Prodscal(Normal(),I), $zn:=Prodscal(Normal(),K), $x:=xn/zn*r/Norm(V),
+     if x>=1 then t1:=pi/2 elif x<=-1 then t1:=-pi/2 else t1:=arcsin(x) fi,
+     $t2:=pi-t1,
+     $M1:=A+V+cos(t1)*r*J+sin(t1)*r*K, $M2:=A+V+cos(t2)*r*J+sin(t2)*r*K,
+     if mode=0 then FillStyle:=none fi,
+         if Norm(M2-M1)>1E-10 then Ligne( Proj3D([M1,A,M2]), 0) fi,
+     if Prodscal(Normal(),V)>=0 then
+               Arc3D(M1,A+V,M2,r,1,V),
+               $oldfill:=FillStyle, FillStyle:=none,
+               Arc3D(M1,A+V,M2,r,-1,V) ,
+               FillStyle:=oldfill
+     else
+        Arc3D(M1,A+V,M2,r,-1,V),
+        if mode<>1 then
+         FillStyle:=none, LineStyle:= HideStyle,
+         if HideColor<>Nil then Color:=HideColor fi,
+         if HideWidth<>Nil then Width:=HideWidth fi,
+         Arc3D(M1,A+V,M2,r,1,V),
+        fi
+     fi
+    else  {projection centrale}
+        $C:=PosCam(), $C':=dproj3d(C, [A,V]),
+        $lambda:= (if Prodscal(V,C'-A)>0 then 1 else -1 fi)*Norm(V)/Norm(C'-A),
+        $r':=r/abs(lambda), $alpha:=arccos(r'/Norm(C'-C)), $C'':=C'+r'*normalize(C-C'),
+        $A1:=rot3d(C'',[A,V], -alpha), $A2:=rot3d(C'',[A,V], alpha),
+        A1:=A+lambda*(A1-A), A2:=A+lambda*(A2-A),
+    if lambda<0 then Echange(A1,A2) fi,
+        if A1=Nil Or A2=Nil then {C est dans le cone}
+                Cercle3D(A+V,r,V),
+        else
+         Path(Proj3D( [A1, A, A2, line] )), $haut:=0,
+         if Prodscal(V,C-A-V)>0 then
+               Arc3D(A1,A+V,A2,r,-1,V),
+               $oldfill:=FillStyle, FillStyle:=none,
+               Arc3D(A1,A+V,A2,r,1,V) ,
+               FillStyle:=oldfill
+         else $haut:=1, Arc3D(A1,A+V,A2,r,1,V)
+         fi,
+         if mode<>1 then
+                 FillStyle:=none,LineStyle:= HideStyle,
+                 if HideColor<>Nil then Color:=HideColor fi,
+                 if HideWidth<>Nil then Width:=HideWidth fi,
+                     if haut then Arc3D(A1,A+V,A2,r,-1,V) fi,
+            fi
+        fi
+    fi,
+         RestoreAttr()
+    ];
+
+    Dcylindre = {cylindre(A, vect, r, mode)}
+    [SaveAttr(),
+     $A:=%1, $V:=%2, $r:=%3, $mode:=%4,
+     if ModelView()=ortho then
+            if Prodscal(n(),V)<0 then A:=A+V, V:=-V fi,
+        $N:=Prodvec(n(),V), N:=r*normalize(N),
+        if mode=0 then FillStyle:=none fi,
+            if mode>0 then
+               LineStyle:=noline,
+               Path(Proj3D( [A-N+V, A-N, A+N, A+N+V, line,closepath] )),
+               LineStyle:=solid,
+            fi,
+            Path(Proj3D( [A-N+V, A-N, line, A+N, move, A+N+V, line,closepath] )),
+            Arc3D(A-N+V,A+V,A+N+V,r,1,V), Arc3D(A-N,A,A+N,r,-1,V),
+            FillStyle:=none, Arc3D(A-N+V,A+V,A+N+V,r,-1,V),
+        if mode<>1 then
+                 FillStyle:=none,LineStyle:= HideStyle,
+                 if HideColor<>Nil then Color:=HideColor fi,
+                 if HideWidth<>Nil then Width:=HideWidth fi,
+                 Arc3D(A-N,A,A+N,r,1,V)
+            fi
+         else
+             $C:=PosCam(),
+             $A':=dproj3d(A, [C,V]), $d:=Norm(A'-A), $a:=arccos(r/d),
+             $A'':=A+r*normalize(A'-A), A2:=rot3d(A'',[A,V],a), A1:=rot3d(A'',[A,V],-a),
+             if mode=0 then FillStyle:=none fi,
+          if A1=Nil Or A2=Nil then {A confondu avec A'}
+                $s:=Prodvec(V,vecI), if Norm(s)<1E-17 then s:=Prodvec(V,vecJ) fi,
+                s:=r*normalize(s),
+                A1:=A+s, A2:=A-s,
+                if Norm(C-A-V)>Norm(C-A) then A:=A+V, V:=-V fi,
+                Cercle3D(A+V,r,V),
+                if mode<>1 then
+                 FillStyle:=none,LineStyle:= HideStyle,
+                 if HideColor<>Nil then Color:=HideColor fi,
+                 if HideWidth<>Nil then Width:=HideWidth fi,
+                     Cercle3D(A,r,V)
+               fi
+          else
+             if mode>0 then
+               LineStyle:=noline,
+               Path(Proj3D( [A1+V, A1, A2, A2+V, line, closepath] )),
+               LineStyle:=solid,
+            fi,
+            Path(Proj3D( [A1+V, A1, line, A2, move, A2+V, line, closepath] )),
+            $haut:=0, $bas:=0,
+            if Prodscal(V,C-A)<0 then
+               Arc3D(A1,A,A2,r,-1,V),
+               $oldfill:=FillStyle, FillStyle:=none,
+               Arc3D(A1,A,A2,r,1,V) ,
+               FillStyle:=oldfill
+            else $bas:=1, Arc3D(A1,A,A2,r,1,V)
+            fi,
+            if Prodscal(V,C-A-V)>0 then
+               Arc3D(A1+V,A+V,A2+V,r,-1,V),
+               $oldfill:=FillStyle, FillStyle:=none,
+               Arc3D(A1+V,A+V,A2+V,r,1,V) ,
+               FillStyle:=oldfill
+            else $haut:=1, Arc3D(A1+V,A+V,A2+V,r,1,V)
+            fi,
+        if mode<>1 then
+                 FillStyle:=none,LineStyle:= HideStyle,
+                 if HideColor<>Nil then Color:=HideColor fi,
+                 if HideWidth<>Nil then Width:=HideWidth fi,
+                 if bas then Arc3D(A1,A,A2,r,-1,V) fi,
+                     if haut then Arc3D(A1+V,A+V,A2+V,r,-1,V) fi,
+            fi
+        fi
+    fi, RestoreAttr()
+    ];
+
+    DpqGoneReg3D = {DpqGoneReg3D( <Axe>, <Sommet>, <[p,q]>): dessine n p/q-gone régulier dans l'espace}
+    Ligne( Proj3D(pqGoneReg3D(%1,%2,%3)), 1);
+
+ 
+    DrawAretes = {DrawAretes( liste aretes, mode 0/1): dessine une liste d'arêtes avec les coordonnées des points, et le style en partie imaginaire de jump}
+    [$oldstyle:=FillStyle, FillStyle:=none,
+     if %2=Nil then $mode:=0 else mode:=%2 fi,
+    for $segment in %1 By jump do
+        if Im(sep) then  Insert($vues, [$segment,jump]) else Insert($cachees, [segment,jump]) fi,
+    od,
+    if mode<>1 then
+        SaveAttr(),
+        LineStyle:= HideStyle,
+        if HideColor<>Nil then Color:=HideColor fi,
+        if HideWidth<>Nil then Width:=HideWidth fi,
+        Ligne(Proj3D(Merge3d(cachees)),0),
+        RestoreAttr()
+    fi,
+    LineStyle:= solid, Ligne(Proj3D(Merge3d(vues)),0),
+    FillStyle:=oldstyle
+    ];
+
+    DrawDroite = {DrawDroite( [point3D, vect dir] , long gauche, long droite) }
+    [ $A:=Copy(%1,1,2), $u:=Copy(%1,3,2),
+     if %2=Nil then Droite(Proj3D(A), Proj3D(A+u))
+     else u:=normalize(u), Ligne( Proj3D([A-%2*u, A+%3*u]),0)
+     fi
+    ];
+
+    DrawDdroite = {DrawDdroite( [A,u], L) demi-droite}
+    [$A:=Copy(%1,1,2), $u:=Copy(%1,3,2), $L:=%2,
+     if L=Nil then $a:=Proj3D(A), $b:=Proj3D(A+u), Ddroite(a,b)
+     else $a:=Proj3D(A), $b:=Proj3D(A+L*normalize(u)), Ligne([a,b],0)
+     fi
+    ];
+
+   DrawGouraudTr = { DrawGouraudTr( facettes ): usage interne, affichage écran}
+    Ligne(Proj3D(%1),1);
+
+
+   DrawPlan = { DrawPlan( [A, u], V, L1, L2, type) }
+    [$A:=Copy(%1,1,2), $u:= Copy(%1,3,2), $V := %2, $type:=%5,
+    if type=Nil then type:=5 fi,
+    $W:= Prodvec(u,V), V:=%3*normalize(V), W:= %4*normalize(W), $Dep:=A+W/2-V/2,
+    Ligne( Proj3D(
+    if type=1 then Dep, Dep-W, Dep-W+V
+      elif type=2 then  Dep-W,Dep+V-W, Dep+V
+      elif type=3 then Dep+V-W, Dep+V, Dep
+      elif type=4 then Dep+V, Dep, Dep-W
+      elif type=-1 then Dep-W, Dep, Dep+V, Dep+V-W
+      elif type=-2 then Dep+V, Dep, Dep-W, Dep-W+V
+      elif type=-3 then Dep, Dep-W, Dep-W+V, Dep+V
+      elif type=-4 then Dep, Dep+V, Dep+V-W, Dep-W
+      else Dep, Dep-W,Dep-W+V, Dep+V fi), type=5)
+     ];
+
+    Dsphere = {dsphere(centre, rayon, mode) }
+    [SaveAttr(),$A:=%1, $R:=%2, $mode:=%3,
+     $oldstyle:=FillStyle,if mode=0 then FillStyle:=none fi,
+     Cercle(Proj3D(A),R), $u:=normalize(Prodvec(Normal(), vecK)), //$v:= normalize(Prodvec(u, vecK)),
+     $M1:=A+R*u, $M2:=A-R*u, 
+     if (mode=1)=0 then
+        if mode=2 then FillStyle:=none fi,
+        Arc3D(M1,A,M2,R,1,vecK),
+        LineStyle:= HideStyle,
+        if HideColor<>Nil then Color:=HideColor fi,
+        if HideWidth<>Nil then Width:=HideWidth fi,
+        Arc3D(M1,A,M2,R,-1,vecK),
+     else
+      LineStyle:=noline, FillStyle:=oldstyle, FillColor:=Rgb(0.9,0.9,0.9),
+     $C:=Proj3D(A)+5*R/6*exp(i*pi/3), $angle:=-pi/3.5, $scale:=R/2,
+     Bezier(for $z in [0, 0.25+i/2,0.75+i/2,1,0.75+i/5,0.25+i/5,0]
+       do scale*exp(i*angle)*z+C od)
+     fi, RestoreAttr()
+    ];
+
+    LabelDot3D = {LabelDot3D( point3D, nom, orientation(N, NE, ...), DrawDot (0/1) [, distance]) affiche un label par rapport à un point de l'espace, ce point peut-être également affiché (DrawDot=1).}
+    LabelDot(Proj3D(%1), %2, %3, %4, %5);
+
+    Ligne3D = {Ligne3D( <liste de point3D>, fermée(0/1) )}
+    Ligne( Proj3D(%1), %2);
+
+    markseg3d = {markseg3d(A,B,n,espace, long [, angle]) }
+    markseg(Proj3D(%1),Proj3D(%2),%3,%4,%5,%6);
+
+    Point3D = {Point3D( <liste de point3D>)}
+    Point( Proj3D( for $k from 1 to Nargs() do Args(k) od));
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{macros de dessin de facettes 3d}
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    Dparallelep = [$X:=Parallelep(%1,%2,%3,%4), DrawPoly(X,%5,%6)];
+
+    Dprisme = [$X:=Prisme(%1,%2),DrawPoly(X,%3,%4)];
+
+    Dpyramide = [$X:=Pyramide(%1,%2),DrawPoly(X,%3,%4)];
+
+    DrawFaces = {DrawFaces(liste faces, visible(0/1)+i*contrast(0/1)): dessine une liste de faces avec les coordonnées des points, usage interne}
+    Ligne(Proj3D(SortFacet(%1,%2)),1);
+
+    DrawFacet = {DrawFacet( facettes1, [color:=,backculling:=,contrast:=,smooth:=],facettes2, [color,...],...): mixe de DrawFlatFacet et DrawSmoothFacet}
+    [SaveAttr(), FillStyle:=full, $oldstyle:=LineStyle, backculling:=0, contrast:=1, color:=white, smooth:=0,
+     $S:=SortFacet( for $k from 1 to Nargs()/2 do
+                                 $aux:=Args(2*k),
+                                 if smooth=0 then
+                                    PaintFacet(Args(2*k-1),color,backculling+i*contrast)
+                                 else
+                                    PaintVertex(Args(2*k-1),color,backculling+i*contrast)
+                                 fi,
+                    od),
+     for $facette in S By jump do
+            if Im($facette[2])=0 then LineStyle:=oldstyle, Ligne(Proj3D([facette,sep]),1) {export sans smooth}
+                                 else LineStyle:=noline, draw("GouraudTr", [facette,sep])     {export avec smooth}
+            fi,
+     od,
+     RestoreAttr()
+     ];
+
+    DrawFlatFacet = {DrawFlatFacet(facettes1, [ backculling:=,contrast:=], facettes2, ...): comme DrawPolyNC mais avec des listes de facettes de couleurs différentes mais sans smooth, (tri de facettes avec SortFacet et non Build3D)}
+    [SaveAttr(), FillStyle:=full, backculling:=0, contrast:=1, color:=white,
+     Ligne(
+           Proj3D(
+                  SortFacet( for $k from 1 to Nargs()/2 do
+                     {SaveAttr(),}
+                     $aux:=Args(2*k),
+                                 PaintFacet(Args(2*k-1),color,backculling+i*contrast),
+                     {RestoreAttr(),}
+                             od)
+                 ),1),
+     RestoreAttr()
+     ];
+ 
+    DrawPoly = {DrawPoly( polyedre, [ mode(0/1/2/3/4) , contrast] ): dessine un polyedre convexe
+    mode=0: aretes visibles et cachées
+    mode=1: faces visibles+couleur unie
+    mode=2: faces visibles+couleur unie+aretes cachées
+    mode=3 faces visibles+couleur nuancée
+    mode=4 faces visibles+couleur nuancée+aretes cachées}
+    [if %2=Nil then $mode:=0 else mode:=%2 fi, $contrast:=if %3=Nil then 1 else %3 fi,
+    if mode=1 then Ligne(Proj3D(SortFacet(%1,1)),1)
+    elif mode=2 then $oldstyle:=LineStyle, LineStyle:=noline, Ligne(Proj3D(SortFacet(%1,1)),1),
+                     LineStyle:=oldstyle
+    elif mode=3 then Ligne(Proj3D(SortFacet(%1,1+i*contrast)),1)
+    elif mode=4 then $oldstyle:=LineStyle, LineStyle:=noline,
+                     Ligne(Proj3D(SortFacet(%1,1+i*contrast)),1),
+                     LineStyle:=oldstyle
+    fi,
+    if mod(mode,2)=0 then {modes 0 2 ou 4}
+    $F:=Aretes(%1),
+    DrawAretes(F,mode)
+    fi];
+
+    DrawPolyNC = {DrawPolyNC( polyedre, mode(0/1) <, contrast> ): dessine un polyedre non convexe (pour compatibilité)
+    mode=1: faces visibles+couleur unie
+    mode=3 faces visibles+couleur nuancée}
+    [if %2=Nil then $mode:=3 else mode:=%2 fi,$contrast:=if %3=Nil then 1 else %3 fi,
+    if mode=0 then Ligne(Proj3D(SortFacet(%1,0)),1)
+    elif mode=1 then Ligne(Proj3D(SortFacet(%1,i*contrast)),1)
+    fi];
+
+   DrawSmoothFacet = { usage interne, appelée par draw("SmoothFacet",...) pour le dessin}
+    [SaveAttr(), FillStyle:=full, LineStyle:=noline, backculling:=0, contrast:=1,color:=white,
+     Ligne(
+           Proj3D(
+                  SortFacet( for $k from 1 to Nargs()/2 do
+                                 $aux:=Args(2*k),
+                                 PaintFacet(Args(2*k-1),color,backculling+i*contrast),
+                             od)
+                 ),1),
+     RestoreAttr()
+     ];
+
+    Dsurface = {Dsurface( <M( x(u,v), y(u,v), z(u,v))> [, uMin+i*uMax, vMin+i*vMax, uNbLg+i*vNbLg, smooth(0/1)+i*contrast] )}
+    [$S:=GetSurface(%1,%2,%3,%4),
+     $c:=if %5=Nil then 1, $s:=0 else Im(%5), s:=Re(%5) fi,
+     if s=1 then draw("SmoothFacet", S, [color:=FillColor, contrast:=c]),
+     else draw("FlatFacet", S, [color:=FillColor, contrast:=c])
+     fi
+    ];
+
+    Dtetraedre = [$X:=Tetra(%1,%2,%3,%4),DrawPoly(X,%5, %6)];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{Macros faisant un dessin dans Build3D }
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    bdFacet = {bdFacet(<liste>, [options]): dessine une liste de facettes dans l'espace
+    options:
+         addsep = x ou y ou z pour ajouter une facette séparatrice Nil par défaut
+         triangular = 0/1 pour trianguler les facettes
+     color:= couleur (white par défaut)
+     contrast:= nombre>=0 (contraste=1: contraste normal valeur par defaut, constrast=0 signifie: pas de contraste, couleur unie)
+     smooth:= 0/1 (0 par defaut)
+     backculling:= 0/1 (0 par defaut, elimination facettes cachees)
+     opacity:= nombre entre 0 et 1 (1 par defaut)
+     twoside:= 0/1 (1 par defaut, distinguer devant-derriere)
+     clip:= -1/0/1 (0 par defaut, 1=clipping avec la fenetre definie par clipwin, -1=section par le plan défini par clipwin)
+     clipwin:= [M(xinf,yinf,zinf),M(xsup,yup,zsup)] (fenetre pour clipper (ou plan), fenetre courante par defaut)
+     matrix:= matrice3d  (matrice de transformation, l'identité par defaut)
+     above := 0/1 permet de placer par dessus la scéne: translation de above*500*\n
+     border := 0/1 permet de dessiner ou non les arêtes des facettes
+     bordercolor := black couleur des arêtes le cas écheant
+     hidden := 0/1  indique si les arêtes doivent être dessinées par dessus}
+
+    [color:=white, contrast:=1, smooth:=0, backculling:=0, opacity:=1, above:=0,border:=0,bordercolor:=black,hidden:=hiddenLines,
+    twoside:=1, clip:=0, matrix:=defaultMatrix, addsep:=Nil, triangular:=0,
+    clipwin:=[Xinf+i*Yinf,Zinf,Xsup+i*Ysup,Zsup],
+    $aux:=%2, 
+    if matrix=Nil then $facettes:=%1 else facettes:=Mtransform3D(%1,matrix) fi,
+    $type:= if smooth then -1 else 1 fi + i*(contrast-1),
+    if backculling then color:=-color fi,
+    if twoside=0 then opacity:=-opacity fi,
+    if opacity=1 then opacity:=0 fi,
+    if clip=1 then facettes:=clipPoly(facettes,clipwin)
+    elif clip=-1 then facettes:=ClipFacet(facettes,clipwin) fi,
+        if addsep<>Nil then
+                $wall:=
+                   for $Z in facettes By jump do
+                    $r:=rectangle3d(Z), $A:=r[1,2],
+                    $B:=r[3,2], $u:=B-A, $x:=Re(u[1]), $y:=Im(u[1]), $z:=u[2],
+                    $U:=[x,0], $V:=[y*i,0], $W:=[0,z],
+                    if addsep="z" then [A,A+U,A+U+V,A+V,jump]
+                    elif addsep="y" then  [A,A+U,A+U+W,A+W,jump]
+                    else [A,A+V,A+V+W,A+W,jump]
+                    fi
+                od,
+                0,0,wall,sep3D
+        fi,
+        if triangular then $res:=trianguler(facettes) else res:= facettes fi,
+    type, color+i*opacity, if above=0 then res else putAbove(res) fi,
+    if border=1 then
+        sep3D, bdLine( Merge3d(Aretes(facettes)), [%2,matrix:=Nil, clip:=0, border:=0,color:=bordercolor])
+    fi
+    ];
+
+    bdLine = {bdLine(<liste>, [options]): dessine une ligne polygonale dans l'espace
+    options:
+     arrows:= 0/1/2 (fleche, 0 par defaut)
+     arrowscale:= echelle (1 par defaut)
+     color:= black par défaut
+     opacity:= nombre entre 0 et 1 (1 par defaut)
+     width:= epaisseur (8 par defaut)
+     linestyle:= style de ligne (solid par defaut )
+     tube:= 0/1 (0 par defaut, indique s'il faut construire un tube (à facettes) à partir de la ligne)
+     radius:= rayon du tube si tube=1 (0.01 par defaut)
+     radiusscale:= facteur d'échelle du rayon lorsque tube=1 (1 par défaut)
+     nbfacet:= nombre de facettes si tube=1 (4 par défaut)
+     close:= 0/1 (0 par defaut, indique s'il faut fermer la ligne ou non)
+     hollow:= 0/1 si tube=1 (0 par defaut, indique si le tube et creux ou non)
+     clip: 0/1 (0 par defaut)
+     clipwin: fenetre3d de clipping (fenetre courante par defaut)
+     matrix:= matrice3d  (matrice de transformation, l'identité par defaut)
+     above := 0/1 permet de placer par dessus la scéne: translation de above*500*\n
+     hidden := 0/1 pour ajouter automatiquement la ligne en pointillés par dessus la scène
+     avec l'option "tube:=1" la macro bdFacet est appelée, on peut donc utiliser dans ce cas les options de bdFacet.}
+
+    [color:=black, opacity:=1, tube:=0, radius:=0.005*(Ymax-Ymin), nbfacet:=4, close:=0, hollow:=0, above:=0,
+    hidden:=hiddenLines, clip:=0, clipwin:=[Xinf+i*Yinf,Zinf,Xsup+i*Ysup,Zsup],width:=8,matrix:=defaultMatrix,
+    linestyle:=solid, arrows:=0,arrowscale:=1,radiusscale:=1,
+    $aux:=%2,  if above=1 then hidden:=0,tube:=0 fi, $type:=2-tube,$bkc:=(hollow=0) Or close,
+    if matrix=Nil then $ligne:=%1 else $ligne:=Mtransform3D(%1,matrix) fi,
+    if clip=1 then ligne:=clipCurve(ligne,clipwin)
+    elif clip=-1 then ligne:=Clip3DLine(ligne,clipwin)
+    fi,
+    if above=1 then ligne:=putAbove(ligne) fi,
+    if arrows<>0 then
+       $ligne:=for $Z in ligne By 2 do Z od, {on enleve les jump}
+       if arrows>=1 then
+          $A:=ligne[0,4], $B:=A[3,2], A:=A[1,2],
+          Del(ligne,0,2), {on supprime le dernier point}
+          $h:=arrowscale*0.25*normalize(A-B),
+              if Norm(B-A)>=0.25*arrowscale then  Insert(ligne,B+h) fi,
+          {cones (smooth shading)}
+          [-1,color,Cone(B,h,arrowscale*0.1,10,1)],sep3D,
+          if arrows=2 then
+             $A:=ligne[1,4], $B:=A[3,2], A:=A[1,2],
+             Del(ligne,1,2),
+             $h:=arrowscale*0.25*normalize(B-A), 
+         if Norm(B-A)>=0.25*arrowscale then  Insert(ligne,A+h,1) fi,
+             {cones (smooth shading)}
+             [-1,color,Cone(A,h,arrowscale*0.1,10,1)],sep3D
+          fi,
+       fi
+    fi,
+    if opacity=1 then opacity:=0 fi,
+    if type=2 then
+     if close then Insert(ligne,ligne[1,2]) fi,
+     2, color+i*opacity, width+i*linestyle,ligne
+    else
+     bdFacet(lineTube(ligne,radius*radiusscale,nbfacet,close,hollow),[backculling:=bkc, %2,matrix:=Nil,clip:=0,above:=0])
+    fi,
+    if hidden then sep3D, bdLine(ligne, [%2,matrix:=Nil,clip:=0,above:=1,hidden:=0,linestyle:=HideStyle,width:=if HideWidth=Nil then 8 else HideWidth fi,arrows:=0]) fi
+    ];
+
+    bdPlan = { bdPlan( plan, [options] ): dessine le plan qui est de la forme: [point, vecteur normal]
+    options:
+    scale: nombre>0 (1 par defaut) le plan est intersecté par le parall\'el\'epip\`e de de base
+        ce qui donne une facette qui peut \^etre agrandie ou diminu\'ee.
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)
+ Cette macro appelle bdFacet.}
+    [scale:=1,  border:=0, width:=8, bordercolor:=black, $aux:=%2,
+     if border=1 then
+        $P:=getplan(%1,scale),
+        bdFacet( getplan(%1,0.995*scale), [twoside:=0,%2, border:=0]),
+        sep3D,
+        bdLine( Merge3d(Aretes(P)), [%2, color:=bordercolor, tube:=0])
+    else
+        bdFacet( getplan(%1,scale), [twoside:=0,%2])
+    fi];
+
+    bdPlanEqn = { bdPlanEqn( equation, [options] ): dessine le plan ax+by+cz=d qui est donne sous la forme: [a,b,c,d]
+    options:
+    scale: nombre>0 (1 par defaut) le plan est intersecté par le parall\'el\'epip\`e de de base
+        ce qui donne une facette qui peut \^etre agrandie ou diminu\'ee.
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+ Cette macro appelle bdFacet.}
+    [scale:=1,  border:=0, width:=8, bordercolor:=black, $aux:=%2,
+     if border=1 then
+        $P:=getplanEqn(%1,scale),
+        bdFacet( getplanEqn(%1,0.995*scale), [twoside:=0,%2, border:=0]),
+        sep3D,
+        bdLine( Merge3d(Aretes(P)), [%2, color:=bordercolor, tube:=0])
+    else
+        bdFacet( getplanEqn(%1,scale), [twoside:=0,%2])
+    fi];
+
+    bdDroite = { bdDroite( droite, [options] ): dessine la droite qui est de la forme: [point, vecteur directeur]
+    options:
+    scale: nombre>0 (1 par defaut) la droite est intersect\'ee par le parall\'el\'epip\`e de de base
+        ce qui donne un segment qui peut \^etre agrandie ou diminu\'ee.
+ Cette macro appelle bdLine.}
+    [scale:=1,$aux:=%2,
+     bdLine( getdroite(%1,scale), %2)
+    ];
+
+    bdCurve = {bdCurve(<f(t)>, [options]): dessine une courbe paramétrée par f(t)=[x(t)+i*y(t),z(t)] dans l'espace
+    options:
+     t:= [tmin,tmax] ([-5,5] par defaut)
+     nbdot: nombre de points (25 par defaut)
+cette macro appelle bdLine, on peut utiliser les options de bdLine.}
+    [t:=[-5,5], nbdot:=25, $aux:=%2,
+    $du:=(t[2]-t[1])/(nbdot-1), $u:=t[1],
+    ligne:=for $k from 1 to nbdot do        {points de la courbe}
+                      Assign(%1,t,u), $A:=%1,
+                      if Nops(A)<2 then jump else A fi,
+                      Inc(u,du)
+    od,
+    bdLine(ligne,%2)];
+
+    bdTorus = {bdTorus(centre, R, r, Normale, [options]): dessine un tore
+        options:
+         color:= couleur (white par défaut)
+         opacity:= nombre entre 0 et 1 (1 par defaut)
+         grid:= [nb méridiens, nb parallèles] ([40,20] par défaut 
+cette macro appelle bdSurf}
+    [$C:=%1, $R:=%2, $r:=%3, $V:=normalize(%4), $Vy:=Yde(V),
+     if abs(Vy)=1 then $mat:=[C,vecI,vecJ,vecK] else
+        mat:= matrix3d(C+rot3d(M,[0,0,Prodvec(vecJ,V)],arccos(Vy))),
+    fi,
+    matrix:=defaultMatrix, clip:=0, $aux:=%5, $bkc:=(clip=0),
+    if matrix<>Nil then mat:=mulmatrix3d(matrix,mat) fi,
+        bdSurf(M((R+r*cos(v))*sin(u),r*sin(v),(R+r*cos(v))*cos(u)), 
+            [grid:=[40,20], backculling:=bkc, %5,u:=[-pi,pi],v:=[-pi,pi],  matrix:=mat])
+    ];
+
+    bdPrism = {bdPrism( base, vecteur, [options] ): dessine un prisme
+    options:
+    color:=
+    hollow:= (1 par defaut)
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+appelle bdFacet}
+    [hollow:=1, border:=0, bordercolor:=black, $aux:=%3,
+     $P:=Prisme(%1,%2,hollow), $A:=Merge3d(Aretes(P)),
+     if hollow=0 then
+       $d:=Pos(jump,P), $base1:=P[1,d[2]], Del(P,1,d[2]),
+       $d:=Pos(jump,P), $base2:=P[1,d[2]], Del(P,1,d[2]),
+       bdFacet([base1,base2], [%3, smooth:=0]), sep3D
+    fi,
+    bdFacet(P,%3),
+    if border=1 then
+        sep3D, bdLine(A, [%4,color:=bordercolor])
+    fi
+    ];
+
+    bdPyramid = {bdPyramid( base, sommet, [options] ): dessine une pyramide
+    options:
+    color:=
+    hollow:= (1 par defaut)
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+appelle bdFacet}
+    [hollow:=1, border:=0, bordercolor:=black, $aux:=%3,
+     $P:=Pyramide(%1,%2,hollow), $A:=Merge3d(Aretes(P)),
+     if hollow=0 then
+       $d:=Pos(jump,P), $base:=P[1,d[2]], Del(P,1,d[2]),
+       bdFacet([base], [%3, smooth:=0]), sep3D
+    fi,
+    bdFacet(P,%3),
+    if border=1 then
+        sep3D, bdLine(A, [%4,color:=bordercolor])
+    fi
+    ];
+
+    bdCylinder = {bdCylinder( sommet, vecteur, rayon, [options])
+    options:
+    color:=
+    nbfacet:= (35 par défaut)
+    hollow:= (1 par defaut)
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+appelle bdFacet
+    }
+    [ nbfacet:=35, hollow:=1, border:=0, bordercolor:=black, $aux:=%4,
+      if border=1 then
+         $k:=0.995,
+         $C:=Cylindre( %1+(1-k)*%2/2, k*%2, k*%3, nbfacet, hollow),
+         if hollow=0 then 
+        $d:=Pos(jump,C), $base:=C[1,d[2]], Del(C,1,d[2]),
+        bdFacet(base,[%4,border:=0]), sep3D
+         fi,
+         bdFacet(C, [%4,border:=0]),
+       if ModelView()=ortho then    
+         $u:=normalize(Prodvec(%2,Normal())), $A1:=%1+%3*u, A2:=%1-%3*u
+       else
+         $Cam:=PosCam(), $A:=%1, $V:=%2, $r:=%3,
+             $A':=dproj3d(A, [Cam,V]), $d:=Norm(A'-A), $a:=arccos(r/d),
+             $A'':=A+r*normalize(A'-A), A2:=rot3d(A'',[A,V],a), A1:=rot3d(A'',[A,V],-a),
+             if A1=Nil Or A2=Nil then {A confondu avec A'}
+                $s:=Prodvec(V,vecI), if Norm(s)<1E-17 then s:=Prodvec(V,vecJ) fi,
+                s:=r*normalize(s),
+                $A1:=A+s, $A2:=A-s,
+
+             fi
+      fi, 
+         $silhouette:=[A1,A1+%2,jump,A2,A2+%2],
+         sep3D,
+         bdLine( $silhouette, [%4, color:=bordercolor, tube:=0]),
+         sep3D,
+         bdCercle( %1,%3,%2, [%4, color:=bordercolor, tube:=0]),
+         sep3D,
+         bdCercle( %1+%2,%3,%2, [%4, color:=bordercolor, tube:=0])
+      else
+         $C:=Cylindre( %1, %2, %3, nbfacet, hollow),
+         if hollow=0 then 
+        $d:=Pos(jump,C), $base:=C[1,d[2]], Del(C,1,d[2]),
+        bdFacet(base,%4), sep3D,
+         fi,
+         bdFacet(C, %4),
+      fi];
+
+    bdCone = {bdCone( sommet, vecteur, rayon, [options])
+    options:
+    color:=
+    nbfacet:= (35 par défaut)
+    hollow:= (1 par defaut)
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+appelle bdFacet
+    }
+    [ hollow:=1, border:=0, nbfacet:=35, bordercolor:=black, width:=8, $aux:=%4,
+      if border=1 then
+         $k:=0.995,
+         $C:=Cone( %1+(1-k)*%2/2, k*%2, k*%3, nbfacet, hollow),
+         if hollow=0 then 
+        $d:=Pos(jump,C), $base:=C[1,d[1]], Del(C,1,d[1]),
+        bdFacet(base,[%4,border:=0]), sep3D
+         fi,
+         bdFacet(C,[%4,border:=0]),
+         $A:=%1, $V:=%2, $r:=%3,
+       if ModelView()=ortho then
+         $I:=normalize(V), $J:=Prodvec(I,Normal()), J:=normalize(J), $K:=Prodvec(I,J),
+         $xn:=Prodscal(Normal(),I), $zn:=Prodscal(Normal(),K), $x:=xn/zn*r/Norm(V),
+         if x>=1 then t1:=pi/2 elif x<=-1 then t1:=-pi/2 else t1:=arcsin(x) fi,
+         $t2:=pi-t1,
+         $M1:=A+V+cos(t1)*r*J+sin(t1)*r*K, $M2:=A+V+cos(t2)*r*J+sin(t2)*r*K,
+         $silhouette:=[M1,A,M2],
+       else
+         $Cam:=PosCam(), $C':=dproj3d(Cam, [A,V]),
+             $lambda:= (if Prodscal(V,C'-A)>0 then 1 else -1 fi)*Norm(V)/Norm(C'-A),
+             $r':=r/abs(lambda), $alpha:=arccos(r'/Norm(C'-Cam)), $C'':=C'+r'*normalize(Cam-C'),
+             $M1:=rot3d(C'',[A,V], -alpha), $M2:=rot3d(C'',[A,V], alpha),
+             M1:=A+lambda*(M1-A), M2:=A+lambda*(M2-A),
+             if M1=Nil Or M2=Nil then {C est dans le cone} $silhouette:=Nil
+            else $silhouette:=[M1,A,M2]
+         fi
+       fi,
+         if silhouette<>Nil then 
+            sep3D,
+            bdLine( $silhouette, [%4, color:=bordercolor, tube:=0])
+         fi,
+         sep3D,
+         bdCercle( A+V,r,V, [%4, color:=bordercolor, tube:=0])
+      else
+         $C:=Cone( %1, %2, %3, nbfacet, hollow),
+         if hollow=0 then 
+        $d:=Pos(jump,C), $base:=C[1,d[1]], Del(C,1,d[1]),
+        bdFacet(base,%4), sep3D
+         fi,
+         bdFacet(C, %4),
+      fi];
+
+    bdSphere = {bdSphere( centre, rayon, [options])
+    options:
+    grid:= [nb parallèles, nb méridiens] ([40,25] par defaut)
+    border:= 0/1 dessiner ou pas le bord (0 par défaut)
+    bordercolor:= couleur du bord (black par défaut)
+    width:= épaisseur du bord (8 par défaut)    
+appelle bdFacet}
+    [ grid:=[40,25], border:=0, width:=8, clip:=0, bordercolor:=black, $aux:=%3, $bkc:=(clip=0),
+      if border=1 then
+         $k:=0.995,
+         bdFacet(Sphere( %1, k*%2, grid[1], grid[2]),[backculling:=bkc,%3,border:=0]),
+         sep3D,
+         if ModelView=ortho then
+            bdCercle( %1,%2, Normal(), [%4, color:=bordercolor, tube:=0])
+         else
+            $C:=inv3d(PosCam(),%1,%2), $r:=%2*sqrt(1-%2^2/Norm(PosCam()-%1)^2), //r=R sqrt( 1-R^2/CM^2)
+            bdCercle( C,r, Normal(), [%4, color:=bordercolor, tube:=0])
+         fi
+      else
+         bdFacet(Sphere( %1, %2, grid[1], grid[2]),[backculling:=bkc,%3]),
+      fi];
+
+    bdSurf = {bdSurf(<[x(u,v)+i*y(u,v), z(u,v)]>, [options]): dessine une surface paramétrée par u et v
+    options:
+     u:=[umin,umax]  (intervalle pour le parametre u, [-5,5] par defaut)
+     v:=[vmin,vmax]  (intervalle pour le parametre v, [-5,5] par defaut)
+     grid:=[unblg, vnblg] (nombre de lignes pour u et v, [25,25] par defaut)
+
+cette macro appelle bdFacet, on peut utiliser les options de bdFacet.}
+    [u:=[-5,5], v:=[-5,5], grid:=[25,25], $aux:=%2,
+    bdFacet(GetSurface(%1,u[1]+i*u[2],v[1]+i*v[2],grid[1]+i*grid[2]),%2)];
+
+    bdWall = { bdWall( <plan> ) permet de poser une cloison separatrice, le plan est de la forme [point3d, vecteur normal]}
+    [0,0,getplan(%1)];
+
+    bdSep = { bdSep( <facette> ) permet de poser une facette separatrice}
+    [0,0,%1];
+
+    bdAxes = {bdAxes(origine, [options]),  dessine les axes
+    options:
+     labels:= 0/1 (indique la présence ou non des labels x y et z, 1 par defaut)
+
+cette macro appelle bdLine, on peut utiliser les options de bdLine.}
+    [labels:=1, SetStr(xlegend,"$x$"), SetStr(ylegend,"$y$"), SetStr(zlegend,"$z$"), $aux:=%2,
+    $O:=%1,$x:=Re(O[1]), $y:=Im(O[1]), $z:=Re(O[2]),
+    bdLine([x+i*Yinf,z,x+i*Ysup,z],%2),sep3D,
+    bdLine([Xinf+i*y,z,Xsup+i*y,z],%2),sep3D,
+    bdLine([x+i*y,Zinf,x+i*y,Zsup],%2),
+    if labels=1 then
+       sep3D, 
+       bdLabel([Xsup+(Xsup-Xinf)/20+i*y,z],@xlegend,[%2]),sep3D,
+       bdLabel([x+i*(Ysup+(Ysup-Yinf)/20),z],@ylegend,[%2]),sep3D,
+       bdLabel([x+i*y,(Zsup+(Zsup-Zinf)/20)],@zlegend,[%2]),
+    fi];
+
+    bdAngleD = { bdAngleD(B,A,C,longueur, [options]): dessiner un angle droit dans l'espace. Cette macro appelle bdLine, on peut utiliser les options de bdLine.}
+    [$u:=%4*normalize(%1-%2), $v:=%4*normalize(%3-%2),$L:=[%2+u,%2+u+v,%2+v],
+    bdLine(L,%5)];
+
+    bdDot = {bdDot( <liste de points>, [options]): dessine une liste de points dans l'espace
+    options:
+    color:= couleur (black par defaut)
+    dotstyle:=disc ou cube  ou line ou cross (disc par defaut)
+    dotscale:= echelle (1 par defaut)
+    dir:= vecteur lorsque dotstyle=line ou [vecteur1,vecteur2] lorsque dotstyle=cross (Nil par defaut)
+
+lorsque dostsyle=cube la macro bdFacet est appelée, on peut alors utiliser les options de bdFacet, lorsque dotstyle=line ou cross la macro bdLine est appelée, on peut alors utiliser les options de bdLine.}
+    [$default:=0.15,
+     color:=black, dotscale:=1, dotstyle:=disc, dir:=[vecI,vecJ], above:=0, $aux:=%2,
+     if dotstyle=disc then
+            [3,color, dotscale*2, if above then putAbove(%1) else %1 fi]
+     elif dotstyle=cube then
+            $faces:=Map3D( [$x:=Xde($Z),$y:=Yde(Z),$z:=Zde(Z), $d:=dotscale*default,
+                            Parallelep(Z-d*[1+i,1]/2,[d,0],[i*d,0],[0,d])
+                           ],Z,%1),
+            bdFacet(faces,[backculling:=1,%2])
+    elif dotstyle=line then
+            $dir1:=Copy(dir,1,2),
+            $d:=dotscale*default*normalize(dir1),
+            bdLine(Map3D( [Z-d,Z+d,jump], Z,%1),%2)
+    elif dotstyle=cross then
+            $dir1:=Copy(dir,1,2), $dir2:=Copy(dir,3,2),
+            $d1:=dotscale*default*normalize(dir1),
+            $d2:=dotscale*default*normalize(dir2),
+            bdLine(Map3D( [Z-d1,Z+d1,jump,Z-d2,Z+d2,jump], Z,%1),%2)
+    fi];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ conversion labels TeX vers prismes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    bande = { bande( ligne, ep ): renvoie une bande centrée sur la ligne}
+    [$ep:=%2/2, $L:=%1, $a:=L[1], $b:=L[2],
+    while b=a do Del(L,1,1), $b:=L[2], od, Del(L,1,2),
+    $v:=i*(b-a)/abs(b-a),
+    $bord:=[a-ep*v, a+ep*v], $dessus:=bord[2],
+    bord[1], $c:=b, b:=a, $v:=v/i,
+    for $z in L do
+        a:=b, b:=c, c:=z, $u:=-v, $v:=(c-b)/abs(c-b),
+        if v=Nil then
+           c:=b, b:=a, v:=-u,
+        else
+            bord:=projO( bord, [b,b+u+v], u),
+            if bord=Nil then bord:=[b+i*u*ep, b-i*u*ep] fi,
+            bord[1], Insert(dessus,bord[2],1)
+        fi
+    od,
+    c-ep*v*i, c+ep*v*i, dessus
+    ];
+
+    conv2Facet = { conv2Facet( path, type-remplissage, largeur-Bande, Vect-Translation, [options]) }
+    [if %2=-3 then {stroke}
+           $L:=bande(Get([NbPoints:=8, Path(%1)],0),%3)
+      else $L:=Get([NbPoints:=8, Path(%1)],0) {fill/eofill}
+      fi, 
+      sep3D,
+      bdFacet(Prisme(for z in L do z,0 od, %4*vecK,1), %5),
+      if L[-1]=jump then Del(L,-1,1) fi,
+      $J:=Pos(jump,L),
+      if J<>Nil then  {2 composantes ou plus => eofill}
+         $base:=split2facet2( for $Z in L by jump do Z,Z[1] od),
+      else  {une composante}
+          $base:= split2facet1([L,L[1]]),
+      fi,
+      sep3D,
+      bdFacet( [shift3d(base, %4*vecK), reverse3d(base)], [%5, smooth:=0]),
+    ];
+
+    split2facet1 = { split2facet1( contour fermé) }
+    [$L:=%1, $N:=Nops(L), $ok:=0, $compt:=0, $nb:=0,
+    repeat
+      repeat
+         if N<4 then ok:=1
+         elif N=4 then for $z in L[1,3] do z,0 od, jump, ok:=1
+         else
+            $a:=L[1], $b:=L[2], $c:=L[3],
+            $u:=(c-a), u:=1E-8*u/abs(u),
+            $Isin:=if ([a+u,c-u] InterL %1)=Nil then (a+c)/2 Inside %1 else 0 fi,
+             if Isin then
+               a,0, b,0, c,0, jump,
+               Del(L,2,1), Inc(N,-1), compt:=0
+             else
+                Del(L,1,1), Insert(L,b), Inc(compt,1)
+             fi
+         fi
+
+      until ok Or (compt=N) od,
+    if ok=0 then Inc(nb,1), L:=[b:=L[1],b, for $z in L[2,0] do a:=b,b:=z,(a+b)/2, b od],
+                 Inc(N,N-1),compt:=0 
+        {ok:=1, $d:=[a,c], split2facet1(Clip2D(L,d,1)), split2facet1(Clip2D(L,reverse(d),1)),}
+    fi
+    until ok Or (nb>2) od
+    ];
+
+    class_Path = {class_Path( liste de chemins): pour que le premier contienne les autres }
+    [$L:=%1, $a:=L[1], $k:=1, $num:=1,
+     for $k from 2 to CpNops(L) do
+            $Z:=CpCopy(L,k,1),
+            if a Inside Z then a:=Z[1], num:=k, $Z1:=Z fi,
+    od,
+    if num>1 then CpDel(L,num,1), Z1,jump,L else L fi
+    ];
+
+    split2facet2 = { split2facet2( contour à plusieurs composantes )}
+    [$L:=class_Path(%1), $Z1:=CpCopy(L,1,1), $Z2:=CpCopy(L,2,1), CpDel(L,1,1), $N2:=Nops(Z2), $N1:=Nops(Z1),
+    while Z2<>Nil do
+         $U:=[Z1,jump,L], CpDel(L,1,1), $compt:=0,
+     repeat
+      $a:=Z1[1], $b:=Z1[2], $ok:=0, $k:=0,
+      repeat
+            $c:=Z2[1], $d:=Z2[2], Inc(k,1),
+            $u:=(c-a), u:=1E-8*u/abs(u),
+            $Isin1:=if ([a+u,c-u] InterL U)=Nil then (a+c)/2 Inside U else 0 fi,
+                $u:=(c-b), u:=1E-8*u/abs(u),
+                $Isin2:=if ([b+u,c-u] InterL U)=Nil then (b+c)/2 Inside U else 0 fi,
+        $u:=(d-a), u:=1E-8*u/abs(u),
+                $Isin3:=if ([a+u,d-u] InterL U)=Nil then (d+a)/2 Inside U else 0 fi,
+            if Isin1 And Isin2 And Isin3 then
+               a,0, b,0, c,0, jump, ok:=1,
+           a,0, c,0, d,0, jump, Del(Z2,1,1), Inc(N2,-1),
+               Del(Z1,1,1), Insert(Z1,[Z2,b]), Inc(N1,N2)
+           else Del(Z2,1,1), Insert(Z2,d)
+           fi
+      until ok Or (k>N2-2) od,
+     if ok=0 then Del(Z1,1,1), Insert(Z1,b), Inc(compt,1) fi
+     until ok Or (compt>N1) od,
+     if ok=0 then split2facet1(Z2) fi, {Z2 en dehors de Z1}
+     $Z2:=CpCopy(L,1,1), N2:=Nops(Z2)
+    od,
+    split2facet1(Z1),
+    ];
+
+    makeLabel3d = {makeLabeld3d(point d'ancrage, numero, [options]): appelée par bdLabel lorsque  label3d vaut 1}
+
+        [$dilatation:=100, $L:=Eval("text3d"+Str(%2)+"Path()"), $options:=%3,
+
+            $d:=labelpos[1], $v:=labelpos[2], v:=v/abs(v), $dir2d:=d*v, if dir2d=Nil then dir2d:=0 fi,
+            $dirH:=labeldir[1,2], $dirW:=labeldir[3,2], $ep:=labeldir[5,1], if ep=Nil then ep:=0.0125 fi,
+            if dirW=Nil then dirW:=ScreenY() fi, if dirH=Nil then dirH:=ScreenX() fi, $dirEp:=Prodvec(dirW,dirH),
+            $T:=%1+Re(dir2d)*ScreenX()+Im(dir2d)*ScreenY()+ep*dirEp/2,
+            $mat3d:=[T,scale*dirH/dilatation,scale*dirW/dilatation,-dirEp],          
+            $r:=Copy(L,1,1), $long:=Re(r[1])/2, $haut:=Im(r[1])/2, Del(L,1,1),
+             if labelstyle= right then $trans:= -long
+             elif labelstyle= right+top then trans:= -long-i*haut
+             elif labelstyle= right+bottom then trans:= -long+i*haut
+             elif labelstyle= left then trans:= long
+             elif labelstyle= left+top then trans:= long-i*haut
+             elif labelstyle= left+bottom then trans:= long+i*haut
+             elif labelstyle= bottom then trans:= i*haut
+             elif labelstyle= top then trans:= -i*haut
+             else $trans:=0
+             fi,
+             $mat:=matrix((z+trans)*dilatation),
+             for $z in L do
+                 if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+                    then
+                        $x:=$chemin[1], Del(chemin,1,1),
+                        if Im(z)<>-4 then  {on ignore les clip}
+                           conv2Facet( Mtransform(chemin,mat), Im(z), Im(x)*0.254/72.27*dilatation,ep, [%3, matrix:=mat3d, above:=0])
+                        fi,
+                        chemin:=Nil
+                    else Insert(chemin,z)
+                 fi
+             od];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fin conversion labels TeX vers prismes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+affichage des labels TeX en 3d sans prisme
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+    drawTeXlabel3d = { drawTeXlabel3d(affixe, chemin lu par loadFlatPs ), [options], ): dessine le contenu en FlatPs 
+     options:
+     scale:= 1 par defaut
+    labeldir:= Nil par défaut
+    }
+    [ $L:=%2, $r:=Copy(L,1,1), $long:=Re(r[1])/2, $haut:=Im(r[1])/2, Del(L,1,1),
+      SaveAttr(), scale:=1, labeldir:=Nil, $options:=%3,
+      if LabelStyle= right then $trans:= -long
+      elif LabelStyle= right+top then trans:= -long-i*haut
+      elif LabelStyle= right+bottom then trans:= -long+i*haut
+      elif LabelStyle= left then trans:= long
+      elif LabelStyle= left+top then trans:= long-i*haut
+      elif LabelStyle= left+bottom then trans:= long+i*haut
+      elif LabelStyle= bottom then trans:= i*haut
+      elif LabelStyle= top then trans:= -i*haut
+      else $trans:=0
+      fi,
+      $anchor:=%1,
+      if Len(labeldir)=5 then $dirH:=labeldir[1,2], $dirW:=labeldir[3,2]
+      else dirH:=Nil, dirW:=Nil
+      fi,
+      if dirW=Nil then dirW:=ScreenY() fi, if dirH=Nil then dirH:=ScreenX() fi,
+      ComposeMatrix([anchor, Proj3D(dirH),Proj3D(dirW)]),ComposeMatrix([-anchor, 1,i]),
+      ComposeMatrix( matrix((z-$anchor)*scale+$anchor) ),
+      ComposeMatrix( matrix(z+$anchor+trans ) ),
+      for $z in L do
+          if (Re(z)=Re(jump)) And (Im(z)<0) {fin de chemin}
+             then  
+                   $x:=chemin[1], Del(chemin,1,1), FillColor:=Color, LineStyle:=noline,
+                   if Im(z)=-1 then Eofill:=1, FillStyle:=full,
+                   elif Im(z)=-2 then Eofill:=0, FillStyle:=full,
+                   else FillStyle:=none, LineStyle:=solid, Width:=Im(x)*scale,
+                   fi,
+                   if Im(z)<>-4 then  {on ignore les clip}
+                    Path(chemin, 0)
+                   fi,
+                   chemin:=Nil
+             else Insert(chemin,z)
+          fi
+      od,
+      RestoreAttr()
+    ];
+
+
+    bdLabel = {bdLabel(point d'ancrage, "texte", [options]): crée la macro ["text3d",numero de macro] contenant le "texte" et affiche celui-ci au point d'ancrage mais décalé de distance*affixe/abs(affixe) dans le plan de projection.
+    options:
+    color:= couleur du label (black par defaut)
+    dotcolor:= couleur du point (comme color par defaut)
+    labelsize:= taille du label (small par defaut)
+    labelstyle:= style du label (0 par defaut)
+    showdot:= 0/1 (indique s'il faut montrer le point d'ancrage, 0 par defaut)
+    labelpos:= [distance, affixe direction] décalage 2d pour l'affichage, (Nil par defaut)
+    labeldir:= [vecteur1, vecteur2, épaisseur]
+    label3d:= 0/1 (0 par défaut), (labels compilés et mis en prisme) si 1 alors Texify prend la valeur 1
+    TeXify := 0/1 (TeXifyLabels par défaut) 
+    dollar:= 0/1 (0 par défaut)
+    scale:= nombre>0 (1 par défaut) pour la taille des labels TeXifiés
+    lorsque showdot=1 la macro bdDot est appelée, on peut alors utiliser les options de bdDot.}
+
+    [Inc(ComptLabel3d,1), labelpos:=[0,i], color:=0, dollar:=0, scale:=1, labeldir:=Nil, label3d:=0, 
+    dotcolor:=Nil, labelsize:=LabelSize, labelstyle:=LabelStyle, showdot:=0, above:=0, matrix:=defaultMatrix,
+    TeXify := TeXifyLabels, $aux:=%3, if dotcolor=Nil then dotcolor:=color fi, TeXify:=(TeXify Or label3d), 
+    if matrix=Nil then $x:=%1 else 
+        x:=Mtransform3D(%1,matrix),
+        if labeldir<>Nil then labeldir:=[Mtransform3D( labeldir[1,4], [Origin, matrix[3,0]]), labeldir[5]] fi
+    fi,
+    if cleanLabel then DelMac("text3d"+Str(ComptLabel3d), "text3d"+Str(ComptLabel3d)+"Path") fi,
+    if TeXify then 
+        $debut:="text3d"+Str(ComptLabel3d),
+        if (GetStr(debut)<>%2) Or  (Eval(debut+"Path()")=Nil) then
+            $aux:=OpenFile(TmpPath+"formula.tex"),
+            if dollar then WriteFile(["\[",%2,"\]"]) else WriteFile(%2) fi,
+            CloseFile(), compileFormule(), $L:=loadFlatPs([TmpPath,"tex2FlatPs.eps"]),
+            $aux:=NewMac(debut+"Path", Str(L)), {Attention: NewMac renvoie 0 ou 1}
+            $aux:=NewMac(debut, String2Teg(%2)),
+        else $L:=Eval(debut+"Path()")
+        fi,
+     else $aux:=NewMac("text3d"+Str(ComptLabel3d), String2Teg(%2))
+     fi,
+    if above=0 then $anchor:=x else $anchor:=putAbove(x) fi,
+    if label3d then makeLabel3d($anchor,ComptLabel3d,%3)
+    else
+        [3+i*(1+TeXify), color+i*ComptLabel3d, if TeXify then scale else labelsize fi+i*labelstyle, [anchor,labelpos,labeldir]],
+    fi, {fin de TeXify=1}
+    if showdot then
+     sep3D,
+     bdDot(anchor,[%3,color:=dotcolor,above:=0,matrix:=Nil]) {on montre le point d'ancrage}
+    fi,
+    ];
+
+    labelarc = {permet de stocker un label pour un arc dans la macro bdArc}
+    SetStr("labelArc",%1);
+
+    bdArc = {bdArc(B,A,C,R,sens, [options]): dessine un arc de cercle dans l'espace de rayon R, le plan (BAC) est orienté par la base (B-A,C-A) et le sens vaut 1 ou -1. La macro bdCurve est appelée, on peut donc utiliser les options de bdCurve.
+    options:
+    labelarc("label"): permet de placer un label
+    radscale:= nombre qui, multiplié par le rayon de l'arc, donnera la distance du label au centre (1.25 par defaut)
+    normal:= vecteur qui sera considéré comme le vecteur normal au plan si l'angle est plat (Nil par défaut)}
+
+    [$B:=%1,$A:=%2, $C:=%3, $R:=%4, SetStr("labelArc",""),
+    $n1:=B-A, $n2:=C-A, radscale:=1.25, normal:=Nil,
+    $u:=Prodvec(n1,n2),
+    if Norm(u)=0 then $x:=%6, u:=normal fi,
+    u:=normalize(u),
+    if Norm(u)<>0 then
+       $v:=R*n1/Norm(n1), {vecteur de depart}
+       $w:=Prodvec(u,v), $alpha:=angle(n1,n2,1E-10),
+       $fin:=if %5>0 then alpha else 2*pi-alpha,w:=-w fi,
+       if $alpha=0 then fin:=2*pi fi,
+       bdCurve( A+cos(t)*v+sin(t)*w, [t:=[0,fin],%6]),
+       if GetStr("labelArc")<>"" then
+        sep3D,
+        bdLabel(A+radscale*cos(fin/2)*v+radscale*sin(fin/2)*w,@labelArc,%6)
+       fi
+    fi];
+
+    bdCercle = {bdCercle(centre, Rayon, vecteur normal,  [options]): dessine un cercle dans l'espace, le plan du cercle est normal au vecteur en troisième paramètre. La macro bdCurve est appelée, on peut donc utiliser les options de bdCurve.}
+    [$C:=%1, $R:=%2, $n1:=normalize(%3),
+    if Norm(n1)<>0 then
+       $n2:=Prodvec(n1,vecI),
+       if Norm(n2)=0 then n2:= Prodvec(n1,vecJ) fi,
+       $v:=R*n2/Norm(n2), {vecteur de depart}
+       $w:=Prodvec(n1,v),
+       bdCurve( C+cos(t)*v+sin(t)*w, [t:=[-pi,pi],nbdot:=50,%4])
+    fi];
+
+{Fin des macros faisant un dessin dans Build3D}
+
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{macro appelée par Display3D()}
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+    disp3d = // usage interne
+    [$F:=Nil, $compt:=0, $type:=0, $islabel:=0, SaveAttr(), 
+    for $z in Get3D() do
+    Inc(compt,1),
+    if Re(z)=Re(jump) then
+                 if type=1 then {facette}
+                            FillStyle:=full,
+                            Width:=2, FillColor:=Color,FillOpacity:=$opacity,StrokeOpacity:=$opacity,
+                            if opacity=1 then LineStyle:=solid else LineStyle:=noline fi,
+                            Ligne(Proj3D(F),1)
+                 elif type=-1 then {facette Gouraud}
+                            FillStyle:=full,
+                            FillOpacity:=$opacity,LineStyle:=solid,StrokeOpacity:=$opacity,Width:=1,
+                            MyExport("GouraudTr",[F,z]) //DrawSmooth
+                 elif type=2 then {segment}
+                      FillStyle:=none,StrokeOpacity:=$opacity,LineCap:=round,Ligne(Proj3D(F),0)
+                 elif type=3 then {points ou label}
+                      if islabel then
+                         $dir:=F[3,2], if dir=Nil then dir:=0 else dir:=dir[1]*dir[2]/Abs(dir[2]) fi,
+                         FillStyle:=none, LabelSize:=Width, LabelStyle:=LineStyle, StrokeOpacity:=1,
+                         Label(Proj3D(F[1,2])+dir, GetStr("text3d"+Str(opacity))),
+                      elif isTexlabel then 
+                         $dir:=F[3,2], if dir=Nil then dir:=0 else dir:=dir[1]*dir[2]/Abs(dir[2]) fi,
+                         FillStyle:=full, LabelSize:=Width, LabelStyle:=LineStyle, StrokeOpacity:=1, $labdir:=F[5,0],
+                         drawTeXlabel3d(Proj3D(F[1,2])+dir, Eval("text3d"+Str(opacity)+"Path()"),
+                                       [scale:=Width, labeldir:=labdir])
+                      else
+                         FillStyle:=none,StrokeOpacity:=$opacity,DotStyle:=dot,Point(Proj3D(F)),
+                      fi
+                 fi,
+                 F:=Nil, compt:=0
+    else
+     if compt=1 then type:=Re(z), islabel:=(type=3) And (Im(z)=1), isTexlabel:=(type=3) And (Im(z)=2)
+     elif compt=2 then Color:=Re(z), $opacity:=Im(z)
+     elif (compt=3) And (type>=2) then Width:=Re(z), LineStyle:=Im(z)  //ligne
+     else Insert(F,z)
+     fi
+    fi
+ od, RestoreAttr()];
+
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+{exports liés à la 3D         }
+{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+ 
+{Algorithme de gouraud pour facettes en export pstricks et eps seulement, l'utilisateur utilise uniquement la macro de dessin: draw("SmoothFacet",..), chaque sommet de chaque facette doit avoir un indice d'éclairage dans la partie imaginaire de sa cote, la commande PaintVertex permet d'obtenir ceci.}
+
+    ExportGouraudTr = {ExportGouraudTr(facettes): macro utilisée en interne, elle exporte les facettes triangulées et peintes avec l'algorithme de Gouraud, la couleur est dans la partie imaginaire du deuxième complexe de chaque point}
+
+    [$gs:=GrayScale(), $linecolor:=Lcolor(Color, gs),
+     if ExportMode=pst Or ExportMode=eps then
+        if ExportMode=eps then {preambule}
+                WriteFile(["gsave /gfill{",FillOpacity," .setopacityalpha shfill} def"]),
+            if LineStyle=0 then WriteFile([Width/10," setlinewidth"]) fi {trait plein}
+        elif (LineStyle=0) {Or (FillOpacity<>1)} then 
+             WriteFile(["{\psset{linecolor=[rgb]{", Round(linecolor[1],4), ",",
+                                    Round(linecolor[2],4), ",",
+                                    Round(linecolor[3],4),"}, linewidth=",Width/10,"pt,",
+                    "fillstyle=none}"])
+           fi,
+      for $facette in %1 By jump do {parcourt de la liste}
+          {if Re(z)=Re(jump) then on a une facette}
+             $B:=Nil, $A:=$facette[1,2],$C:=Nil, Del(facette,1,2), $a:=Proj3D(A),
+             $b:=Nil, $c:=Nil, $colora:=Lcolor(Im(A[2])-2, gs),
+             Map( {parcourt des sommets de la facette, on exporte triangle par triangle}
+                   [B:=C, C:=Z, $colorb:=$colorc, colorc:=Lcolor(Im(C[2])-2, gs),   
+                   $b:=$c, $c:=Proj3D(C),
+                    if B<>Nil then
+                       if ExportMode=pst then {export pstricks}
+                          WriteFile([
+                          if LineStyle=0 then "\psGTriangle"
+                                         else "\psGTriangle"
+                          fi,
+                        "(", Round(Re(a),4),",",Round(Im(a),4),")",
+                        "(", Round(Re(b),4),",",Round(Im(b),4),")",
+                        "(", Round(Re(c),4),",",Round(Im(c),4),")",LF,
+    "{[rgb]{", Round(colora[1],4), ",", Round(colora[2],4), ",", Round(colora[3],4), "}}",
+    "{[rgb]{", Round(colorb[1],4), ",", Round(colorb[2],4), ",", Round(colorb[3],4), "}}",
+    "{[rgb]{", Round(colorc[1],4), ",", Round(colorc[2],4), ",", Round(colorc[3],4), "}}",
+                                   ])
+                        elif ExportMode=eps then {export postscript}
+                             WriteFile([
+                               "/triDS[",LF,
+                               $z:=EpsCoord(a),
+                               "0 ", Round(Re(z),4)," ",Round(Im(z),4)," ",
+                               Round(colora[1],4), " ", Round(colora[2],4), " ", Round(colora[3],4),LF,
+                               $z:=EpsCoord(b),
+                               "0 ", Round(Re(z),4)," ",Round(Im(z),4)," ",
+                               Round(colorb[1],4), " ", Round(colorb[2],4), " ", Round(colorb[3],4),LF,
+                               $z:=EpsCoord(c),
+                               "2 ", Round(Re(z),4)," ",Round(Im(z),4)," ",
+                               Round(colorc[1],4), " ", Round(colorc[2],4), " ", Round(colorc[3],4),LF,
+                               "] def sTs"]),
+                              if LineStyle=0 then {export des segments, pas encore au point}
+                               {WriteFile([
+                                //Round(linecolor[1],4), " ",
+                                //Round(linecolor[2],4), " ",
+                                //Round(linecolor[3],4)," rgb",LF,
+                                $z:=EpsCoord(a), Round(Re(z),4)," ",Round(Im(z),4)," m ",
+                                $z:=EpsCoord(b), Round(Re(z),4)," ",Round(Im(z),4)," l ",
+                                $z:=EpsCoord(c), Round(Re(z),4)," ",Round(Im(z),4)," l s",
+                                ])}
+                              fi
+                        fi
+
+                    fi], Z, facette,2+i),
+             {facette:=Nil
+          else
+              Insert(facette,z)
+          fi}
+      od,
+         if ExportMode=eps then WriteFile("grestore")
+            else if (LineStyle=0) {Or (FillOpacity<>1)} then WriteFile("}") {on ferme le groupe commence au psset}
+         fi,
+      fi
+      else 0 {si cette macro renvoie 0 alors TeXgraph fait un export normal}
+     fi
+    ];
+
+
+    ExportSmoothFacet = { usage interne, appelée par draw("SmoothFacet",...) pour l'export}
+    [if ExportMode=pst Or ExportMode=eps then 
+     SaveAttr(), FillStyle:=full, LineStyle:=noline, backculling:=0, contrast:=1,color:=white,
+     $S:=SortFacet( for $k from 1 to Nargs()/2 do
+                                 $aux:=Args(2*k),
+                                 PaintVertex(Args(2*k-1),color,backculling+i*contrast),
+                             od),
+     ExportGouraudTr(S),
+     RestoreAttr()
+     else 0 fi
+     ];
+
+
+
+    WriteObj = {WriteObj( <fichier>, sommets, faces, lignes): exporte en fichier obj, les faces et les lignes comportent les numéros des sommets.}
+    if OpenFile([%1,".obj"])
+        then
+         $nbsommets:=Nops(%2)/2, $nbfacettes:= Nops(Pos(jump,%3)),$nblignes:=Nops(Pos(jump,%4)),
+         WriteFile(["# ",nbsommets," sommets"]),
+            for $Z in %2 By 2 do {enregistrement des sommets}
+                   WriteFile(["v ", Xde(Z), " ", Yde(Z)," ", Zde(Z)])
+            od,
+             WriteFile(["# ",nbfacettes," facettes"]),
+             for liste in %3 By jump do {enregistrement des facettes}
+                      WriteFile(["f", for k in liste do " ", k od])
+             od,
+             WriteFile(["# ",nblignes," lignes"]),
+             for liste in %4 By jump do  {enregistrement des lignes}
+                       WriteFile(["l", for k in liste do " ", k od])
+             od,
+         CloseFile()
+     fi;
+
+    WriteOff = {WriteOff(<fichier>, sommets, faces <, couleur>): exporte en fichier off, les faces  comportent les numéros des sommets.}
+    if OpenFile([%1,".off"])
+        then
+         $nbsommets:=Nops(%2)/2, $nbfacettes:= Nops(Pos(jump,%3)),
+         $color:=Lcolor(%4, GrayScale()),$r:=color[1], $g:=color[2], $b:=color[3],
+         WriteFile(["OFF"]),
+         WriteFile([nbsommets," ",nbfacettes," ",0]),
+         for $Z in %2 By 2 do {enregistrement des sommets}
+                WriteFile([Xde(Z), " ", Yde(Z)," ",Zde(Z)]),
+         od,
+         for liste in %3 By jump do {enregistrement des facettes}
+               WriteFile([Nops(liste), for k in liste do " ",k-1 od, if color<>Nil then " ",r," ",g," ",b," ", 1 fi]),
+         od,
+         CloseFile()
+     fi;
+
+    SceneToObj = {SceneToObj(<fichier>,<element1>, <element2>, ...): utilisee par la commande Export, elle exporte les <elements> en fichier.obj, <element> est une liste du même type que les arguments de la commande Build3D. Le fichier a déjà été ouvert par la commande Export}
+    [$S:=Nil, {liste sommets}
+     $L:=Nil, {liste facettes}
+         $nbsommets:=0, $oldnbsommets:=0, $nbVn:=0, $oldnbVn:=0, $nbobjets:=0,
+     $nbfacettes:=0, $oldnbfacettes:=0,
+     $nblignes:=0, $oldnblignes:=0,
+     if StrComp(%1,"") then $ok:=1 else ok:=OpenFile([%1,".obj"]) fi,
+     if ok then
+     for $k from 2 to Nargs() do
+             for $z in [Args(k),sep3D] do
+               if Re(z)=Re(jump) And Im(z)=-1 then
+             $type:=abs(Re(element[1])), $S:=Nil, $L:=Nil,
+             //$cOlor:=Lcolor(abs(Re(element[2])), GrayScale()), $r:=cOlor[1], $g:=cOlor[2], $b:=cOlor[3],
+         if type=1 Or type=2 then 
+         $gouraud:=(Re(element[1])=-1), Inc(nbobjets,1),
+             if type=1 then element:=element[3,0] {facettes}
+             elif type=2 then element:=element[4,0]  {lignes}
+             fi,
+         $x:= if smooth then ConvertToObjN(element,S,L) else ConvertToObj(element,S,L) fi,
+        nbsommets:=Re(x), nbVn:=nbsommets, if type=1 then nbfacettes:=Im(x) elif type=2 then  nblignes:=Im(x) fi,
+            WriteFile(["# sommets"]),
+        if smooth then
+                for $Z in S By 4 do {enregistrement des sommets}
+                        WriteFile(["v ", Re(Z[1]), " ", Im(Z[1])," ", Re(Z[2])]),
+                WriteFile(["vn ", Re(Z[3]), " ", Im(Z[3])," ", Re(Z[4])])
+                od
+        else
+            for $Z in S By 2 do {enregistrement des sommets}
+                        WriteFile(["v ", Xde(Z), " ", Yde(Z)," ", Zde(Z)]),
+                od
+        fi,
+            if type=1 then
+               WriteFile(["# facettes ", oldnbfacettes+1," à ",oldnbfacettes+nbfacettes]),
+           WriteFile(["g objet", nbobjets]),
+           if smooth then
+            WriteFile("s 1"),
+                    for liste in $L By jump do {enregistrement des facettes}
+                      if liste<>Nil then WriteFile(["f", for k in liste do " ", k+oldnbsommets,"//",k+oldnbVn od]) fi,
+                od
+           else
+            for liste in $L By jump do {enregistrement des facettes}
+                      if liste<>Nil then WriteFile(["f", for k in liste do " ", k+oldnbsommets od]) fi
+                od
+           fi
+            elif type=2 then
+                WriteFile(["# lignes ", oldnblignes+1," à ", oldnblignes+nblignes]),
+            WriteFile(["g objet", nbobjets]),
+                for liste in $L By jump do  {enregistrement des lignes}
+                       if liste<>Nil then WriteFile(["l", for k in liste do " ", k+oldnbsommets od]) fi
+                od
+            fi,
+             Inc(oldnbsommets,nbsommets), nbsommets:=0,
+         Inc(oldnbVn,nbVn), nbVn:=0,
+             if type=1 then
+                 Inc(oldnbfacettes,nbfacettes), nbfacettes:=0
+             elif type=2 then
+                  Inc(oldnblignes,nblignes), nblignes:=0
+             fi,
+         fi,
+         element:=nil
+         else Insert(element,z)
+         fi
+        od
+    od,
+    if StrComp(%1,"")=0 then CloseFile() fi
+    fi];
+    
+    SceneToGeom = {SceneToGeom(<fichier>,<element1>, <element2>, ...): utilisee par la commande Export, elle exporte les <elements> en fichier.geom pour Geomview, <element> est une liste du même type que les arguments de la commande Build3D. Le fichier a déjà été ouvert par la commande Export}
+    [$S:=Nil, {liste sommets}
+     $L:=Nil, {liste facettes}
+         $nbsommets:=0, $nbfacettes:=0, $nbobjets:=0,
+         if StrComp(%1,"") then $ok:=1 else ok:=OpenFile([%1,".geom"]) fi,
+    if ok then
+     WriteFile("(new-geometry ""[g1]"""),
+     WriteFile(" {# World"),
+     WriteFile("   INST geom{{ LIST #world list"),
+     for $k from 2 to Nargs() do
+         $liste:=[Args(k),sep3D],   
+             for $z in  liste do
+               if Re(z)=Re(jump) And Im(z)=-1 then
+             $type:=Re(element[1]), $S:=Nil, $L:=Nil,
+         $cOlor:=Lcolor(abs(Re(element[2])), GrayScale()), $r:=cOlor[1], $g:=cOlor[2], $b:=cOlor[3],
+         $opacity:=abs(Im(element[2])), if opacity=0 then opacity:=1 fi,
+         $backcull:= (Re(element[2])<0),$contrast:=Im(element[1]),
+             if abs(type)<=3 then {facettes ou lignes ou point}
+            Inc(nbobjets,1),
+            if abs(type)=1 then Del(element,1,2), $x:=ConvertToObjN(element,S,L), 
+            else $linewidth:=Ent(Re(element[3])/10*96/72.27), if linewidth=0 then linewidth:=1 fi,
+                 if type=2 then Del(element,1,3) 
+                 elif (type=3) And (contrast=0) then element:= for $Z in element[4,0] By 2 do Z,jump od {point}
+                 elif (type=3) And (contrast<>1) then {TeXlabel3d} $labelStyle:=Im(element[3,1]), $Scale:=Re(element[3,1]),
+                Del(element,1,3), $poslabel:=element[1,2], 
+                Insert(liste, makeLabel3d($poslabel,opacity,[color:=RgbL(cOlor),labelstyle:=labelStyle, smooth:=1,labeldir:=element[5,0],labelpos:=element[3,2],scale:=Scale])),
+                Insert(liste,sep3D), element:=Nil
+                 else element:=Nil 
+                 fi,    
+                 $x:=ConvertToObj(element,S,L), 
+            fi, 
+            nbsommets:=Re(x), nbfacettes:=Im(x),
+            if (S<>Nil) And (L<>Nil) then
+                WriteFile(["{ # objet ",nbobjets]),
+            WriteFile("    INST geom { appearance{"),
+            if opacity<>1 then WriteFile("    transparent") fi,
+            if backcull then   WriteFile("    backcull") else WriteFile("    -backcull") fi,
+            if type=-1 then {smooth}
+                WriteFile("    shading smooth")
+            elif contrast=-1 then 
+                WriteFile("    shading constant")
+            fi,
+            if type>1 then WriteFile(["    linewidth ",linewidth]),
+                       WriteFile("    shadelines")  
+            fi,
+            WriteFile("    material {"),
+            WriteFile(["    ambient ",r," ",g," ",b]),
+            WriteFile(["    diffuse ",r," ",g," ",b]),
+            if opacity<>1 then WriteFile(["    alpha ",opacity]) fi,
+            WriteFile("            }"),
+            WriteFile("}"),
+            if abs(type)=1 then 
+                WriteFile("geom NOFF"), WriteFile([nbsommets," ",nbfacettes," ",0,LF]),
+                for $Z in S By 4 do {enregistrement des sommets}
+                            WriteFile([Re(Z[1]), " ", Im(Z[1])," ",Re(Z[2]), " ", Re(Z[3]), " ", Im(Z[3])," ",Re(Z[4])]),
+                    od,
+            else WriteFile("geom SKEL"), WriteFile([nbsommets," ",nbfacettes,LF]),
+                for $Z in S By 2 do {enregistrement des sommets}
+                        WriteFile([Re(Z[1]), " ", Im(Z[1])," ",Re(Z[2])]),
+                    od,
+            fi,
+            for $liste in L By jump do {enregistrement des facettes}
+                if liste<> Nil then 
+                        WriteFile([Nops(liste), for k in liste do " ",k-1 od , if type>=1 then " ",r," ",g," ",b fi])
+                fi
+                od,
+                WriteFile(["} } # end"])
+           fi
+             fi,
+         element:=nil
+         else Insert(element,z)
+         fi
+        od
+    od,
+    WriteFile("}}}"),
+    $m:=invmatrix3d([Origin, ScreenX(),ScreenY(),Normal()]), $T:=Origin, $v1:=m[3,2], $v2:=m[5,2], $v3:=m[7,2],
+    WriteFile(["  ) # end geometry",LF,"(bbox-draw ""[g1]"" off)",LF,
+        "(xform-set ""worldgeom"" transform {",LF,
+        Xde(v1)," ",Yde(v1)," ",Zde(v1)," ",0,LF,
+        Xde(v2)," ",Yde(v2)," ",Zde(v2)," ",0,LF,
+        Xde(v3)," ",Yde(v3)," ",Zde(v3)," ",0,LF,
+        Xde(T)," ",Yde(T)," ",Zde(T)," 1} )",LF,
+        if backcolor<>white then "(backcolor ""Camera"" ",Rcolor(backcolor)," ", Gcolor(backcolor)," ",Bcolor(backcolor),")" fi]),
+    if StrComp(%1,"")=0 then CloseFile() fi
+    fi];
+
+
+    SceneToJvx = {SceneToJvx(<fichier>,<element1>, <element2>, ...): utilisee par la commande Export, elle exporte les <elements> en fichier.geom pour Geomview, <element> est une liste du même type que les arguments de la commande Build3D. Le fichier a déjà été ouvert par la commande Export}
+    [$S:=Nil, {liste sommets}
+     $L:=Nil, {liste facettes}
+     $nbsommets:=0, $nbfacettes:=0, $nbobjets:=0,
+     if StrComp(%1,"") then $ok:=1 else ok:=OpenFile([%1,".jvx"]) fi,
+    if ok then
+     WriteFile("<?xml version=""1.0"" encoding=""utf8"" standalone=""no""?>"),
+     WriteFile("<!DOCTYPE jvx-model SYSTEM ""http://www.javaview.de/rsrc/jvx.dtd"">"),
+     WriteFile("<jvx-model>"),
+     WriteFile("<geometries>"),
+     for $k from 2 to Nargs() do
+         $liste:=[Args(k),sep3D],
+             for $z in liste By jump do
+               //if Re(z)=Re(jump) And Im(z)=-1 then
+           if Im(sep)=-1 then Insert(element,z),
+           if element<>Nil then
+         $a:=element[1], $b0:=element[2], $c:=element[3],
+             $type:=Re(a), $S:=Nil, $L:=Nil, $islabel:=0, 
+         $cOlor:=Lcolor(abs(Re(b0)), GrayScale()), $r:=Ent(255*cOlor[1]), $g:=Ent(255*cOlor[2]), $b:=Ent(255*cOlor[3]),
+         $opacity:=Im(b0), $backcull:= (Re(b0)<0), $contrast:=Im(a), 
+
+         if opacity<0 then $twoside:=0, opacity:=-opacity else twoside:=1 fi,
+         if (type<>3) And opacity=0 then opacity:=1 fi,
+             if abs(type)<=3 then {facettes ou lignes ou point}
+            Inc(nbobjets,1),
+            if abs(type)=1 then Del(element,1,2) 
+            else $linewidth:=Ent(Re(c)/10*96/72.27), if linewidth=0 then linewidth:=1 fi,
+                 if type=2 then Del(element,1,3), {ligne}
+                 elif (type=3) And (contrast=0) then element:= for $Z in element[4,0] By 2 do Z,jump od {point}
+                 elif (type=3) then $labelStyle:=Im(c), $labelsize:=Re(c), $Scale:=labelsize,
+                if labelsize<5 then Inc(labelsize,6) else labelsize:=labelsize*2+6 fi,
+                Del(element,1,3), $poslabel:=element[1,2], $d:=element[3,1], $v:=element[4,1], v:=v/Abs(v),
+                if v=Nil then $dir2d:=0 else $dir2d:=d*v fi, 
+                Inc($poslabel,Re(dir2d)*ScreenX()+Im(dir2d)*ScreenY()), $stylex:=mod(labelStyle,4),
+                $styley:=div(mod(labelStyle,16),4),
+                if (contrast=1) then $islabel:=1
+                else {TeXlabel3d}
+                    Insert(liste, makeLabel3d($poslabel,opacity,[color:=RgbL(cOlor),labelstyle:=labelStyle, smooth:=1,labeldir:=element[5,0],labelpos:=[d,v],scale:=Scale])),
+                    Insert(liste,sep3D),
+                    element:=Nil
+                fi  
+                 else element:=Nil fi,  
+            fi, 
+            nbsommets:=Re(x), nbfacettes:=Im(x),
+            if islabel then S:=poslabel, L:=1 else $x:=ConvertToObj(element,S,L) fi,
+            if (S<>Nil) And (L<>Nil) then
+                WriteFile(["<geometry name=""",
+                if islabel then GetStr("text3d"+Str(opacity)),
+                else "objet",nbobjets fi,
+                """>"]),
+            WriteFile(["  <pointSet dim=""3"" point=""", 
+                if (type<3) Or (islabel) then "hide" else "show" fi, """>"]),
+                WriteFile("    <points>"),
+            for $Z in S By 2 do {enregistrement des sommets}
+                        WriteFile(["      <p> ",Re(Z[1]), " ", Im(Z[1])," ",Re(Z[2]),"</p>"]),
+                od,
+            if (type=3) And (contrast=0) then {points}
+                WriteFile(["      <thickness>",2*linewidth,"</thickness>"]), 
+                WriteFile(["      <color>", r, " ", g, " ",b,"</color>"])
+            fi,
+                    WriteFile("    </points>"),
+                    WriteFile("  </pointSet>"),
+            if abs(type)=1 then {facette}
+                WriteFile(["  <faceSet ", if twoside then "colorBackGlobal=""show"" " fi,
+                 if backcull then "backface=""hide"" " fi, "edge=""hide"">"]),
+                        WriteFile("    <faces>"),
+                for $liste in L By jump do {enregistrement des facettes}
+                       if liste<>Nil then WriteFile(["      <f>",for k in liste do " ",k-1 od,"</f>"]) fi,
+                    od,
+                WriteFile(["      <color>", r, " ", g, " ",b,"</color>"]),
+                if twoside then
+                  WriteFile(["      <colorBack type=""rgb"">",127 +div(r,2)," ", 127+div(g,2)," ",127+div(b,2),"</colorBack>"])
+                fi,
+                        WriteFile("    </faces>"),
+                        WriteFile("  </faceSet>"),
+                WriteFile(["   <material", if type=-1 then " shading=""gouraud""" fi, ">"]), 
+                WriteFile(["      <ambientIntensity>0.35</ambientIntensity>"]),
+                if opacity<1 then 
+                   WriteFile(["      <transparency visible=""show"">", 1-opacity,"</transparency>"])
+                fi,
+                WriteFile(["   </material>"]),
+            elif type=2 then {lignes}
+                WriteFile("  <lineSet>"),
+                        WriteFile("    <lines>"),
+                for $liste in L By jump do {enregistrement des facettes}
+                       if liste<>Nil then WriteFile(["      <l>",for k in liste do " ",k-1 od,"</l>"]) fi,
+                    od,
+                WriteFile(["      <thickness>",linewidth,"</thickness>"]),
+                WriteFile(["      <color>", r, " ", g, " ",b,"</color>"]),
+                        WriteFile("    </lines>"),
+                        WriteFile("  </lineSet>")
+            fi,
+            if islabel then
+               WriteFile(["    <labelAtt font=""fixed"" horAlign=""",
+                if stylex=1 then "head"
+                elif stylex=0 then "Center"
+                else "Tail" fi,
+                """ name=""Monospaced"" verAlign=""",
+                if styley=1 then "Top"
+                elif styley=0 then  "Middle"
+                else  "bottom" fi,
+                """ style=""plain"" visible=""show"" auto=""hide"">"]),
+               WriteFile(["      <xOffset>0</xOffset>"]),
+               WriteFile(["      <yOffset>0</yOffset>"]),
+               WriteFile(["      <size>",labelsize*1.4,"</size>"]),
+               WriteFile(["      <color type=""rgb"">",r," ",g," ",b,"</color>"]),
+               WriteFile("    </labelAtt>")
+            fi,
+                WriteFile("</geometry>")
+           fi
+             fi,
+         element:=nil
+         fi 
+         else Insert(element,z), Insert(element,sep)
+         fi
+        od
+    od,
+    WriteFile("</geometries>"),
+    WriteFile("</jvx-model>"),
+    if StrComp(%1,"")=0 then CloseFile() fi
+    fi];
+
+    SceneToJs = {SceneToJs(<fichier>,<element1>, <element2>, ...) :
+        //exporte les <elements> en javascript,
+        //<elements> est une liste du même type que les arguments de la commande Build3D. Le fichier a déjà été ouvert par la commande Export}
+       [SaveWin3d(),
+        transformbox3d([M(Xinf,Yinf,Zinf),M(Xsup,Ysup,Zsup)],1), //nouvelle boite [-3,3,-3,3,-3,3]
+        $S:=Nil, {liste sommets}
+        $L:=Nil, {liste facettes}
+        $nbsommets:=0, $nbfacettes:=0, $nbobjets:=0,
+        if %1="" then $ok:=1 else ok:=OpenFile([%1,".js"]) fi,
+        if ok then
+         WriteFile("MODEL=["),
+         for $k from 2 to Nargs() do
+             $liste:=[Args(k),sep3D],
+             for $z in liste By jump do
+               if Im(sep)=-1 then
+                  Insert(element,z),
+                  if element<>Nil then
+                     $a:=element[1], $b0:=element[2], $c:=element[3],
+                     $type:=Re(a), $S:=Nil, $L:=Nil, $islabel:=0,
+                     $cOlor:=Lcolor(abs(Re(b0)), GrayScale()), $r:=cOlor[1], $g:=cOlor[2], $b:=cOlor[3],
+                     $opacity:=Im(b0), $backcull:= (Re(b0)<0), $contrast:=Im(a),
+                     if opacity<0 then $twoside:=0, opacity:=-opacity else twoside:=1 fi,
+                     if (type<>3) And opacity=0 then opacity:=1 fi,
+                     if (1<=abs(type)) And (abs(type)<=3) then {facettes ou lignes ou point}
+                        //Inc(nbobjets,1),
+                        if abs(type)=1 then //facettes
+                           Del(element,1,2)
+                        else $linewidth:=Ent(Re(c)/10*96/72.27)+1, if linewidth=0 then linewidth:=1 fi,
+                             $dashed:= (Im(c)<>solid),
+                             if type=2 then  // ligne
+                                Del(element,1,3),
+                             elif (type=3) And (contrast=0) then  //point
+                                  element:= for $Z in element[4,0] By 2 do Z,jump od
+                             elif (type=3) then  // label
+                                  $labelStyle:=Im(c), $labelsize:=Re(c), $Scale:=labelsize,
+                                  if labelsize<5 then Inc(labelsize,6) else labelsize:=labelsize*2+6 fi,
+                                  Del(element,1,3), $poslabel:=element[1,2], $d:=element[3,1], $v:=element[4,1], v:=v/Abs(v),
+                                  if v=Nil then $dir2d:=0 else $dir2d:=d*v fi,
+                                  Inc($poslabel,Re(dir2d)*ScreenX()+Im(dir2d)*ScreenY()), $stylex:=mod(labelStyle,4),
+                                  $styley:=div(mod(labelStyle,16),4),
+                                  if (contrast=1) then $islabel:=1
+                                  else {TeXlabel3d}
+                                       Insert(liste, makeLabel3d($poslabel,opacity,[color:=RgbL(cOlor),labelstyle:=labelStyle,
+                                                 smooth:=1,labeldir:=element[5,0],labelpos:=[d,v],scale:=Scale])),
+                                       Insert(liste,sep3D),
+                                       element:=Nil
+                                  fi
+                             else element:=Nil
+                             fi,
+                        fi,//abs(type)=1
+                     nbsommets:=Re(x), nbfacettes:=Im(x),
+                     if islabel then S:=poslabel, L:=1 else $x:=ConvertToObj(element,S,L) fi,
+                     if (S<>Nil) And (L<>Nil) then
+                        Inc(nbobjets,1),
+                        S:=Mtransform3D(S,GetMatrix3D()), //application de la matrice3d courante
+                        WriteFile([if nbobjets>1 then "," fi,
+                                   "{//", if islabel then GetStr("text3d"+Str(opacity)) else "objet",nbobjets fi]),
+                        WriteFile(["""type"" : ", if type=-1 then """smooth""" elif type=1 then """flat""" elif type=2 then """line""" elif
+                                                     (type=3) And (contrast=0) then """dot""" else """unknown""" fi,","]),
+                        WriteFile(["""color"" : [", r, ", ", g, ", ",b,"],"]),
+                        if type>1 then
+                           WriteFile(["""thick"" : ", linewidth,","]),
+                           if type=2 then WriteFile(["""dash"" : ", dashed,","]) fi
+                        else
+                            WriteFile(["""backcull"" : ", backcull,","]),
+                        fi,
+                        WriteFile(["""opacity"" : ", opacity,","]),
+                        first:=1,
+                        points:= Concat(["[", for $Z in S By 2 do {enregistrement des sommets}
+                                      if first=0 then "," else first:=0 fi,
+                                      Round(Im(Z[1])/3,8),",",Round(Re(Z[2])/3,8),",",Round(Re(Z[1])/3,8)
+                                   od, "]"]),
+                        WriteFile(["""vertex"": ",points, if type<3 then "," fi]), //il y a les index ensuite
+                        if abs(type)=1 then {facette}
+                           first:=1,
+                           index:= Concat(["[", for $liste in L By jump do {enregistrement des facettes}
+                                                  if Nops(liste)>2 then //au moins trois sommets
+                                                     A:=liste[1]-1, B:=liste[2],
+                                                     if first=0 then "," else first:=0 fi,
+                                                     c:=1,
+                                                     for C in liste[3,0] do if c=0 then "," else c:=0 fi, A,",",B-1,",",C-1,B:=C od,
+                                                   fi
+                                                 od,"]"]),
+                           WriteFile(["""index"" : ",index])
+                        elif type=2 then {lignes}
+                             first:=1,
+                             index:= Concat(["[", for $liste in L By jump do {enregistrement des lignes}
+                                                    c:=1,
+                                                    if liste<>Nil then
+                                                        if first=0 then "," else first:=0 fi, "[",
+                                                        for k in liste do if c=0 then "," else c:=0 fi, k-1 od, "]"
+                                                    fi,
+                                                  od,"]"]),
+                           WriteFile(["""index"" : ",index])
+                        fi,
+                     WriteFile(["}// fin de objet",nbobjets])
+                     fi //(S<>Nil) And (L<>Nil)
+                 fi, //if abs(type)<=3
+             element:=nil
+             fi //if element<>Nil
+           else Insert(element,z), Insert(element,sep) fi //if Im(sep)=-1
+         od //for $z in liste By jump
+        od, //for $k from 2 to Nargs()
+        WriteFile("]//fin de MODEL"),
+        if %1<>"" then CloseFile() fi,
+        fi, //if ok
+        RestoreWin3d()
+        ]; 

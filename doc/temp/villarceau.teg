@@ -1,0 +1,21 @@
+TeXgraph#
+Graph image = [
+view(-6,6,-5,5),Marges(0,0,0,0),size(7.5),
+$R:=3, $r:=1,
+N:=rot3d(vecK,[Origin,vecI],arcsin(r/R)),
+view3D(-5,5,-5,5,-5,5),
+background(full,lightgray),
+Build3D(
+ bdPlan([Origin, -N],
+  [color:=seagreen, opacity:=0.8]),
+ bdTorus( Origin, R, r, vecK,
+  [color:=steelblue, smooth:=1]),
+ view3D(-5.5,5.5,-5.5,5.5,-5,5),
+ bdAxes( Origin,
+  [arrows:=1, newxlegend("x"),newylegend("y"),
+   newzlegend("z")]),
+ bdCercle(M(r,0,0),R,N,[color:=red, tube:=1]),
+ bdCercle(M(-r,0,0),R,N,[color:=red, tube:=1])
+    ),
+Display3D()
+];

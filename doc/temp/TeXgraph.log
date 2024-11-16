@@ -1,0 +1,2407 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=latex 2021.7.25)  4 AUG 2021 10:32
+entering extended mode
+ \write18 enabled.
+ %&-line parsing enabled.
+**\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCo
+de"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.
+{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\
+documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname
+ tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{
+\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode xhtml,fn-in,index=2,3,chars
+et=utf-8,html5.a.b.c.\input "\detokenize{TeXgraph.tex}"
+(./TeXgraph.tex (/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2021/02/12 v1.4n Standard LaTeX document class
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/bk10.clo
+File: bk10.clo 2021/02/12 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count182
+\c@chapter=\count183
+\c@section=\count184
+\c@subsection=\count185
+\c@subsubsection=\count186
+\c@paragraph=\count187
+\c@subparagraph=\count188
+\c@figure=\count189
+\c@table=\count190
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/tex4ht.sty
+version 2021-03-06-13:30
+Package: tex4ht 
+--------------------------------------
+--- Note --- for _ at preamble, use the command line option `early_'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ at preamble, use the command line option `early^'
+--------------------------------------
+\tmp:toks=\toks16
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/usepackage.4ht
+version 2021-05-06-14:39
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 11
+2.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/hyperref-hooks.4ht
+version 2021-05-06-14:39
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2021-06-07 v7.00m Hypertext links for LaTeX
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode is ignored in DVI mode.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.st
+y
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+
+Package auxhook Warning: Cannot patch \document,
+(auxhook)                using \AtBeginDocument instead.
+
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
+)
+\@linkdim=\dimen139
+\Hy@linkcounter=\count191
+\Hy@pagecounter=\count192
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2021-06-07 v7.00m Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref-langpatches.
+def
+File: hyperref-langpatches.def 2021-06-07 v7.00m Hyperref: patches for babel la
+nguages
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count193
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2021-06-07 v7.00m Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 4073.
+Package hyperref Info: Option `colorlinks' set `true' on input line 4073.
+Package hyperref Info: Option `colorlinks' set `true' on input line 4073.
+Package hyperref Info: Hyper figures OFF on input line 4192.
+Package hyperref Info: Link nesting OFF on input line 4197.
+Package hyperref Info: Hyper index ON on input line 4200.
+Package hyperref Info: Plain pages OFF on input line 4207.
+Package hyperref Info: Backreferencing OFF on input line 4212.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4445.
+\c@Hy@tempcnt=\count194
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4804.
+\XeTeXLinkMargin=\dimen140
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count195
+\Field@Width=\dimen141
+\Fld@charsize=\dimen142
+\Field@toks=\toks20
+Package hyperref Info: Hyper figures OFF on input line 6076.
+Package hyperref Info: Link nesting OFF on input line 6081.
+Package hyperref Info: Hyper index ON on input line 6084.
+Package hyperref Info: backreferencing OFF on input line 6091.
+Package hyperref Info: Link coloring ON on input line 6094.
+Package hyperref Info: Link coloring with OCG OFF on input line 6101.
+Package hyperref Info: PDF/A mode OFF on input line 6106.
+LaTeX Info: Redefining \ref on input line 6146.
+LaTeX Info: Redefining \pageref on input line 6150.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count196
+
+Package hyperref Message: Stopped early.
+
+)
+Package hyperref Info: Driver: htex4ht.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/htex4ht.def
+File: htex4ht.def 2021-06-07 v7.00m Hyperref driver for TeX4ht
+Package hyperref Info: tex4ht is already loaded.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/gettitlestring/gettitlestrin
+g.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count197
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/tools/array.sty
+Package: array 2021/04/20 v2.5e Tabular extension package (FMi)
+\col@sep=\dimen143
+\ar@mcellbox=\box50
+\extrarowheight=\dimen144
+\NC@list=\toks21
+\extratabsurround=\skip49
+\backup@length=\skip50
+\ar@cellbox=\box51
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/caption-hooks.4ht
+version 2021-05-16-09:21
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2020/10/26 v3.5g Customizing captions (AR)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
+\captionmargin=\dimen145
+\captionmargin@=\dimen146
+\captionwidth=\dimen147
+\caption@tempdima=\dimen148
+\caption@indent=\dimen149
+\caption@parindent=\dimen150
+\caption@hangindent=\dimen151
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count198
+\c@continuedfloat=\count199
+Package caption Info: hyperref package is loaded.
+Package caption Info: Hyperref support is turned off
+(caption)             because hyperref has stopped early.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/xcolor-hooks.4ht
+version 2020-10-17-13:53
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: dvips.def on input line 225.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics-def/dvips.def
+File: dvips.def 2017/06/20 v3.1d Graphics/color driver for dvips
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/xcolor/svgnam.def
+File: svgnam.def 2016/05/11 v2.12 Predefined colors according to SVG 1.1 (UK)
+)) (/home/pfradin/texmf/tex/latex/TeXgraph/texgraph.sty (/home/pfradin/texlive/
+2021/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2020-07-07 v1.5u LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks22
+\verbatim@line=\toks23
+\verbatim@in@stream=\read2
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2021/01/20 v3.7 verbatim text (tvz,hv)
+\FV@CodeLineNo=\count266
+\FV@InFile=\read3
+\FV@TabBox=\box52
+\c@FancyVerbLine=\count267
+\FV@StepNumber=\count268
+\FV@OutFile=\write3
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/home/p
+fradin/texlive/2021/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks24
+\XKV@tempa@toks=\toks25
+)
+\XKV@depth=\count269
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/xcolor-hooks.4ht
+version 2020-10-17-13:53
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/tools/shellesc.sty
+Package: shellesc 2019/11/08 v1.0c unified shell escape interface for LaTeX
+Package shellesc Info: Unrestricted shell escape enabled on input line 75.
+)
+Package: texgraph 2020/07/27 v1.5 texgraph environment
+\c@imgcount=\count270
+\fig@box=\box53
+\tegcode@Out=\write4
+runsystem(CmdTeXgraph server on)...executed.
+
+\openout3 = `tegcode.teg'.
+
+runsystem(CmdTeXgraph -none -keep tegcode)...executed.
+
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/12/05 v1.2c Enhanced LaTeX Graphics (DPC,SPQR)
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/graphics-hooks.4ht
+version 2020-10-17-13:53
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvips.def on input line 107.
+)
+\Gin@req@height=\dimen152
+\Gin@req@width=\dimen153
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks26
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/04/20 v2.17j AMS math features
+\@mathmargin=\skip51
+For additional information on amsmath, use the `?' option.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks27
+\ex@=\dimen154
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen155
+) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count271
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count272
+\leftroot@=\count273
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count274
+\DOTSCASE@=\count275
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box54
+\strutbox@=\box55
+\big@size=\dimen156
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count276
+\c@MaxMatrixCols=\count277
+\dotsspace@=\muskip17
+\c@parentequation=\count278
+\dspbrk@lvl=\count279
+\tag@help=\toks28
+\row@=\count280
+\column@=\count281
+\maxfields@=\count282
+\andhelp@=\toks29
+\eqnshift@=\dimen157
+\alignsep@=\dimen158
+\tagshift@=\dimen159
+\tagwidth@=\dimen160
+\totwidth@=\dimen161
+\lineht@=\dimen162
+\@envbody=\toks30
+\multlinegap=\skip52
+\multlinetaggap=\skip53
+\mathdisplay@stack=\toks31
+LaTeX Info: Redefining \[ on input line 2923.
+LaTeX Info: Redefining \] on input line 2924.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2021/07/22 3.63 The Babel package
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2021/07/22 3.63 Babel common definitions
+\babel@savecnt=\count283
+\U@D=\dimen163
+\l@unhyphenated=\language87
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/babel/txtbabel.def)
+\bbl@readstream=\read4
+)
+\bbl@dirlevel=\count284
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/babel-french/french.ldf
+Language: french 2021/07/20 v3.5m French support from the babel system
+Package babel Info: Hyphen rules for 'acadian' set to \l@french
+(babel)             (\language29). Reported on input line 91.
+Package babel Info: Hyphen rules for 'canadien' set to \l@french
+(babel)             (\language29). Reported on input line 92.
+\FB@nonchar=\count285
+Package babel Info: Making : an active character on input line 430.
+Package babel Info: Making ; an active character on input line 431.
+Package babel Info: Making ! an active character on input line 432.
+Package babel Info: Making ? an active character on input line 433.
+\FBguill@level=\count286
+\FBold@everypar=\toks32
+\FB@Mht=\dimen164
+\mc@charclass=\count287
+\mc@charfam=\count288
+\mc@charslot=\count289
+\std@mcc=\count290
+\dec@mcc=\count291
+\listindentFB=\dimen165
+\descindentFB=\dimen166
+\labelindentFB=\dimen167
+\labelwidthFB=\dimen168
+\leftmarginFB=\dimen169
+\parindentFFN=\dimen170
+\FBfnindent=\dimen171
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/carlisle/scalefnt.sty) (/ho
+me/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/tex4ht.4ht
+version 2021-06-20-15:33
+--------------------------------------
+--- Note --- for additional information, use the command line option `info'
+--------------------------------------
+::::::::::::::::::::::::::::::::::::::::::
+ TeX4ht info is available in the log file 
+::::::::::::::::::::::::::::::::::::::::::
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/tex4ht.sty
+version 2021-03-06-13:30
+l.855 --- TeX4ht warning --- nonprimitive \everypar ---
+--- needs --- tex4ht TeXgraph ---
+\tmp:cnt=\count292
+\openout15 = `TeXgraph.tmp'.
+
+(./TeXgraph.tmp)
+\tmp:dim=\skip54
+(./TeXgraph.xref)
+\:refout=\write5
+\openout5 = `TeXgraph.xref'.
+
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- to remove the <?xml version=...?> processing instruction use the c
+ommand line option `no-VERSION'
+--------------------------------------
+--------------------------------------
+--- Note --- to remove the DOCTYPE declaration use the command line option `no-
+DOCTYPE'
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)
+--------------------------------------
+--- Note --- for marking of the base font, use the command line option `fonts+'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for non active _, use the command line option `no_'
+--------------------------------------
+--------------------------------------
+--- Note --- for _ of catcode 13, use the command line option `_13'
+--------------------------------------
+--------------------------------------
+--- Note --- for non active ^, use the command line option `no^'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ of catcode 13, use the command line option `^13'
+--------------------------------------
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- For section filenames that reflect on their titles use the command
+ line option `sec-filename'
+--------------------------------------
+--------------------------------------
+--- Note --- to ignore CSS font decoration, use the `NoFonts' command line opti
+on
+--------------------------------------
+--------------------------------------
+--- Note --- for jpg bitmaps of pictures, use the `jpg' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for gif bitmaps of pictures, use the `gif' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for content and toc in 2 frames, use the command line option `fram
+es'
+--------------------------------------
+--------------------------------------
+--- Note --- for content, toc, and footnotes in 3 frames, use the command line 
+option `frames-fn'
+--------------------------------------
+--------------------------------------
+--- Note --- for file extension name xht, use the command line option `xht'
+--------------------------------------
+TeX4ht package options: xhtml,fn-in,index=2,3,charset=utf-8,html5,html
+--------------------------------------
+--- Note --- To print a timestamp, use the command line option timestamp
+--------------------------------------
+--------------------------------------
+--- Note --- to ignore CSS code, use the command line option `-css
+--------------------------------------
+--------------------------------------
+--- Note --- for inline CSS code, use the command line option `css-in'
+--------------------------------------
+--------------------------------------
+--- Note --- for pop ups on mouse over, use the command line option `mouseover'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for addressing images in a subdirectory, use the command line opti
+on `imgdir:.../'
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+--------------------------------------
+--- Note --- To print a timestamp, use the command line option timestamp
+--------------------------------------
+)
+\:tokwrite=\toks33
+\:tokpage=\toks34
+--------------------------------------
+--- Note --- for back links to toc, use the command line option `sections+'
+--------------------------------------
+--------------------------------------
+--- Note --- for linear crosslinks of pages, use the command line option `next'
+
+--------------------------------------
+\openout15 = `TeXgraph.4ct'.
+
+\:tocout=\write6
+\openout6 = `TeXgraph.4tc'.
+
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/latex.4ht
+version 2021-06-25-13:51
+LaTeX Info: Redefining \_ on input line 173.
+LaTeX Info: Redefining \, on input line 792.
+LaTeX Info: Redefining \; on input line 793.
+LaTeX Info: Redefining \! on input line 794.
+LaTeX Info: Redefining \: on input line 795.
+LaTeX Info: Redefining \> on input line 796.
+--------------------------------------
+--- Note --- for links into captions, instead of float heads, use the command l
+ine option `refcaption'
+--------------------------------------
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- For mini tocs immediately aftter the header use the command line o
+ption `minitoc<'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements with valued data, use the command lin
+e option `enumerate+'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements li's with value attributes, use the c
+ommand line option `enumerate-'
+--------------------------------------
+--------------------------------------
+--- Note --- for CSS2 code, use the command line option `css2'
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial tabular, use the command line option `pic-tabular'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap fbox'es, use the command line option `pic-fbox'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap framebox'es, use the command line option `pic-framebox'
+
+--------------------------------------
+\fn:box=\box56
+--------------------------------------
+--- Note --- for tracing of latex font commands, use the command line option `f
+onts'
+--------------------------------------
+--------------------------------------
+--- Note --- for width specifications of tabular p entries, use the `p-width' c
+ommand line option or a configuration similar to \Configure{HColWidth}{\HCode{ 
+style="width:\HColWidth"}}
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+--------------------------------------
+--- Note --- for pictorial eqnarray, use the command line option `pic-eqnarray'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial array, use the command line option `pic-array'
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial $...$ environments, use the command line option `pic
+-m' (not recommended!!)
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial $...$ and $$...$$ environments with latex alt, use t
+he command line option `pic-m+' (not safe!!)
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial array, use the command line option `pic-array'
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/fontmath.4ht
+version 2018-11-06-15:55
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/book.4ht
+version 2021-05-16-09:21
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- for tocs without * entries, use command line option `notoc*'
+--------------------------------------
+--------------------------------------
+--- Note --- for tocs without * entries, use command line option `notoc*'
+--------------------------------------
+--------------------------------------
+--- Note --- for tocs without * entries, use command line option `notoc*'
+--------------------------------------
+--------------------------------------
+--- Note --- to eliminate mini tables of contents, use the command line option 
+`nominitoc'
+--------------------------------------
+--------------------------------------
+--- Note --- to eliminate mini tables of contents, use the command line option 
+`nominitoc'
+--------------------------------------
+--------------------------------------
+--- Note --- for frames-like object-based table of contents, use the command li
+ne option `obj-toc'
+--------------------------------------
+--------------------------------------
+--- Note --- for files named derived from section titles, use the command line 
+option `sec-filename'
+--------------------------------------
+--------------------------------------
+--- Note --- the number of columns requested by the option `index=2' can be mod
+ified through the command \Configure{IndexColumns}{i}
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/inputenc.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/hyperref.4ht
+version 2021-05-16-13:57
+LaTeX Info: Redefining \autoref on input line 88.
+\Hy@SectionHShift=\skip55
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/pd1enc.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/url.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- for URL encoding within href use the command line option `url-enc'
+
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/nameref.4ht
+version 2021-02-03-14:57
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/array.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+--------------------------------------
+--- Note --- for pictorial array, use the command line option `pic-array'
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/caption.4ht
+version 2021-05-16-09:21
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/xcolor.4ht
+version 2019-04-09-10:06
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/color.4ht
+version 2021-05-23-15:14
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/color.4ht
+version 2021-05-23-15:14
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/dvips.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/svgnam.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/xcolor/svgnam.def) (/home/pfra
+din/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/verbatim.4ht
+version 2021-07-04-09:13
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/ifthen.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/fancyvrb.4ht
+version 2021-06-06-09:18
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/graphicx.4ht
+version 2018-10-01-14:24
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/graphics.4ht
+version 2021-06-13-08:46
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+--------------------------------------
+--- Note --- if included graphics are of degraded quality, try the command line
+ options `graphics-num' or `graphics-'. The `num' should provide the density of
+ pixels in the bitmaps (e.g., 110). 
+--------------------------------------
+--------------------------------------
+--- Note --- for key dimensions try the option `Gin-dim'; for key dimensions wh
+en bounding box is unavailable try `Gin-dim+'; neither is recommended
+--------------------------------------
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amssymb.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amsfonts.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amsmath.4ht
+version 2019-12-29-14:17
+\tmp:muskip=\muskip18
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+LaTeX Info: Redefining \[ on input line 504.
+LaTeX Info: Redefining \] on input line 504.
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amstext.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amsbsy.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/amsopn.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/babel.4ht
+version 2021-05-16-09:21
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/french.4ht
+version 2009-05-21-09:32
+(/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4.4ht
+version 2021-06-17-14:38
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2021-06-19-14:11
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html4-math.4ht
+version 2021-04-16-13:27
+) (/home/pfradin/texlive/2021/texmf-dist/tex/generic/tex4ht/html5.4ht
+version 2021-06-13-08:45
+)) (/home/pfradin/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-dvips.d
+ef
+File: l3backend-dvips.def 2021-07-12 L3 backend support: dvips
+\l__pdf_internal_box=\box57
+\g__pdf_backend_object_int=\count293
+\l__pdf_backend_content_box=\box58
+\l__pdf_backend_model_box=\box59
+\g__pdf_backend_annotation_int=\count294
+\g__pdf_backend_link_int=\count295
+\g__pdf_backend_link_sf_int=\count296
+) (./TeXgraph.aux
+
+LaTeX Warning: Label `typepath' multiply defined.
+
+
+LaTeX Warning: Label `straightL' multiply defined.
+
+
+LaTeX Warning: Label `seg' multiply defined.
+
+)
+\openout1 = `TeXgraph.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 97.
+LaTeX Font Info:    ... okay on input line 97.
+Package hyperref Info: Link coloring ON on input line 97.
+LaTeX Info: Redefining \ref on input line 97.
+LaTeX Info: Redefining \pageref on input line 97.
+LaTeX Info: Redefining \nameref on input line 97.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: french babel package is loaded.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Info: Redefining \degres on input line 97.
+LaTeX Info: Redefining \up on input line 97.
+--- file TeXgraph.css ---
+[1
+
+] [2
+
+]
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
+04.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+04.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+104.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+104.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 104.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 104.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 104.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 104
+.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 104
+.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+
+LaTeX Warning: No \author given.
+
+[1] [1] (./TeXgraph.4ct [2
+
+] [3] [4]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 297.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 297.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 297.
+[5])
+--- file TeXgraphli1.html ---
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+07.
+(/home/pfradin/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) (./TeXgraph.4ct) (./chap01.tex [6] [7
+
+]
+Chapitre 1.
+--- file TeXgraphch1.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse1.html ---
+[8
+
+] [9]
+--- file TeXgraphse2.html ---
+[10
+
+] [11]
+--- file TeXgraphse3.html ---
+[12
+
+]
+--- file TeXgraphse4.html ---
+[13
+
+] [14]
+--- file TeXgraphse5.html ---
+[15
+
+] [16] (./ColorJump.html)
+l.206 --- TeX4ht warning --- File `"ColorJump.xbb"' not found ---
+l.206 --- TeX4ht warning --- Cannot determine size of graphic in "ColorJump.xbb
+" (no BoundingBox) ---
+l. 206 --- needs --- ColorJump.png ---
+[17]) (./chap02.tex [18] [19
+
+] [20
+
+]
+Chapitre 2.
+--- file TeXgraphch2.html ---
+(./TeXgraph.4ct [21
+
+])
+--- file TeXgraphse6.html ---
+\fn:box2=\box60
+[22]
+--- file TeXgraphse7.html ---
+[23
+
+]
+--- file TeXgraphse8.html ---
+[24
+
+] [25]
+--- file TeXgraphse9.html ---
+[26
+
+]
+--- file TeXgraphse10.html ---
+[27
+
+]
+--- file TeXgraphse11.html ---
+[28
+
+]
+--- file TeXgraphse12.html ---
+[29
+
+]
+--- file TeXgraphse13.html ---
+[30
+
+]
+--- file TeXgraphse14.html ---
+[31
+
+]
+--- file TeXgraphse15.html ---
+[32
+
+]
+--- file TeXgraphse16.html ---
+[33
+
+] [34]
+--- file TeXgraphse17.html ---
+[35
+
+]
+--- file TeXgraphse18.html ---
+[36
+
+]
+--- file TeXgraphse19.html ---
+[37
+
+]
+--- file TeXgraphse20.html ---
+[38
+
+]
+--- file TeXgraphse21.html ---
+l. 259 Writing TeXgraph.idv[1] (TeXgraph0x.png)
+) (./chap03.tex [39
+
+] [40]
+Chapitre 3.
+--- file TeXgraphch3.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse22.html ---
+[41
+
+] [42]
+--- file TeXgraphse23.html ---
+[43
+
+] [44]
+--- file TeXgraphse24.html ---
+[45
+
+] [46] [47]
+--- file TeXgraphse25.html ---
+[48
+
+] [49]
+--- file TeXgraphse26.html ---
+[50
+
+] [51] [52]
+--- file TeXgraphse27.html ---
+[53
+
+] [54]
+--- file TeXgraphse28.html ---
+[55
+
+] [56] [57] [58]
+--- file TeXgraphse29.html ---
+[59
+
+] [60]
+--- file TeXgraphse30.html ---
+[61
+
+]
+--- file TeXgraphse31.html ---
+[62
+
+]
+--- file TeXgraphse32.html ---
+[63
+
+] [64] [65]
+--- file TeXgraphse33.html ---
+[66
+
+] [67] [68] [69] [70]) (./chap04.tex [71]
+Chapitre 4.
+--- file TeXgraphch4.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse34.html ---
+[72
+
+] [73] [74]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 84.
+[75] [76]
+l. 119 Writing TeXgraph.idv[2] (TeXgraph1x.png)
+[77]
+--- file TeXgraphse35.html ---
+[78
+
+] [79] [80] [81] [82]
+
+LaTeX Warning: Reference `typegradLine' on page 83 undefined on input line 241.
+
+
+
+LaTeX Warning: Reference `typegradLine' on page 83 undefined on input line 255.
+
+
+[83]
+--- file TeXgraphse36.html ---
+[84
+
+] [85] [86] [87] [88] [89] [90] [91] [92] [93] [94] [95] [96]
+
+LaTeX Warning: Reference `typegradLine' on page 97 undefined on input line 538.
+
+
+
+LaTeX Warning: Reference `macGradDroite' on page 97 undefined on input line 541
+.
+
+
+LaTeX Warning: Reference `macGradDroite' on page 97 undefined on input line 543
+.
+
+[97]
+--- file TeXgraphse37.html ---
+[98
+
+] [99] [100] [101]) (./chap05.tex [102]
+Chapitre 5.
+--- file TeXgraphch5.html ---
+(./TeXgraph.4ct [103
+
+] [104])
+--- file TeXgraphse38.html ---
+[105]
+--- file TeXgraphse39.html ---
+[106
+
+]
+--- file TeXgraphse40.html ---
+[107
+
+]
+--- file TeXgraphse41.html ---
+[108
+
+]
+--- file TeXgraphse42.html ---
+[109
+
+]
+--- file TeXgraphse43.html ---
+[110
+
+]
+--- file TeXgraphse44.html ---
+[111
+
+]
+--- file TeXgraphse45.html ---
+[112
+
+]
+--- file TeXgraphse46.html ---
+[113
+
+]
+--- file TeXgraphse47.html ---
+[114
+
+]
+--- file TeXgraphse48.html ---
+l. 94 Writing TeXgraph.idv[3] (TeXgraph2x.png)
+[115
+
+]
+--- file TeXgraphse49.html ---
+[116
+
+]
+--- file TeXgraphse50.html ---
+l. 122 Writing TeXgraph.idv[4] (TeXgraph3x.png)
+[117
+
+]
+--- file TeXgraphse51.html ---
+[118
+
+]
+--- file TeXgraphse52.html ---
+[119
+
+]
+--- file TeXgraphse53.html ---
+[120
+
+]
+--- file TeXgraphse54.html ---
+[121
+
+]
+--- file TeXgraphse55.html ---
+[122
+
+]
+--- file TeXgraphse56.html ---
+[123
+
+]
+--- file TeXgraphse57.html ---
+[124
+
+]
+--- file TeXgraphse58.html ---
+[125
+
+]
+--- file TeXgraphse59.html ---
+[126
+
+]
+--- file TeXgraphse60.html ---
+[127
+
+]
+--- file TeXgraphse61.html ---
+[128
+
+]
+--- file TeXgraphse62.html ---
+[129
+
+] [130]
+--- file TeXgraphse63.html ---
+[131
+
+]
+--- file TeXgraphse64.html ---
+[132
+
+] [133]
+--- file TeXgraphse65.html ---
+[134
+
+]
+--- file TeXgraphse66.html ---
+[135
+
+] [136]
+--- file TeXgraphse67.html ---
+[137
+
+]
+--- file TeXgraphse68.html ---
+[138
+
+]
+--- file TeXgraphse69.html ---
+[139
+
+]
+--- file TeXgraphse70.html ---
+[140
+
+]
+--- file TeXgraphse71.html ---
+(./Get.html)
+l.348 --- TeX4ht warning --- File `"Get.xbb"' not found ---
+l.348 --- TeX4ht warning --- Cannot determine size of graphic in "Get.xbb" (no 
+BoundingBox) ---
+l. 348 --- needs --- Get.png ---
+[141
+
+] [142]
+--- file TeXgraphse72.html ---
+[143
+
+]
+--- file TeXgraphse73.html ---
+[144
+
+]
+--- file TeXgraphse74.html ---
+[145
+
+]
+--- file TeXgraphse75.html ---
+[146
+
+]
+--- file TeXgraphse76.html ---
+[147
+
+]
+--- file TeXgraphse77.html ---
+[148
+
+]
+--- file TeXgraphse78.html ---
+[149
+
+]
+--- file TeXgraphse79.html ---
+[150
+
+]
+--- file TeXgraphse80.html ---
+[151
+
+]
+--- file TeXgraphse81.html ---
+[152
+
+]
+--- file TeXgraphse82.html ---
+[153
+
+]
+--- file TeXgraphse83.html ---
+[154
+
+]
+--- file TeXgraphse84.html ---
+[155
+
+]
+--- file TeXgraphse85.html ---
+[156
+
+]
+--- file TeXgraphse86.html ---
+[157
+
+]
+--- file TeXgraphse87.html ---
+[158
+
+]
+--- file TeXgraphse88.html ---
+[159
+
+]
+--- file TeXgraphse89.html ---
+[160
+
+]
+--- file TeXgraphse90.html ---
+[161
+
+]
+--- file TeXgraphse91.html ---
+[162
+
+]
+--- file TeXgraphse92.html ---
+[163
+
+]
+--- file TeXgraphse93.html ---
+[164
+
+]
+--- file TeXgraphse94.html ---
+[165
+
+] [166]
+--- file TeXgraphse95.html ---
+[167
+
+]
+--- file TeXgraphse96.html ---
+[168
+
+]
+--- file TeXgraphse97.html ---
+[169
+
+]
+--- file TeXgraphse98.html ---
+[170
+
+]
+--- file TeXgraphse99.html ---
+[171
+
+]
+--- file TeXgraphse100.html ---
+[172
+
+]
+--- file TeXgraphse101.html ---
+[173
+
+] [174]
+--- file TeXgraphse102.html ---
+[175
+
+]
+--- file TeXgraphse103.html ---
+[176
+
+] [177]
+--- file TeXgraphse104.html ---
+[178
+
+]
+--- file TeXgraphse105.html ---
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 662.
+
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 663.
+
+[179
+
+]
+--- file TeXgraphse106.html ---
+[180
+
+]
+--- file TeXgraphse107.html ---
+[181
+
+]
+--- file TeXgraphse108.html ---
+[182
+
+]
+--- file TeXgraphse109.html ---
+[183
+
+]
+--- file TeXgraphse110.html ---
+[184
+
+]
+--- file TeXgraphse111.html ---
+[185
+
+]
+--- file TeXgraphse112.html ---
+[186
+
+] [187] [188]
+--- file TeXgraphse113.html ---
+[189
+
+]
+--- file TeXgraphse114.html ---
+[190
+
+]
+--- file TeXgraphse115.html ---
+[191
+
+]
+--- file TeXgraphse116.html ---
+[192
+
+]
+--- file TeXgraphse117.html ---
+[193
+
+]
+--- file TeXgraphse118.html ---
+[194
+
+]
+--- file TeXgraphse119.html ---
+[195
+
+]
+--- file TeXgraphse120.html ---
+[196
+
+]
+--- file TeXgraphse121.html ---
+[197
+
+]
+--- file TeXgraphse122.html ---
+[198
+
+]
+--- file TeXgraphse123.html ---
+[199
+
+]
+--- file TeXgraphse124.html ---
+[200
+
+]
+--- file TeXgraphse125.html ---
+[201
+
+]
+--- file TeXgraphse126.html ---
+l. 878 Writing TeXgraph.idv[5] (TeXgraph4x.png)
+(./SetMatrix.html)
+l.895 --- TeX4ht warning --- File `"SetMatrix.xbb"' not found ---
+l.895 --- TeX4ht warning --- Cannot determine size of graphic in "SetMatrix.xbb
+" (no BoundingBox) ---
+l. 895 --- needs --- SetMatrix.png ---
+[202
+
+] [203]
+--- file TeXgraphse127.html ---
+[204
+
+]
+--- file TeXgraphse128.html ---
+[205
+
+]
+--- file TeXgraphse129.html ---
+[206
+
+]
+--- file TeXgraphse130.html ---
+[207
+
+]
+--- file TeXgraphse131.html ---
+[208
+
+]
+--- file TeXgraphse132.html ---
+[209
+
+]
+--- file TeXgraphse133.html ---
+[210
+
+]
+--- file TeXgraphse134.html ---
+[211
+
+]
+--- file TeXgraphse135.html ---
+[212
+
+]
+--- file TeXgraphse136.html ---
+[213
+
+]
+--- file TeXgraphse137.html ---
+[214
+
+]
+--- file TeXgraphse138.html ---
+[215
+
+]
+--- file TeXgraphse139.html ---
+[216
+
+]
+--- file TeXgraphse140.html ---
+[217
+
+]
+--- file TeXgraphse141.html ---
+[218
+
+]
+--- file TeXgraphse142.html ---
+[219
+
+]
+--- file TeXgraphse143.html ---
+[220
+
+]
+--- file TeXgraphse144.html ---
+[221
+
+]
+--- file TeXgraphse145.html ---
+[222
+
+]
+--- file TeXgraphse146.html ---
+[223
+
+]
+--- file TeXgraphse147.html ---
+[224
+
+]
+--- file TeXgraphse148.html ---
+[225
+
+]) (./chap06.tex [226] [227
+
+] [228
+
+]
+Chapitre 6.
+--- file TeXgraphch6.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse149.html ---
+[229
+
+] [230] [231] [232]
+--- file TeXgraphse150.html ---
+[233
+
+] [234] [235] [236] [237]) (./chap07.tex [238]
+Chapitre 7.
+--- file TeXgraphch7.html ---
+(./TeXgraph.4ct [239
+
+] [240])
+--- file TeXgraphse151.html ---
+[241] [242] [243]
+--- file TeXgraphse152.html ---
+[244
+
+] [245] [246] [247] [248] [249]
+--- file TeXgraphse153.html ---
+[250
+
+] [251] [252] [253]
+--- file TeXgraphse154.html ---
+[254
+
+] [255] [256] [257]
+--- file TeXgraphse155.html ---
+[258
+
+] [259] [260] [261] [262]
+--- file TeXgraphse156.html ---
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 622.
+l. 622 Writing TeXgraph.idv[6] (TeXgraph5x.png)
+[263
+
+] (./ChangeWinTo.html)
+l.660 --- TeX4ht warning --- File `"ChangeWinTo.xbb"' not found ---
+l.660 --- TeX4ht warning --- Cannot determine size of graphic in "ChangeWinTo.x
+bb" (no BoundingBox) ---
+l. 660 --- needs --- ChangeWinTo.png ---
+[264] [265] [266]
+--- file TeXgraphse157.html ---
+(./cap.html)
+l.729 --- TeX4ht warning --- File `"cap.xbb"' not found ---
+l.729 --- TeX4ht warning --- Cannot determine size of graphic in "cap.xbb" (no 
+BoundingBox) ---
+l. 729 --- needs --- cap.png ---
+[267
+
+] (./capB.html)
+l.747 --- TeX4ht warning --- File `"capB.xbb"' not found ---
+l.747 --- TeX4ht warning --- Cannot determine size of graphic in "capB.xbb" (no
+ BoundingBox) ---
+l. 747 --- needs --- capB.png ---
+[268] [269] (./cup.html)
+l.771 --- TeX4ht warning --- File `"cup.xbb"' not found ---
+l.771 --- TeX4ht warning --- Cannot determine size of graphic in "cup.xbb" (no 
+BoundingBox) ---
+l. 771 --- needs --- cup.png ---
+(./cupB.html)
+l.788 --- TeX4ht warning --- File `"cupB.xbb"' not found ---
+l.788 --- TeX4ht warning --- Cannot determine size of graphic in "cupB.xbb" (no
+ BoundingBox) ---
+l. 788 --- needs --- cupB.png ---
+[270] [271] (./Cvx2d.html)
+l.813 --- TeX4ht warning --- File `"Cvx2d.xbb"' not found ---
+l.813 --- TeX4ht warning --- Cannot determine size of graphic in "Cvx2d.xbb" (n
+o BoundingBox) ---
+l. 813 --- needs --- Cvx2d.png ---
+[272] [273] [274] (./setminus.html)
+l.895 --- TeX4ht warning --- File `"setminus.xbb"' not found ---
+l.895 --- TeX4ht warning --- Cannot determine size of graphic in "setminus.xbb"
+ (no BoundingBox) ---
+l. 895 --- needs --- setminus.png ---
+[275] (./setminusB.html)
+l.912 --- TeX4ht warning --- File `"setminusB.xbb"' not found ---
+l.912 --- TeX4ht warning --- Cannot determine size of graphic in "setminusB.xbb
+" (no BoundingBox) ---
+l. 912 --- needs --- setminusB.png ---
+[276]
+--- file TeXgraphse158.html ---
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 920.
+
+[277
+
+]
+--- file TeXgraphse159.html ---
+[278
+
+] [279] [280] [281] [282] [283] [284]
+--- file TeXgraphse160.html ---
+) (./chap08.tex [285
+
+]
+Chapitre 8.
+--- file TeXgraphch8.html ---
+(./TeXgraph.4ct [286
+
+] [287])
+--- file TeXgraphse161.html ---
+[288] (./Bezier.html)
+l.43 --- TeX4ht warning --- File `"Bezier.xbb"' not found ---
+l.43 --- TeX4ht warning --- Cannot determine size of graphic in "Bezier.xbb" (n
+o BoundingBox) ---
+l. 43 --- needs --- Bezier.png ---
+[289] (./Cartesienne.html)
+l.59 --- TeX4ht warning --- File `"Cartesienne.xbb"' not found ---
+l.59 --- TeX4ht warning --- Cannot determine size of graphic in "Cartesienne.xb
+b" (no BoundingBox) ---
+l. 59 --- needs --- Cartesienne.png ---
+(./Point.html)
+l.82 --- TeX4ht warning --- File `"Pointbis.xbb"' not found ---
+l.82 --- TeX4ht warning --- Cannot determine size of graphic in "Pointbis.xbb" 
+(no BoundingBox) ---
+l. 82 --- needs --- Pointbis.png ---
+[290] (./ellipse.html)
+l.102 --- TeX4ht warning --- File `"ellipse.xbb"' not found ---
+l.102 --- TeX4ht warning --- Cannot determine size of graphic in "ellipse.xbb" 
+(no BoundingBox) ---
+l. 102 --- needs --- ellipse.png ---
+[291] (./EllipticArc.html)
+l.119 --- TeX4ht warning --- File `"EllipticArc.xbb"' not found ---
+l.119 --- TeX4ht warning --- Cannot determine size of graphic in "EllipticArc.x
+bb" (no BoundingBox) ---
+l. 119 --- needs --- EllipticArc.png ---
+[292] (./Implicit.html)
+l.140 --- TeX4ht warning --- File `"Implicit.xbb"' not found ---
+l.140 --- TeX4ht warning --- Cannot determine size of graphic in "Implicit.xbb"
+ (no BoundingBox) ---
+l. 140 --- needs --- Implicit.png ---
+[293] (./Label.html)
+l.160 --- TeX4ht warning --- File `"Label.xbb"' not found ---
+l.160 --- TeX4ht warning --- Cannot determine size of graphic in "Label.xbb" (n
+o BoundingBox) ---
+l. 160 --- needs --- Label.png ---
+[294] (./Ligne.html)
+l.178 --- TeX4ht warning --- File `"Ligne.xbb"' not found ---
+l.178 --- TeX4ht warning --- Cannot determine size of graphic in "Ligne.xbb" (n
+o BoundingBox) ---
+l. 178 --- needs --- Ligne.png ---
+[295] [296]
+l. 192 Writing TeXgraph.idv[7] (TeXgraph6x.png)
+(./EquaDif.html)
+l.207 --- TeX4ht warning --- File `"EquaDif.xbb"' not found ---
+l.207 --- TeX4ht warning --- Cannot determine size of graphic in "EquaDif.xbb" 
+(no BoundingBox) ---
+l. 207 --- needs --- EquaDif.png ---
+[297] [298] (./Path.html)
+l.252 --- TeX4ht warning --- File `"Path.xbb"' not found ---
+l.252 --- TeX4ht warning --- Cannot determine size of graphic in "Path.xbb" (no
+ BoundingBox) ---
+l. 252 --- needs --- Path.png ---
+[299] (./Polaire.html)
+l.270 --- TeX4ht warning --- File `"Polaire.xbb"' not found ---
+l.270 --- TeX4ht warning --- Cannot determine size of graphic in "Polaire.xbb" 
+(no BoundingBox) ---
+l. 270 --- needs --- Polaire.png ---
+[300] (./Spline.html)
+l.291 --- TeX4ht warning --- File `"Spline.xbb"' not found ---
+l.291 --- TeX4ht warning --- Cannot determine size of graphic in "Spline.xbb" (
+no BoundingBox) ---
+l. 291 --- needs --- Spline.png ---
+[301] (./Droite.html)
+l.311 --- TeX4ht warning --- File `"Droite.xbb"' not found ---
+l.311 --- TeX4ht warning --- Cannot determine size of graphic in "Droite.xbb" (
+no BoundingBox) ---
+l. 311 --- needs --- Droite.png ---
+[302]
+--- file TeXgraphse162.html ---
+[303
+
+] [304] (./julia.html)
+l.377 --- TeX4ht warning --- File `"juliabis.xbb"' not found ---
+l.377 --- TeX4ht warning --- Cannot determine size of graphic in "juliabis.xbb"
+ (no BoundingBox) ---
+l. 377 --- needs --- juliabis.png ---
+[305] [306]
+--- file TeXgraphse163.html ---
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 388.
+
+[307
+
+] [308]
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 439.
+
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 439.
+
+l.552 --- TeX4ht warning --- File `"marker.xbb"' not found ---
+l.552 --- TeX4ht warning --- Cannot determine size of graphic in "marker.xbb" (
+no BoundingBox) ---
+l. 552 --- needs --- marker.png ---
+[309] [310] [311] [312] (./typepath.html)
+l.633 --- TeX4ht warning --- File `"typepath.xbb"' not found ---
+l.633 --- TeX4ht warning --- Cannot determine size of graphic in "typepath.xbb"
+ (no BoundingBox) ---
+l. 633 --- needs --- typepath.png ---
+[313]
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 641.
+
+[314] [315] [316] [317] (./courbes.html)
+l.739 --- TeX4ht warning --- File `"courbes.xbb"' not found ---
+l.739 --- TeX4ht warning --- Cannot determine size of graphic in "courbes.xbb" 
+(no BoundingBox) ---
+l. 739 --- needs --- courbes.png ---
+[318] [319] [320] (./periodic.html)
+l.795 --- TeX4ht warning --- File `"periodic.xbb"' not found ---
+l.795 --- TeX4ht warning --- Cannot determine size of graphic in "periodic.xbb"
+ (no BoundingBox) ---
+l. 795 --- needs --- periodic.png ---
+
+LaTeX Warning: Command \FBtextellipsis invalid in math mode on input line 803.
+
+[321] (./straightL.html)
+l.835 --- TeX4ht warning --- File `"straightL.xbb"' not found ---
+l.835 --- TeX4ht warning --- Cannot determine size of graphic in "straightL.xbb
+" (no BoundingBox) ---
+l. 835 --- needs --- straightL.png ---
+[322] [323] (./seg.html)
+l.874 --- TeX4ht warning --- File `"seg.xbb"' not found ---
+l.874 --- TeX4ht warning --- Cannot determine size of graphic in "seg.xbb" (no 
+BoundingBox) ---
+l. 874 --- needs --- seg.png ---
+[324] (./interval.html)
+l.905 --- TeX4ht warning --- File `"interval.xbb"' not found ---
+l.905 --- TeX4ht warning --- Cannot determine size of graphic in "interval.xbb"
+ (no BoundingBox) ---
+l. 905 --- needs --- interval.png ---
+[325] (./halfPlane.html)
+l.938 --- TeX4ht warning --- File `"halfPlane.xbb"' not found ---
+l.938 --- TeX4ht warning --- Cannot determine size of graphic in "halfPlane.xbb
+" (no BoundingBox) ---
+l. 938 --- needs --- halfPlane.png ---
+[326] [327] (./Arc.html)
+l.971 --- TeX4ht warning --- File `"Arc.xbb"' not found ---
+l.971 --- TeX4ht warning --- Cannot determine size of graphic in "Arc.xbb" (no 
+BoundingBox) ---
+l. 971 --- needs --- Arc.png ---
+[328] (./cycloide.html)
+l.1001 --- TeX4ht warning --- File `"cycloide.xbb"' not found ---
+l.1001 --- TeX4ht warning --- Cannot determine size of graphic in "cycloide.xbb
+" (no BoundingBox) ---
+l. 1001 --- needs --- cycloide.png ---
+[329]
+--- file TeXgraphse164.html ---
+l. 1009 Writing TeXgraph.idv[8] (TeXgraph7x.png)
+l. 1010 Writing TeXgraph.idv[9] (TeXgraph8x.png)
+l. 1011 Writing TeXgraph.idv[10] (TeXgraph9x.png)
+l. 1012 Writing TeXgraph.idv[11] (TeXgraph10x.png)
+l. 1013 Writing TeXgraph.idv[12] (TeXgraph11x.png)
+l. 1014 Writing TeXgraph.idv[13] (TeXgraph12x.png)
+[330
+
+]
+l. 1025 Writing TeXgraph.idv[14] (TeXgraph13x.png)
+[331] [332] (./gradline.html)
+l.1067 --- TeX4ht warning --- File `"gradline.xbb"' not found ---
+l.1067 --- TeX4ht warning --- Cannot determine size of graphic in "gradline.xbb
+" (no BoundingBox) ---
+l. 1067 --- needs --- gradline.png ---
+[333] [334] [335] [336] (./axeXaxeY.html)
+l.1114 --- TeX4ht warning --- File `"axeXaxeY.xbb"' not found ---
+l.1114 --- TeX4ht warning --- Cannot determine size of graphic in "axeXaxeY.xbb
+" (no BoundingBox) ---
+l. 1114 --- needs --- axeXaxeY.png ---
+[337] [338] [339] (./axes.html)
+l.1188 --- TeX4ht warning --- File `"axes.xbb"' not found ---
+l.1188 --- TeX4ht warning --- Cannot determine size of graphic in "axes.xbb" (n
+o BoundingBox) ---
+l. 1188 --- needs --- axes.png ---
+[340] [341] [342] [343] (./gradBox.html)
+l.1251 --- TeX4ht warning --- File `"gradBox.xbb"' not found ---
+l.1251 --- TeX4ht warning --- Cannot determine size of graphic in "gradBox.xbb"
+ (no BoundingBox) ---
+l. 1251 --- needs --- gradBox.png ---
+[344] [345] (./Agrid.html)
+l.1281 --- TeX4ht warning --- File `"Agrid.xbb"' not found ---
+l.1281 --- TeX4ht warning --- Cannot determine size of graphic in "Agrid.xbb" (
+no BoundingBox) ---
+l. 1281 --- needs --- Agrid.png ---
+[346] [347]
+--- file TeXgraphse165.html ---
+[348
+
+] [349] [350] [351] [352] (./domaines.html)
+l.1459 --- TeX4ht warning --- File `"domaines.xbb"' not found ---
+l.1459 --- TeX4ht warning --- Cannot determine size of graphic in "domaines.xbb
+" (no BoundingBox) ---
+l. 1459 --- needs --- domaines.png ---
+[353] [354] [355] (./pqGoneReg.html)
+l.1525 --- TeX4ht warning --- File `"pqGoneReg.xbb"' not found ---
+l.1525 --- TeX4ht warning --- Cannot determine size of graphic in "pqGoneReg.xb
+b" (no BoundingBox) ---
+l. 1525 --- needs --- pqGoneReg.png ---
+[356] [357] [358] [359] [360] [361] [362]
+
+LaTeX Warning: Reference `axeXY' on page 363 undefined on input line 1669.
+
+[363] [364] [365] (./suite.html)
+l.1754 --- TeX4ht warning --- File `"suite.xbb"' not found ---
+l.1754 --- TeX4ht warning --- Cannot determine size of graphic in "suite.xbb" (
+no BoundingBox) ---
+l. 1754 --- needs --- suite.png ---
+[366] [367]) (./chap09.tex [368]
+Chapitre 9.
+--- file TeXgraphch9.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse166.html ---
+[369
+
+] [370] [371] [372]
+--- file TeXgraphse167.html ---
+[373
+
+] [374] [375] [376] [377]) (./chap10.tex [378] [379
+
+] [380
+
+]
+Chapitre 10.
+--- file TeXgraphch10.html ---
+[381
+
+] (./TeXgraph.4ct [382] [383] [384])
+--- file TeXgraphse168.html ---
+[385] [386]
+--- file TeXgraphse169.html ---
+(./Aretes.html)
+l.59 --- TeX4ht warning --- File `"Aretes.xbb"' not found ---
+l.59 --- TeX4ht warning --- Cannot determine size of graphic in "Aretes.xbb" (n
+o BoundingBox) ---
+l. 59 --- needs --- Aretes.png ---
+[387
+
+] [388] [389] (./Clip3DLine.html)
+l.139 --- TeX4ht warning --- File `"Clip3DLine.xbb"' not found ---
+l.139 --- TeX4ht warning --- Cannot determine size of graphic in "Clip3DLine.xb
+b" (no BoundingBox) ---
+l. 139 --- needs --- Clip3DLine.png ---
+[390] [391] (./ClipFacet.html)
+l.160 --- TeX4ht warning --- File `"ClipFacet.xbb"' not found ---
+l.160 --- TeX4ht warning --- Cannot determine size of graphic in "ClipFacet.xbb
+" (no BoundingBox) ---
+l. 160 --- needs --- ClipFacet.png ---
+[392] (./GetSurface.html)
+l.202 --- TeX4ht warning --- File `"GetSurface.xbb"' not found ---
+l.202 --- TeX4ht warning --- Cannot determine size of graphic in "GetSurface.xb
+b" (no BoundingBox) ---
+l. 202 --- needs --- GetSurface.png ---
+[393] [394] [395] (./Mtransform3D.html)
+l.254 --- TeX4ht warning --- File `"Mtransform3D.xbb"' not found ---
+l.254 --- TeX4ht warning --- Cannot determine size of graphic in "Mtransform3D.
+xbb" (no BoundingBox) ---
+l. 254 --- needs --- Mtransform3D.png ---
+[396] [397] [398] (./coord.html
+Overfull \hbox (7303.60213pt too wide) in paragraph at lines 17--17
+[][]\T1/lmtt/m/n/9 <li><b><span[]class="TegMacPredef">view</span></b><span[]cla
+ss="TegSymbol">(</span><span[]class="TegSymbol">-[]</span><span[]class="TegNume
+ric">3.5</span><span[]class="TegSymbol">,</span><span[]class="TegNumeric">4.5</
+span><span[]class="TegSymbol">,</span><span[]class="TegSymbol">-[]</span><span[
+]class="TegNumeric">3</span><span[]class="TegSymbol">,</span><span[]class="TegN
+umeric">4</span><span[]class="TegSymbol">)</span><span[]class="TegSymbol">,</sp
+an>&nbsp;<b><span[]class="TegMacPredef">view3D</span></b><span[]class="TegSymbo
+l">(</span><span[]class="TegSymbol">-[]</span><span[]class="TegNumeric">3.5</sp
+an><span[]class="TegSymbol">,</span><span[]class="TegNumeric">3.5</span><span[]
+class="TegSymbol">,</span><span[]class="TegSymbol">-[]</span><span[]class="TegN
+umeric">3.5</span><span[]class="TegSymbol">,</span><span[]class="TegNumeric">3.
+5</span><span[]class="TegSymbol">,</span><span[]class="TegSymbol">-[]</span><sp
+an[]class="TegNumeric">3.5</span><span[]class="TegSymbol">,</span><span[]class=
+"TegNumeric">3.5</span><span[]class="TegSymbol">)</span><span[]class="TegSymbol
+">,</span>&nbsp;<b><span[]class="TegMacPredef">size</span></b><span[]class="Teg
+Symbol">(</span><span[]class="TegNumeric">7.5</span><span[]class="TegSymbol">)<
+/span><span[]class="TegSymbol">,</span>&nbsp;<b><span[]class="TegKeyWord">Marge
+s</span></b><span[]class="TegSymbol">(</span><span[]class="TegNumeric">0</span>
+<span[]class="TegSymbol">,</span><span[]class="TegNumeric">0</span><span[]class
+="TegSymbol">,</span><span[]class="TegNumeric">0</span><span[]class="TegSymbol"
+>,</span><span[]class="TegNumeric">0</span><span[]class="TegSymbol">)</span><sp
+an[]class="TegSymbol">,</span></li>  
+ []
+
+)
+l.323 --- TeX4ht warning --- File `"coord.xbb"' not found ---
+l.323 --- TeX4ht warning --- Cannot determine size of graphic in "coord.xbb" (n
+o BoundingBox) ---
+l. 323 --- needs --- coord.png ---
+[399] (./Proj3D.html)
+l.345 --- TeX4ht warning --- File `"Proj3D.xbb"' not found ---
+l.345 --- TeX4ht warning --- Cannot determine size of graphic in "Proj3D.xbb" (
+no BoundingBox) ---
+l. 345 --- needs --- Proj3D.png ---
+[400] (./triceratops.html)
+l.369 --- TeX4ht warning --- File `"triceratopsbis.xbb"' not found ---
+l.369 --- TeX4ht warning --- Cannot determine size of graphic in "triceratopsbi
+s.xbb" (no BoundingBox) ---
+l. 369 --- needs --- triceratopsbis.png ---
+[401] [402] [403]
+--- file TeXgraphse170.html ---
+[404
+
+] [405] [406] [407] [408] [409] [410] [411] (./viewDir.html)
+l.616 --- TeX4ht warning --- File `"viewDir.xbb"' not found ---
+l.616 --- TeX4ht warning --- Cannot determine size of graphic in "viewDir.xbb" 
+(no BoundingBox) ---
+l. 616 --- needs --- viewDir.png ---
+[412] [413]
+--- file TeXgraphse171.html ---
+[414
+
+] [415] [416] [417] [418]
+--- file TeXgraphse172.html ---
+l. 742 Writing TeXgraph.idv[15] (TeXgraph14x.png)
+[419
+
+] [420]
+--- file TeXgraphse173.html ---
+[421
+
+] [422] [423]
+--- file TeXgraphse174.html ---
+[424
+
+] [425]
+--- file TeXgraphse175.html ---
+(./Clip3D.html)
+l.869 --- TeX4ht warning --- File `"Clip3Dbis.xbb"' not found ---
+l.869 --- TeX4ht warning --- Cannot determine size of graphic in "Clip3Dbis.xbb
+" (no BoundingBox) ---
+l. 869 --- needs --- Clip3Dbis.png ---
+[426
+
+] (./clipPoly.html)
+l.893 --- TeX4ht warning --- File `"clipPoly.xbb"' not found ---
+l.893 --- TeX4ht warning --- Cannot determine size of graphic in "clipPoly.xbb"
+ (no BoundingBox) ---
+l. 893 --- needs --- clipPoly.png ---
+[427] [428]
+--- file TeXgraphse176.html ---
+(./Chanfrein.html)
+l.922 --- TeX4ht warning --- File `"Chanfrein.xbb"' not found ---
+l.922 --- TeX4ht warning --- Cannot determine size of graphic in "Chanfrein.xbb
+" (no BoundingBox) ---
+l. 922 --- needs --- Chanfrein.png ---
+[429
+
+] [430] (./curve2Cone.html)
+l.947 --- TeX4ht warning --- File `"curve2Cone.xbb"' not found ---
+l.947 --- TeX4ht warning --- Cannot determine size of graphic in "curve2Cone.xb
+b" (no BoundingBox) ---
+l. 947 --- needs --- curve2Cone.png ---
+(./curve2Cylinder.html)
+l.963 --- TeX4ht warning --- File `"curve2Cylinder.xbb"' not found ---
+l.963 --- TeX4ht warning --- Cannot determine size of graphic in "curve2Cylinde
+r.xbb" (no BoundingBox) ---
+l. 963 --- needs --- curve2Cylinder.png ---
+[431] (./curveTube.html)
+l.979 --- TeX4ht warning --- File `"curveTube.xbb"' not found ---
+l.979 --- TeX4ht warning --- Cannot determine size of graphic in "curveTube.xbb
+" (no BoundingBox) ---
+l. 979 --- needs --- curveTube.png ---
+[432] [433] [434] (./grille3d.html)
+l.1043 --- TeX4ht warning --- File `"grille3d.xbb"' not found ---
+l.1043 --- TeX4ht warning --- Cannot determine size of graphic in "grille3d.xbb
+" (no BoundingBox) ---
+l. 1043 --- needs --- grille3d.png ---
+[435] (./HollowFacetbis.html)
+l.1068 --- TeX4ht warning --- File `"HollowFacetbis.xbb"' not found ---
+l.1068 --- TeX4ht warning --- Cannot determine size of graphic in "HollowFacetb
+is.xbb" (no BoundingBox) ---
+l. 1068 --- needs --- HollowFacetbis.png ---
+(./HollowFacet.html)
+l.1087 --- TeX4ht warning --- File `"HollowFacet.xbb"' not found ---
+l.1087 --- TeX4ht warning --- Cannot determine size of graphic in "HollowFacet.
+xbb" (no BoundingBox) ---
+l. 1087 --- needs --- HollowFacet.png ---
+[436] [437] [438] (./lineTube.html)
+l.1125 --- TeX4ht warning --- File `"lineTube.xbb"' not found ---
+l.1125 --- TeX4ht warning --- Cannot determine size of graphic in "lineTube.xbb
+" (no BoundingBox) ---
+l. 1125 --- needs --- lineTube.png ---
+[439] [440] (./rotCurve.html)
+l.1170 --- TeX4ht warning --- File `"rotCurve.xbb"' not found ---
+l.1170 --- TeX4ht warning --- Cannot determine size of graphic in "rotCurve.xbb
+" (no BoundingBox) ---
+l. 1170 --- needs --- rotCurve.png ---
+(./rotLine.html)
+l.1187 --- TeX4ht warning --- File `"rotLine.xbb"' not found ---
+l.1187 --- TeX4ht warning --- Cannot determine size of graphic in "rotLine.xbb"
+ (no BoundingBox) ---
+l. 1187 --- needs --- rotLine.png ---
+[441] (./Section.html)
+l.1206 --- TeX4ht warning --- File `"Section.xbb"' not found ---
+l.1206 --- TeX4ht warning --- Cannot determine size of graphic in "Section.xbb"
+ (no BoundingBox) ---
+l. 1206 --- needs --- Section.png ---
+[442] [443] [444]
+--- file TeXgraphse177.html ---
+[445
+
+] [446] [447] [448] [449] (./AxeZ3D.html)
+l.1333 --- TeX4ht warning --- File `"AxeZ3D.xbb"' not found ---
+l.1333 --- TeX4ht warning --- Cannot determine size of graphic in "AxeZ3D.xbb" 
+(no BoundingBox) ---
+l. 1333 --- needs --- AxeZ3D.png ---
+[450] [451] [452] [453] [454] [455] [456] [457] (./drawplan1.html)
+l.1483 --- TeX4ht warning --- File `"drawplan1.xbb"' not found ---
+l.1483 --- TeX4ht warning --- Cannot determine size of graphic in "drawplan1.xb
+b" (no BoundingBox) ---
+l. 1483 --- needs --- drawplan1.png ---
+[458] (./drawplan2.html)
+l.1523 --- TeX4ht warning --- File `"drawplan2.xbb"' not found ---
+l.1523 --- TeX4ht warning --- Cannot determine size of graphic in "drawplan2.xb
+b" (no BoundingBox) ---
+l. 1523 --- needs --- drawplan2.png ---
+[459] [460] [461]
+--- file TeXgraphse178.html ---
+[462
+
+] [463] (./DrawFacet.html)
+l.1620 --- TeX4ht warning --- File `"DrawFacetbis.xbb"' not found ---
+l.1620 --- TeX4ht warning --- Cannot determine size of graphic in "DrawFacetbis
+.xbb" (no BoundingBox) ---
+l. 1620 --- needs --- DrawFacetbis.png ---
+[464]
+
+LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
+(Font)              using `T1/lmr/bx/n' instead on input line 1628.
+
+(./DrawFlatFacet.html)
+l.1648 --- TeX4ht warning --- File `"DrawFlatFacet.xbb"' not found ---
+l.1648 --- TeX4ht warning --- Cannot determine size of graphic in "DrawFlatFace
+t.xbb" (no BoundingBox) ---
+l. 1648 --- needs --- DrawFlatFacet.png ---
+[465] [466] (./DrawSmoothFacet.html)
+l.1692 --- TeX4ht warning --- File `"DrawSmoothFacetbis.xbb"' not found ---
+l.1692 --- TeX4ht warning --- Cannot determine size of graphic in "DrawSmoothFa
+cetbis.xbb" (no BoundingBox) ---
+l. 1692 --- needs --- DrawSmoothFacetbis.png ---
+[467] [468]) (./chap11.tex [469]
+Chapitre 11.
+--- file TeXgraphch11.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse179.html ---
+[470
+
+] [471] (./Build3D.html)
+l.74 --- TeX4ht warning --- File `"Build3Dbis.xbb"' not found ---
+l.74 --- TeX4ht warning --- Cannot determine size of graphic in "Build3Dbis.xbb
+" (no BoundingBox) ---
+l. 74 --- needs --- Build3Dbis.png ---
+[472] [473]
+--- file TeXgraphse180.html ---
+[474
+
+] [475] (./bdAngleD.html)
+l.137 --- TeX4ht warning --- File `"bdAngleD.xbb"' not found ---
+l.137 --- TeX4ht warning --- Cannot determine size of graphic in "bdAngleD.xbb"
+ (no BoundingBox) ---
+l. 137 --- needs --- bdAngleD.png ---
+[476] [477] [478] [479] [480] [481] [482] [483] (./texify.html)
+l.328 --- TeX4ht warning --- File `"texifybis.xbb"' not found ---
+l.328 --- TeX4ht warning --- Cannot determine size of graphic in "texifybis.xbb
+" (no BoundingBox) ---
+l. 328 --- needs --- texifybis.png ---
+[484] [485] [486] (./intersection.html)
+l.414 --- TeX4ht warning --- File `"intersection.xbb"' not found ---
+l.414 --- TeX4ht warning --- Cannot determine size of graphic in "intersection.
+xbb" (no BoundingBox) ---
+l. 414 --- needs --- intersection.png ---
+[487] [488] [489] [490] (./villarceau.html)
+l.514 --- TeX4ht warning --- File `"villarceaubis.xbb"' not found ---
+l.514 --- TeX4ht warning --- Cannot determine size of graphic in "villarceaubis
+.xbb" (no BoundingBox) ---
+l. 514 --- needs --- villarceaubis.png ---
+[491] [492]
+--- file TeXgraphse181.html ---
+[493
+
+] [494]) (./chap12.tex [495] [496
+
+] [497
+
+]
+Chapitre 12.
+--- file TeXgraphch12.html ---
+(./TeXgraph.4ct)
+--- file TeXgraphse182.html ---
+[498
+
+]
+--- file TeXgraphse183.html ---
+[499
+
+] [500] [501] [502] [503]
+--- file TeXgraphse184.html ---
+l.122 --- TeX4ht warning --- File `"surf1.xbb"' not found ---
+l.122 --- TeX4ht warning --- Cannot determine size of graphic in "surf1.xbb" (n
+o BoundingBox) ---
+l. 122 --- needs --- surf1.png ---
+[504
+
+]
+l.180 --- TeX4ht warning --- File `"polyedre.xbb"' not found ---
+l.180 --- TeX4ht warning --- Cannot determine size of graphic in "polyedre.xbb"
+ (no BoundingBox) ---
+l. 180 --- needs --- polyedre.png ---
+[505]
+--- file TeXgraphse185.html ---
+[506
+
+] [507] [508]
+--- file TeXgraphse186.html ---
+[509
+
+] [510]
+\openout3 = `PrintPgcd.teg'.
+
+\openout4 = `PrintPgcd.prm'.
+
+runsystem(CmdTeXgraph -none -nosrc PrintPgcd)...executed.
+
+(./PrintPgcd.res) [511]
+--- file TeXgraphse187.html ---
+[512
+
+] [513]
+\openout3 = `tegcode.teg'.
+
+runsystem(CmdTeXgraph -none -keep tegcode)...executed.
+
+\openout4 = `tegdirect.teg'.
+
+runsystem(CmdTeXgraph -none -nosrc tegdirect)...executed.
+
+(./tegdirect.res)
+\openout4 = `tegdirect.teg'.
+
+runsystem(CmdTeXgraph -none -nosrc tegdirect)...executed.
+
+(./tegdirect.res))
+runsystem(CmdTeXgraph server off)...executed.
+
+[514] [515
+
+] (./TeXgraph.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 23788 strings out of 478543
+ 362370 string characters out of 5848924
+ 767325 words of memory out of 5000000
+ 40857 multiletter control sequences out of 15000+600000
+ 505827 words of font info for 92 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 66i,11n,88p,2200b,1814s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on TeXgraph.dvi (518 pages, 2753456 bytes).

@@ -1,0 +1,17 @@
+TeXgraph#
+Graph image = [
+view(-5,5,-5,5), Marges(0.5,0,0,0.5), size(7.5),
+draw("grid",[-5-5*i,5+5*i,0.5+0.5*i],[unit:=[0.5,0.5],
+ gridwidth:=2]),
+Width:=8, FillOpacity:=0.6,
+draw("halfPlane" ,x+2*y>=5, [FillColor:=navy,
+ labelpos:=0.425, legend:="$x+2y \geqslant 5$"]),
+draw("halfPlane" ,-5*x+2*y<2, [FillColor:=crimson,
+ labelpos:=0.425, legend:="$-5x+2y< 2$" ]),
+draw("halfPlane" ,x<-2, [FillColor:=darkgreen,
+ labelpos:=0.6, legend:="$x<-2$" ]),
+draw("halfPlane" ,y<=-1, [FillColor:=gold,
+ legend:="$y\leqslant -1$" ]),
+draw("axes",[-5-5*i,1+i],[Arrows:=1, Width:=4,
+ originpos:=[0,0]])
+];
